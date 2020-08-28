@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "baseUrl": "src",
+    "module": "es6",
+    "moduleResolution": "node",
+    "target": "es6",
+    "sourceMap": true,
+    "jsx": "react",
+    "allowJs": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true
+  },
+  "include": [
+    "src/**/*.js",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+  ]
+}
