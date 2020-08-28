@@ -1,4 +1,0 @@
-{
-  "terminal.integrated.automationShell.windows": "",
-  "terminal.integrated.cwd": "${workspaceFolder}/packages/website"
-}
