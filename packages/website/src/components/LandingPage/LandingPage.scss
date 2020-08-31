@@ -10,7 +10,6 @@
 
 /* Colors: */
 $color-ff6975: #ff6975;
-$color-000000: #000000;
 $color-101519: #101519;
 $color-ae5cff: #ae5cff;
 $color-1ee0fc: #1ee0fc;
@@ -40,6 +39,7 @@ $color-95d86e: #95d86e;
 $color-77ff02: #77ff02;
 $color-c0ffa4: #c0ffa4;
 $color-white: #ffffff;
+$color-black: #000000;
 
 /* Font/text values */
 $font-family-headers: "Cera Pro";
@@ -65,9 +65,17 @@ $line-spacing-91: 91px;
 $text-transform-uppercase: uppercase;
 
 .landingPageWrapper {
-  /* Character Styles */
   .header-3 {
     font-family: $font-family-headers;
+    font-style: $font-style-normal;
+    font-weight: $font-weight-normal;
+    font-size: $font-size-22;
+    line-height: $line-spacing-48;
+    letter-spacing: $character-spacing-1-1;
+  }
+
+  .header-2-2 {
+    font-family: $font-family-body-text;
     font-style: $font-style-normal;
     font-weight: $font-weight-medium;
     font-size: $font-size-28;
@@ -100,14 +108,16 @@ $text-transform-uppercase: uppercase;
   //   letter-spacing: $character-spacing-0-75;
   //   text-transform: $text-transform-uppercase;
   // }
-  // .div {
-  //   font-family: $font-family-body-text;
-  //   font-style: $font-style-normal;
-  //   font-weight: $font-weight-normal;
-  //   font-size: $font-size-18;
-  //   line-height: $line-spacing-26;
-  //   letter-spacing: $character-spacing-0-9;
-  // }
+
+  .text-menu {
+    font-family: $font-family-body-text;
+    font-style: $font-style-normal;
+    font-weight: $font-weight-normal;
+    font-size: $font-size-28;
+    line-height: $line-spacing-48;
+    letter-spacing: $character-spacing-0;
+  }
+
   .text-1 {
     font-family: $font-family-body-text;
     font-style: $font-style-normal;
@@ -117,17 +127,23 @@ $text-transform-uppercase: uppercase;
     letter-spacing: $character-spacing-1-1;
   }
 
-  .introduction {
-    background-image: url("/src/assets/images/CURVE_PD_3D_BG_SCENE_V15-1_CAM_01.jpg");
-    background-size: contain;
-    background-repeat: no-repeat;
-    height: 1080px;
+  .introduction,
+  .aboutUs {
     padding-left: 140px;
     padding-right: 140px;
-    padding-top: 380px;
-    padding: 95px;
+  }
+
+  .introduction {
+    background-image: url("/src/assets/images/CURVE_PD_3D_BG_SCENE_V15-1_CAM_01.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 740px;
+    padding-top: 100px;
+    padding-bottom: 95px;
     color: $color-white;
-    .container {
+    display: flex;
+
+    .leftColumn {
       .header {
         img.logo {
           width: 94px;
@@ -159,6 +175,34 @@ $text-transform-uppercase: uppercase;
           opacity: 1;
         }
       }
+    }
+
+    .rightColumn {
+      text-align: right;
+      @extend .text-menu;
+      min-width: 400px; // temporary placeholder
+
+      div {
+        display: inline-block;
+
+        &.learn {
+          margin-right: 40px;
+        }
+      }
+    }
+  }
+
+  .aboutUs {
+    padding-top: 140px;
+    color: $color-101519;
+
+    .title {
+      @extend .header-2-2;
+    }
+    .subtitle {
+      @extend .header-3;
+    }
+    .body {
     }
   }
 }

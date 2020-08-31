@@ -7,7 +7,7 @@ const LandingPage = (): React.ReactElement => {
   return (
     <div className="landingPageWrapper">
       <div className="introduction">
-        <div className="container">
+        <div className="leftColumn">
           <div className="header">
             <img className="logo" src="/src/assets/images/PrimeDAOLogo.svg"/>
           </div>
@@ -19,6 +19,10 @@ const LandingPage = (): React.ReactElement => {
           <div className="footer">
             <div className="moreIcon"></div>
           </div>
+        </div>
+        <div className="rightColumn">
+          <div className="learn">Learn</div>
+          <div className="connect">Connect</div>
         </div>
       </div>
       <div className="aboutUs">

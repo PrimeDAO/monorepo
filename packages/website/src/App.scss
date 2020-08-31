@@ -5,13 +5,13 @@ body {
 
   .app-shell {
     min-height: 100vh;
-    min-width: 100vw;
+    width: 1815px;
+    max-width: 1815px;
+    margin: auto;
 
     .landing-body-container {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      margin: 0 5vw;
     }
   }
 }
