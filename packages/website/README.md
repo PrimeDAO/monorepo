@@ -20,7 +20,7 @@ No front-end tests at the moment.
 
 ### Local Development
 
- - Execute `npm run start` , this will start the site in http//:localhost:3000
+ - Execute `npm run start` , this will start the site in http//:localhost:3200
     
 ## Deployment
 
