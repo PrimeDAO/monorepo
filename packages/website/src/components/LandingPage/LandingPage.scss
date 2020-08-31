@@ -1,2 +1,164 @@
-div.landingPageWrapper {
+@font-face {
+  font-family: "Cera Pro";
+  src: url("../../assets/fonts/Cera Pro Medium.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Aeonik";
+  src: url("../../assets/fonts/Aeonik-Regular.otf") format("opentype");
+}
+
+/* Colors: */
+$color-ff6975: #ff6975;
+$color-000000: #000000;
+$color-101519: #101519;
+$color-ae5cff: #ae5cff;
+$color-1ee0fc: #1ee0fc;
+$color-ff495b: #ff495b;
+$color-fca500: #fca500;
+$color-f2c21a: #f2c21a;
+$color-fffa51: #fffa51;
+$color-feffa2: #feffa2;
+$color-ff402e: #ff402e;
+$color-fd6123: #fd6123;
+$color-faa04a: #faa04a;
+$color-f9bd7d: #f9bd7d;
+$color-df0031: #df0031;
+$color-fe173b: #fe173b;
+$color-ea005a: #ea005a;
+$color-fc1d90: #fc1d90;
+$color-fa81ff: #fa81ff;
+$color-ffa2ce: #ffa2ce;
+$color-9a14d5: #9a14d5;
+$color-bf62a8: #bf62a8;
+$color-c08eff: #c08eff;
+$color-298cdd: #298cdd;
+$color-8668fc: #8668fc;
+$color-64b0c8: #64b0c8;
+$color-5bcaa9: #5bcaa9;
+$color-95d86e: #95d86e;
+$color-77ff02: #77ff02;
+$color-c0ffa4: #c0ffa4;
+$color-white: #ffffff;
+
+/* Font/text values */
+$font-family-headers: "Cera Pro";
+$font-family-body-text: Aeonik;
+$font-style-normal: normal;
+$font-weight-medium: normal;
+$font-weight-normal: normal;
+$font-size-15: 15px;
+$font-size-18: 18px;
+$font-size-22: 22px;
+$font-size-28: 28px;
+$font-size-42: 42px;
+$font-size-72: 72px;
+$character-spacing-0: 0px;
+$character-spacing-0-75: 0.75px;
+$character-spacing-0-9: 0.9px;
+$character-spacing-1-1: 1.1px;
+$line-spacing-18: 18px;
+$line-spacing-26: 26px;
+$line-spacing-30: 30px;
+$line-spacing-48: 48px;
+$line-spacing-91: 91px;
+$text-transform-uppercase: uppercase;
+
+.landingPageWrapper {
+  /* Character Styles */
+  .header-3 {
+    font-family: $font-family-headers;
+    font-style: $font-style-normal;
+    font-weight: $font-weight-medium;
+    font-size: $font-size-28;
+    line-height: $line-spacing-48;
+    letter-spacing: $character-spacing-0;
+  }
+  .header-2 {
+    font-family: $font-family-headers;
+    font-style: $font-style-normal;
+    font-weight: $font-weight-medium;
+    font-size: $font-size-42;
+    line-height: $line-spacing-48;
+    letter-spacing: $character-spacing-0;
+  }
+  .header-1 {
+    font-family: $font-family-headers;
+    font-style: $font-style-normal;
+    font-weight: $font-weight-medium;
+    font-size: $font-size-72;
+    line-height: $line-spacing-91;
+    letter-spacing: $character-spacing-0;
+  }
+
+  // .div {
+  //   font-family: $font-family-body-text;
+  //   font-style: $font-style-normal;
+  //   font-weight: $font-weight-normal;
+  //   font-size: $font-size-15;
+  //   line-height: $line-spacing-18;
+  //   letter-spacing: $character-spacing-0-75;
+  //   text-transform: $text-transform-uppercase;
+  // }
+  // .div {
+  //   font-family: $font-family-body-text;
+  //   font-style: $font-style-normal;
+  //   font-weight: $font-weight-normal;
+  //   font-size: $font-size-18;
+  //   line-height: $line-spacing-26;
+  //   letter-spacing: $character-spacing-0-9;
+  // }
+  .text-1 {
+    font-family: $font-family-body-text;
+    font-style: $font-style-normal;
+    font-weight: $font-weight-normal;
+    font-size: $font-size-22;
+    line-height: $line-spacing-30;
+    letter-spacing: $character-spacing-1-1;
+  }
+
+  .introduction {
+    background-image: url("/src/assets/images/CURVE_PD_3D_BG_SCENE_V15-1_CAM_01.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 1080px;
+    padding-left: 140px;
+    padding-right: 140px;
+    padding-top: 380px;
+    padding: 95px;
+    color: $color-white;
+    .container {
+      .header {
+        img.logo {
+          width: 94px;
+          height: 94px;
+        }
+      }
+
+      .body {
+        .title {
+          @extend .header-1;
+          text-shadow: 0px 3px 20px #000000cc;
+        }
+        .subtitle {
+          @extend .header-2;
+          text-shadow: 0px 3px 20px #000000cc;
+        }
+        .body {
+          @extend .text-1;
+          text-shadow: 0px 3px 20px #000000cc;
+        }
+      }
+
+      .footer {
+        .moreIcon {
+          width: 29px;
+          height: 29px;
+          transform: matrix(0, -1, 1, 0, 0, 0);
+          background: #ffffff 0% 0% no-repeat padding-box;
+          opacity: 1;
+        }
+      }
+    }
+  }
 }
