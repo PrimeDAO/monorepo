@@ -21,8 +21,18 @@ const LandingPage = (): React.ReactElement => {
           </div>
         </div>
         <div className="rightColumn">
-          <div className="learn">Learn</div>
-          <div className="connect">Connect</div>
+          <div className="learn"><div className="name">Learn</div></div>
+          <div className="connect"><div className="name">Connect</div></div>
+          <div className="learnMenu">
+            <div><div className="name">Blog</div><div className="triangle"></div></div>
+            <div><div className="name">Litepaper</div><div className="triangle"></div></div>
+          </div>
+          <div className="connectMenu">
+            <div><div className="name">Discord</div><div className="triangle"></div></div>
+            <div><div className="name">Twitter</div><div className="triangle"></div></div>
+            <div><div className="name">Github</div><div className="triangle"></div></div>
+            <div><div className="name">Contact</div><div className="triangle"></div></div>
+          </div>
         </div>
       </div>
       <div className="aboutUs">
