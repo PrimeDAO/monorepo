@@ -9,7 +9,7 @@ const LandingPage = (): React.ReactElement => {
       <div className="introduction">
         <div className="leftColumn">
           <div className="header">
-            <img className="logo" src="/src/assets/images/PrimeDAOLogo.svg"/>
+            <img className="logo" src="PrimeDAOLogo.svg"/>
           </div>
           <div className="body">
             <div className="title">Introducing PrimeDAO:</div>
@@ -35,6 +35,9 @@ const LandingPage = (): React.ReactElement => {
             <div className="body">The PrimeDAO’s focus will be to deliver open finance support structures that a centralized prime broker would otherwise provide, such as efficient order matching, guaranteed settlement, liquidity for spot trades, lending, derivatives, leverage, and so on. Everybody should have easy access to prime brokerage tools and services that lets them lend and make markets. PrimeDAO will leverage transparent, decentralized governance to catalyze and democratize a new wave of DeFi adopters.</div>
           </div>
         </div>
+      </div>
+      <div className="footer">
+        <img src="FOOTER_SOCIAL_DISCORD.svg"/>
       </div>
     </div>
   );
