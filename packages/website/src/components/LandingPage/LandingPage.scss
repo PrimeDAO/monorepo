@@ -67,6 +67,11 @@ $text-transform-uppercase: uppercase;
 .landingPageWrapper {
   padding-bottom: 80px;
 
+  > div {
+    padding-left: 140px;
+    padding-right: 150px;
+  }
+
   .header-3 {
     font-family: $font-family-headers;
     font-style: $font-style-normal;
@@ -147,8 +152,6 @@ $text-transform-uppercase: uppercase;
     height: 740px;
     padding-top: 100px;
     padding-bottom: 95px;
-    padding-left: 140px;
-    padding-right: 140px;
     color: $color-white;
     display: flex;
 
@@ -390,8 +393,6 @@ $text-transform-uppercase: uppercase;
     justify-content: space-between;
     align-items: center;
     color: #d7d9db;
-    padding-left: 80px;
-    padding-right: 80px;
 
     .header {
       flex-basis: 30%;
