@@ -78,7 +78,7 @@ $text-transform-uppercase: uppercase;
     font-family: $font-family-body-text;
     font-style: $font-style-normal;
     font-weight: $font-weight-medium;
-    font-size: $font-size-28;
+    font-size: $font-size-42;
     line-height: $line-spacing-48;
     letter-spacing: $character-spacing-0;
   }
@@ -126,6 +126,15 @@ $text-transform-uppercase: uppercase;
     font-size: $font-size-22;
     line-height: $line-spacing-30;
     letter-spacing: $character-spacing-1-1;
+  }
+
+  .text-2 {
+    font-family: $font-family-body-text;
+    font-style: $font-style-normal;
+    font-weight: $font-weight-normal;
+    font-size: $font-size-18;
+    line-height: $line-spacing-26;
+    letter-spacing: $character-spacing-0-9;
   }
 
   .introduction,
@@ -249,12 +258,87 @@ $text-transform-uppercase: uppercase;
     color: $color-101519;
 
     .title {
-      @extend .header-2-2;
+      padding-bottom: 46px;
+
+      .triangle {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 0 91px 91px;
+        border-color: transparent transparent $color-ff6975 transparent;
+        display: inline-block;
+      }
+
+      .name {
+        @extend .header-2-2;
+        display: inline-block;
+        position: relative;
+        top: -51px;
+        left: -91px;
+      }
+      .subtitle {
+        @extend .header-3;
+        position: relative;
+        top: -51px;
+      }
     }
-    .subtitle {
-      @extend .header-3;
+    .subsections {
+      display: flex;
+
+      .section {
+        .icon {
+          margin-bottom: 46px;
+        }
+        .title {
+          @extend .header-2-2;
+          height: 100px;
+          padding-bottom: 46px;
+          margin-bottom: 46px;
+          border-bottom: solid 5px $color-ff6975;
+        }
+        .body {
+          @extend .text-2;
+        }
+      }
+
+      .section:not(:last-child) {
+        margin-right: 5%;
+      }
     }
-    .body {
+  }
+
+  .ecosystem {
+    padding-top: 140px;
+    color: $color-101519;
+
+    .title {
+      padding-bottom: 46px;
+
+      .triangle {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 0 91px 91px;
+        border-color: transparent transparent $color-1ee0fc transparent;
+        display: inline-block;
+      }
+
+      .name {
+        @extend .header-2-2;
+        display: inline-block;
+        position: relative;
+        top: -51px;
+        left: -91px;
+      }
+      .subtitle {
+        @extend .header-3;
+        position: relative;
+        top: -51px;
+      }
+    }
+
+    .pic {
+      text-align: center;
     }
   }
 }
