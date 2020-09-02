@@ -14,6 +14,10 @@ const LandingPage = (): React.ReactElement => {
     }
   };
 
+  const goto = (where: string) => {
+    window.open(where, '_blank', 'noopener noreferrer');
+  };
+
   return (
     <div className="landingPageWrapper">
       <div className="introduction">
@@ -49,8 +53,8 @@ const LandingPage = (): React.ReactElement => {
             onMouseLeave={() => showMenu('Learn', false)}
           >
             <div className="learnMenu">
-              <div><div className="name"><a href="https://medium.com/primedao" target="_blank" rel="noopener noreferrer">Blog</a></div><div className="triangle"></div></div>
-              <div><div className="name"><a href="" target="_blank" rel="noopener noreferrer">Litepaper</a></div><div className="triangle"></div></div>
+              <div onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
+              <div><div className="name">Litepaper</div><div className="triangle"></div></div>
             </div>
           </div>
           <div
@@ -58,10 +62,10 @@ const LandingPage = (): React.ReactElement => {
             onMouseLeave={() => showMenu('Connect', false)}
           >
             <div className="connectMenu">
-              <div><div className="name"><a href="https://discord.gg/b8VjMfC" target="_blank" rel="noopener noreferrer">Discord</a></div><div className="triangle"></div></div>
-              <div><div className="name"><a href="https://twitter.com/PrimeDAO" target="_blank" rel="noopener noreferrer">Twitter</a></div><div className="triangle"></div></div>
-              <div><div className="name"><a href="" target="_blank" rel="noopener noreferrer">Github</a></div><div className="triangle"></div></div>
-              <div><div className="name"><a href="https://primedao.substack.com" target="_blank" rel="noopener noreferrer">Contact</a></div><div className="triangle"></div></div>
+              <div onClick={() => goto('https://discord.gg/b8VjMfC')}><div className="name">Discord</div><div className="triangle"></div></div>
+              <div onClick={() => goto('https://twitter.com/PrimeDAO')}><div className="name">Twitter</div><div className="triangle"></div></div>
+              <div><div className="name">Github</div><div className="triangle"></div></div>
+              <div onClick={() => goto('https://primedao.substack.com')}><div className="name">Contact</div><div className="triangle"></div></div>
             </div>
           </div>
         </div>

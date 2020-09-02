@@ -228,6 +228,7 @@ $text-transform-uppercase: uppercase;
           display: flex;
           padding: 14px;
           cursor: pointer;
+          color: $color-black;
 
           .triangle {
             flex-grow: 2;
