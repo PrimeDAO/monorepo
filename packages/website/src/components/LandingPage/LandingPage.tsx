@@ -118,9 +118,9 @@ const LandingPage = (): React.ReactElement => {
           <img src="PrimeDAOLogo-grey.svg" />
         </div>
         <div className="share">
-          <a href="https://discord.gg/b8VjMfC" target="_blank" rel="noopener noreferrer"><img src="FOOTER_SOCIAL_DISCORD.svg" /></a>
-          <a href="https://twitter.com/PrimeDAO" target="_blank" rel="noopener noreferrer"><img src="FOOTER_SOCIAL_TWITTER.svg" /></a>
-          <a href="https://medium.com/primedao" target="_blank" rel="noopener noreferrer"><img src="FOOTER_SOCIAL_MEDIUM.svg" /></a>
+          <a className="discord" href="https://discord.gg/b8VjMfC" target="_blank" rel="noopener noreferrer"></a>
+          <a className="twitter" href="https://twitter.com/PrimeDAO" target="_blank" rel="noopener noreferrer"></a>
+          <a className="medium" href="https://medium.com/primedao" target="_blank" rel="noopener noreferrer"></a>
         </div>
       </div>
     </div>

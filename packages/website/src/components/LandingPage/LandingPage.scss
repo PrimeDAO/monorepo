@@ -438,6 +438,32 @@ $text-transform-uppercase: uppercase;
       flex-basis: 30%;
       text-align: right;
 
+      a {
+        width: 33px;
+        height: 33px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: inline-block;
+        &.discord {
+          background-image: url("/src/assets/images/FOOTER_SOCIAL_DISCORD.svg");
+        }
+        &.twitter {
+          background-image: url("/src/assets/images/FOOTER_SOCIAL_TWITTER.svg");
+        }
+        &.medium {
+          background-image: url("/src/assets/images/FOOTER_SOCIAL_MEDIUM.svg");
+        }
+        &.discord:hover {
+          background-image: url("/src/assets/images/FOOTER_SOCIAL_DISCORD-dark.svg");
+        }
+        &.twitter:hover {
+          background-image: url("/src/assets/images/FOOTER_SOCIAL_TWITTER-dark.svg");
+        }
+        &.medium:hover {
+          background-image: url("/src/assets/images/FOOTER_SOCIAL_MEDIUM-dark.svg");
+        }
+      }
+
       a:not(:last-child) {
         margin-right: 12px;
       }
