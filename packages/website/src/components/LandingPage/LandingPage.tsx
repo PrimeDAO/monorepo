@@ -93,14 +93,19 @@ const LandingPage = (): React.ReactElement => {
             <div className="body">To preserve the DeFi commons’ fundamental ethos of permissionless access, it cannot be governed by a centralized entity. PrimeDAO aims to be a sustainable engine of value creation that earns and allocates resources towards a wide contributor ecosystem for promoting, simulating, building, auditing and maintaining the mechanisms and products of the DeFi ecosystem, cultivating projects that promote safety, reliability, liquidity, and above all, open access.</div>
           </div>
         </div>
-        <div className="ecosystem">
-          <div className="title">
-            <div className="triangle"></div>
-            <div className="name">Prime Ecosystem</div>
-            <div className="subtitle">PrimeDAO Visualized</div>
-          </div>
-          <div className="pic"><img src="CURVE_PD_DEFI_ECOSYSTEM_V02-1.jpg"/></div>
+      </div>
+      <div className="ecosystem">
+        <div className="title">
+          <div className="triangle"></div>
+          <div className="name">Prime Ecosystem</div>
+          <div className="subtitle">PrimeDAO Visualized</div>
         </div>
+        <div className="pic"><img src="CURVE_PD_DEFI_ECOSYSTEM_V02-1.jpg"/></div>
+      </div>
+      <div className="join">
+        <div className="title">Stay Informed:</div>
+        <div className="subtitle">In the next few months, the PrimeDAO ecosystem will launch. You will not receive spam and your email will never be shared.</div>
+        <div className="button"><a href="https://primedao.substack.com/" target="_blank" rel="noopener noreferrer">Join</a></div>
       </div>
       <div className="footer">
         <img src="FOOTER_SOCIAL_DISCORD.svg"/>
