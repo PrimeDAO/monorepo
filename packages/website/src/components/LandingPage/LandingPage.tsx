@@ -64,8 +64,8 @@ const LandingPage = (): React.ReactElement => {
             <div className="connectMenu">
               <div onClick={() => goto('https://discord.gg/b8VjMfC')}><div className="name">Discord</div><div className="triangle"></div></div>
               <div onClick={() => goto('https://twitter.com/PrimeDAO')}><div className="name">Twitter</div><div className="triangle"></div></div>
-              <div><div className="name">Github</div><div className="triangle"></div></div>
-              <div onClick={() => goto('https://primedao.substack.com')}><div className="name">Contact</div><div className="triangle"></div></div>
+              <div onClick={() => goto('https://github.com/PrimeDAO-Foundation')}><div className="name">Github</div><div className="triangle"></div></div>
+              <div onClick={() => goto('https://twitter.com/PrimeDAO')}><div className="name">Contact</div><div className="triangle"></div></div>
             </div>
           </div>
         </div>
