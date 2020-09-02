@@ -183,35 +183,51 @@ $text-transform-uppercase: uppercase;
     .rightColumn {
       text-align: right;
       @extend .text-menu;
-      min-width: 320px; // temporary placeholder
+      min-width: 320px;
       display: grid;
       grid-template-columns: auto auto;
-      grid-template-rows: 80px auto;
+      grid-template-rows: 50px max-content;
       column-gap: 16px;
+
+      &.showLearn .learn .menuDivider,
+      &.showConnect .connect .menuDivider {
+        display: block;
+      }
+
+      &.showLearn .learnMenu,
+      &.showConnect .connectMenu {
+        height: initial;
+      }
 
       .learn,
       .connect {
         .name {
           display: inline-block;
           width: 100%;
-          &:hover {
-            border-bottom: solid 3px $color-white;
-            @extent;
-          }
+        }
+        .menuDivider {
+          display: none;
+          height: 3px;
+          background-color: $color-white;
         }
       }
 
       .learnMenu,
       .connectMenu {
+        padding-top: 20px;
         text-align: left;
         display: flex;
         flex-direction: column;
+        height: 0;
+        overflow-y: hidden;
+
         > div {
           @extend .text-menu-item;
           background-color: $color-white;
           margin-bottom: 16px;
           display: flex;
           padding: 14px;
+          cursor: pointer;
 
           .triangle {
             flex-grow: 2;
