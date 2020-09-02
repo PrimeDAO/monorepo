@@ -65,6 +65,8 @@ $line-spacing-91: 91px;
 $text-transform-uppercase: uppercase;
 
 .landingPageWrapper {
+  padding-bottom: 80px;
+
   .header-3 {
     font-family: $font-family-headers;
     font-style: $font-style-normal;
@@ -138,12 +140,6 @@ $text-transform-uppercase: uppercase;
     letter-spacing: $character-spacing-0-9;
   }
 
-  .introduction,
-  .join {
-    padding-left: 140px;
-    padding-right: 140px;
-  }
-
   .introduction {
     background-image: url("/src/assets/images/CURVE_PD_3D_BG_SCENE_V15-1_CAM_01.jpg");
     background-size: cover;
@@ -151,6 +147,8 @@ $text-transform-uppercase: uppercase;
     height: 740px;
     padding-top: 100px;
     padding-bottom: 95px;
+    padding-left: 140px;
+    padding-right: 140px;
     color: $color-white;
     display: flex;
 
@@ -355,6 +353,7 @@ $text-transform-uppercase: uppercase;
     padding-right: 540px;
     color: $color-white;
     text-align: center;
+    margin-bottom: 120px;
 
     .title {
       @extend .header-1;
@@ -382,6 +381,45 @@ $text-transform-uppercase: uppercase;
         a {
           color: $color-white;
         }
+      }
+    }
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #d7d9db;
+    padding-left: 80px;
+    padding-right: 80px;
+
+    .header {
+      flex-basis: 30%;
+      .title {
+        @extend .header-2;
+        margin-bottom: 16px;
+      }
+      .subtitle {
+        @extend .text-1;
+      }
+    }
+
+    .logo {
+      flex-grow: 20;
+      flex-basis: 40%;
+      text-align: center;
+      img {
+        width: 71px;
+        height: 71px;
+      }
+    }
+
+    .share {
+      flex-basis: 30%;
+      text-align: right;
+
+      a:not(:last-child) {
+        margin-right: 12px;
       }
     }
   }
