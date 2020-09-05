@@ -1,13 +1,3 @@
-@font-face {
-  font-family: "Cera Pro";
-  src: url("../../assets/fonts/Cera Pro Medium.otf") format("opentype");
-}
-
-@font-face {
-  font-family: "Aeonik";
-  src: url("../../assets/fonts/Aeonik-Regular.otf") format("opentype");
-}
-
 /* Colors: */
 $color-ff6975: #ff6975;
 $color-101519: #101519;
@@ -162,7 +152,6 @@ $text-transform-uppercase: uppercase;
   }
 
   .introduction {
-    background-image: url("../../assets/images/CURVE_PD_3D_BG_SCENE_V15-1_CAM_01.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     height: 740px;
@@ -365,7 +354,6 @@ $text-transform-uppercase: uppercase;
   }
 
   .join {
-    background-image: url("../../assets/images/CURVE_PD_3D_BG_SCENE_V11-1_CAM_03.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     height: 500px;
@@ -444,24 +432,6 @@ $text-transform-uppercase: uppercase;
         background-size: cover;
         background-repeat: no-repeat;
         display: inline-block;
-        &.discord {
-          background-image: url("../../assets/images/FOOTER_SOCIAL_DISCORD.svg");
-        }
-        &.twitter {
-          background-image: url("../../assets/images/FOOTER_SOCIAL_TWITTER.svg");
-        }
-        &.medium {
-          background-image: url("../../assets/images/FOOTER_SOCIAL_MEDIUM.svg");
-        }
-        &.discord:hover {
-          background-image: url("../../assets/images/FOOTER_SOCIAL_DISCORD-dark.svg");
-        }
-        &.twitter:hover {
-          background-image: url("../../assets/images/FOOTER_SOCIAL_TWITTER-dark.svg");
-        }
-        &.medium:hover {
-          background-image: url("../../assets/images/FOOTER_SOCIAL_MEDIUM-dark.svg");
-        }
       }
 
       a:not(:last-child) {
