@@ -162,7 +162,7 @@ $text-transform-uppercase: uppercase;
   }
 
   .introduction {
-    background-image: url("/src/assets/images/CURVE_PD_3D_BG_SCENE_V15-1_CAM_01.jpg");
+    background-image: url("../../assets/images/CURVE_PD_3D_BG_SCENE_V15-1_CAM_01.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     height: 740px;
@@ -365,7 +365,7 @@ $text-transform-uppercase: uppercase;
   }
 
   .join {
-    background-image: url("/src/assets/images/CURVE_PD_3D_BG_SCENE_V11-1_CAM_03.jpg");
+    background-image: url("../../assets/images/CURVE_PD_3D_BG_SCENE_V11-1_CAM_03.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     height: 500px;
@@ -445,22 +445,22 @@ $text-transform-uppercase: uppercase;
         background-repeat: no-repeat;
         display: inline-block;
         &.discord {
-          background-image: url("/src/assets/images/FOOTER_SOCIAL_DISCORD.svg");
+          background-image: url("../../assets/images/FOOTER_SOCIAL_DISCORD.svg");
         }
         &.twitter {
-          background-image: url("/src/assets/images/FOOTER_SOCIAL_TWITTER.svg");
+          background-image: url("../../assets/images/FOOTER_SOCIAL_TWITTER.svg");
         }
         &.medium {
-          background-image: url("/src/assets/images/FOOTER_SOCIAL_MEDIUM.svg");
+          background-image: url("../../assets/images/FOOTER_SOCIAL_MEDIUM.svg");
         }
         &.discord:hover {
-          background-image: url("/src/assets/images/FOOTER_SOCIAL_DISCORD-dark.svg");
+          background-image: url("../../assets/images/FOOTER_SOCIAL_DISCORD-dark.svg");
         }
         &.twitter:hover {
-          background-image: url("/src/assets/images/FOOTER_SOCIAL_TWITTER-dark.svg");
+          background-image: url("../../assets/images/FOOTER_SOCIAL_TWITTER-dark.svg");
         }
         &.medium:hover {
-          background-image: url("/src/assets/images/FOOTER_SOCIAL_MEDIUM-dark.svg");
+          background-image: url("../../assets/images/FOOTER_SOCIAL_MEDIUM-dark.svg");
         }
       }
 
