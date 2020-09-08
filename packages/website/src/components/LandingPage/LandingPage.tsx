@@ -28,7 +28,7 @@ const LandingPage = (): React.ReactElement => {
             <div className="body">
               <div className="title">Introducing PrimeDAO:</div>
               <div className="subtitle">An Adoption Engine for Open Finance</div>
-              <div className="body">A new system of open finance based on programmable money is being realized on Ethereum. PrimeDAO is here to catalyze and coordinate an open-source ecosystem of partners, builders, and users that simplifies, secures, and makes decentralized finance accessible (DeFi) for the masses.</div>
+              <div className="body">A new system of open finance based on programmable money is being realized on Ethereum. PrimeDAO is here to catalyze and coordinate an open-source ecosystem of partners, builders, and users that simplifies, secures, and makes decentralized finance (DeFi) accessible for the masses.</div>
             </div>
             <div className="footer">
               <div className="moreIcon"></div>
@@ -63,7 +63,7 @@ const LandingPage = (): React.ReactElement => {
             >
               <div className="connectMenu">
                 <div onClick={() => goto('https://discord.gg/b8VjMfC')}><div className="name">Discord</div><div className="triangle"></div></div>
-                <div onClick={() => goto('https://twitter.com/PrimeDAO')}><div className="name">Twitter</div><div className="triangle"></div></div>
+                <div onClick={() => goto(' https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
                 <div onClick={() => goto('https://github.com/PrimeDAO-Foundation')}><div className="name">Github</div><div className="triangle"></div></div>
                 <div onClick={() => goto('https://twitter.com/PrimeDAO')}><div className="name">Contact</div><div className="triangle"></div></div>
               </div>
@@ -91,7 +91,7 @@ const LandingPage = (): React.ReactElement => {
           <div className="section">
             <div className="icon"><img src="PD_LP_ICON_03_02.jpg" /></div>
             <div className="title">DeFi Ecosystem Coordinator</div>
-            <div className="body">To preserve the DeFi commons’ fundamental ethos of permissionless access, it cannot be governed by a centralized entity. PrimeDAO aims to be a sustainable engine of value creation that earns and allocates resources towards a wide contributor ecosystem for promoting, simulating, building, auditing and maintaining the mechanisms and products of the DeFi ecosystem, cultivating projects that promote safety, reliability, liquidity, and above all, open access.</div>
+            <div className="body">DeFi must be governed decentrally if it is to preserve the commons’ fundamental ethos of permissionless access. PrimeDAO aims to be a sustainable engine of value creation that earns and allocates resources towards a wide contributor ecosystem for promoting, simulating, building, auditing and maintaining the mechanisms and products of the DeFi ecosystem, cultivating projects that promote safety, reliability, liquidity, and above all, open access.</div>
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@ const LandingPage = (): React.ReactElement => {
         </div>
         <div className="share">
           <a className="discord" href="https://discord.gg/b8VjMfC" target="_blank" rel="noopener noreferrer"></a>
-          <a className="twitter" href="https://twitter.com/PrimeDAO" target="_blank" rel="noopener noreferrer"></a>
+          <a className="twitter" href=" https://twitter.com/PrimeDAO_?s=09" target="_blank" rel="noopener noreferrer"></a>
           <a className="medium" href="https://medium.com/primedao" target="_blank" rel="noopener noreferrer"></a>
         </div>
       </div>

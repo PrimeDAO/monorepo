@@ -138,7 +138,7 @@ $text-transform-uppercase: uppercase;
     font-style: $font-style-normal;
     font-weight: $font-weight-normal;
     font-size: $font-size-22;
-    line-height: $line-spacing-30;
+    line-height: 32px;
     letter-spacing: $character-spacing-1-1;
   }
 
@@ -154,17 +154,21 @@ $text-transform-uppercase: uppercase;
   .introduction {
     background-size: cover;
     background-repeat: no-repeat;
-    height: 740px;
+    height: 880px;
     padding-top: 100px;
     padding-bottom: 95px;
     color: $color-white;
+    margin-bottom: 126px;
 
     .container {
       display: flex;
+      justify-content: space-around;
 
       .leftColumn {
+        flex-grow: 55;
+
         .header {
-          margin-bottom: 140px;
+          margin-bottom: 180px;
           img.logo {
             width: 94px;
             height: 94px;
@@ -172,18 +176,19 @@ $text-transform-uppercase: uppercase;
         }
 
         .body {
-          margin-bottom: 190px;
+          margin-bottom: 260px;
           text-shadow: 0px 3px 20px #000000cc;
           .title {
             @extend .header-1;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
           }
           .subtitle {
             @extend .header-2;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
           }
           .body {
             @extend .text-1;
+            max-width: 900px;
           }
         }
 
@@ -199,6 +204,7 @@ $text-transform-uppercase: uppercase;
       }
 
       .rightColumn {
+        flex-grow: 45;
         text-align: right;
         @extend .text-menu;
         min-width: 320px;
@@ -264,8 +270,8 @@ $text-transform-uppercase: uppercase;
   }
 
   .aboutUs {
-    padding-top: 140px;
     color: $color-101519;
+    margin-bottom: 126px;
 
     .title {
       padding-bottom: 46px;
@@ -312,13 +318,12 @@ $text-transform-uppercase: uppercase;
       }
 
       .section:not(:last-child) {
-        margin-right: 5%;
+        margin-right: 7%;
       }
     }
   }
 
   .ecosystem {
-    padding-top: 140px;
     color: $color-101519;
     margin-bottom: 140px;
 
@@ -436,6 +441,28 @@ $text-transform-uppercase: uppercase;
 
       a:not(:last-child) {
         margin-right: 12px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1160px) {
+  .landingPageWrapper {
+    text-align: center;
+    .introduction {
+      .container {
+        height: 2912px;
+        .leftColumn {
+          .body {
+            .body {
+              line-height: 50px;
+              font-size: 28px;
+            }
+          }
+        }
+        .rightColumn {
+          display: none;
+        }
       }
     }
   }
