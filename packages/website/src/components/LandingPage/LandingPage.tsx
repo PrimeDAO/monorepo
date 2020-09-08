@@ -113,7 +113,7 @@ const LandingPage = (): React.ReactElement => {
         <div className="subtitle">In the next few months, the PrimeDAO ecosystem will launch. You will not receive spam and your email will never be shared.</div>
         <div className="button"><a href="https://primedao.substack.com/" target="_blank" rel="noopener noreferrer">Join</a></div>
       </div>
-      <div className="footer">
+      <div className="moreInfo">
         <div className="header">
           <div className="title">PrimeDAO</div>
           <div className="subtitle">&copy; 2020 PrimeDAO Development Foundation</div>
