@@ -73,7 +73,7 @@ const LandingPage = (): React.ReactElement => {
       </div>
       <div className="aboutUs">
         <div className="title">
-          <div className="triangle"></div>
+          <div className="triangle"><img/></div>
           <div className="name">About Us</div>
           <div className="subtitle">Catalyzing DeFi Mass Adoption</div>
         </div>
@@ -97,7 +97,7 @@ const LandingPage = (): React.ReactElement => {
       </div>
       <div className="ecosystem">
         <div className="title">
-          <div className="triangle"></div>
+          <div className="triangle"><img /></div>
           <div className="name">Prime Ecosystem</div>
           <div className="subtitle">PrimeDAO Visualized</div>
         </div>
