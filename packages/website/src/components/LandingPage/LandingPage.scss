@@ -460,6 +460,7 @@ $text-transform-uppercase: uppercase;
 
   .landingPageWrapper {
     text-align: center;
+    padding-bottom: 0;
 
     > .introduction > .container,
     > .aboutUs,
@@ -546,8 +547,9 @@ $text-transform-uppercase: uppercase;
     }
 
     .ecosystem {
+      margin-bottom: 10px;
+
       .title {
-        padding-bottom: 6px;
         .triangle {
           left: 50%;
 
@@ -557,6 +559,24 @@ $text-transform-uppercase: uppercase;
           }
         }
       }
+    }
+
+    .join {
+      padding-top: 120px;
+      margin-bottom: 0;
+      .title {
+        font-size: 46px;
+        line-height: 54px;
+        margin-bottom: 40px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+        margin-bottom: 90px;
+      }
+    }
+    .footer {
+      display: none;
     }
   }
 }

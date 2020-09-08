@@ -101,7 +101,12 @@ const LandingPage = (): React.ReactElement => {
           <div className="name">Prime Ecosystem</div>
           <div className="subtitle">PrimeDAO Visualized</div>
         </div>
-        <div className="pic"><img src="CURVE_PD_DEFI_ECOSYSTEM_V02-1.jpg"/></div>
+        <div className="pic">
+          <picture>
+            <source media="(max-width:1160px)" srcSet="CURVE_PD_DEFI_ECOSYSTEM_V02-1-mobile.jpg" />
+            <img src="CURVE_PD_DEFI_ECOSYSTEM_V02-1.jpg" />
+          </picture>
+        </div>
       </div>
       <div className="join">
         <div className="title">Stay Informed:</div>
