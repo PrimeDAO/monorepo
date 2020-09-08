@@ -65,7 +65,7 @@ const LandingPage = (): React.ReactElement => {
                 <div onClick={() => goto('https://discord.gg/b8VjMfC')}><div className="name">Discord</div><div className="triangle"></div></div>
                 <div onClick={() => goto(' https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
                 <div onClick={() => goto('https://github.com/PrimeDAO-Foundation')}><div className="name">Github</div><div className="triangle"></div></div>
-                <div onClick={() => goto('https://twitter.com/PrimeDAO')}><div className="name">Contact</div><div className="triangle"></div></div>
+                <div onClick={() => goto('mailto:hello@primedao.io')}><div className="name">Contact</div><div className="triangle"></div></div>
               </div>
             </div>
           </div>
