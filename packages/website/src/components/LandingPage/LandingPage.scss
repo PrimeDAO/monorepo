@@ -163,9 +163,12 @@ $text-transform-uppercase: uppercase;
     .container {
       display: flex;
       justify-content: space-around;
+      height: 100%;
 
       .leftColumn {
-        flex-grow: 55;
+        flex-basis: 900px;
+        display: flex;
+        flex-direction: column;
 
         .header {
           margin-bottom: 180px;
@@ -176,7 +179,6 @@ $text-transform-uppercase: uppercase;
         }
 
         .body {
-          margin-bottom: 260px;
           text-shadow: 0px 3px 20px #000000cc;
           .title {
             @extend .header-1;
@@ -188,11 +190,12 @@ $text-transform-uppercase: uppercase;
           }
           .body {
             @extend .text-1;
-            max-width: 900px;
           }
         }
 
         .footer {
+          flex-grow: 100;
+          place-items: flex-end;
           .moreIcon {
             width: 0;
             height: 0;
@@ -204,7 +207,6 @@ $text-transform-uppercase: uppercase;
       }
 
       .rightColumn {
-        flex-grow: 45;
         text-align: right;
         @extend .text-menu;
         min-width: 320px;
