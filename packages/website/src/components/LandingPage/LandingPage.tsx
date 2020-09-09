@@ -1,6 +1,10 @@
 import React, { RefObject } from 'react';
 import './LandingPage.scss';
 
+const goto = (where: string) => {
+  window.open(where, '_blank', 'noopener noreferrer');
+};
+
 const MainMenu = (props: {container: RefObject<HTMLDivElement>}): React.ReactElement => {
 
   const {container} = props;
@@ -11,10 +15,6 @@ const MainMenu = (props: {container: RefObject<HTMLDivElement>}): React.ReactEle
     } else {
       container.current.classList.remove(`show${which}`);
     }
-  };
-
-  const goto = (where: string) => {
-    window.open(where, '_blank', 'noopener noreferrer');
   };
 
   return (
@@ -48,7 +48,7 @@ const MainMenu = (props: {container: RefObject<HTMLDivElement>}): React.ReactEle
         <div className="connectMenu">
           <div onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
           <div onClick={() => goto(' https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
-          <div onClick={() => goto('https://github.com/PrimeDAO-Foundation')}><div className="name">Github</div><div className="triangle"></div></div>
+          <div onClick={() => goto('https://github.com/PrimeDAO')}><div className="name">Github</div><div className="triangle"></div></div>
           <div onClick={() => goto('mailto:hello@primedao.io')}><div className="name">Contact</div><div className="triangle"></div></div>
         </div>
       </div>
@@ -56,22 +56,50 @@ const MainMenu = (props: {container: RefObject<HTMLDivElement>}): React.ReactEle
   );
 };
 
+const showMobileMenu = (container: RefObject<HTMLDivElement>, show: boolean) => {
+  if (show) {
+    container.current.classList.add('showMobileMenu');
+  } else {
+    container.current.classList.remove('showMobileMenu');
+  }
+};
+
+const MobileMenu = (props: { container: RefObject<HTMLDivElement> }): React.ReactElement => {
+  return (
+    <div className="mobileMenu">
+      <div className="header">
+        <div className="logo"><img src="PrimeDAOLogo.svg" /></div>
+        <div className="mobilemenuButton"><img onClick={() => showMobileMenu(props.container, false)} src="hamburger_menu.svg" /></div>
+      </div>
+
+      <div className="item" onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
+      <div className="item"><div className="name">Litepaper</div><div className="triangle"></div></div>
+      <div className="item" onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
+      <div className="item" onClick={() => goto(' https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
+      <div className="item" onClick={() => goto('https://github.com/PrimeDAO')}><div className="name">Github</div><div className="triangle"></div></div>
+      <div className="item" onClick={() => goto('mailto:hello@primedao.io')}><div className="name">Contact</div><div className="triangle"></div></div>
+    </div>
+  );
+};
+
 const LandingPage = (): React.ReactElement => {
 
   const rightMenu = React.createRef<HTMLDivElement>();
   const centerMenu = React.createRef<HTMLDivElement>();
+  const wrapper = React.createRef<HTMLDivElement>();
 
   return (
-    <div className="landingPageWrapper">
+    <div className="landingPageWrapper" ref={wrapper}>
+      <MobileMenu container={wrapper}></MobileMenu>
       <div className="introduction">
         <div className="container">
           <div className="leftColumn">
             <div className="header">
               <div className="logo"><img src="PrimeDAOLogo.svg" /></div>
               <div className="centerMenu" ref={centerMenu}>
-                <MainMenu container={centerMenu} />
+                <MainMenu container={rightMenu} />
               </div>
-              <div className="mobilemenu"><img src="hamburger_menu.svg" /></div>
+              <div className="mobilemenuButton"><img onClick={() => showMobileMenu(wrapper, true)} src="hamburger_menu.svg" /></div>
             </div>
             <div className="body">
               <div className="title">Introducing PrimeDAO:</div>
