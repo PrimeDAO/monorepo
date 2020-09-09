@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import './LandingPage.scss';
 
-const LandingPage = (): React.ReactElement => {
+const MainMenu = (props: {container: RefObject<HTMLDivElement>}): React.ReactElement => {
 
-  const menu = React.createRef<HTMLDivElement>();
+  const {container} = props;
 
   const showMenu = (which: string, show: boolean) => {
     if (show) {
-      menu.current.classList.add(`show${which}`);
+      container.current.classList.add(`show${which}`);
     } else {
-      menu.current.classList.remove(`show${which}`);
+      container.current.classList.remove(`show${which}`);
     }
   };
 
@@ -18,12 +18,59 @@ const LandingPage = (): React.ReactElement => {
   };
 
   return (
+    <>
+      <div className="learn">
+        <div className="name"
+          onMouseEnter={() => showMenu('Learn', true)}
+          onMouseLeave={() => showMenu('Learn', false)}
+        >Learn<div className="menuDivider"></div></div>
+
+      </div>
+      <div className="connect">
+        <div className="name"
+          onMouseEnter={() => showMenu('Connect', true)}
+          onMouseLeave={() => showMenu('Connect', false)}
+        >Connect<div className="menuDivider"></div></div>
+      </div>
+      <div
+        onMouseEnter={() => showMenu('Learn', true)}
+        onMouseLeave={() => showMenu('Learn', false)}
+      >
+        <div className="learnMenu">
+          <div onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
+          <div><div className="name">Litepaper</div><div className="triangle"></div></div>
+        </div>
+      </div>
+      <div
+        onMouseEnter={() => showMenu('Connect', true)}
+        onMouseLeave={() => showMenu('Connect', false)}
+      >
+        <div className="connectMenu">
+          <div onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
+          <div onClick={() => goto(' https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
+          <div onClick={() => goto('https://github.com/PrimeDAO-Foundation')}><div className="name">Github</div><div className="triangle"></div></div>
+          <div onClick={() => goto('mailto:hello@primedao.io')}><div className="name">Contact</div><div className="triangle"></div></div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const LandingPage = (): React.ReactElement => {
+
+  const rightMenu = React.createRef<HTMLDivElement>();
+  const centerMenu = React.createRef<HTMLDivElement>();
+
+  return (
     <div className="landingPageWrapper">
       <div className="introduction">
         <div className="container">
           <div className="leftColumn">
             <div className="header">
               <div className="logo"><img src="PrimeDAOLogo.svg" /></div>
+              <div className="centerMenu" ref={centerMenu}>
+                <MainMenu container={centerMenu} />
+              </div>
               <div className="mobilemenu"><img src="hamburger_menu.svg" /></div>
             </div>
             <div className="body">
@@ -35,40 +82,8 @@ const LandingPage = (): React.ReactElement => {
               <div className="moreIcon"></div>
             </div>
           </div>
-          <div className="rightColumn" ref={menu}>
-            <div className="learn">
-              <div className="name"
-                onMouseEnter={() => showMenu('Learn', true)}
-                onMouseLeave={() => showMenu('Learn', false)}
-              >Learn<div className="menuDivider"></div></div>
-
-            </div>
-            <div className="connect">
-              <div className="name"
-                onMouseEnter={() => showMenu('Connect', true)}
-                onMouseLeave={() => showMenu('Connect', false)}
-              >Connect<div className="menuDivider"></div></div>
-            </div>
-            <div
-              onMouseEnter={() => showMenu('Learn', true)}
-              onMouseLeave={() => showMenu('Learn', false)}
-            >
-              <div className="learnMenu">
-                <div onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
-                <div><div className="name">Litepaper</div><div className="triangle"></div></div>
-              </div>
-            </div>
-            <div
-              onMouseEnter={() => showMenu('Connect', true)}
-              onMouseLeave={() => showMenu('Connect', false)}
-            >
-              <div className="connectMenu">
-                <div onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
-                <div onClick={() => goto(' https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
-                <div onClick={() => goto('https://github.com/PrimeDAO-Foundation')}><div className="name">Github</div><div className="triangle"></div></div>
-                <div onClick={() => goto('mailto:hello@primedao.io')}><div className="name">Contact</div><div className="triangle"></div></div>
-              </div>
-            </div>
+          <div className="rightColumn" ref={rightMenu}>
+            <MainMenu container ={rightMenu}/>
           </div>
         </div>
       </div>
