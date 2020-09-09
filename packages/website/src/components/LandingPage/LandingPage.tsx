@@ -23,7 +23,8 @@ const LandingPage = (): React.ReactElement => {
         <div className="container">
           <div className="leftColumn">
             <div className="header">
-              <img className="logo" src="PrimeDAOLogo.svg"/>
+              <div className="logo"><img src="PrimeDAOLogo.svg" /></div>
+              <div className="mobilemenu"><img src="PrimeDAOLogo.svg" /></div>
             </div>
             <div className="body">
               <div className="title">Introducing PrimeDAO:</div>

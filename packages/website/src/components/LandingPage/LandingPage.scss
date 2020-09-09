@@ -171,9 +171,17 @@ $text-transform-uppercase: uppercase;
 
         .header {
           margin-bottom: 140px;
-          img.logo {
-            width: 94px;
-            height: 94px;
+          display: flex;
+          justify-content: flex-start;
+          .logo {
+            img {
+              width: 94px;
+              height: 94px;
+            }
+          }
+
+          .mobilemenu {
+            display: none;
           }
         }
 
@@ -481,11 +489,26 @@ $text-transform-uppercase: uppercase;
         .leftColumn {
           .header {
             margin-bottom: 80px;
-            img.logo {
-              width: 58px;
-              height: 58px;
+            justify-content: space-between;
+            padding-left: 10px;
+            padding-right: 10px;
+            .logo {
+              img {
+                width: 58px;
+                height: 58px;
+              }
+            }
+
+            .mobilemenu {
+              display: inline-block;
+
+              img {
+                width: 58px;
+                height: 59px;
+              }
             }
           }
+
           .body {
             margin-bottom: 30px;
 
