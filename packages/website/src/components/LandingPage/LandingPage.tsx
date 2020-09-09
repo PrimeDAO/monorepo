@@ -63,7 +63,7 @@ const LandingPage = (): React.ReactElement => {
               onMouseLeave={() => showMenu('Connect', false)}
             >
               <div className="connectMenu">
-                <div onClick={() => goto('https://discord.gg/b8VjMfC')}><div className="name">Discord</div><div className="triangle"></div></div>
+                <div onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
                 <div onClick={() => goto(' https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
                 <div onClick={() => goto('https://github.com/PrimeDAO-Foundation')}><div className="name">Github</div><div className="triangle"></div></div>
                 <div onClick={() => goto('mailto:hello@primedao.io')}><div className="name">Contact</div><div className="triangle"></div></div>
@@ -81,7 +81,7 @@ const LandingPage = (): React.ReactElement => {
         <div className="subsections">
           <div className="section">
             <div className="icon"><img src="PD_LP_ICON_01_02.jpg"/></div>
-            <div className="title">The Decentralized Prime Brokerage</div>
+            <div className="title">Decentralized Prime Brokerage</div>
             <div className="body">The PrimeDAO’s focus will be to deliver open finance support structures that a centralized prime broker would otherwise provide, such as efficient order matching, guaranteed settlement, liquidity for spot trades, lending, derivatives, leverage, and so on. Everybody should have easy access to prime brokerage tools and services that lets them lend and make markets. PrimeDAO will leverage transparent, decentralized governance to catalyze and democratize a new wave of DeFi adopters.</div>
           </div>
           <div className="section">
@@ -117,13 +117,13 @@ const LandingPage = (): React.ReactElement => {
       <div className="moreInfo">
         <div className="header">
           <div className="title">PrimeDAO</div>
-          <div className="subtitle">&copy; 2020 PrimeDAO Development Foundation</div>
+          <div className="subtitle">&copy; 2020 Prime Development Foundation</div>
         </div>
         <div className="logo">
           <img src="PrimeDAOLogo-grey.svg" />
         </div>
         <div className="share">
-          <a className="discord" href="https://discord.gg/b8VjMfC" target="_blank" rel="noopener noreferrer"></a>
+          <a className="discord" href="https://discord.gg/x8v59pG" target="_blank" rel="noopener noreferrer"></a>
           <a className="twitter" href=" https://twitter.com/PrimeDAO_?s=09" target="_blank" rel="noopener noreferrer"></a>
           <a className="medium" href="https://medium.com/primedao" target="_blank" rel="noopener noreferrer"></a>
         </div>
