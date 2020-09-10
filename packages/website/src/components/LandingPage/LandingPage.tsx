@@ -38,7 +38,7 @@ const MainMenu = (props: {container: RefObject<HTMLDivElement>}): React.ReactEle
       >
         <div className="learnMenu">
           <div onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
-          <div><div className="name">Litepaper</div><div className="triangle"></div></div>
+          <div onClick={() => goto('https://ipfs.io/ipfs/QmPCtPR4gthh4HunCRANhXnsA5j2VDzG1j13GKqoCX9uhR')}><div className="name">Litepaper</div><div className="triangle"></div></div>
         </div>
       </div>
       <div
@@ -73,7 +73,7 @@ const MobileMenu = (props: { container: RefObject<HTMLDivElement> }): React.Reac
       </div>
 
       <div className="item" onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
-      <div className="item"><div className="name">Litepaper</div><div className="triangle"></div></div>
+      <div className="item" onClick={() => goto('https://ipfs.io/ipfs/QmPCtPR4gthh4HunCRANhXnsA5j2VDzG1j13GKqoCX9uhR')}><div className="name">Litepaper</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto(' https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://github.com/PrimeDAO')}><div className="name">Github</div><div className="triangle"></div></div>
