@@ -1,0 +1,3694 @@
+{
+  "contractName": "RightsManager",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "DEFAULT_CAN_ADD_REMOVE_TOKENS",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "DEFAULT_CAN_CHANGE_SWAP_FEE",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "DEFAULT_CAN_CHANGE_WEIGHTS",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "DEFAULT_CAN_PAUSE_SWAPPING",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "DEFAULT_CAN_WHITELIST_LPS",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bool[]",
+          "name": "a",
+          "type": "bool[]"
+        }
+      ],
+      "name": "constructRights",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "canPauseSwapping",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "canChangeSwapFee",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "canChangeWeights",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "canAddRemoveTokens",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "canWhitelistLPs",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct RightsManager.Rights",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "canPauseSwapping",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "canChangeSwapFee",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "canChangeWeights",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "canAddRemoveTokens",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "canWhitelistLPs",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct RightsManager.Rights",
+          "name": "self",
+          "type": "tuple"
+        },
+        {
+          "internalType": "enum RightsManager.Permissions",
+          "name": "permission",
+          "type": "RightsManager.Permissions"
+        }
+      ],
+      "name": "hasPermission",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.6.6+commit.6c089d02\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"DEFAULT_CAN_ADD_REMOVE_TOKENS\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_CAN_CHANGE_SWAP_FEE\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_CAN_CHANGE_WEIGHTS\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_CAN_PAUSE_SWAPPING\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_CAN_WHITELIST_LPS\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool[]\",\"name\":\"a\",\"type\":\"bool[]\"}],\"name\":\"constructRights\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"canPauseSwapping\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeSwapFee\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeWeights\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canAddRemoveTokens\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canWhitelistLPs\",\"type\":\"bool\"}],\"internalType\":\"struct RightsManager.Rights\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"canPauseSwapping\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeSwapFee\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeWeights\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canAddRemoveTokens\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canWhitelistLPs\",\"type\":\"bool\"}],\"internalType\":\"struct RightsManager.Rights\",\"name\":\"self\",\"type\":\"tuple\"},{\"internalType\":\"enum RightsManager.Permissions\",\"name\":\"permission\",\"type\":\"RightsManager.Permissions\"}],\"name\":\"hasPermission\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Balancer Labs\",\"methods\":{\"hasPermission(RightsManager.Rights,RightsManager.Permissions)\":{\"params\":{\"permission\":\"- The permission to check\",\"self\":\"- Rights struct containing the permissions\"},\"returns\":{\"_0\":\"Boolean true if it has the permission\"}}},\"title\":\"Manage Configurable Rights for the smart pool     canPauseSwapping - can setPublicSwap back to false after turning it on                        by default, it is off on initialization and can only be turned on     canChangeSwapFee - can setSwapFee after initialization (by default, it is fixed at create time)     canChangeWeights - can bind new token weights (allowed by default in base pool)     canAddRemoveTokens - can bind/unbind tokens (allowed by default in base pool)\"},\"userdoc\":{\"methods\":{\"hasPermission(RightsManager.Rights,RightsManager.Permissions)\":{\"notice\":\"Externally check permissions using the Enum\"}}}},\"settings\":{\"compilationTarget\":{\"/Users/arseny/Projects/curvelabs/research/1-balancer-sale/contracts/libraries/RightsManager.sol\":\"RightsManager\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/arseny/Projects/curvelabs/research/1-balancer-sale/contracts/libraries/RightsManager.sol\":{\"keccak256\":\"0xe5b8cb6edf67cfee04b8bc905111634c6604e29ecaf93d45ade9c65e03e5d818\",\"urls\":[\"bzz-raw://54fdf37d288d50c36afadd93864762882d4849127195d55a401be582965b4491\",\"dweb:/ipfs/QmRsfetyDJWPpdCbnNBUuArM7PM7fPtzbvhH7zRG6MCFCU\"]}},\"version\":1}",
+  "bytecode": "0x61044e610026600b82828239805160001a60731461001957fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600436106100875760003560e01c80634583544a116100655780634583544a146100b2578063c08473fc146100c5578063cb0d28f6146100aa578063dccf54e7146100aa57610087565b806321bb04ae1461008c5780632cc0c346146100aa5780633d027b9d1461008c575b600080fd5b6100946100e5565b6040516100a191906103c9565b60405180910390f35b6100946100ea565b6100946100c0366004610389565b6100ef565b6100d86100d33660046102f6565b6101ab565b6040516100a191906103d4565b600181565b600081565b60008160048111156100fd57fe5b6101155761010e6020840184610362565b90506101a5565b81600481111561012157fe5b600114156101395761010e6040840160208501610362565b81600481111561014557fe5b6002141561015d5761010e6060840160408501610362565b81600481111561016957fe5b600314156101815761010e6080840160608501610362565b81600481111561018d57fe5b600414156101a55761010e60a0840160808501610362565b92915050565b6101b36102c8565b816101ec57506040805160a0810182526000808252602082018190526001928201839052606082019290925260808101919091526101a5565b6040518060a001604052808484600081811061020457fe5b90506020020160208101906102199190610362565b151581526020018484600181811061022d57fe5b90506020020160208101906102429190610362565b151581526020018484600281811061025657fe5b905060200201602081019061026b9190610362565b151581526020018484600381811061027f57fe5b90506020020160208101906102949190610362565b15158152602001848460048181106102a857fe5b90506020020160208101906102bd9190610362565b1515905290506101a5565b6040805160a08101825260008082526020820181905291810182905260608101829052608081019190915290565b60008060208385031215610308578182fd5b823567ffffffffffffffff8082111561031f578384fd5b81850186601f820112610330578485fd5b8035925081831115610340578485fd5b8660208085028301011115610353578485fd5b60200196919550909350505050565b600060208284031215610373578081fd5b81358015158114610382578182fd5b9392505050565b60008082840360c081121561039c578283fd5b60a08112156103a9578283fd5b5082915060a0830135600581106103be578182fd5b809150509250929050565b901515815260200190565b600060a0820190508251151582526020830151151560208301526040830151151560408301526060830151151560608301526080830151151560808301529291505056fea2646970667358221220dc2d799ed181de3df0883334781e41aca5bf38aeb32861ea873455b0ae91735f64736f6c63430006060033",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600436106100875760003560e01c80634583544a116100655780634583544a146100b2578063c08473fc146100c5578063cb0d28f6146100aa578063dccf54e7146100aa57610087565b806321bb04ae1461008c5780632cc0c346146100aa5780633d027b9d1461008c575b600080fd5b6100946100e5565b6040516100a191906103c9565b60405180910390f35b6100946100ea565b6100946100c0366004610389565b6100ef565b6100d86100d33660046102f6565b6101ab565b6040516100a191906103d4565b600181565b600081565b60008160048111156100fd57fe5b6101155761010e6020840184610362565b90506101a5565b81600481111561012157fe5b600114156101395761010e6040840160208501610362565b81600481111561014557fe5b6002141561015d5761010e6060840160408501610362565b81600481111561016957fe5b600314156101815761010e6080840160608501610362565b81600481111561018d57fe5b600414156101a55761010e60a0840160808501610362565b92915050565b6101b36102c8565b816101ec57506040805160a0810182526000808252602082018190526001928201839052606082019290925260808101919091526101a5565b6040518060a001604052808484600081811061020457fe5b90506020020160208101906102199190610362565b151581526020018484600181811061022d57fe5b90506020020160208101906102429190610362565b151581526020018484600281811061025657fe5b905060200201602081019061026b9190610362565b151581526020018484600381811061027f57fe5b90506020020160208101906102949190610362565b15158152602001848460048181106102a857fe5b90506020020160208101906102bd9190610362565b1515905290506101a5565b6040805160a08101825260008082526020820181905291810182905260608101829052608081019190915290565b60008060208385031215610308578182fd5b823567ffffffffffffffff8082111561031f578384fd5b81850186601f820112610330578485fd5b8035925081831115610340578485fd5b8660208085028301011115610353578485fd5b60200196919550909350505050565b600060208284031215610373578081fd5b81358015158114610382578182fd5b9392505050565b60008082840360c081121561039c578283fd5b60a08112156103a9578283fd5b5082915060a0830135600581106103be578182fd5b809150509250929050565b901515815260200190565b600060a0820190508251151582526020830151151560208301526040830151151560408301526060830151151560608301526080830151151560808301529291505056fea2646970667358221220dc2d799ed181de3df0883334781e41aca5bf38aeb32861ea873455b0ae91735f64736f6c63430006060033",
+  "immutableReferences": {},
+  "sourceMap": "686:2461:7:-:0;;132:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24",
+  "deployedSourceMap": "686:2461:7:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;12:1:-1;9;2:12;1307:54:7;;;:::i;:::-;;;;;;;;;;;;;;;;1184:55;;;:::i;2476:669::-;;;;;;;;;:::i;1745:484::-;;;;;;;;;:::i;:::-;;;;;;;;1307:54;1357:4;1307:54;:::o;1184:55::-;1234:5;1184:55;:::o;2476:669::-;2568:4;2618:10;2588:40;;;;;;;;2584:555;;2651:21;;;;:4;:21;;;2644:28;;;;2584:555;2732:10;2701:41;;;;;;;;:27;:41;2697:442;;;2765:21;;;;;;;;;2697:442;2845:10;2815:40;;;;;;;;:26;:40;2811:328;;;2878:21;;;;;;;;;2811:328;2961:10;2928:43;;;;;;;;:29;:43;2924:215;;;2994:23;;;;;;;;;2924:215;3075:10;3046:39;;;;;;;;:25;:39;3042:97;;;3108:20;;;;;;;;;3042:97;2476:669;;;;:::o;1745:484::-;1812:13;;:::i;:::-;1841;1837:386;;-1:-1:-1;1877:253:7;;;;;;;;-1:-1:-1;1877:253:7;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1870:260;;1837:386;2176:36;;;;;;;;2183:1;;2185;2183:4;;;;;;;;;;;;;;;;;;;;;;2176:36;;;;;;2189:1;;2191;2189:4;;;;;;;;;;;;;;;;;;;;;;2176:36;;;;;;2195:1;;2197;2195:4;;;;;;;;;;;;;;;;;;;;;;2176:36;;;;;;2201:1;;2203;2201:4;;;;;;;;;;;;;;;;;;;;;;2176:36;;;;;;2207:1;;2209;2207:4;;;;;;;;;;;;;;;;;;;;;;2176:36;;;;2169:43;-1:-1:-1;2169:43:7;;686:2461;;;;;;;;;-1:-1:-1;686:2461:7;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;878:391:-1:-;;;1014:2;1002:9;993:7;989:23;985:32;982:2;;;-1:-1;;1020:12;982:2;1078:17;1065:31;1116:18;;1108:6;1105:30;1102:2;;;-1:-1;;1138:12;1102:2;1236:6;1225:9;1221:22;147:3;140:4;132:6;128:17;124:27;114:2;;-1:-1;;155:12;114:2;198:6;185:20;175:30;;1116:18;217:6;214:30;211:2;;;-1:-1;;247:12;211:2;342:3;1014:2;;326:6;322:17;283:6;308:32;;305:41;302:2;;;-1:-1;;349:12;302:2;1014;279:17;;1166:87;;-1:-1;976:293;;-1:-1;;;;976:293;1276:235;;1377:2;1365:9;1356:7;1352:23;1348:32;1345:2;;;-1:-1;;1383:12;1345:2;454:6;441:20;4022:5;3915:13;3908:21;4000:5;3997:32;3987:2;;-1:-1;;4033:12;3987:2;1435:60;1339:172;-1:-1;;;1339:172;1518:452;;;1669:9;1660:7;1656:23;1681:3;1656:23;1652:33;1649:2;;;-1:-1;;1688:12;1649:2;823:3;805:16;801:26;798:2;;;-1:-1;;830:12;798:2;;1740:89;;;823:3;1926:9;1922:22;591:20;4144:1;4137:5;4134:12;4124:2;;-1:-1;;4150:12;4124:2;1875:79;;;;1643:327;;;;;;3292:217;3915:13;;3908:21;2050:34;;3412:2;3397:18;;3383:126;3516:326;;3690:3;3679:9;3675:19;3667:27;;2503:16;2497:23;3915:13;3908:21;2057:3;2050:34;2682:4;2675:5;2671:16;2665:23;3915:13;3908:21;2682:4;2748:3;2744:14;2050:34;2850:4;2843:5;2839:16;2833:23;3915:13;3908:21;2850:4;2916:3;2912:14;2050:34;3020:4;3013:5;3009:16;3003:23;3915:13;3908:21;3020:4;3086:3;3082:14;2050:34;3187:4;3180:5;3176:16;3170:23;3915:13;3908:21;3187:4;3253:3;3249:14;2050:34;3661:181;;;;",
+  "source": "// SPDX-License-Identifier: GPL-3.0-or-later\npragma solidity ^0.6.6;\n\n// Needed to handle structures externally\npragma experimental ABIEncoderV2;\n\n/**\n * @author Balancer Labs\n * @title Manage Configurable Rights for the smart pool\n *      canPauseSwapping - can setPublicSwap back to false after turning it on\n *                         by default, it is off on initialization and can only be turned on\n *      canChangeSwapFee - can setSwapFee after initialization (by default, it is fixed at create time)\n *      canChangeWeights - can bind new token weights (allowed by default in base pool)\n *      canAddRemoveTokens - can bind/unbind tokens (allowed by default in base pool)\n */\nlibrary RightsManager {\n\n    // Type declarations\n\n    enum Permissions { PAUSE_SWAPPING,\n                       CHANGE_SWAP_FEE,\n                       CHANGE_WEIGHTS,\n                       ADD_REMOVE_TOKENS,\n                       WHITELIST_LPS }\n\n    struct Rights {\n        bool canPauseSwapping;\n        bool canChangeSwapFee;\n        bool canChangeWeights;\n        bool canAddRemoveTokens;\n        bool canWhitelistLPs;\n    }\n\n    // State variables (can only be constants in a library)\n    bool public constant DEFAULT_CAN_PAUSE_SWAPPING = false;\n    bool public constant DEFAULT_CAN_CHANGE_SWAP_FEE = false;\n    bool public constant DEFAULT_CAN_CHANGE_WEIGHTS = true;\n    bool public constant DEFAULT_CAN_ADD_REMOVE_TOKENS = true;\n    bool public constant DEFAULT_CAN_WHITELIST_LPS = false;\n\n    // Functions\n\n    // Used in ConfigurableRightsPool constructor, so that we don't need to hard-code the number of permissions\n    // If you pass an empty array, it will construct it using the defaults\n    // See note above about external vs internal\n    function constructRights(bool[] calldata a) external pure returns (Rights memory) {\n        if (a.length == 0) {\n            return Rights(DEFAULT_CAN_PAUSE_SWAPPING,\n                          DEFAULT_CAN_CHANGE_SWAP_FEE,\n                          DEFAULT_CAN_CHANGE_WEIGHTS,\n                          DEFAULT_CAN_ADD_REMOVE_TOKENS,\n                          DEFAULT_CAN_WHITELIST_LPS);\n        }\n        else {\n            return Rights(a[0], a[1], a[2], a[3], a[4]);\n        }\n    }\n\n    /**\n     * @notice Externally check permissions using the Enum\n     * @param self - Rights struct containing the permissions\n     * @param permission - The permission to check\n     * @return Boolean true if it has the permission\n     */\n    function hasPermission(Rights calldata self, Permissions permission) external pure returns (bool) {\n        if (Permissions.PAUSE_SWAPPING == permission) {\n            return self.canPauseSwapping;\n        }\n        else if (Permissions.CHANGE_SWAP_FEE == permission) {\n            return self.canChangeSwapFee;\n        }\n        else if (Permissions.CHANGE_WEIGHTS == permission) {\n            return self.canChangeWeights;\n        }\n        else if (Permissions.ADD_REMOVE_TOKENS == permission) {\n            return self.canAddRemoveTokens;\n        }\n        else if (Permissions.WHITELIST_LPS == permission) {\n            return self.canWhitelistLPs;\n        }\n    }\n}\n",
+  "sourcePath": "/Users/arseny/Projects/curvelabs/research/1-balancer-sale/contracts/libraries/RightsManager.sol",
+  "ast": {
+    "absolutePath": "/Users/arseny/Projects/curvelabs/research/1-balancer-sale/contracts/libraries/RightsManager.sol",
+    "exportedSymbols": {
+      "RightsManager": [
+        3376
+      ]
+    },
+    "id": 3377,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3243,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".6"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "45:23:7"
+      },
+      {
+        "id": 3244,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "112:33:7"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": {
+          "id": 3245,
+          "nodeType": "StructuredDocumentation",
+          "src": "147:538:7",
+          "text": "@author Balancer Labs\n@title Manage Configurable Rights for the smart pool\n     canPauseSwapping - can setPublicSwap back to false after turning it on\n                        by default, it is off on initialization and can only be turned on\n     canChangeSwapFee - can setSwapFee after initialization (by default, it is fixed at create time)\n     canChangeWeights - can bind new token weights (allowed by default in base pool)\n     canAddRemoveTokens - can bind/unbind tokens (allowed by default in base pool)"
+        },
+        "fullyImplemented": true,
+        "id": 3376,
+        "linearizedBaseContracts": [
+          3376
+        ],
+        "name": "RightsManager",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "RightsManager.Permissions",
+            "id": 3251,
+            "members": [
+              {
+                "id": 3246,
+                "name": "PAUSE_SWAPPING",
+                "nodeType": "EnumValue",
+                "src": "760:14:7"
+              },
+              {
+                "id": 3247,
+                "name": "CHANGE_SWAP_FEE",
+                "nodeType": "EnumValue",
+                "src": "799:15:7"
+              },
+              {
+                "id": 3248,
+                "name": "CHANGE_WEIGHTS",
+                "nodeType": "EnumValue",
+                "src": "839:14:7"
+              },
+              {
+                "id": 3249,
+                "name": "ADD_REMOVE_TOKENS",
+                "nodeType": "EnumValue",
+                "src": "878:17:7"
+              },
+              {
+                "id": 3250,
+                "name": "WHITELIST_LPS",
+                "nodeType": "EnumValue",
+                "src": "920:13:7"
+              }
+            ],
+            "name": "Permissions",
+            "nodeType": "EnumDefinition",
+            "src": "741:194:7"
+          },
+          {
+            "canonicalName": "RightsManager.Rights",
+            "id": 3262,
+            "members": [
+              {
+                "constant": false,
+                "id": 3253,
+                "mutability": "mutable",
+                "name": "canPauseSwapping",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 3262,
+                "src": "965:21:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 3252,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "965:4:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3255,
+                "mutability": "mutable",
+                "name": "canChangeSwapFee",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 3262,
+                "src": "996:21:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 3254,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "996:4:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3257,
+                "mutability": "mutable",
+                "name": "canChangeWeights",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 3262,
+                "src": "1027:21:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 3256,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1027:4:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3259,
+                "mutability": "mutable",
+                "name": "canAddRemoveTokens",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 3262,
+                "src": "1058:23:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 3258,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1058:4:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3261,
+                "mutability": "mutable",
+                "name": "canWhitelistLPs",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 3262,
+                "src": "1091:20:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 3260,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1091:4:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Rights",
+            "nodeType": "StructDefinition",
+            "scope": 3376,
+            "src": "941:177:7",
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "functionSelector": "2cc0c346",
+            "id": 3265,
+            "mutability": "constant",
+            "name": "DEFAULT_CAN_PAUSE_SWAPPING",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3376,
+            "src": "1184:55:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 3263,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "1184:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "66616c7365",
+              "id": 3264,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "bool",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1234:5:7",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              },
+              "value": "false"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "functionSelector": "cb0d28f6",
+            "id": 3268,
+            "mutability": "constant",
+            "name": "DEFAULT_CAN_CHANGE_SWAP_FEE",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3376,
+            "src": "1245:56:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 3266,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "1245:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "66616c7365",
+              "id": 3267,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "bool",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1296:5:7",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              },
+              "value": "false"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "functionSelector": "21bb04ae",
+            "id": 3271,
+            "mutability": "constant",
+            "name": "DEFAULT_CAN_CHANGE_WEIGHTS",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3376,
+            "src": "1307:54:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 3269,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "1307:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "74727565",
+              "id": 3270,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "bool",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1357:4:7",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              },
+              "value": "true"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "functionSelector": "3d027b9d",
+            "id": 3274,
+            "mutability": "constant",
+            "name": "DEFAULT_CAN_ADD_REMOVE_TOKENS",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3376,
+            "src": "1367:57:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 3272,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "1367:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "74727565",
+              "id": 3273,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "bool",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1420:4:7",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              },
+              "value": "true"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "functionSelector": "dccf54e7",
+            "id": 3277,
+            "mutability": "constant",
+            "name": "DEFAULT_CAN_WHITELIST_LPS",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3376,
+            "src": "1430:54:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 3275,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "1430:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "66616c7365",
+              "id": 3276,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "bool",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1479:5:7",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              },
+              "value": "false"
+            },
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 3318,
+              "nodeType": "Block",
+              "src": "1827:402:7",
+              "statements": [
+                {
+                  "condition": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    },
+                    "id": 3288,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3285,
+                        "name": "a",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3280,
+                        "src": "1841:1:7",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                          "typeString": "bool[] calldata"
+                        }
+                      },
+                      "id": 3286,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "length",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "1841:8:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": "==",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 3287,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1853:1:7",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1841:13:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "falseBody": {
+                    "id": 3316,
+                    "nodeType": "Block",
+                    "src": "2155:68:7",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "baseExpression": {
+                                "argumentTypes": null,
+                                "id": 3299,
+                                "name": "a",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3280,
+                                "src": "2183:1:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                                  "typeString": "bool[] calldata"
+                                }
+                              },
+                              "id": 3301,
+                              "indexExpression": {
+                                "argumentTypes": null,
+                                "hexValue": "30",
+                                "id": 3300,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "2185:1:7",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                },
+                                "value": "0"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "IndexAccess",
+                              "src": "2183:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "baseExpression": {
+                                "argumentTypes": null,
+                                "id": 3302,
+                                "name": "a",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3280,
+                                "src": "2189:1:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                                  "typeString": "bool[] calldata"
+                                }
+                              },
+                              "id": 3304,
+                              "indexExpression": {
+                                "argumentTypes": null,
+                                "hexValue": "31",
+                                "id": 3303,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "2191:1:7",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_1_by_1",
+                                  "typeString": "int_const 1"
+                                },
+                                "value": "1"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "IndexAccess",
+                              "src": "2189:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "baseExpression": {
+                                "argumentTypes": null,
+                                "id": 3305,
+                                "name": "a",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3280,
+                                "src": "2195:1:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                                  "typeString": "bool[] calldata"
+                                }
+                              },
+                              "id": 3307,
+                              "indexExpression": {
+                                "argumentTypes": null,
+                                "hexValue": "32",
+                                "id": 3306,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "2197:1:7",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_2_by_1",
+                                  "typeString": "int_const 2"
+                                },
+                                "value": "2"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "IndexAccess",
+                              "src": "2195:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "baseExpression": {
+                                "argumentTypes": null,
+                                "id": 3308,
+                                "name": "a",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3280,
+                                "src": "2201:1:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                                  "typeString": "bool[] calldata"
+                                }
+                              },
+                              "id": 3310,
+                              "indexExpression": {
+                                "argumentTypes": null,
+                                "hexValue": "33",
+                                "id": 3309,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "2203:1:7",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_3_by_1",
+                                  "typeString": "int_const 3"
+                                },
+                                "value": "3"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "IndexAccess",
+                              "src": "2201:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "baseExpression": {
+                                "argumentTypes": null,
+                                "id": 3311,
+                                "name": "a",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3280,
+                                "src": "2207:1:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                                  "typeString": "bool[] calldata"
+                                }
+                              },
+                              "id": 3313,
+                              "indexExpression": {
+                                "argumentTypes": null,
+                                "hexValue": "34",
+                                "id": 3312,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "2209:1:7",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_4_by_1",
+                                  "typeString": "int_const 4"
+                                },
+                                "value": "4"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "IndexAccess",
+                              "src": "2207:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            ],
+                            "id": 3298,
+                            "name": "Rights",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3262,
+                            "src": "2176:6:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_struct$_Rights_$3262_storage_ptr_$",
+                              "typeString": "type(struct RightsManager.Rights storage pointer)"
+                            }
+                          },
+                          "id": 3314,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "structConstructorCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "2176:36:7",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Rights_$3262_memory_ptr",
+                            "typeString": "struct RightsManager.Rights memory"
+                          }
+                        },
+                        "functionReturnParameters": 3284,
+                        "id": 3315,
+                        "nodeType": "Return",
+                        "src": "2169:43:7"
+                      }
+                    ]
+                  },
+                  "id": 3317,
+                  "nodeType": "IfStatement",
+                  "src": "1837:386:7",
+                  "trueBody": {
+                    "id": 3297,
+                    "nodeType": "Block",
+                    "src": "1856:285:7",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 3290,
+                              "name": "DEFAULT_CAN_PAUSE_SWAPPING",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3265,
+                              "src": "1884:26:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "id": 3291,
+                              "name": "DEFAULT_CAN_CHANGE_SWAP_FEE",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3268,
+                              "src": "1938:27:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "id": 3292,
+                              "name": "DEFAULT_CAN_CHANGE_WEIGHTS",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3271,
+                              "src": "1993:26:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "id": 3293,
+                              "name": "DEFAULT_CAN_ADD_REMOVE_TOKENS",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3274,
+                              "src": "2047:29:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "id": 3294,
+                              "name": "DEFAULT_CAN_WHITELIST_LPS",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3277,
+                              "src": "2104:25:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            ],
+                            "id": 3289,
+                            "name": "Rights",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3262,
+                            "src": "1877:6:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_struct$_Rights_$3262_storage_ptr_$",
+                              "typeString": "type(struct RightsManager.Rights storage pointer)"
+                            }
+                          },
+                          "id": 3295,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "structConstructorCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1877:253:7",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Rights_$3262_memory_ptr",
+                            "typeString": "struct RightsManager.Rights memory"
+                          }
+                        },
+                        "functionReturnParameters": 3284,
+                        "id": 3296,
+                        "nodeType": "Return",
+                        "src": "1870:260:7"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "c08473fc",
+            "id": 3319,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "constructRights",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 3281,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3280,
+                  "mutability": "mutable",
+                  "name": "a",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3319,
+                  "src": "1770:17:7",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                    "typeString": "bool[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 3278,
+                      "name": "bool",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "1770:4:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "id": 3279,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1770:6:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_bool_$dyn_storage_ptr",
+                      "typeString": "bool[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1769:19:7"
+            },
+            "returnParameters": {
+              "id": 3284,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3283,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3319,
+                  "src": "1812:13:7",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Rights_$3262_memory_ptr",
+                    "typeString": "struct RightsManager.Rights"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3282,
+                    "name": "Rights",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3262,
+                    "src": "1812:6:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Rights_$3262_storage_ptr",
+                      "typeString": "struct RightsManager.Rights"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1811:15:7"
+            },
+            "scope": 3376,
+            "src": "1745:484:7",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 3374,
+              "nodeType": "Block",
+              "src": "2574:571:7",
+              "statements": [
+                {
+                  "condition": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_enum$_Permissions_$3251",
+                      "typeString": "enum RightsManager.Permissions"
+                    },
+                    "id": 3332,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3329,
+                        "name": "Permissions",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3251,
+                        "src": "2588:11:7",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_enum$_Permissions_$3251_$",
+                          "typeString": "type(enum RightsManager.Permissions)"
+                        }
+                      },
+                      "id": 3330,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "memberName": "PAUSE_SWAPPING",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "2588:26:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_enum$_Permissions_$3251",
+                        "typeString": "enum RightsManager.Permissions"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": "==",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "id": 3331,
+                      "name": "permission",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3324,
+                      "src": "2618:10:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_enum$_Permissions_$3251",
+                        "typeString": "enum RightsManager.Permissions"
+                      }
+                    },
+                    "src": "2588:40:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "falseBody": {
+                    "condition": {
+                      "argumentTypes": null,
+                      "commonType": {
+                        "typeIdentifier": "t_enum$_Permissions_$3251",
+                        "typeString": "enum RightsManager.Permissions"
+                      },
+                      "id": 3340,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 3337,
+                          "name": "Permissions",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3251,
+                          "src": "2701:11:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_enum$_Permissions_$3251_$",
+                            "typeString": "type(enum RightsManager.Permissions)"
+                          }
+                        },
+                        "id": 3338,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "lValueRequested": false,
+                        "memberName": "CHANGE_SWAP_FEE",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "2701:27:7",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_enum$_Permissions_$3251",
+                          "typeString": "enum RightsManager.Permissions"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "==",
+                      "rightExpression": {
+                        "argumentTypes": null,
+                        "id": 3339,
+                        "name": "permission",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3324,
+                        "src": "2732:10:7",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_enum$_Permissions_$3251",
+                          "typeString": "enum RightsManager.Permissions"
+                        }
+                      },
+                      "src": "2701:41:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "falseBody": {
+                      "condition": {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_enum$_Permissions_$3251",
+                          "typeString": "enum RightsManager.Permissions"
+                        },
+                        "id": 3348,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 3345,
+                            "name": "Permissions",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3251,
+                            "src": "2815:11:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_enum$_Permissions_$3251_$",
+                              "typeString": "type(enum RightsManager.Permissions)"
+                            }
+                          },
+                          "id": 3346,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "memberName": "CHANGE_WEIGHTS",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "2815:26:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_enum$_Permissions_$3251",
+                            "typeString": "enum RightsManager.Permissions"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "id": 3347,
+                          "name": "permission",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3324,
+                          "src": "2845:10:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_enum$_Permissions_$3251",
+                            "typeString": "enum RightsManager.Permissions"
+                          }
+                        },
+                        "src": "2815:40:7",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      "falseBody": {
+                        "condition": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_enum$_Permissions_$3251",
+                            "typeString": "enum RightsManager.Permissions"
+                          },
+                          "id": 3356,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 3353,
+                              "name": "Permissions",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3251,
+                              "src": "2928:11:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_enum$_Permissions_$3251_$",
+                                "typeString": "type(enum RightsManager.Permissions)"
+                              }
+                            },
+                            "id": 3354,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "memberName": "ADD_REMOVE_TOKENS",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "2928:29:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_enum$_Permissions_$3251",
+                              "typeString": "enum RightsManager.Permissions"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "==",
+                          "rightExpression": {
+                            "argumentTypes": null,
+                            "id": 3355,
+                            "name": "permission",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3324,
+                            "src": "2961:10:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_enum$_Permissions_$3251",
+                              "typeString": "enum RightsManager.Permissions"
+                            }
+                          },
+                          "src": "2928:43:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "falseBody": {
+                          "condition": {
+                            "argumentTypes": null,
+                            "commonType": {
+                              "typeIdentifier": "t_enum$_Permissions_$3251",
+                              "typeString": "enum RightsManager.Permissions"
+                            },
+                            "id": 3364,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "leftExpression": {
+                              "argumentTypes": null,
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 3361,
+                                "name": "Permissions",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3251,
+                                "src": "3046:11:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_type$_t_enum$_Permissions_$3251_$",
+                                  "typeString": "type(enum RightsManager.Permissions)"
+                                }
+                              },
+                              "id": 3362,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "memberName": "WHITELIST_LPS",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": null,
+                              "src": "3046:25:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_enum$_Permissions_$3251",
+                                "typeString": "enum RightsManager.Permissions"
+                              }
+                            },
+                            "nodeType": "BinaryOperation",
+                            "operator": "==",
+                            "rightExpression": {
+                              "argumentTypes": null,
+                              "id": 3363,
+                              "name": "permission",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3324,
+                              "src": "3075:10:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_enum$_Permissions_$3251",
+                                "typeString": "enum RightsManager.Permissions"
+                              }
+                            },
+                            "src": "3046:39:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            }
+                          },
+                          "falseBody": null,
+                          "id": 3369,
+                          "nodeType": "IfStatement",
+                          "src": "3042:97:7",
+                          "trueBody": {
+                            "id": 3368,
+                            "nodeType": "Block",
+                            "src": "3087:52:7",
+                            "statements": [
+                              {
+                                "expression": {
+                                  "argumentTypes": null,
+                                  "expression": {
+                                    "argumentTypes": null,
+                                    "id": 3365,
+                                    "name": "self",
+                                    "nodeType": "Identifier",
+                                    "overloadedDeclarations": [],
+                                    "referencedDeclaration": 3322,
+                                    "src": "3108:4:7",
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                                      "typeString": "struct RightsManager.Rights calldata"
+                                    }
+                                  },
+                                  "id": 3366,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "memberName": "canWhitelistLPs",
+                                  "nodeType": "MemberAccess",
+                                  "referencedDeclaration": 3261,
+                                  "src": "3108:20:7",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_bool",
+                                    "typeString": "bool"
+                                  }
+                                },
+                                "functionReturnParameters": 3328,
+                                "id": 3367,
+                                "nodeType": "Return",
+                                "src": "3101:27:7"
+                              }
+                            ]
+                          }
+                        },
+                        "id": 3370,
+                        "nodeType": "IfStatement",
+                        "src": "2924:215:7",
+                        "trueBody": {
+                          "id": 3360,
+                          "nodeType": "Block",
+                          "src": "2973:55:7",
+                          "statements": [
+                            {
+                              "expression": {
+                                "argumentTypes": null,
+                                "expression": {
+                                  "argumentTypes": null,
+                                  "id": 3357,
+                                  "name": "self",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 3322,
+                                  "src": "2994:4:7",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                                    "typeString": "struct RightsManager.Rights calldata"
+                                  }
+                                },
+                                "id": 3358,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "lValueRequested": false,
+                                "memberName": "canAddRemoveTokens",
+                                "nodeType": "MemberAccess",
+                                "referencedDeclaration": 3259,
+                                "src": "2994:23:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                }
+                              },
+                              "functionReturnParameters": 3328,
+                              "id": 3359,
+                              "nodeType": "Return",
+                              "src": "2987:30:7"
+                            }
+                          ]
+                        }
+                      },
+                      "id": 3371,
+                      "nodeType": "IfStatement",
+                      "src": "2811:328:7",
+                      "trueBody": {
+                        "id": 3352,
+                        "nodeType": "Block",
+                        "src": "2857:53:7",
+                        "statements": [
+                          {
+                            "expression": {
+                              "argumentTypes": null,
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 3349,
+                                "name": "self",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3322,
+                                "src": "2878:4:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                                  "typeString": "struct RightsManager.Rights calldata"
+                                }
+                              },
+                              "id": 3350,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "canChangeWeights",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 3257,
+                              "src": "2878:21:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            "functionReturnParameters": 3328,
+                            "id": 3351,
+                            "nodeType": "Return",
+                            "src": "2871:28:7"
+                          }
+                        ]
+                      }
+                    },
+                    "id": 3372,
+                    "nodeType": "IfStatement",
+                    "src": "2697:442:7",
+                    "trueBody": {
+                      "id": 3344,
+                      "nodeType": "Block",
+                      "src": "2744:53:7",
+                      "statements": [
+                        {
+                          "expression": {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 3341,
+                              "name": "self",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3322,
+                              "src": "2765:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                                "typeString": "struct RightsManager.Rights calldata"
+                              }
+                            },
+                            "id": 3342,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "canChangeSwapFee",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": 3255,
+                            "src": "2765:21:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            }
+                          },
+                          "functionReturnParameters": 3328,
+                          "id": 3343,
+                          "nodeType": "Return",
+                          "src": "2758:28:7"
+                        }
+                      ]
+                    }
+                  },
+                  "id": 3373,
+                  "nodeType": "IfStatement",
+                  "src": "2584:555:7",
+                  "trueBody": {
+                    "id": 3336,
+                    "nodeType": "Block",
+                    "src": "2630:53:7",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 3333,
+                            "name": "self",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3322,
+                            "src": "2651:4:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                              "typeString": "struct RightsManager.Rights calldata"
+                            }
+                          },
+                          "id": 3334,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "canPauseSwapping",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 3253,
+                          "src": "2651:21:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "functionReturnParameters": 3328,
+                        "id": 3335,
+                        "nodeType": "Return",
+                        "src": "2644:28:7"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "documentation": {
+              "id": 3320,
+              "nodeType": "StructuredDocumentation",
+              "src": "2235:236:7",
+              "text": "@notice Externally check permissions using the Enum\n@param self - Rights struct containing the permissions\n@param permission - The permission to check\n@return Boolean true if it has the permission"
+            },
+            "functionSelector": "4583544a",
+            "id": 3375,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "hasPermission",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 3325,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3322,
+                  "mutability": "mutable",
+                  "name": "self",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3375,
+                  "src": "2499:20:7",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                    "typeString": "struct RightsManager.Rights"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3321,
+                    "name": "Rights",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3262,
+                    "src": "2499:6:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Rights_$3262_storage_ptr",
+                      "typeString": "struct RightsManager.Rights"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3324,
+                  "mutability": "mutable",
+                  "name": "permission",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3375,
+                  "src": "2521:22:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_Permissions_$3251",
+                    "typeString": "enum RightsManager.Permissions"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3323,
+                    "name": "Permissions",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3251,
+                    "src": "2521:11:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_Permissions_$3251",
+                      "typeString": "enum RightsManager.Permissions"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2498:46:7"
+            },
+            "returnParameters": {
+              "id": 3328,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3327,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3375,
+                  "src": "2568:4:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 3326,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2568:4:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2567:6:7"
+            },
+            "scope": 3376,
+            "src": "2476:669:7",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 3377,
+        "src": "686:2461:7"
+      }
+    ],
+    "src": "45:3103:7"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/arseny/Projects/curvelabs/research/1-balancer-sale/contracts/libraries/RightsManager.sol",
+    "exportedSymbols": {
+      "RightsManager": [
+        3376
+      ]
+    },
+    "id": 3377,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3243,
+        "literals": [
+          "solidity",
+          "^",
+          "0.6",
+          ".6"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "45:23:7"
+      },
+      {
+        "id": 3244,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "112:33:7"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": {
+          "id": 3245,
+          "nodeType": "StructuredDocumentation",
+          "src": "147:538:7",
+          "text": "@author Balancer Labs\n@title Manage Configurable Rights for the smart pool\n     canPauseSwapping - can setPublicSwap back to false after turning it on\n                        by default, it is off on initialization and can only be turned on\n     canChangeSwapFee - can setSwapFee after initialization (by default, it is fixed at create time)\n     canChangeWeights - can bind new token weights (allowed by default in base pool)\n     canAddRemoveTokens - can bind/unbind tokens (allowed by default in base pool)"
+        },
+        "fullyImplemented": true,
+        "id": 3376,
+        "linearizedBaseContracts": [
+          3376
+        ],
+        "name": "RightsManager",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "RightsManager.Permissions",
+            "id": 3251,
+            "members": [
+              {
+                "id": 3246,
+                "name": "PAUSE_SWAPPING",
+                "nodeType": "EnumValue",
+                "src": "760:14:7"
+              },
+              {
+                "id": 3247,
+                "name": "CHANGE_SWAP_FEE",
+                "nodeType": "EnumValue",
+                "src": "799:15:7"
+              },
+              {
+                "id": 3248,
+                "name": "CHANGE_WEIGHTS",
+                "nodeType": "EnumValue",
+                "src": "839:14:7"
+              },
+              {
+                "id": 3249,
+                "name": "ADD_REMOVE_TOKENS",
+                "nodeType": "EnumValue",
+                "src": "878:17:7"
+              },
+              {
+                "id": 3250,
+                "name": "WHITELIST_LPS",
+                "nodeType": "EnumValue",
+                "src": "920:13:7"
+              }
+            ],
+            "name": "Permissions",
+            "nodeType": "EnumDefinition",
+            "src": "741:194:7"
+          },
+          {
+            "canonicalName": "RightsManager.Rights",
+            "id": 3262,
+            "members": [
+              {
+                "constant": false,
+                "id": 3253,
+                "mutability": "mutable",
+                "name": "canPauseSwapping",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 3262,
+                "src": "965:21:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 3252,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "965:4:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3255,
+                "mutability": "mutable",
+                "name": "canChangeSwapFee",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 3262,
+                "src": "996:21:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 3254,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "996:4:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3257,
+                "mutability": "mutable",
+                "name": "canChangeWeights",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 3262,
+                "src": "1027:21:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 3256,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1027:4:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3259,
+                "mutability": "mutable",
+                "name": "canAddRemoveTokens",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 3262,
+                "src": "1058:23:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 3258,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1058:4:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 3261,
+                "mutability": "mutable",
+                "name": "canWhitelistLPs",
+                "nodeType": "VariableDeclaration",
+                "overrides": null,
+                "scope": 3262,
+                "src": "1091:20:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 3260,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1091:4:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Rights",
+            "nodeType": "StructDefinition",
+            "scope": 3376,
+            "src": "941:177:7",
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "functionSelector": "2cc0c346",
+            "id": 3265,
+            "mutability": "constant",
+            "name": "DEFAULT_CAN_PAUSE_SWAPPING",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3376,
+            "src": "1184:55:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 3263,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "1184:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "66616c7365",
+              "id": 3264,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "bool",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1234:5:7",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              },
+              "value": "false"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "functionSelector": "cb0d28f6",
+            "id": 3268,
+            "mutability": "constant",
+            "name": "DEFAULT_CAN_CHANGE_SWAP_FEE",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3376,
+            "src": "1245:56:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 3266,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "1245:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "66616c7365",
+              "id": 3267,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "bool",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1296:5:7",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              },
+              "value": "false"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "functionSelector": "21bb04ae",
+            "id": 3271,
+            "mutability": "constant",
+            "name": "DEFAULT_CAN_CHANGE_WEIGHTS",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3376,
+            "src": "1307:54:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 3269,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "1307:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "74727565",
+              "id": 3270,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "bool",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1357:4:7",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              },
+              "value": "true"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "functionSelector": "3d027b9d",
+            "id": 3274,
+            "mutability": "constant",
+            "name": "DEFAULT_CAN_ADD_REMOVE_TOKENS",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3376,
+            "src": "1367:57:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 3272,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "1367:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "74727565",
+              "id": 3273,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "bool",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1420:4:7",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              },
+              "value": "true"
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": true,
+            "functionSelector": "dccf54e7",
+            "id": 3277,
+            "mutability": "constant",
+            "name": "DEFAULT_CAN_WHITELIST_LPS",
+            "nodeType": "VariableDeclaration",
+            "overrides": null,
+            "scope": 3376,
+            "src": "1430:54:7",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_bool",
+              "typeString": "bool"
+            },
+            "typeName": {
+              "id": 3275,
+              "name": "bool",
+              "nodeType": "ElementaryTypeName",
+              "src": "1430:4:7",
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              }
+            },
+            "value": {
+              "argumentTypes": null,
+              "hexValue": "66616c7365",
+              "id": 3276,
+              "isConstant": false,
+              "isLValue": false,
+              "isPure": true,
+              "kind": "bool",
+              "lValueRequested": false,
+              "nodeType": "Literal",
+              "src": "1479:5:7",
+              "subdenomination": null,
+              "typeDescriptions": {
+                "typeIdentifier": "t_bool",
+                "typeString": "bool"
+              },
+              "value": "false"
+            },
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 3318,
+              "nodeType": "Block",
+              "src": "1827:402:7",
+              "statements": [
+                {
+                  "condition": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    },
+                    "id": 3288,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3285,
+                        "name": "a",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3280,
+                        "src": "1841:1:7",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                          "typeString": "bool[] calldata"
+                        }
+                      },
+                      "id": 3286,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "length",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "1841:8:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": "==",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "hexValue": "30",
+                      "id": 3287,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "1853:1:7",
+                      "subdenomination": null,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_0_by_1",
+                        "typeString": "int_const 0"
+                      },
+                      "value": "0"
+                    },
+                    "src": "1841:13:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "falseBody": {
+                    "id": 3316,
+                    "nodeType": "Block",
+                    "src": "2155:68:7",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "baseExpression": {
+                                "argumentTypes": null,
+                                "id": 3299,
+                                "name": "a",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3280,
+                                "src": "2183:1:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                                  "typeString": "bool[] calldata"
+                                }
+                              },
+                              "id": 3301,
+                              "indexExpression": {
+                                "argumentTypes": null,
+                                "hexValue": "30",
+                                "id": 3300,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "2185:1:7",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_0_by_1",
+                                  "typeString": "int_const 0"
+                                },
+                                "value": "0"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "IndexAccess",
+                              "src": "2183:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "baseExpression": {
+                                "argumentTypes": null,
+                                "id": 3302,
+                                "name": "a",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3280,
+                                "src": "2189:1:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                                  "typeString": "bool[] calldata"
+                                }
+                              },
+                              "id": 3304,
+                              "indexExpression": {
+                                "argumentTypes": null,
+                                "hexValue": "31",
+                                "id": 3303,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "2191:1:7",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_1_by_1",
+                                  "typeString": "int_const 1"
+                                },
+                                "value": "1"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "IndexAccess",
+                              "src": "2189:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "baseExpression": {
+                                "argumentTypes": null,
+                                "id": 3305,
+                                "name": "a",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3280,
+                                "src": "2195:1:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                                  "typeString": "bool[] calldata"
+                                }
+                              },
+                              "id": 3307,
+                              "indexExpression": {
+                                "argumentTypes": null,
+                                "hexValue": "32",
+                                "id": 3306,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "2197:1:7",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_2_by_1",
+                                  "typeString": "int_const 2"
+                                },
+                                "value": "2"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "IndexAccess",
+                              "src": "2195:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "baseExpression": {
+                                "argumentTypes": null,
+                                "id": 3308,
+                                "name": "a",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3280,
+                                "src": "2201:1:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                                  "typeString": "bool[] calldata"
+                                }
+                              },
+                              "id": 3310,
+                              "indexExpression": {
+                                "argumentTypes": null,
+                                "hexValue": "33",
+                                "id": 3309,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "2203:1:7",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_3_by_1",
+                                  "typeString": "int_const 3"
+                                },
+                                "value": "3"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "IndexAccess",
+                              "src": "2201:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "baseExpression": {
+                                "argumentTypes": null,
+                                "id": 3311,
+                                "name": "a",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3280,
+                                "src": "2207:1:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                                  "typeString": "bool[] calldata"
+                                }
+                              },
+                              "id": 3313,
+                              "indexExpression": {
+                                "argumentTypes": null,
+                                "hexValue": "34",
+                                "id": 3312,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": true,
+                                "kind": "number",
+                                "lValueRequested": false,
+                                "nodeType": "Literal",
+                                "src": "2209:1:7",
+                                "subdenomination": null,
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_rational_4_by_1",
+                                  "typeString": "int_const 4"
+                                },
+                                "value": "4"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "IndexAccess",
+                              "src": "2207:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            ],
+                            "id": 3298,
+                            "name": "Rights",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3262,
+                            "src": "2176:6:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_struct$_Rights_$3262_storage_ptr_$",
+                              "typeString": "type(struct RightsManager.Rights storage pointer)"
+                            }
+                          },
+                          "id": 3314,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "structConstructorCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "2176:36:7",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Rights_$3262_memory_ptr",
+                            "typeString": "struct RightsManager.Rights memory"
+                          }
+                        },
+                        "functionReturnParameters": 3284,
+                        "id": 3315,
+                        "nodeType": "Return",
+                        "src": "2169:43:7"
+                      }
+                    ]
+                  },
+                  "id": 3317,
+                  "nodeType": "IfStatement",
+                  "src": "1837:386:7",
+                  "trueBody": {
+                    "id": 3297,
+                    "nodeType": "Block",
+                    "src": "1856:285:7",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "arguments": [
+                            {
+                              "argumentTypes": null,
+                              "id": 3290,
+                              "name": "DEFAULT_CAN_PAUSE_SWAPPING",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3265,
+                              "src": "1884:26:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "id": 3291,
+                              "name": "DEFAULT_CAN_CHANGE_SWAP_FEE",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3268,
+                              "src": "1938:27:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "id": 3292,
+                              "name": "DEFAULT_CAN_CHANGE_WEIGHTS",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3271,
+                              "src": "1993:26:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "id": 3293,
+                              "name": "DEFAULT_CAN_ADD_REMOVE_TOKENS",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3274,
+                              "src": "2047:29:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            {
+                              "argumentTypes": null,
+                              "id": 3294,
+                              "name": "DEFAULT_CAN_WHITELIST_LPS",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3277,
+                              "src": "2104:25:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            ],
+                            "id": 3289,
+                            "name": "Rights",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3262,
+                            "src": "1877:6:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_struct$_Rights_$3262_storage_ptr_$",
+                              "typeString": "type(struct RightsManager.Rights storage pointer)"
+                            }
+                          },
+                          "id": 3295,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "structConstructorCall",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "1877:253:7",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Rights_$3262_memory_ptr",
+                            "typeString": "struct RightsManager.Rights memory"
+                          }
+                        },
+                        "functionReturnParameters": 3284,
+                        "id": 3296,
+                        "nodeType": "Return",
+                        "src": "1870:260:7"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "documentation": null,
+            "functionSelector": "c08473fc",
+            "id": 3319,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "constructRights",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 3281,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3280,
+                  "mutability": "mutable",
+                  "name": "a",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3319,
+                  "src": "1770:17:7",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_bool_$dyn_calldata_ptr",
+                    "typeString": "bool[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 3278,
+                      "name": "bool",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "1770:4:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "id": 3279,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1770:6:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_bool_$dyn_storage_ptr",
+                      "typeString": "bool[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1769:19:7"
+            },
+            "returnParameters": {
+              "id": 3284,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3283,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3319,
+                  "src": "1812:13:7",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Rights_$3262_memory_ptr",
+                    "typeString": "struct RightsManager.Rights"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3282,
+                    "name": "Rights",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3262,
+                    "src": "1812:6:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Rights_$3262_storage_ptr",
+                      "typeString": "struct RightsManager.Rights"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1811:15:7"
+            },
+            "scope": 3376,
+            "src": "1745:484:7",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 3374,
+              "nodeType": "Block",
+              "src": "2574:571:7",
+              "statements": [
+                {
+                  "condition": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_enum$_Permissions_$3251",
+                      "typeString": "enum RightsManager.Permissions"
+                    },
+                    "id": 3332,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 3329,
+                        "name": "Permissions",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3251,
+                        "src": "2588:11:7",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_enum$_Permissions_$3251_$",
+                          "typeString": "type(enum RightsManager.Permissions)"
+                        }
+                      },
+                      "id": 3330,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "lValueRequested": false,
+                      "memberName": "PAUSE_SWAPPING",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "2588:26:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_enum$_Permissions_$3251",
+                        "typeString": "enum RightsManager.Permissions"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": "==",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "id": 3331,
+                      "name": "permission",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 3324,
+                      "src": "2618:10:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_enum$_Permissions_$3251",
+                        "typeString": "enum RightsManager.Permissions"
+                      }
+                    },
+                    "src": "2588:40:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "falseBody": {
+                    "condition": {
+                      "argumentTypes": null,
+                      "commonType": {
+                        "typeIdentifier": "t_enum$_Permissions_$3251",
+                        "typeString": "enum RightsManager.Permissions"
+                      },
+                      "id": 3340,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "leftExpression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 3337,
+                          "name": "Permissions",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3251,
+                          "src": "2701:11:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_enum$_Permissions_$3251_$",
+                            "typeString": "type(enum RightsManager.Permissions)"
+                          }
+                        },
+                        "id": 3338,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "lValueRequested": false,
+                        "memberName": "CHANGE_SWAP_FEE",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "2701:27:7",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_enum$_Permissions_$3251",
+                          "typeString": "enum RightsManager.Permissions"
+                        }
+                      },
+                      "nodeType": "BinaryOperation",
+                      "operator": "==",
+                      "rightExpression": {
+                        "argumentTypes": null,
+                        "id": 3339,
+                        "name": "permission",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 3324,
+                        "src": "2732:10:7",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_enum$_Permissions_$3251",
+                          "typeString": "enum RightsManager.Permissions"
+                        }
+                      },
+                      "src": "2701:41:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bool",
+                        "typeString": "bool"
+                      }
+                    },
+                    "falseBody": {
+                      "condition": {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_enum$_Permissions_$3251",
+                          "typeString": "enum RightsManager.Permissions"
+                        },
+                        "id": 3348,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 3345,
+                            "name": "Permissions",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3251,
+                            "src": "2815:11:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_enum$_Permissions_$3251_$",
+                              "typeString": "type(enum RightsManager.Permissions)"
+                            }
+                          },
+                          "id": 3346,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "memberName": "CHANGE_WEIGHTS",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "2815:26:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_enum$_Permissions_$3251",
+                            "typeString": "enum RightsManager.Permissions"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "id": 3347,
+                          "name": "permission",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 3324,
+                          "src": "2845:10:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_enum$_Permissions_$3251",
+                            "typeString": "enum RightsManager.Permissions"
+                          }
+                        },
+                        "src": "2815:40:7",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      "falseBody": {
+                        "condition": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_enum$_Permissions_$3251",
+                            "typeString": "enum RightsManager.Permissions"
+                          },
+                          "id": 3356,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 3353,
+                              "name": "Permissions",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3251,
+                              "src": "2928:11:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_enum$_Permissions_$3251_$",
+                                "typeString": "type(enum RightsManager.Permissions)"
+                              }
+                            },
+                            "id": 3354,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "memberName": "ADD_REMOVE_TOKENS",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": null,
+                            "src": "2928:29:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_enum$_Permissions_$3251",
+                              "typeString": "enum RightsManager.Permissions"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "==",
+                          "rightExpression": {
+                            "argumentTypes": null,
+                            "id": 3355,
+                            "name": "permission",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3324,
+                            "src": "2961:10:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_enum$_Permissions_$3251",
+                              "typeString": "enum RightsManager.Permissions"
+                            }
+                          },
+                          "src": "2928:43:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "falseBody": {
+                          "condition": {
+                            "argumentTypes": null,
+                            "commonType": {
+                              "typeIdentifier": "t_enum$_Permissions_$3251",
+                              "typeString": "enum RightsManager.Permissions"
+                            },
+                            "id": 3364,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "leftExpression": {
+                              "argumentTypes": null,
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 3361,
+                                "name": "Permissions",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3251,
+                                "src": "3046:11:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_type$_t_enum$_Permissions_$3251_$",
+                                  "typeString": "type(enum RightsManager.Permissions)"
+                                }
+                              },
+                              "id": 3362,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "memberName": "WHITELIST_LPS",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": null,
+                              "src": "3046:25:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_enum$_Permissions_$3251",
+                                "typeString": "enum RightsManager.Permissions"
+                              }
+                            },
+                            "nodeType": "BinaryOperation",
+                            "operator": "==",
+                            "rightExpression": {
+                              "argumentTypes": null,
+                              "id": 3363,
+                              "name": "permission",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3324,
+                              "src": "3075:10:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_enum$_Permissions_$3251",
+                                "typeString": "enum RightsManager.Permissions"
+                              }
+                            },
+                            "src": "3046:39:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            }
+                          },
+                          "falseBody": null,
+                          "id": 3369,
+                          "nodeType": "IfStatement",
+                          "src": "3042:97:7",
+                          "trueBody": {
+                            "id": 3368,
+                            "nodeType": "Block",
+                            "src": "3087:52:7",
+                            "statements": [
+                              {
+                                "expression": {
+                                  "argumentTypes": null,
+                                  "expression": {
+                                    "argumentTypes": null,
+                                    "id": 3365,
+                                    "name": "self",
+                                    "nodeType": "Identifier",
+                                    "overloadedDeclarations": [],
+                                    "referencedDeclaration": 3322,
+                                    "src": "3108:4:7",
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                                      "typeString": "struct RightsManager.Rights calldata"
+                                    }
+                                  },
+                                  "id": 3366,
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "memberName": "canWhitelistLPs",
+                                  "nodeType": "MemberAccess",
+                                  "referencedDeclaration": 3261,
+                                  "src": "3108:20:7",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_bool",
+                                    "typeString": "bool"
+                                  }
+                                },
+                                "functionReturnParameters": 3328,
+                                "id": 3367,
+                                "nodeType": "Return",
+                                "src": "3101:27:7"
+                              }
+                            ]
+                          }
+                        },
+                        "id": 3370,
+                        "nodeType": "IfStatement",
+                        "src": "2924:215:7",
+                        "trueBody": {
+                          "id": 3360,
+                          "nodeType": "Block",
+                          "src": "2973:55:7",
+                          "statements": [
+                            {
+                              "expression": {
+                                "argumentTypes": null,
+                                "expression": {
+                                  "argumentTypes": null,
+                                  "id": 3357,
+                                  "name": "self",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 3322,
+                                  "src": "2994:4:7",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                                    "typeString": "struct RightsManager.Rights calldata"
+                                  }
+                                },
+                                "id": 3358,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "lValueRequested": false,
+                                "memberName": "canAddRemoveTokens",
+                                "nodeType": "MemberAccess",
+                                "referencedDeclaration": 3259,
+                                "src": "2994:23:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                }
+                              },
+                              "functionReturnParameters": 3328,
+                              "id": 3359,
+                              "nodeType": "Return",
+                              "src": "2987:30:7"
+                            }
+                          ]
+                        }
+                      },
+                      "id": 3371,
+                      "nodeType": "IfStatement",
+                      "src": "2811:328:7",
+                      "trueBody": {
+                        "id": 3352,
+                        "nodeType": "Block",
+                        "src": "2857:53:7",
+                        "statements": [
+                          {
+                            "expression": {
+                              "argumentTypes": null,
+                              "expression": {
+                                "argumentTypes": null,
+                                "id": 3349,
+                                "name": "self",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 3322,
+                                "src": "2878:4:7",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                                  "typeString": "struct RightsManager.Rights calldata"
+                                }
+                              },
+                              "id": 3350,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "memberName": "canChangeWeights",
+                              "nodeType": "MemberAccess",
+                              "referencedDeclaration": 3257,
+                              "src": "2878:21:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              }
+                            },
+                            "functionReturnParameters": 3328,
+                            "id": 3351,
+                            "nodeType": "Return",
+                            "src": "2871:28:7"
+                          }
+                        ]
+                      }
+                    },
+                    "id": 3372,
+                    "nodeType": "IfStatement",
+                    "src": "2697:442:7",
+                    "trueBody": {
+                      "id": 3344,
+                      "nodeType": "Block",
+                      "src": "2744:53:7",
+                      "statements": [
+                        {
+                          "expression": {
+                            "argumentTypes": null,
+                            "expression": {
+                              "argumentTypes": null,
+                              "id": 3341,
+                              "name": "self",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 3322,
+                              "src": "2765:4:7",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                                "typeString": "struct RightsManager.Rights calldata"
+                              }
+                            },
+                            "id": 3342,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "memberName": "canChangeSwapFee",
+                            "nodeType": "MemberAccess",
+                            "referencedDeclaration": 3255,
+                            "src": "2765:21:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bool",
+                              "typeString": "bool"
+                            }
+                          },
+                          "functionReturnParameters": 3328,
+                          "id": 3343,
+                          "nodeType": "Return",
+                          "src": "2758:28:7"
+                        }
+                      ]
+                    }
+                  },
+                  "id": 3373,
+                  "nodeType": "IfStatement",
+                  "src": "2584:555:7",
+                  "trueBody": {
+                    "id": 3336,
+                    "nodeType": "Block",
+                    "src": "2630:53:7",
+                    "statements": [
+                      {
+                        "expression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 3333,
+                            "name": "self",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 3322,
+                            "src": "2651:4:7",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                              "typeString": "struct RightsManager.Rights calldata"
+                            }
+                          },
+                          "id": 3334,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "canPauseSwapping",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 3253,
+                          "src": "2651:21:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "functionReturnParameters": 3328,
+                        "id": 3335,
+                        "nodeType": "Return",
+                        "src": "2644:28:7"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "documentation": {
+              "id": 3320,
+              "nodeType": "StructuredDocumentation",
+              "src": "2235:236:7",
+              "text": "@notice Externally check permissions using the Enum\n@param self - Rights struct containing the permissions\n@param permission - The permission to check\n@return Boolean true if it has the permission"
+            },
+            "functionSelector": "4583544a",
+            "id": 3375,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "hasPermission",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 3325,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3322,
+                  "mutability": "mutable",
+                  "name": "self",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3375,
+                  "src": "2499:20:7",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Rights_$3262_calldata_ptr",
+                    "typeString": "struct RightsManager.Rights"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3321,
+                    "name": "Rights",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3262,
+                    "src": "2499:6:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Rights_$3262_storage_ptr",
+                      "typeString": "struct RightsManager.Rights"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 3324,
+                  "mutability": "mutable",
+                  "name": "permission",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3375,
+                  "src": "2521:22:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_Permissions_$3251",
+                    "typeString": "enum RightsManager.Permissions"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 3323,
+                    "name": "Permissions",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3251,
+                    "src": "2521:11:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_Permissions_$3251",
+                      "typeString": "enum RightsManager.Permissions"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2498:46:7"
+            },
+            "returnParameters": {
+              "id": 3328,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 3327,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "overrides": null,
+                  "scope": 3375,
+                  "src": "2568:4:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 3326,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2568:4:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2567:6:7"
+            },
+            "scope": 3376,
+            "src": "2476:669:7",
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 3377,
+        "src": "686:2461:7"
+      }
+    ],
+    "src": "45:3103:7"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.6.6+commit.6c089d02.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.4",
+  "updatedAt": "2020-09-10T10:38:34.239Z",
+  "devdoc": {
+    "author": "Balancer Labs",
+    "methods": {
+      "hasPermission(RightsManager.Rights,RightsManager.Permissions)": {
+        "params": {
+          "permission": "- The permission to check",
+          "self": "- Rights struct containing the permissions"
+        },
+        "returns": {
+          "_0": "Boolean true if it has the permission"
+        }
+      }
+    },
+    "title": "Manage Configurable Rights for the smart pool     canPauseSwapping - can setPublicSwap back to false after turning it on                        by default, it is off on initialization and can only be turned on     canChangeSwapFee - can setSwapFee after initialization (by default, it is fixed at create time)     canChangeWeights - can bind new token weights (allowed by default in base pool)     canAddRemoveTokens - can bind/unbind tokens (allowed by default in base pool)"
+  },
+  "userdoc": {
+    "methods": {
+      "hasPermission(RightsManager.Rights,RightsManager.Permissions)": {
+        "notice": "Externally check permissions using the Enum"
+      }
+    }
+  }
+}
