@@ -1,3 +1,3 @@
 ## Warning
 
-This is a monorepo! If you do `npm install --save` something don't forget to re-run `lerna bootstrap` afterwards.
+This is a monorepo! If you do `npm install --save(Dev)` something in your package, don't forget to run `npx lerna bootstrap` afterwards.

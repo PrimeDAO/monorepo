@@ -1,5 +1,5 @@
 {
-  "name": "@primedao/website",
+  "name": "@primedao/landingPage",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -83,7 +83,6 @@
     "workbox-webpack-plugin": "4.3.1"
   },
   "dependencies": {
-    "@primedao/contracts": "^1.0.0",
     "react": "^16.10.2",
     "react-dev-utils": "^9.1.0",
     "react-dom": "^16.10.2",
