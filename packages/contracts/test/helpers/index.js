@@ -19,6 +19,9 @@ const encodeAddToken = (token, balance, denormalizedWeight) => {
 const encodeRemoveToken = (token) => {
   return new web3.eth.Contract(BalancerProxy.abi).methods.removeToken(token).encodeABI();
 };
+const encodeUpdateWeightsGradually = (newWeights, startBlock, endBlock) => {
+  return new web3.eth.Contract(BalancerProxy.abi).methods.updateWeightsGradually(newWeights, startBlock, endBlock).encodeABI();
+};
 const getValueFromLogs = (tx, arg, eventName, index = 0) => {
   /**
    *
@@ -72,6 +75,7 @@ module.exports = {
   encodeSetSwapFee,
   encodeAddToken,
   encodeRemoveToken,
+  encodeUpdateWeightsGradually,
   getNewProposalId,
   values: {
     AMOUNT,

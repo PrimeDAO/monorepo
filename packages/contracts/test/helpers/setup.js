@@ -96,7 +96,6 @@ const balancer = async (setup) => {
   
   const swapFee = 10 ** 15;
   const startWeights = [toWei('8'), toWei('1'), toWei('1')];
-  const endWeights = [toWei('2'), toWei('4'), toWei('4')];
   const startBalances = [toWei('10000'), toWei('5000'), toWei('5000')];
   const SYMBOL = 'BPOOL';
 

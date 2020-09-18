@@ -49,12 +49,9 @@ contract('BalancerProxy', (accounts) => {
       const proposalId = helpers.getNewProposalId(_tx);
       const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
       const proposal = await setup.scheme.organizationProposals(proposalId);
-      // store data
-      setup.data.tx = tx;
-      setup.data.proposal = proposal;
 
-      let pool = await setup.balancer.pool.bPool();
-      let bPool = await BPool.at(pool);
+      const pool = await setup.balancer.pool.bPool();
+      const bPool = await BPool.at(pool);
 
       expect(await bPool.isPublicSwap()).to.equal(publicSwap);
     });
@@ -67,14 +64,11 @@ contract('BalancerProxy', (accounts) => {
       const proposalId = helpers.getNewProposalId(_tx);
       const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
       const proposal = await setup.scheme.organizationProposals(proposalId);
-      // store data
-      setup.data.tx = tx;
-      setup.data.proposal = proposal;
 
-      let pool = await setup.balancer.pool.bPool();
-      let bPool = await BPool.at(pool);
+      const pool = await setup.balancer.pool.bPool();
+      const bPool = await BPool.at(pool);
 
-      let swapFee = await bPool.getSwapFee();
+      const swapFee = await bPool.getSwapFee();
       expect(await swapFee.toString()).to.equal(newFee.toString());
     });
   });
@@ -85,9 +79,6 @@ contract('BalancerProxy', (accounts) => {
       const proposalId = helpers.getNewProposalId(_tx);
       const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
       const proposal = await setup.scheme.organizationProposals(proposalId);
-      // store data
-      setup.data.tx = tx;
-      setup.data.proposal = proposal;
     });
   });
   context('» execute removeToken', async () => {
@@ -97,9 +88,18 @@ contract('BalancerProxy', (accounts) => {
       const proposalId = helpers.getNewProposalId(_tx);
       const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
       const proposal = await setup.scheme.organizationProposals(proposalId);
-      // store data
-      setup.data.tx = tx;
-      setup.data.proposal = proposal;
+    });
+  });
+  context('» execute updateWeightsGradually', async () => {
+    it('it sends updateWeightsGradually proposal and votes', async () => {
+
+      const startBlock = (await web3.eth.getBlock()).timestamp+1;
+      const endBlock = await startBlock+100;
+      const calldata = helpers.encodeUpdateWeightsGradually([toWei('5'), toWei('2'), toWei('2')], startBlock, endBlock);
+      const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+      const proposalId = helpers.getNewProposalId(_tx);
+      const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+      const proposal = await setup.scheme.organizationProposals(proposalId);
     });
   });
 });
