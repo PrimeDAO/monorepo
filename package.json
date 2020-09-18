@@ -1,20 +1,10 @@
 {
-  "name": "@primedao/contracts",
+  "name": "@primedao/monorepo",
   "private": true,
   "scripts": {
     "install": "npx lerna bootstrap --hoist"
   },
-  "dependencies": {
-    "@daostack/arc": "0.0.1-rc.41",
-    "openzeppelin-solidity": "2.4.0",
-    "truffle": "^5.1.44"
-  },
-
   "devDependencies": {
-    "lerna": "^3.22.1",
-    "@daostack/infra": "0.0.1-rc.17",
-    "@daostack/migration": "0.0.1-rc.44-v0",
-    "@openzeppelin/test-helpers": "^0.5.6",
-    "web3": "^1.2.11"
+    "lerna": "^3.22.1"
   }
 }
