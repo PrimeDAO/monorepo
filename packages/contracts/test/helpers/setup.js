@@ -105,7 +105,7 @@ const balancer = async (setup) => {
         canChangeSwapFee: true,
         canChangeWeights: true,
         canAddRemoveTokens: true,
-        canWhitelistLPs: true,
+        canWhitelistLPs: false,
   };
 
   POOL = await crpFactory.newCrp.call(

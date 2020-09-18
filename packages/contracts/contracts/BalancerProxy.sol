@@ -53,22 +53,6 @@ contract BalancerProxy {
         _removeToken(token);
     }
 
-    function whitelistLiquidityProvider(address provider) public protected {
-        _whitelistLiquidityProvider(provider);
-    }
-
-    function removeWhitelistedLiquidityProvider(address provider) public protected {
-        _whitelistLiquidityProvider(provider);
-    }
-
-    // function joinPool(uint poolAmountOut, uint[] maxAmountsIn) public protected {
-    //     _joinPool(poolAmountOut, maxAmountsIn);
-    // }
-
-    // function exitPool(uint poolAmountIn, uint[] minAmountsOut) public protected {
-    //     _exitPool(poolAmountIn, minAmountsOut);
-    // }
-
     function _setPublicSwap(bool _publicSwap) internal {
         bytes     memory returned;
         bool             success;
@@ -167,44 +151,4 @@ contract BalancerProxy {
             0
         );
     }
-
-    function _whitelistLiquidityProvider(address _provider) internal {
-        bytes     memory returned;
-        bool             success;
-        Controller controller = Controller(avatar.owner());
-
-        (success, returned) = controller.genericCall(
-            address(crpool),
-            abi.encodeWithSelector(
-                crpool.whitelistLiquidityProvider.selector,
-                _provider
-            ),
-            avatar,
-            0
-        );
-    }
-
-    function _removeWhitelistedLiquidityProvider(address _provider) internal {
-        bytes     memory returned;
-        bool             success;
-        Controller controller = Controller(avatar.owner());
-
-        (success, returned) = controller.genericCall(
-            address(crpool),
-            abi.encodeWithSelector(
-                crpool.removeWhitelistedLiquidityProvider.selector,
-                _provider
-            ),
-            avatar,
-            0
-        );
-    }
-
-    // function _joinPool(uint _poolAmountOut, uint[] _maxAmountsIn) internal {
-    //     // TODO
-    // }
-
-    // function _exitPool(uint poolAmountIn, uint[] minAmountsOut) internal {
-    //     // TODO
-    // }
 }

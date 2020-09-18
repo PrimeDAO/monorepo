@@ -63,9 +63,7 @@ contract('BalancerProxy', (accounts) => {
       const calldata = helpers.encodeSetSwapFee(newFee);
       const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
       const proposalId = helpers.getNewProposalId(_tx);
-
       const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
-
       const proposal = await setup.scheme.organizationProposals(proposalId);
       // store data
       setup.data.tx = tx;
@@ -78,25 +76,4 @@ contract('BalancerProxy', (accounts) => {
       expect(await swapFee.toString()).to.equal(newFee.toString());
     });
   });
-  // context('!! execute whitelistLiquidityProvider', async () => {
-  //   // execute swap
-  //   it('it sends whitelistLiquidityProvider proposal and votes', async () => {
-  //     // const calldata = helpers.encodeSetSwapFee(3 ** 15);
-  //     const calldata = helpers.encodeWhitelistLiquidityProvider(accounts[1]);
-
-  //     const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
-  //     const proposalId = helpers.getNewProposalId(_tx);
-  //     const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
-  //     const proposal = await setup.scheme.organizationProposals(proposalId);
-  //     // store data
-  //     setup.data.tx = tx;
-  //     setup.data.proposal = proposal;
-
-  //     let pool = await setup.balancer.pool.bPool();
-  //     let bPool = await BPool.at(pool);
-
-  //     // expect(await swapFee.toString()).to.equal("1000000000000000");
-  //   });
-  // });
-
 });
