@@ -1,17 +1,17 @@
-# Landing-Page
+# PrimeDAO Landing-Page
 
-This is the **Landing page** of the [PrimeDAO](primedao.eth.link).
+This is the home page of PrimeDAO, accessible at [primedao.eth.link](primedao.eth.link).
 
 ## Technical Description
 
-The Landing Page is written in javascript and typescrypt, it uses ReactJS and Webpack.
+The web page is written in Javascript and Typescript, it uses ReactJS and Webpack.
 
 ## Install
-Install dependencies with the following command:
+Note this is part of a monorepo.  Install dependencies with the following command:
 ```
-npm run install
+nps lerna bootstrap
 ```
-    
+
 ## Test
 No front-end tests at the moment.
 
@@ -48,5 +48,3 @@ ipfs add -r build
 To calculate the same ipfs hash used for the application deployed you will need the ENV variables that were used for build. Make
 Once you have your ENV variables set you should delete the `node_modules` and `build` folders, run `npm run` to have fresh dependencies installed and at last run `npm run build` to generate a clean build.
 Now with the build at your disposal you can calculate the hash of the folder by running `ipfs add -r -n build`.
-
-The build hash ipfs of the entire build folder will be `QmPhoeL14E5SBFBaC4bA3nuRpg3MpxdWVYdPrdXHdQ3EHY`
