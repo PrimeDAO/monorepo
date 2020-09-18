@@ -1,6 +1,6 @@
 # PrimeDAO Contract Interface
 
-This is the [PrimeDAO](primedao.eth.link) web interface enabling the world to interact with PrimeDAO contracts.
+This is the [PrimeDAO](primedao.eth.link) web interface enabling the world to interact with PrimeDAO contracts. The "The PrimeDAO’s home for network members".
 
 ## Technical Description
 

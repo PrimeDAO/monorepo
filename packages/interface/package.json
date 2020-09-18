@@ -1,7 +1,7 @@
 {
   "name": "@primedao/interface",
   "version": "1.0.0",
-  "description": "PrimeDAO contracts web interface",
+  "description": "The PrimeDAO’s home for network members",
   "main": "index.js",
   "scripts": {
     "start": "node scripts/start.js",
