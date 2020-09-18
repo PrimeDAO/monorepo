@@ -7,7 +7,7 @@ import './interfaces/IConfigurableRightsPool.sol';
 contract BalancerProxy {
     string constant ERROR_SET_PUBLIC_SWAP    = "UniswapProxy: setPublicSwap failed";
     string constant ERROR_SET_SWAP_FEE       = "UniswapProxy: setSwapFee failed";
-    string constant COMMIT_TOKEN             = "UniswapProxy: token was not commited";
+    string constant COMMIT_TOKEN             = "UniswapProxy: token was not committed";
     string constant ADD_TOKEN                = "UniswapProxy: addToken failed";
     string constant REMOVE_TOKEN             = "UniswapProxy: removeToken failed";
     string constant UPDATE_WEIGHTS_GRADUALLY = "UniswapProxy: updateWeightsGradually failed";
@@ -110,7 +110,14 @@ contract BalancerProxy {
         return success;        
     }
 
-    function _updateWeightsGradually(uint[] memory _newWeights, uint _startBlock, uint _endBlock) internal returns(bool) {
+    function _updateWeightsGradually(
+        uint[] memory _newWeights,
+        uint _startBlock, 
+        uint _endBlock
+    )
+    internal
+    returns(bool)
+    {
         bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
