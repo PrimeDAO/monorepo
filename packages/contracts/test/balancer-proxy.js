@@ -4,6 +4,8 @@ const helpers = require('./helpers');
 const BPool = artifacts.require('BPool');
 const Controller = artifacts.require('Controller');
 
+const { toWei } = web3.utils
+
 const deploy = async (accounts) => {
   // initialize test setup
   const setup = await helpers.setup.initialize(accounts[0]);
@@ -74,6 +76,30 @@ contract('BalancerProxy', (accounts) => {
 
       let swapFee = await bPool.getSwapFee();
       expect(await swapFee.toString()).to.equal(newFee.toString());
+    });
+  });
+  context('» execute addToken', async () => {
+    it('it sends addToken proposal and votes', async () => {
+      const calldata = helpers.encodeAddToken(setup.tokens.weth.address, toWei('10'), toWei('2'));
+      const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+      const proposalId = helpers.getNewProposalId(_tx);
+      const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+      const proposal = await setup.scheme.organizationProposals(proposalId);
+      // store data
+      setup.data.tx = tx;
+      setup.data.proposal = proposal;
+    });
+  });
+  context('» execute removeToken', async () => {
+    it('it sends removeToken proposal and votes', async () => {
+      const calldata = helpers.encodeRemoveToken(setup.tokens.weth.address);
+      const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+      const proposalId = helpers.getNewProposalId(_tx);
+      const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+      const proposal = await setup.scheme.organizationProposals(proposalId);
+      // store data
+      setup.data.tx = tx;
+      setup.data.proposal = proposal;
     });
   });
 });

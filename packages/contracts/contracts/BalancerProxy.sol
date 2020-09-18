@@ -37,20 +37,17 @@ contract BalancerProxy {
         _setSwapFee(swapFee);
     }
 
-    function updateWeightsGradually(uint[] memory newWeights, uint startBlock, uint endBlock) public protected {
-        _updateWeightsGradually(newWeights, startBlock, endBlock);
-    }
-
-    function commitAddToken(address token, uint balance, uint denormalizedWeight) public protected {
-        _commitAddToken(token, balance, denormalizedWeight);
-    }
-
-    function applyAddToken() public protected {
+    function addToken(address token, uint balance, uint denormalizedWeight) public protected {
+        bool success = _commitAddToken(token, balance, denormalizedWeight);
+        require(success, "BalancerProxy: token was not commited");
         _applyAddToken();
     }
 
     function removeToken(address token) public protected {
         _removeToken(token);
+    }
+    function updateWeightsGradually(uint[] memory newWeights, uint startBlock, uint endBlock) public protected {
+        _updateWeightsGradually(newWeights, startBlock, endBlock);
     }
 
     function _setPublicSwap(bool _publicSwap) internal {
@@ -103,7 +100,7 @@ contract BalancerProxy {
         );
     }
 
-    function _commitAddToken(address _token, uint _balance, uint _denormalizedWeight) internal {
+    function _commitAddToken(address _token, uint _balance, uint _denormalizedWeight) internal returns(bool) {
         bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
@@ -119,6 +116,7 @@ contract BalancerProxy {
             avatar,
             0
         );
+        return success;
     }
 
     function _applyAddToken() internal {

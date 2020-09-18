@@ -2,7 +2,7 @@ const ERC20 = artifacts.require('ERC20Mock');
 const ControllerCreator = artifacts.require('./ControllerCreator.sol');
 const DaoCreator = artifacts.require('./DaoCreator.sol');
 const DAOTracker = artifacts.require('./DAOTracker.sol');
-// const WETH = artifacts.require('WETH');
+const WETH = artifacts.require('WETH');
 const GenericScheme = artifacts.require('GenericScheme');
 const Avatar = artifacts.require('./Avatar.sol');
 const DAOToken = artifacts.require('./DAOToken.sol');
@@ -63,11 +63,11 @@ const initialize = async (root) => {
 };
 
 const tokens = async (setup) => {
-  // const weth = await WETH.new();
+  const weth = await WETH.new();
   const erc20s = [await ERC20.new('DAI Stablecoin', 'DAI', 18), await ERC20.new('USDC Stablecoin', 'USDC', 15)];
-  // await weth.deposit({ value: INITIAL_CASH_BALANCE });
+  await weth.deposit({ value: INITIAL_CASH_BALANCE });
 
-  return { /*weth,*/ erc20s };
+  return { weth, erc20s };
 };
 
 const balancer = async (setup) => {
