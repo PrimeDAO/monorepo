@@ -1,3 +1,2 @@
-## Warning
-
-This is a monorepo! If you do `npm install --save(Dev)` something in your package, don't forget to run `npx lerna bootstrap` afterwards.
+## Installation
+This is a monorepo using [Lerna](https://github.com/lerna/lerna) to manage packages.  After cloning the monorepo from github, run `npx lerna bootstrap --force-local` at the root to install all the packages.

@@ -2,7 +2,7 @@
   "name": "@primedao/monorepo",
   "private": true,
   "scripts": {
-    "install": "npx lerna bootstrap --hoist"
+    "install": "npx lerna bootstrap"
   },
   "devDependencies": {
     "lerna": "^3.22.1"
