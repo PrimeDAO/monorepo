@@ -5,10 +5,23 @@ import "@daostack/arc/contracts/controller/Controller.sol";
 import './interfaces/IConfigurableRightsPool.sol';
 
 contract BalancerProxy {
+    string constant ERROR_SET_PUBLIC_SWAP    = "UniswapProxy: setPublicSwap failed";
+    string constant ERROR_SET_SWAP_FEE       = "UniswapProxy: setSwapFee failed";
+    string constant COMMIT_TOKEN             = "UniswapProxy: token was not commited";
+    string constant ADD_TOKEN                = "UniswapProxy: addToken failed";
+    string constant REMOVE_TOKEN             = "UniswapProxy: removeToken failed";
+    string constant UPDATE_WEIGHTS_GRADUALLY = "UniswapProxy: updateWeightsGradually failed";
+
     bool               		public initialized;
     Avatar             		public avatar;
     IConfigurableRightsPool public crpool;
-    
+
+    event SetPublicSwap          (bool publicSwap);
+    event SetSwapFee             (uint swapFee);
+    event AddToken               (address indexed token, uint balance, uint denormalizedWeight);
+    event RemoveToken            (address indexed token);
+    event UpdateWeightsGradually (uint[] newWeights, uint startBlock, uint endBlock);
+
     modifier initializer() {
         require(!initialized, "BalancerProxy: proxy already initialized");
         initialized = true;
@@ -21,7 +34,7 @@ contract BalancerProxy {
         _;
     }
 
-    function initialize(Avatar _avatar, IConfigurableRightsPool _crpool/*, IBPool _bpool,*/) external initializer {
+    function initialize(Avatar _avatar, IConfigurableRightsPool _crpool) external initializer {
         require(_avatar != Avatar(0),             	   "BalancerProxy: avatar cannot be null");
         require(_crpool != IConfigurableRightsPool(0), "BalancerProxy: crpool cannot be null");
 
@@ -29,28 +42,41 @@ contract BalancerProxy {
         crpool = _crpool;
     }
 
-    function setPublicSwap(bool publicSwap) public protected {
-        _setPublicSwap(publicSwap);
+    function setPublicSwap(bool publicSwap) external protected {
+        bool success = _setPublicSwap(publicSwap);
+        require(success, ERROR_SET_PUBLIC_SWAP);
+        emit SetPublicSwap(publicSwap);
     }
 
-    function setSwapFee(uint swapFee) public protected {
-        _setSwapFee(swapFee);
+    function setSwapFee(uint swapFee) external protected {
+        bool success = _setSwapFee(swapFee);
+        require(success, ERROR_SET_SWAP_FEE);
+        emit SetSwapFee(swapFee);
     }
 
-    function addToken(address token, uint balance, uint denormalizedWeight) public protected {
+    function addToken(address token, uint balance, uint denormalizedWeight) external protected {
         bool success = _commitAddToken(token, balance, denormalizedWeight);
-        require(success, "BalancerProxy: token was not commited");
-        _applyAddToken();
+        require(success, COMMIT_TOKEN);
+        success = _applyAddToken();
+        require(success, ADD_TOKEN);
+        emit AddToken(token, balance, denormalizedWeight);
     }
 
-    function removeToken(address token) public protected {
-        _removeToken(token);
-    }
-    function updateWeightsGradually(uint[] memory newWeights, uint startBlock, uint endBlock) public protected {
-        _updateWeightsGradually(newWeights, startBlock, endBlock);
+    function removeToken(address token) external protected {
+        bool success = _removeToken(token);
+        require(success, ADD_TOKEN);
+        emit RemoveToken(token);
     }
 
-    function _setPublicSwap(bool _publicSwap) internal {
+    function updateWeightsGradually(uint[] calldata newWeights, uint startBlock, uint endBlock) external protected {
+        bool success = _updateWeightsGradually(newWeights, startBlock, endBlock);
+        require(success, UPDATE_WEIGHTS_GRADUALLY);
+        emit UpdateWeightsGradually(newWeights, startBlock, endBlock);
+    }
+
+    /* internal state-modifying functions */
+
+    function _setPublicSwap(bool _publicSwap) internal returns(bool) {
         bytes     memory returned;
         bool             success;
     	Controller controller = Controller(avatar.owner());
@@ -64,9 +90,10 @@ contract BalancerProxy {
             avatar,
             0
         );
+        return success;
     }
 
-    function _setSwapFee(uint _swapFee) internal {
+    function _setSwapFee(uint _swapFee) internal returns(bool) {
         bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
@@ -80,9 +107,10 @@ contract BalancerProxy {
             avatar,
             0
         );
+        return success;        
     }
 
-    function _updateWeightsGradually(uint[] memory _newWeights, uint _startBlock, uint _endBlock) internal {
+    function _updateWeightsGradually(uint[] memory _newWeights, uint _startBlock, uint _endBlock) internal returns(bool) {
         bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
@@ -98,6 +126,7 @@ contract BalancerProxy {
             avatar,
             0
         );
+        return success;        
     }
 
     function _commitAddToken(address _token, uint _balance, uint _denormalizedWeight) internal returns(bool) {
@@ -119,7 +148,7 @@ contract BalancerProxy {
         return success;
     }
 
-    function _applyAddToken() internal {
+    function _applyAddToken() internal returns(bool) {
         bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
@@ -132,9 +161,10 @@ contract BalancerProxy {
             avatar,
             0
         );
+        return success;
     }
 
-    function _removeToken(address _token) internal {
+    function _removeToken(address _token) internal returns(bool) {
         bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
@@ -148,5 +178,6 @@ contract BalancerProxy {
             avatar,
             0
         );
+        return success;
     }
 }
