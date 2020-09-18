@@ -39,10 +39,10 @@ contract('BalancerProxy', (accounts) => {
       expect(await setup.proxy.avatar()).to.equal(setup.organization.avatar.address);
     });
   });
-  context('!! execute setPublicSwap', async () => {
-    // execute swap
+  context('» execute setPublicSwap', async () => {
     it('it sends setPublicSwap proposal and votes', async () => {
-      const calldata = helpers.encodeSetPublicSwap(false);
+      const publicSwap = false
+      const calldata = helpers.encodeSetPublicSwap(publicSwap);
       const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
       const proposalId = helpers.getNewProposalId(_tx);
       const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
@@ -54,16 +54,18 @@ contract('BalancerProxy', (accounts) => {
       let pool = await setup.balancer.pool.bPool();
       let bPool = await BPool.at(pool);
 
-      expect(await bPool.isPublicSwap()).to.equal(false);
+      expect(await bPool.isPublicSwap()).to.equal(publicSwap);
     });
   });
-  context('!! execute setSwapFee', async () => {
-    // execute swap
+  context('» execute setSwapFee', async () => {
     it('it sends setSwapFee proposal and votes', async () => {
-      const calldata = helpers.encodeSetSwapFee(10 ** 15);
+      const newFee = 11 ** 15
+      const calldata = helpers.encodeSetSwapFee(newFee);
       const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
       const proposalId = helpers.getNewProposalId(_tx);
+
       const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+
       const proposal = await setup.scheme.organizationProposals(proposalId);
       // store data
       setup.data.tx = tx;
@@ -73,7 +75,28 @@ contract('BalancerProxy', (accounts) => {
       let bPool = await BPool.at(pool);
 
       let swapFee = await bPool.getSwapFee();
-      expect(await swapFee.toString()).to.equal("1000000000000000");
+      expect(await swapFee.toString()).to.equal(newFee.toString());
     });
   });
+  // context('!! execute whitelistLiquidityProvider', async () => {
+  //   // execute swap
+  //   it('it sends whitelistLiquidityProvider proposal and votes', async () => {
+  //     // const calldata = helpers.encodeSetSwapFee(3 ** 15);
+  //     const calldata = helpers.encodeWhitelistLiquidityProvider(accounts[1]);
+
+  //     const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+  //     const proposalId = helpers.getNewProposalId(_tx);
+  //     const tx = await setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+  //     const proposal = await setup.scheme.organizationProposals(proposalId);
+  //     // store data
+  //     setup.data.tx = tx;
+  //     setup.data.proposal = proposal;
+
+  //     let pool = await setup.balancer.pool.bPool();
+  //     let bPool = await BPool.at(pool);
+
+  //     // expect(await swapFee.toString()).to.equal("1000000000000000");
+  //   });
+  // });
+
 });

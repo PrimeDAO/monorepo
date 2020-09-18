@@ -13,6 +13,9 @@ const encodeSetPublicSwap = (publicSwap) => {
 const encodeSetSwapFee = (swapFee) => {
   return new web3.eth.Contract(BalancerProxy.abi).methods.setSwapFee(swapFee).encodeABI();
 };
+const encodeWhitelistLiquidityProvider = (provider) => {
+  return new web3.eth.Contract(BalancerProxy.abi).methods.whitelistLiquidityProvider(provider).encodeABI();
+};
 const getValueFromLogs = (tx, arg, eventName, index = 0) => {
   /**
    *
@@ -64,6 +67,7 @@ module.exports = {
   setup,
   encodeSetPublicSwap,
   encodeSetSwapFee,
+  encodeWhitelistLiquidityProvider,
   getNewProposalId,
   values: {
     AMOUNT,
