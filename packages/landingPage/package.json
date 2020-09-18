@@ -1,7 +1,7 @@
 {
   "name": "@primedao/landingPage",
   "version": "1.0.0",
-  "description": "",
+  "description": "PrimeDAO main webpage",
   "main": "index.js",
   "scripts": {
     "start": "node scripts/start.js",
@@ -10,9 +10,9 @@
     "lint": "eslint --ext .ts,.tsx,.js ./src",
     "lint-andFix": "npm run lint -- --fix"
   },
-  "author": "Curve Labs",
+  "author": "CL Cybernetix GmbH",
   "homepage": "./",
-  "license": "ISC",
+  "license": "MIT",
   "browserslist": {
     "production": [
       ">0.2%",
