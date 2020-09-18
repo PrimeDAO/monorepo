@@ -1,6 +1,9 @@
 {
   "name": "@primedao/monorepo",
   "private": true,
+  "scripts": {
+    "bootstrap": "npx lerna bootstrap --force-local --ci"
+  },
   "devDependencies": {
     "lerna": "^3.22.1"
   }
