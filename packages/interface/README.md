@@ -1,6 +1,6 @@
-# PrimeDAO Contract Interface
+# The PrimeDAO’s Home for Network mMembers
 
-This is the [PrimeDAO](primedao.eth.link) web interface enabling the world to interact with PrimeDAO contracts. The "The PrimeDAO’s home for network members".
+This is the [PrimeDAO](primedao.eth.link) web interface enabling interaction with PrimeDAO contracts.
 
 ## Technical Description
 
