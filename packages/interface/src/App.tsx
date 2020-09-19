@@ -1,9 +1,12 @@
-import * as React from 'react';
-import { HashRouter, Route, Switch } from 'react-router-dom';
-import './App.scss';
-import LandingPage from './components/LandingPage/LandingPage';
+import * as React from "react";
+import { HashRouter, Route, Switch } from "react-router-dom";
+import { Ethereum } from "services/ethereum";
+import "./App.scss";
+import LandingPage from "./components/LandingPage/LandingPage";
 
 const App = (): React.ReactElement => {
+  Ethereum.initialize();
+
   return (
     <div className="app-shell">
       <HashRouter>

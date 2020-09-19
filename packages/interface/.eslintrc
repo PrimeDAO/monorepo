@@ -64,7 +64,7 @@
         "@typescript-eslint/no-unused-expressions": "error",
         "no-unused-vars": "off", // to not interfere with @typescript just below
         "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "[_].*" }],
-        "quotes": ["error", "single"],
+        "quotes": ["error", "double"],
         // "import/order": "error",
         // "import/newline-after-import": "error",
         "comma-dangle": ["error" ,"always-multiline"],
