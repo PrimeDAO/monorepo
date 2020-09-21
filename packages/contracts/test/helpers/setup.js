@@ -160,7 +160,7 @@ const proxy = async (setup) => {
   // deploy proxy
   const proxy = await BalancerProxy.new();
   // initialize proxy
-  await proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address);
+  await proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
 
   return proxy;
 };

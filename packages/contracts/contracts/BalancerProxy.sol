@@ -4,6 +4,7 @@ import "@daostack/arc/contracts/controller/Avatar.sol";
 import "@daostack/arc/contracts/controller/Controller.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./interfaces/IConfigurableRightsPool.sol";
+import "./interfaces/IBPool.sol";
 
 /**
  * @title A Balancer Configurable Rights Pool proxy
@@ -17,10 +18,14 @@ contract BalancerProxy {
     string constant REMOVE_TOKEN             = "BalancerProxy: removeToken failed";
     string constant UPDATE_WEIGHTS_GRADUALLY = "BalancerProxy: updateWeightsGradually failed";
     string constant ERROR_APPROVAL           = "BalancerProxy: ERC20 approval failed";
+    string constant JOIN_POOL                = "BalancerProxy: JoinPool failed";
+    string constant EXIT_POOL                = "BalancerProxy: ExitPool failed";
+    string constant TOKEN_AMOUNTS            = "BalancerProxy: token amounts array length doesn't match";
 
     bool               		public initialized;
     Avatar             		public avatar;
     IConfigurableRightsPool public crpool;
+    IBPool                  public bpool;
 
     event SetPublicSwap          (bool publicSwap);
     event SetSwapFee             (uint swapFee);
@@ -45,12 +50,14 @@ contract BalancerProxy {
       * @param _avatar The address of the Avatar controlling this proxy.
       * @param _crpool The address of the balancer Configurable Rights Pool.
       */
-    function initialize(Avatar _avatar, IConfigurableRightsPool _crpool) external initializer {
+    function initialize(Avatar _avatar, IConfigurableRightsPool _crpool, IBPool _bpool) external initializer {
         require(_avatar != Avatar(0),             	   "BalancerProxy: avatar cannot be null");
         require(_crpool != IConfigurableRightsPool(0), "BalancerProxy: crpool cannot be null");
+        require(_bpool  != IBPool(0), "BalancerProxy: crpool cannot be null");
 
         avatar = _avatar;
         crpool = _crpool;
+        bpool  = _bpool;
     }
 
     /**
@@ -102,12 +109,37 @@ contract BalancerProxy {
       * @param newWeights         New weights
       * @param startBlock         Start block for the update
       * @param endBlock           End block for the update
-
       */
     function updateWeightsGradually(uint[] calldata newWeights, uint startBlock, uint endBlock) external protected {
         bool success = _updateWeightsGradually(newWeights, startBlock, endBlock);
         require(success, UPDATE_WEIGHTS_GRADUALLY);
         emit UpdateWeightsGradually(newWeights, startBlock, endBlock);
+    }
+
+    /**
+      * @dev                      Joins the pool by adding more tokens.
+      * @param poolAmountOut      Number of pool tokens to receive
+      * @param maxAmountsIn       Max amount of asset tokens to spend
+      */
+    function joinPool(uint poolAmountOut, uint[] calldata maxAmountsIn) external protected {
+        address[] memory poolTokens = bpool.getCurrentTokens();
+        require(poolTokens.length == maxAmountsIn.length, TOKEN_AMOUNTS);
+        _approveAllTokens(poolTokens, maxAmountsIn);
+        bool success = _joinPool(poolAmountOut, maxAmountsIn);
+        require(success, JOIN_POOL);
+    }
+
+    /**
+     * @dev                      Exits the pool by redeeming the tokens.
+     * @param poolAmountIn       Amount of pool tokens to redeem
+     * @param minAmountsOut      Minimum amount of asset tokens to receive
+     */
+    function exitPool(uint poolAmountIn, uint[] calldata minAmountsOut) external protected {
+        address[] memory poolTokens = bpool.getCurrentTokens();
+        require(poolTokens.length == minAmountsOut.length, TOKEN_AMOUNTS);
+        _approveAllTokens(poolTokens, minAmountsOut);
+        bool success = _exitPool(poolAmountIn, minAmountsOut);
+        require(success, EXIT_POOL);
     }
 
     /* internal state-modifying functions */
@@ -179,15 +211,8 @@ contract BalancerProxy {
 
         address _poolManager = crpool.getSmartPoolManagerVersion();
 
-        (success,) = controller.genericCall(
-            _token,
-            abi.encodeWithSelector(IERC20(_token).approve.selector, _poolManager, _balance),
-            avatar,
-            0
-        );
+        _approve(_poolManager, _balance);
         
-        require(success, ERROR_APPROVAL);
-
         (success, returned) = controller.genericCall(
             address(crpool),
             abi.encodeWithSelector(
@@ -233,5 +258,74 @@ contract BalancerProxy {
             0
         );
         return success;
+    }
+
+    function _joinPool(uint _poolAmountOut, uint[] memory _maxAmountsIn) internal returns(bool) {
+        bytes     memory returned;
+        bool             success;
+        Controller controller = Controller(avatar.owner());
+
+        (success, returned) = controller.genericCall(
+            address(crpool),
+            abi.encodeWithSelector(
+                crpool.joinPool.selector,
+                _poolAmountOut,
+                _maxAmountsIn
+            ),
+            avatar,
+            0
+        );
+        return success;
+    }
+
+    function _exitPool(uint _poolAmountIn, uint[] memory _minAmountsOut) internal returns(bool) {
+        bytes     memory returned;
+        bool             success;
+        Controller controller = Controller(avatar.owner());
+
+        (success, returned) = controller.genericCall(
+            address(crpool),
+            abi.encodeWithSelector(
+                crpool.exitPool.selector,
+                _poolAmountIn,
+                _minAmountsOut
+            ),
+            avatar,
+            0
+        );
+        return success;
+    }
+
+    /* internal helpers functions */
+
+    function _approve(address _token, uint256 _amount) internal {
+        Controller       controller = Controller(avatar.owner());
+        bool             success;
+
+        if (IERC20(_token).allowance(address(avatar), address(crpool)) > 0) {
+            // reset allowance to make sure final approval does not revert
+            (success,) = controller.genericCall(
+                _token,
+                abi.encodeWithSelector(IERC20(_token).approve.selector, address(crpool), 0),
+                avatar,
+                0
+            );
+            require(success, ERROR_APPROVAL);
+        }
+        (success,) = controller.genericCall(
+            _token,
+            abi.encodeWithSelector(IERC20(_token).approve.selector, address(crpool), _amount),
+            avatar,
+            0
+        );
+        require(success, ERROR_APPROVAL);
+    }
+
+    function _approveAllTokens(address[] memory _poolTokens, uint[] memory _amounts) internal {
+        for (uint i = 0; i < _poolTokens.length; i++) {
+            address t   = _poolTokens[i];
+            uint amount = _amounts[i];
+            _approve(t, amount);
+        }
     }
 }
