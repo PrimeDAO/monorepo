@@ -30,7 +30,11 @@ export class Ethereum {
     walletconnect: {
       package: WalletConnectProvider, // required
       options: {
-        infuraId: "INFURA_ID", // required
+        rpc: {
+          1: "https://cad923f2c4e44bcf94459765db426b88.eth.rpc.rivet.cloud", // mainnet
+          4: "https://cad923f2c4e44bcf94459765db426b88.rinkeby.rpc.rivet.cloud/", // rinkeby
+          100: "https://dai.poa.network",
+        },
       },
     },
   };
@@ -83,33 +87,32 @@ export class Ethereum {
     });
 
     this.web3ModalProvider = await this.web3Modal.connect();
-
-    // Subscribe to accounts change
-    this.web3ModalProvider.on("accountsChanged", (accounts: string[]) => {
-      console.info(`web3ModalProvider.accountsChanged: ${accounts?.[0]}`);
-      this.fireAccountsChangedHandler(accounts);
-    });
-
-    // Subscribe to chainId change
-    this.web3ModalProvider.on("chainChanged", (chainId: number) => {
-      console.info(`web3ModalProvider.chainChanged: ${chainId}`);
-      this.fireChainChangedHandler(chainId);
-    });
-
-    // Subscribe to provider connection
-    this.web3ModalProvider.on("connect", (info: { chainId: number }) => {
-      console.info(`web3ModalProvider.connect: ${info?.chainId}`);
+    if (this.web3ModalProvider) {
       this.walletProvider = new ethers.providers.Web3Provider(this.web3ModalProvider);
-      this.fireConnectHandler(info);
-    });
+      const chainId = (this.walletProvider.provider as any)?.chainId ?? "unknown";
+      console.info(`web3Modal.connect: ${chainId}`);
+      this.fireConnectHandler({ chainId });
 
-    // Subscribe to provider disconnection
-    this.web3ModalProvider.on("disconnect", (error: { code: number; message: string }) => {
-      console.info(`web3ModalProvider.disconnect: ${error?.code}: ${error?.message}`);
-      this.web3ModalProvider = undefined;
-      this.walletProvider = undefined;
-      this.fireDisconnectHandler(error);
-    });
+      // Subscribe to accounts change
+      this.web3ModalProvider.on("accountsChanged", (accounts: string[]) => {
+        console.info(`web3ModalProvider.accountsChanged: ${accounts?.[0]}`);
+        this.fireAccountsChangedHandler(accounts);
+      });
+
+      // Subscribe to chainId change
+      this.web3ModalProvider.on("chainChanged", (chainId: number) => {
+        console.info(`web3ModalProvider.chainChanged: ${chainId}`);
+        this.fireChainChangedHandler(chainId);
+      });
+
+      // Subscribe to provider disconnection
+      this.web3ModalProvider.on("disconnect", (error: { code: number; message: string }) => {
+        console.info(`web3ModalProvider.disconnect: ${error?.code}: ${error?.message}`);
+        this.web3ModalProvider = undefined;
+        this.walletProvider = undefined;
+        this.fireDisconnectHandler(error);
+      });
+    }
   }
 
   public static onAccountsChanged(handler: (accounts: string[]) => void): void {
