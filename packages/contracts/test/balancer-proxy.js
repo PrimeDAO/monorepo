@@ -33,6 +33,7 @@ contract('BalancerProxy', (accounts) => {
   let setup;
   let publicSwap;
   let swapFee;
+  let blockNumber;
   before('!! deploy setup', async () => {
     setup = await deploy(accounts);
   });
@@ -214,25 +215,29 @@ contract('BalancerProxy', (accounts) => {
               it('it emits a CommitAddToken event', async () => {
                 await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'CommitAddToken');
               });
+              it('checks that the right address is commited', async () => {
+                expect((await setup.balancer.pool.newToken()).addr).to.equal(setup.tokens.erc20s[2].address);
+              });
               it('checks allowance of balancer pool provided by avatar', async () => {
                 expect((await setup.tokens.erc20s[2].allowance(setup.organization.avatar.address, setup.balancer.pool.address)).toString()).to.equal(toWei('1000'));
               });
               it('transfer tokens to the avatar address', async () => {
                 await setup.tokens.erc20s[2].transfer(setup.organization.avatar.address, toWei('1000'));
               });
-              it('waits 20 sec', async () => {
-                await time.increase(time.duration.seconds(20));
+              it('advances to blockNumber + 11', async () => {
+                blockNumber = (await setup.balancer.pool.newToken()).commitBlock;
+                await time.advanceBlockTo(blockNumber.toNumber()+11);
               });
-              // it('apply add Token', async () => {
-              //   // await setup.data.proxy.applyAddToken();
-              //   const calldata = helpers.encodeApplyAddToken();
-              //   const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
-              //   const proposalId = helpers.getNewProposalId(_tx);
-              //   const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+              it('apply add Token', async () => {
+                // await setup.data.proxy.applyAddToken();
+                const calldata = helpers.encodeApplyAddToken();
+                const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                const proposalId = helpers.getNewProposalId(_tx);
+                const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
 
-              //   setup.data.tx = tx;
-              //   await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'ApplyAddToken');
-              // });
+                setup.data.tx = tx;
+                await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'ApplyAddToken');
+              });
           });
         });
       });
