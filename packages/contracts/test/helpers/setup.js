@@ -99,6 +99,7 @@ const balancer = async (setup) => {
   const startWeights = [toWei('8'), toWei('1'), toWei('1')];
   const startBalances = [toWei('10000'), toWei('5000'), toWei('5000')];
   const SYMBOL = 'BPOOL';
+  const NAME = 'Prime Balancer Pool Token';
 
   const permissions = {
         canPauseSwapping: true,
@@ -108,25 +109,26 @@ const balancer = async (setup) => {
         canWhitelistLPs: false,
   };
 
+  const poolParams = {
+        poolTokenSymbol: SYMBOL,
+        poolTokenName: NAME,
+        constituentTokens: tokenAddresses,
+        tokenBalances: startBalances,
+        tokenWeights: startWeights,
+        swapFee: swapFee,
+  };
+
   POOL = await crpFactory.newCrp.call(
           bfactory.address,
-          SYMBOL,
-          tokenAddresses,
-          startBalances,
-          startWeights,
-          swapFee,
+          poolParams,
           permissions,
   );
     
   await crpFactory.newCrp(
           bfactory.address,
-          SYMBOL,
-          tokenAddresses,
-          startBalances,
-          startWeights,
-          swapFee,
+          poolParams,
           permissions,
-      );
+  );
 
   const pool = await ConfigurableRightsPool.at(POOL);
 
