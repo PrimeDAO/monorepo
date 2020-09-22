@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { ethers } from "ethers";
-import { BaseProvider, Web3Provider, ExternalProvider } from "@ethersproject/providers";
+import { BaseProvider, Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Torus from "@toruslabs/torus-embed";
@@ -12,7 +12,15 @@ interface IEIP1193 {
   on(eventName: "disconnect", handler: (error: { code: number; message: string }) => void);
 }
 
+export type AllowedNetworks = "mainnet" | "rinkeby" | "xdai";
+
 export class Ethereum {
+  private static ProviderEndpoints =
+  {
+    "mainnet": `https://${process.env.RIVET_ID}.eth.rpc.rivet.cloud/`,
+    "rinkeby": `https://${process.env.RIVET_ID}.rinkeby.rpc.rivet.cloud/`,
+    "xdai": "https://dai.poa.network",
+  }
   private static providerOptions = {
     torus: {
       package: Torus, // required
@@ -31,9 +39,9 @@ export class Ethereum {
       package: WalletConnectProvider, // required
       options: {
         rpc: {
-          1: "https://cad923f2c4e44bcf94459765db426b88.eth.rpc.rivet.cloud", // mainnet
-          4: "https://cad923f2c4e44bcf94459765db426b88.rinkeby.rpc.rivet.cloud/", // rinkeby
-          100: "https://dai.poa.network",
+          1: Ethereum.ProviderEndpoints["mainnet"],
+          4: Ethereum.ProviderEndpoints["rinkeby"],
+          100: Ethereum.ProviderEndpoints["xdai"],
         },
       },
     },
@@ -43,7 +51,23 @@ export class Ethereum {
   /**
    * provided by Web3Modal
    */
-  private static web3ModalProvider: ExternalProvider & IEIP1193;
+  private static web3ModalProvider: Web3Provider & IEIP1193;
+
+  private static chainNameById = new Map<number, string>([
+    [ 1, "mainnet" ],
+    [ 4, "rinkeby" ],
+    [ 100, "xdai" ],
+  ]);
+
+  private static chainIdByName = new Map<string, number>([
+    ["mainnet", 1],
+    ["rinkeby", 4],
+    ["xdai", 100],
+  ]);
+
+  private static async getChainId(provider: Web3Provider): Promise<number> {
+    return Number((await provider.send("net_version", [])));
+  }
 
   /**
    * using `Set` means dups are prevented.  They are maintained in the order added.
@@ -59,7 +83,7 @@ export class Ethereum {
   private static fireChainChangedHandler(chainId: number) {
     this.onChainChangedHandlers.forEach((fn) => fn(chainId));
   }
-  private static fireConnectHandler(info: { chainId: number }) {
+  private static fireConnectHandler(info: { chainId: number, chainName: string }) {
     this.onConnectHandlers.forEach((fn) => fn(info));
   }
   private static fireDisconnectHandler(error: { code: number; message: string }) {
@@ -74,24 +98,39 @@ export class Ethereum {
    */
   public static walletProvider: Web3Provider;
 
-  public static initialize(network = "https://cad923f2c4e44bcf94459765db426b88.eth.rpc.rivet.cloud" /*process.env.RIVET_ENDPOINT*/): void {
-    this.readOnlyProvider = ethers.getDefaultProvider(network);
+  public static initialize(network: AllowedNetworks): void {
+
+    if (!network) {
+      throw new Error("Ethereum.initialize: `network` must be specified");
+    }
+
+    this.readOnlyProvider = ethers.getDefaultProvider(Ethereum.ProviderEndpoints[network]);
   }
 
   public static async connect(network = "mainnet"): Promise<void> {
 
-    this.web3Modal = new Web3Modal({
-      network, // optional
-      // cacheProvider: true, // optional
-      providerOptions: this.providerOptions, // required
-    });
+    if (!this.web3Modal) {
+      this.web3Modal = new Web3Modal({
+        network, // optional
+        // cacheProvider: true, // optional
+        providerOptions: this.providerOptions, // required
+      });
+    }
 
-    this.web3ModalProvider = await this.web3Modal.connect();
-    if (this.web3ModalProvider) {
-      this.walletProvider = new ethers.providers.Web3Provider(this.web3ModalProvider);
-      const chainId = (this.walletProvider.provider as any)?.chainId ?? "unknown";
-      console.info(`web3Modal.connect: ${chainId}`);
-      this.fireConnectHandler({ chainId });
+    const web3ModalProvider = await this.web3Modal.connect();
+    if (web3ModalProvider) {
+      const walletProvider = new ethers.providers.Web3Provider(web3ModalProvider);
+      const chainId = await this.getChainId(walletProvider);
+      const chainName = this.chainNameById.get(chainId);
+      const readonlyEndPoint = Ethereum.ProviderEndpoints[chainName];
+      if (!readonlyEndPoint) {
+        alert("Please connect to either mainnet, rinkeby or xdai");
+        return;
+      }
+      this.readOnlyProvider = ethers.getDefaultProvider(readonlyEndPoint);
+      this.walletProvider = walletProvider;
+      this.web3ModalProvider = web3ModalProvider;
+      this.fireConnectHandler({ chainId, chainName});
 
       // Subscribe to accounts change
       this.web3ModalProvider.on("accountsChanged", (accounts: string[]) => {
@@ -121,7 +160,7 @@ export class Ethereum {
   public static onChainChanged(handler: (chainId: number) => void): void {
     this.onChainChangedHandlers.add(handler);
   }
-  public static onConnect(handler: (info: { chainId: number; }) => void): void {
+  public static onConnect(handler: (info: { chainId: number; chainName: string }) => void): void {
     this.onConnectHandlers.add(handler);
   }
   public static onDisconnect(handler: (error: { code: number; message: string; }) => void): void {
