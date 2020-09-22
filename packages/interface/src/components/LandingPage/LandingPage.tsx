@@ -49,7 +49,7 @@ class LandingPage extends React.Component<unknown, IState> {
   }
   async componentDidMount(): Promise<void> {
     const provider = Ethereum.readOnlyProvider;
-    Ethereum.onConnect((info) => { alert(info.chainId); });
+    Ethereum.onConnect((info) => { alert(`Connected to: ${info.chainName}`); });
     this.setState( {
       balance: await provider.getBalance("0xc564cfaea4d720dc58fa4b4dc934a32d76664404"),
       blockNumber: await provider.getBlockNumber(),
