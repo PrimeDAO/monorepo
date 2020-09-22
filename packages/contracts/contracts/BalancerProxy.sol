@@ -29,7 +29,8 @@ contract BalancerProxy {
 
     event SetPublicSwap          (bool publicSwap);
     event SetSwapFee             (uint swapFee);
-    event AddToken               (address indexed token, uint balance, uint denormalizedWeight);
+    event CommitAddToken         (address indexed token, uint balance, uint denormalizedWeight);
+    event ApplyAddToken          (bool addToken);
     event RemoveToken            (address indexed token);
     event UpdateWeightsGradually (uint[] newWeights, uint startBlock, uint endBlock);
 
@@ -38,6 +39,11 @@ contract BalancerProxy {
         initialized = true;
         _;
     }
+
+    // modifier onlyInitialized () {
+    //     require(initialized,                   "BalancerProxy: proxy not initialized");
+    //     _;
+    // }
 
     modifier protected () {
         require(initialized,                   "BalancerProxy: proxy not initialized");
@@ -53,7 +59,7 @@ contract BalancerProxy {
     function initialize(Avatar _avatar, IConfigurableRightsPool _crpool, IBPool _bpool) external initializer {
         require(_avatar != Avatar(0),             	   "BalancerProxy: avatar cannot be null");
         require(_crpool != IConfigurableRightsPool(0), "BalancerProxy: crpool cannot be null");
-        require(_bpool  != IBPool(0), "BalancerProxy: crpool cannot be null");
+        require(_bpool  != IBPool(0),                  "BalancerProxy: bpool cannot be null");
 
         avatar = _avatar;
         crpool = _crpool;
@@ -80,18 +86,17 @@ contract BalancerProxy {
         emit SetSwapFee(swapFee);
     }
 
-    /**
-      * @dev                      Add Token to the balancer pool.
-      * @param token              Token address
-      * @param balance            Amount of tokens that will be added to the pool.
-      * @param denormalizedWeight Approximate denormalized weight in the pool.
-      */
-    function addToken(address token, uint balance, uint denormalizedWeight) external protected {
+    function commitAddToken(address token, uint balance, uint denormalizedWeight) external protected {
         bool success = _commitAddToken(token, balance, denormalizedWeight);
         require(success, COMMIT_TOKEN);
-        success = _applyAddToken();
+
+        emit CommitAddToken(token, balance, denormalizedWeight);
+    }
+
+    function applyAddToken() external protected {
+        bool success = _applyAddToken();
         require(success, ADD_TOKEN);
-        emit AddToken(token, balance, denormalizedWeight);
+        emit ApplyAddToken(success);
     }
 
     /**
@@ -145,11 +150,11 @@ contract BalancerProxy {
     /* internal state-modifying functions */
 
     function _setPublicSwap(bool _publicSwap) internal returns(bool) {
-        bytes     memory returned;
+        // bytes     memory returned;
         bool             success;
     	Controller controller = Controller(avatar.owner());
 
-        (success, returned) = controller.genericCall(
+        (success,) = controller.genericCall(
             address(crpool),
             abi.encodeWithSelector(
                 crpool.setPublicSwap.selector,
@@ -162,11 +167,11 @@ contract BalancerProxy {
     }
 
     function _setSwapFee(uint _swapFee) internal returns(bool) {
-        bytes     memory returned;
+        // bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
-        (success, returned) = controller.genericCall(
+        (success, ) = controller.genericCall(
             address(crpool),
             abi.encodeWithSelector(
                 crpool.setSwapFee.selector,
@@ -205,15 +210,11 @@ contract BalancerProxy {
     }
 
     function _commitAddToken(address _token, uint _balance, uint _denormalizedWeight) internal returns(bool) {
-        bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
-        address _poolManager = crpool.getSmartPoolManagerVersion();
-
-        _approve(_poolManager, _balance);
-        
-        (success, returned) = controller.genericCall(
+        _approve(_token, _balance);
+        (success, ) = controller.genericCall(
             address(crpool),
             abi.encodeWithSelector(
                 crpool.commitAddToken.selector,
@@ -228,11 +229,11 @@ contract BalancerProxy {
     }
 
     function _applyAddToken() internal returns(bool) {
-        bytes     memory returned;
+        // bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
-        (success, returned) = controller.genericCall(
+        (success, ) = controller.genericCall(
             address(crpool),
             abi.encodeWithSelector(
                 crpool.applyAddToken.selector
@@ -328,4 +329,10 @@ contract BalancerProxy {
             _approve(t, amount);
         }
     }
+
+    // function _parseAddress(bytes memory bys) internal pure returns (address addr) {
+    //     assembly {
+    //       addr := mload(add(bys,20))
+    //     } 
+    // }
 }

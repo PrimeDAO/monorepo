@@ -13,8 +13,11 @@ const encodeSetPublicSwap = (publicSwap) => {
 const encodeSetSwapFee = (swapFee) => {
   return new web3.eth.Contract(BalancerProxy.abi).methods.setSwapFee(swapFee).encodeABI();
 };
-const encodeAddToken = (token, balance, denormalizedWeight) => {
-  return new web3.eth.Contract(BalancerProxy.abi).methods.addToken(token, balance, denormalizedWeight).encodeABI();
+const encodeCommitAddToken = (token, balance, denormalizedWeight) => {
+  return new web3.eth.Contract(BalancerProxy.abi).methods.commitAddToken(token, balance, denormalizedWeight).encodeABI();
+};
+const encodeApplyAddToken = () => {
+  return new web3.eth.Contract(BalancerProxy.abi).methods.applyAddToken().encodeABI();
 };
 const encodeRemoveToken = (token) => {
   return new web3.eth.Contract(BalancerProxy.abi).methods.removeToken(token).encodeABI();
@@ -73,7 +76,8 @@ module.exports = {
   setup,
   encodeSetPublicSwap,
   encodeSetSwapFee,
-  encodeAddToken,
+  encodeCommitAddToken,
+  encodeApplyAddToken,
   encodeRemoveToken,
   encodeUpdateWeightsGradually,
   getNewProposalId,

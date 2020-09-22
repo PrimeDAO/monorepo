@@ -63,11 +63,11 @@ const initialize = async (root) => {
 };
 
 const tokens = async (setup) => {
-  const weth = await WETH.new();
-  const erc20s = [await ERC20.new('DAI Stablecoin', 'DAI', 18), await ERC20.new('USDC Stablecoin', 'USDC', 15)];
-  await weth.deposit({ value: INITIAL_CASH_BALANCE });
+  // const weth = await WETH.new();
+  const erc20s = [await ERC20.new('DAI Stablecoin', 'DAI', 18), await ERC20.new('USDC Stablecoin', 'USDC', 15), await ERC20.new('USDT Stablecoin', 'USDT', 18)];
+  // await weth.deposit({ value: INITIAL_CASH_BALANCE });
 
-  return { weth, erc20s };
+  return { erc20s };
 };
 
 const balancer = async (setup) => {
@@ -87,6 +87,7 @@ const balancer = async (setup) => {
   const usdc = await setup.tokens.erc20s[1];
   const dai = await setup.tokens.erc20s[0];
   const daotoken = await setup.organization.token;
+  const usdt = await setup.tokens.erc20s[2];
 
   const USDC = await usdc.address;
   const DAI = await dai.address;
@@ -133,7 +134,7 @@ const balancer = async (setup) => {
   await dai.approve(POOL, MAX);
   await daotoken.approve(POOL, MAX);
 
-  await pool.createPool(toWei('1000'));
+  await pool.createPool(toWei('1000'), 10, 10);
 
   // move ownership to avatar
   await pool.setController(setup.organization.avatar.address);
