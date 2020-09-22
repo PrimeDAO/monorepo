@@ -40,11 +40,6 @@ contract BalancerProxy {
         _;
     }
 
-    // modifier onlyInitialized () {
-    //     require(initialized,                   "BalancerProxy: proxy not initialized");
-    //     _;
-    // }
-
     modifier protected () {
         require(initialized,                   "BalancerProxy: proxy not initialized");
         require(msg.sender == address(avatar), "BalancerProxy: protected operation");
@@ -329,10 +324,4 @@ contract BalancerProxy {
             _approve(t, amount);
         }
     }
-
-    // function _parseAddress(bytes memory bys) internal pure returns (address addr) {
-    //     assembly {
-    //       addr := mload(add(bys,20))
-    //     } 
-    // }
 }
