@@ -34,6 +34,10 @@ contract('BalancerProxy', (accounts) => {
   let publicSwap;
   let swapFee;
   let blockNumber;
+  let newWeights;
+  let startBLock;
+  let endBlock;
+
   before('!! deploy setup', async () => {
     setup = await deploy(accounts);
   });
@@ -46,12 +50,10 @@ contract('BalancerProxy', (accounts) => {
           expect(await setup.proxy.crpool()).to.equal(setup.balancer.pool.address);
         });
       });
-
       context('» avatar parameter is not valid', () => {
         before('!! deploy proxy', async () => {
           setup.data.proxy = await BalancerProxy.new();
         });
-
         it('it reverts', async () => {
           await expectRevert(setup.data.proxy.initialize(constants.ZERO_ADDRESS, setup.balancer.pool.address, await setup.balancer.pool.bPool()), 'BalancerProxy: avatar cannot be null');
         });
@@ -88,12 +90,10 @@ contract('BalancerProxy', (accounts) => {
               setup = await deploy(accounts);
               publicSwap = false;
             });
-
             context('» proxy is not initialized', () => {
               before('!! deploy proxy', async () => {
                 setup.data.proxy = await BalancerProxy.new();
               });
-
               it('it reverts', async () => {
                 await expectRevert(
                   setup.data.proxy.setPublicSwap(publicSwap),
@@ -101,13 +101,11 @@ contract('BalancerProxy', (accounts) => {
                 );
               });
             });
-
             context('» setPublicSwap is not triggered by avatar', () => {
               before('!! deploy and initialize proxy', async () => {
                 setup.data.proxy = await BalancerProxy.new();
                 await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
               });
-
               it('it reverts', async () => {
                 await expectRevert(
                   setup.data.proxy.setPublicSwap(publicSwap),
@@ -115,13 +113,11 @@ contract('BalancerProxy', (accounts) => {
                 );
               });
             });
-
             context('» pauses the contract by changing setPublicSwap', () => {
               before('!! deploy and initialize proxy', async () => {
                 setup.data.proxy = await BalancerProxy.new();
                 await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
               });
-
               it('bPool.isPublicSwap() == publicSwap', async () => {
                 const calldata = helpers.encodeSetPublicSwap(publicSwap);
                 const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
@@ -143,103 +139,146 @@ contract('BalancerProxy', (accounts) => {
             });
           });
       });
-      context('# setSwapFee', () => {
-          context('» generics', () => {
-            before('!! deploy setup', async () => {
-              setup = await deploy(accounts);
-              swapFee = 11 ** 15;
-            });
-
-            context('» setSwapFee is not triggered by avatar', () => {
-              before('!! deploy and initialize proxy', async () => {
-                setup.data.proxy = await BalancerProxy.new();
-                await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+        context('# setSwapFee', () => {
+            context('» generics', () => {
+              before('!! deploy setup', async () => {
+                setup = await deploy(accounts);
+                swapFee = 11 ** 15;
               });
-
-              it('it reverts', async () => {
-                await expectRevert(
-                  setup.data.proxy.setSwapFee(swapFee),
-                  'BalancerProxy: protected operation'
-                );
-              });
-            });
-
-            context('» change swapFee', () => {
-              before('!! deploy and initialize proxy', async () => {
-                setup.data.proxy = await BalancerProxy.new();
-                await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
-              });
-
-              it('bPool.getSwapFee() == swapFee', async () => {
-                const calldata = helpers.encodeSetSwapFee(swapFee);
-                const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
-                const proposalId = helpers.getNewProposalId(_tx);
-                const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
-                //store data
-                setup.data.tx = tx;
-              
-                const pool = await setup.balancer.pool.bPool();
-                const bPool = await BPool.at(pool);
-                expect(await (await bPool.getSwapFee()).toString()).to.equal(swapFee.toString());
-              });
-              it('it emits a SetSwapFee event', async () => {
-                await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'SetSwapFee', {
-                  swapFee: swapFee.toString()
+              context('» setSwapFee is not triggered by avatar', () => {
+                before('!! deploy and initialize proxy', async () => {
+                  setup.data.proxy = await BalancerProxy.new();
+                  await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+                });
+                it('it reverts', async () => {
+                  await expectRevert(
+                    setup.data.proxy.setSwapFee(swapFee),
+                    'BalancerProxy: protected operation'
+                  );
                 });
               });
+              context('» change swapFee', () => {
+                before('!! deploy and initialize proxy', async () => {
+                  setup.data.proxy = await BalancerProxy.new();
+                  await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+                });
+                it('bPool.getSwapFee() == swapFee', async () => {
+                  const calldata = helpers.encodeSetSwapFee(swapFee);
+                  const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                  const proposalId = helpers.getNewProposalId(_tx);
+                  const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                  //store data
+                  setup.data.tx = tx;
+                
+                  const pool = await setup.balancer.pool.bPool();
+                  const bPool = await BPool.at(pool);
+                  expect(await (await bPool.getSwapFee()).toString()).to.equal(swapFee.toString());
+                });
+                it('it emits a SetSwapFee event', async () => {
+                  await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'SetSwapFee', {
+                    swapFee: swapFee.toString()
+                  });
+                });
+            });
           });
         });
-      });
 
-      context('# addToken', () => {
+        context('# addToken & remove token', () => {
+            context('» generics', () => {
+              before('!! deploy setup', async () => {
+                setup = await deploy(accounts);
+              });
+              context('» add & remove Token', () => {
+                before('!! deploy and initialize proxy', async () => {
+                  setup.data.proxy = await BalancerProxy.new();
+                  await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+                });
+                it('commit add Token', async () => {
+                  const calldata = helpers.encodeCommitAddToken(setup.tokens.erc20s[2].address, toWei('1000'), toWei('1'));
+                  const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                  const proposalId = helpers.getNewProposalId(_tx);
+                  const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                  //store data
+                  setup.data.tx = tx;
+                });
+                it('it emits a CommitAddToken event', async () => {
+                  await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'CommitAddToken');
+                });
+                it('checks that the right address is commited', async () => {
+                  expect((await setup.balancer.pool.newToken()).addr).to.equal(setup.tokens.erc20s[2].address);
+                });
+                it('checks allowance of balancer pool provided by avatar', async () => {
+                  expect((await setup.tokens.erc20s[2].allowance(setup.organization.avatar.address, setup.balancer.pool.address)).toString()).to.equal(toWei('1000'));
+                });
+                it('transfer tokens to the avatar address', async () => {
+                  await setup.tokens.erc20s[2].transfer(setup.organization.avatar.address, toWei('1000'));
+                });
+                it('advances to blockNumber + 11', async () => {
+                  blockNumber = (await setup.balancer.pool.newToken()).commitBlock;
+                  await time.advanceBlockTo(blockNumber.toNumber()+11);
+                });
+                it('apply add Token', async () => {
+                  const calldata = helpers.encodeApplyAddToken();
+                  const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                  const proposalId = helpers.getNewProposalId(_tx);
+                  const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+
+                  setup.data.tx = tx;
+                  await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'ApplyAddToken');
+                });
+                it('checks the balance of bPool', async () => {
+                  expect((await setup.tokens.erc20s[2].balanceOf(await setup.balancer.pool.bPool())).toString()).to.equal(toWei('1000'));
+                });
+                it('checks the number of tokens', async () => {
+                  const pool = await setup.balancer.pool.bPool();
+                  const bPool = await BPool.at(pool);
+                  expect((await bPool.getNumTokens()).toNumber()).to.equal(4);
+                });
+                it('removes Token', async () => {
+                  const calldata = helpers.encodeRemoveToken(setup.tokens.erc20s[2].address);
+                  const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                  const proposalId = helpers.getNewProposalId(_tx);
+                  const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+
+                  setup.data.tx = tx;
+                  await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'RemoveToken');
+                });
+                it('checks the number of tokens', async () => {
+                  const pool = await setup.balancer.pool.bPool();
+                  const bPool = await BPool.at(pool);
+                  expect((await bPool.getNumTokens()).toNumber()).to.equal(3);
+                });
+                it('checks the balance of bPool', async () => {
+                  expect((await setup.tokens.erc20s[2].balanceOf(await setup.balancer.pool.bPool())).toString()).to.equal('0');
+                });
+            });
+          });
+        });
+        context('# updateWeightsGradually', () => {
           context('» generics', () => {
             before('!! deploy setup', async () => {
               setup = await deploy(accounts);
+              newWeights = [toWei('2'), toWei('4'), toWei('4')];
+              startBLock = blockNumber.toNumber()+100;
+              endBlock = startBLock + 250;
             });
-
-            context('» add Token', () => {
+            context('» call updateWeightsGradually', () => {
               before('!! deploy and initialize proxy', async () => {
                 setup.data.proxy = await BalancerProxy.new();
                 await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
               });
-
-              it('commit add Token', async () => {
-                const calldata = helpers.encodeCommitAddToken(setup.tokens.erc20s[2].address, toWei('1000'), toWei('1'));
+              it('update weights gradually', async () => {
+                const calldata = helpers.encodeUpdateWeightsGradually(newWeights, startBLock, endBlock);
                 const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                 const proposalId = helpers.getNewProposalId(_tx);
                 const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                 //store data
                 setup.data.tx = tx;
-              
-              });
-              it('it emits a CommitAddToken event', async () => {
-                await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'CommitAddToken');
-              });
-              it('checks that the right address is commited', async () => {
-                expect((await setup.balancer.pool.newToken()).addr).to.equal(setup.tokens.erc20s[2].address);
-              });
-              it('checks allowance of balancer pool provided by avatar', async () => {
-                expect((await setup.tokens.erc20s[2].allowance(setup.organization.avatar.address, setup.balancer.pool.address)).toString()).to.equal(toWei('1000'));
-              });
-              it('transfer tokens to the avatar address', async () => {
-                await setup.tokens.erc20s[2].transfer(setup.organization.avatar.address, toWei('1000'));
-              });
-              it('advances to blockNumber + 11', async () => {
-                blockNumber = (await setup.balancer.pool.newToken()).commitBlock;
-                await time.advanceBlockTo(blockNumber.toNumber()+11);
-              });
-              it('apply add Token', async () => {
-                // await setup.data.proxy.applyAddToken();
-                const calldata = helpers.encodeApplyAddToken();
-                const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
-                const proposalId = helpers.getNewProposalId(_tx);
-                const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
 
-                setup.data.tx = tx;
-                await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'ApplyAddToken');
+                await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'UpdateWeightsGradually');
               });
-          });
+            });
         });
-      });
-
+    });
 });
+

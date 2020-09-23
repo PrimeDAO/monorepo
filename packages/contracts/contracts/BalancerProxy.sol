@@ -186,11 +186,11 @@ contract BalancerProxy {
     internal
     returns(bool)
     {
-        bytes     memory returned;
+        // bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
-        (success, returned) = controller.genericCall(
+        (success, ) = controller.genericCall(
             address(crpool),
             abi.encodeWithSelector(
                 crpool.updateWeightsGradually.selector,
@@ -240,11 +240,11 @@ contract BalancerProxy {
     }
 
     function _removeToken(address _token) internal returns(bool) {
-        bytes     memory returned;
+        // bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
-        (success, returned) = controller.genericCall(
+        (success, ) = controller.genericCall(
             address(crpool),
             abi.encodeWithSelector(
                 crpool.removeToken.selector,
