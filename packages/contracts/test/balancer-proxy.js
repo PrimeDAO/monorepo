@@ -37,6 +37,8 @@ contract('BalancerProxy', (accounts) => {
   let newWeights;
   let startBLock;
   let endBlock;
+  let poolAmountOut;
+  let maxAmountsIn;
 
   before('!! deploy setup', async () => {
     setup = await deploy(accounts);
@@ -280,5 +282,39 @@ contract('BalancerProxy', (accounts) => {
             });
         });
     });
+        context('# joinPool', () => {
+          context('» generics', () => {
+            before('!! deploy setup', async () => {
+              setup = await deploy(accounts);
+              poolAmountOut = toWei('500')
+              maxAmountsIn = [toWei('7000'), toWei('3000'), toWei('3000')];
+
+            });
+            context('» call joinPool', () => {
+              before('!! deploy and initialize proxy', async () => {
+                setup.data.proxy = await BalancerProxy.new();
+                await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+              });
+              it('transfers tokens to the avatar address', async () => {
+                await setup.organization.token.transfer(setup.organization.avatar.address, maxAmountsIn[0]);
+                await setup.tokens.erc20s[0].transfer(setup.organization.avatar.address, maxAmountsIn[1]);
+                await setup.tokens.erc20s[1].transfer(setup.organization.avatar.address, maxAmountsIn[2]);
+              });
+
+              it('joins pool', async () => {
+                const calldata = helpers.encodeJoinPool(poolAmountOut, maxAmountsIn);
+                const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                const proposalId = helpers.getNewProposalId(_tx);
+                const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                // store data
+                setup.data.tx = tx;
+
+                await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'JoinPool');
+              });
+            });
+        });
+    });
+
+
 });
 

@@ -33,6 +33,7 @@ contract BalancerProxy {
     event ApplyAddToken          (bool addToken);
     event RemoveToken            (address indexed token);
     event UpdateWeightsGradually (uint[] newWeights, uint startBlock, uint endBlock);
+    event JoinPool               (uint poolAmountOut, uint[] maxAmountsIn);
 
     modifier initializer() {
         require(!initialized, "BalancerProxy: proxy already initialized");
@@ -127,6 +128,7 @@ contract BalancerProxy {
         _approveAllTokens(poolTokens, maxAmountsIn);
         bool success = _joinPool(poolAmountOut, maxAmountsIn);
         require(success, JOIN_POOL);
+        emit JoinPool(poolAmountOut, maxAmountsIn);
     }
 
     /**
@@ -257,11 +259,11 @@ contract BalancerProxy {
     }
 
     function _joinPool(uint _poolAmountOut, uint[] memory _maxAmountsIn) internal returns(bool) {
-        bytes     memory returned;
+        // bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
-        (success, returned) = controller.genericCall(
+        (success, ) = controller.genericCall(
             address(crpool),
             abi.encodeWithSelector(
                 crpool.joinPool.selector,
