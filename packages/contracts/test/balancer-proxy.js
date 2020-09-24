@@ -38,7 +38,9 @@ contract('BalancerProxy', (accounts) => {
   let startBLock;
   let endBlock;
   let poolAmountOut;
+  let poolAmountIn;
   let maxAmountsIn;
+  let minAmountsOut;
 
   before('!! deploy setup', async () => {
     setup = await deploy(accounts);
@@ -282,15 +284,17 @@ contract('BalancerProxy', (accounts) => {
             });
         });
     });
-        context('# joinPool', () => {
+        context('# joinPool & exitPool', () => {
           context('» generics', () => {
             before('!! deploy setup', async () => {
               setup = await deploy(accounts);
               poolAmountOut = toWei('500')
+              poolAmountIn = toWei('250')
               maxAmountsIn = [toWei('7000'), toWei('3000'), toWei('3000')];
+              minAmountsOut = [toWei('2000'), toWei('1000'), toWei('1000')];
 
             });
-            context('» call joinPool', () => {
+            context('» call joinPool and exitPool', () => {
               before('!! deploy and initialize proxy', async () => {
                 setup.data.proxy = await BalancerProxy.new();
                 await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
@@ -311,6 +315,22 @@ contract('BalancerProxy', (accounts) => {
 
                 await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'JoinPool');
               });
+              it('checks the balanceOf BPRIME tokens', async () => {
+                expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountOut);
+              }); 
+              it('exits pool', async () => {
+                const calldata = helpers.encodeExitPool(poolAmountIn, minAmountsOut);
+                const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                const proposalId = helpers.getNewProposalId(_tx);
+                const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                // store data
+                setup.data.tx = tx;
+
+                await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'ExitPool');
+              });
+              it('checks the balanceOf BPRIME tokens', async () => {
+                expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountIn);
+              }); 
             });
         });
     });

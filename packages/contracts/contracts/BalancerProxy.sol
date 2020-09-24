@@ -34,6 +34,7 @@ contract BalancerProxy {
     event RemoveToken            (address indexed token);
     event UpdateWeightsGradually (uint[] newWeights, uint startBlock, uint endBlock);
     event JoinPool               (uint poolAmountOut, uint[] maxAmountsIn);
+    event ExitPool               (uint poolAmountIn, uint[]  minAmountsOut);
 
     modifier initializer() {
         require(!initialized, "BalancerProxy: proxy already initialized");
@@ -82,13 +83,21 @@ contract BalancerProxy {
         emit SetSwapFee(swapFee);
     }
 
+    /**
+      * @dev                      Commit add token to the balancer pool.
+      * @param token              Token address
+      * @param balance            balance of the Token to add to the pool
+      * @param denormalizedWeight expected denormalizedWeight
+      */
     function commitAddToken(address token, uint balance, uint denormalizedWeight) external protected {
         bool success = _commitAddToken(token, balance, denormalizedWeight);
         require(success, COMMIT_TOKEN);
-
         emit CommitAddToken(token, balance, denormalizedWeight);
     }
 
+    /**
+      * @dev                      Add Token commited previously.
+      */
     function applyAddToken() external protected {
         bool success = _applyAddToken();
         require(success, ADD_TOKEN);
@@ -139,15 +148,14 @@ contract BalancerProxy {
     function exitPool(uint poolAmountIn, uint[] calldata minAmountsOut) external protected {
         address[] memory poolTokens = bpool.getCurrentTokens();
         require(poolTokens.length == minAmountsOut.length, TOKEN_AMOUNTS);
-        _approveAllTokens(poolTokens, minAmountsOut);
         bool success = _exitPool(poolAmountIn, minAmountsOut);
         require(success, EXIT_POOL);
+        emit ExitPool(poolAmountIn, minAmountsOut);
     }
 
     /* internal state-modifying functions */
 
     function _setPublicSwap(bool _publicSwap) internal returns(bool) {
-        // bytes     memory returned;
         bool             success;
     	Controller controller = Controller(avatar.owner());
 
@@ -164,7 +172,6 @@ contract BalancerProxy {
     }
 
     function _setSwapFee(uint _swapFee) internal returns(bool) {
-        // bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
@@ -188,7 +195,6 @@ contract BalancerProxy {
     internal
     returns(bool)
     {
-        // bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
@@ -226,7 +232,6 @@ contract BalancerProxy {
     }
 
     function _applyAddToken() internal returns(bool) {
-        // bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
@@ -242,7 +247,6 @@ contract BalancerProxy {
     }
 
     function _removeToken(address _token) internal returns(bool) {
-        // bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
@@ -259,7 +263,6 @@ contract BalancerProxy {
     }
 
     function _joinPool(uint _poolAmountOut, uint[] memory _maxAmountsIn) internal returns(bool) {
-        // bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
@@ -277,11 +280,10 @@ contract BalancerProxy {
     }
 
     function _exitPool(uint _poolAmountIn, uint[] memory _minAmountsOut) internal returns(bool) {
-        bytes     memory returned;
         bool             success;
         Controller controller = Controller(avatar.owner());
 
-        (success, returned) = controller.genericCall(
+        (success, ) = controller.genericCall(
             address(crpool),
             abi.encodeWithSelector(
                 crpool.exitPool.selector,

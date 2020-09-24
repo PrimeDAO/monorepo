@@ -28,6 +28,9 @@ const encodeUpdateWeightsGradually = (newWeights, startBlock, endBlock) => {
 const encodeJoinPool = (poolAmountOut, maxAmountsIn) => {
   return new web3.eth.Contract(BalancerProxy.abi).methods.joinPool(poolAmountOut, maxAmountsIn).encodeABI();
 };
+const encodeExitPool = (poolAmountIn, minAmountsOut) => {
+  return new web3.eth.Contract(BalancerProxy.abi).methods.exitPool(poolAmountIn, minAmountsOut).encodeABI();
+};
 const getValueFromLogs = (tx, arg, eventName, index = 0) => {
   /**
    *
@@ -84,6 +87,7 @@ module.exports = {
   encodeRemoveToken,
   encodeUpdateWeightsGradually,
   encodeJoinPool,
+  encodeExitPool,
   getNewProposalId,
   values: {
     AMOUNT,
