@@ -1,0 +1,49 @@
+{
+  "orgName": "primeDAO",
+  "tokenName": "Prime Token",
+  "tokenSymbol": "PRIME",
+  "ContributionReward": [{ "voteParams": 0 }],
+  "SchemeRegistrar": [{ "voteRegisterParams": 0, "voteRemoveParams": 0 }],
+  "UpgradeScheme": [{ "voteParams": 0 }],
+  "StandAloneContracts": [],
+  "CustomSchemes": [
+    {
+      "name": "BalancerProxy",
+      "alias": "BalancerProxy",
+      "isUniversal": false,
+      "address": "",
+      "params": ["0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"],
+      "permissions": "0x00000010"
+    },
+    {
+      "name": "GenericScheme",
+      "schemeName": "GenericScheme",
+      "isUniversal": false,
+      "params": ["GenesisProtocolAddress", { "voteParams": 0 }, ""],
+      "permissions": "0x00000010",
+      "alias": "GenericSchemeBalancer",
+      "fromArc": true
+    }
+  ],
+  "VotingMachinesParams": [
+    {
+      "activationTime": 0,
+      "boostedVotePeriodLimit": 604800,
+      "daoBountyConst": 10,
+      "minimumDaoBounty": 100,
+      "preBoostedVotePeriodLimit": 86400,
+      "proposingRepReward": 0,
+      "queuedVotePeriodLimit": 5184000,
+      "queuedVoteRequiredPercentage": 50,
+      "quietEndingPeriod": 345600,
+      "thresholdConst": 1500,
+      "voteOnBehalf": "0x0000000000000000000000000000000000000000",
+      "votersReputationLossRatio": 0
+    }
+  ],
+  "schemes": { "ContributionReward": true, "GenericScheme": true, "SchemeRegistrar": true, "GlobalConstraintRegistrar": false, "UpgradeScheme": true },
+  "unregisterOwner": true,
+  "useUController": false,
+  "useDaoCreator": true,
+  "founders": [{ "address": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC", "tokens": 100, "reputation": 100 }]
+}

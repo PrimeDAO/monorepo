@@ -42,7 +42,7 @@ contract BalancerProxy {
         _;
     }
 
-    modifier protected () {
+    modifier protected() {
         require(initialized,                   "BalancerProxy: proxy not initialized");
         require(msg.sender == address(avatar), "BalancerProxy: protected operation");
         _;
