@@ -5905,12 +5905,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xF7423DB51bCb777f074c03Bec6CeDE6BBe70c3f3",
-      "transactionHash": "0x8b7599aa5fe9b3130a3bfc74f3f3ff03b1d7c2436e9f836d5bfcb22020c7dbac"
+      "address": "0x6791062A6b2b56decDcF9259515244D9cfcDa00D",
+      "transactionHash": "0x30bd0515bfc4328176e3caeeff5d014f4bd81fc3d7e124953164e8961cf814ec"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-25T12:33:45.578Z",
+  "updatedAt": "2020-09-25T13:57:57.199Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",

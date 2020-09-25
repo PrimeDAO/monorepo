@@ -8326,12 +8326,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x9e895C3C1448C1Aa8095cF6B75C3982Cb26314A6",
-      "transactionHash": "0x426c2cac96b13cf0dca2c5e989942930f5e626ff7b94b4ba8a7b6b9934fdda6e"
+      "address": "0x83aAF97CDdd55Ca4a4886c8570cC225e48420552",
+      "transactionHash": "0x4991d15e5411c4ef6505b782662ab79e8e9d96a4b2d31ff6d21f4b73d773b4fe"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-25T12:33:45.660Z",
+  "updatedAt": "2020-09-25T13:57:57.262Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",

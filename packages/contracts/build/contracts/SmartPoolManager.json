@@ -46970,12 +46970,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x7f91f73c3060864AF99F2F325C872672859Ac7fC",
-      "transactionHash": "0x23d7aeceee93136c6abcb597ce2b247547bde71381784d16b826ccc105b04610"
+      "address": "0x14943ed99b734a2c139bf8e42156abE964e9A61c",
+      "transactionHash": "0x7129a135c1ecca10982246d18ff486793eef70a93575c9b0e0f8c53ad9e86a13"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-25T12:33:45.601Z",
+  "updatedAt": "2020-09-25T13:57:57.221Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",

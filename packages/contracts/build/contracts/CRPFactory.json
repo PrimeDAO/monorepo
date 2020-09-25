@@ -3198,16 +3198,16 @@
         }
       },
       "links": {
-        "BalancerSafeMath": "0x9e895C3C1448C1Aa8095cF6B75C3982Cb26314A6",
-        "RightsManager": "0xF7423DB51bCb777f074c03Bec6CeDE6BBe70c3f3",
-        "SmartPoolManager": "0x7f91f73c3060864AF99F2F325C872672859Ac7fC"
+        "BalancerSafeMath": "0x83aAF97CDdd55Ca4a4886c8570cC225e48420552",
+        "RightsManager": "0x6791062A6b2b56decDcF9259515244D9cfcDa00D",
+        "SmartPoolManager": "0x14943ed99b734a2c139bf8e42156abE964e9A61c"
       },
-      "address": "0xc0baE84c7eFbA508B0C5fb82B2c0e626ae4E4ce9",
-      "transactionHash": "0x5d2c96fb288a656a90d94b5cba810a6dcfddccf0391a2523f45de62396260ff5"
+      "address": "0x2bAE7a05fa7b3FF54A757AE2D2370D84BB0c604F",
+      "transactionHash": "0xdf8f4bf0823a4fac02e48fb7f72ccfae40f820c305eb3d62b6426fddd84d14d5"
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-25T12:33:45.648Z",
+  "updatedAt": "2020-09-25T13:57:57.241Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",
