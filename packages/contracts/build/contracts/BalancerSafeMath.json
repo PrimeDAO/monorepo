@@ -12,7 +12,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.6.6+commit.6c089d02\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"BONE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Balancer Labs\",\"details\":\"badd and bsub are basically identical to OpenZeppelin SafeMath; mul/div have extra checks\",\"methods\":{},\"title\":\"SafeMath - wrap Solidity operators to prevent underflow/overflow\"},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/arseny/Projects/curvelabs/research/1-balancer-sale/contracts/libraries/BalancerSafeMath.sol\":\"BalancerSafeMath\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/arseny/Projects/curvelabs/research/1-balancer-sale/contracts/libraries/BalancerSafeMath.sol\":{\"keccak256\":\"0x4f63e5431c2af366d3014c7c1ac662db1b3d81abec8f66452c3d8ceeb6d3fc42\",\"urls\":[\"bzz-raw://cda0f32f8096f523cef25dbc239cd9fdf8437541788776f614ddc69daf50b182\",\"dweb:/ipfs/QmRde4sYKDLMih4vapFMoYk6jxRffmYM4aFwJtUzV6q5J1\"]}},\"version\":1}",
@@ -8321,9 +8322,17 @@
     "name": "solc",
     "version": "0.6.6+commit.6c089d02.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x9e895C3C1448C1Aa8095cF6B75C3982Cb26314A6",
+      "transactionHash": "0x426c2cac96b13cf0dca2c5e989942930f5e626ff7b94b4ba8a7b6b9934fdda6e"
+    }
+  },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-10T10:38:34.232Z",
+  "updatedAt": "2020-09-25T12:33:45.660Z",
+  "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",
     "details": "badd and bsub are basically identical to OpenZeppelin SafeMath; mul/div have extra checks",

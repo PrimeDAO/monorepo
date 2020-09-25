@@ -12,7 +12,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -25,7 +26,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -38,7 +40,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -51,7 +54,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -64,7 +68,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -77,7 +82,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -128,7 +134,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -179,7 +186,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -235,7 +243,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"DEFAULT_CAN_ADD_REMOVE_TOKENS\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_CAN_CHANGE_CAP\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_CAN_CHANGE_SWAP_FEE\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_CAN_CHANGE_WEIGHTS\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_CAN_PAUSE_SWAPPING\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"DEFAULT_CAN_WHITELIST_LPS\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool[]\",\"name\":\"a\",\"type\":\"bool[]\"}],\"name\":\"constructRights\",\"outputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"canPauseSwapping\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeSwapFee\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeWeights\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canAddRemoveTokens\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canWhitelistLPs\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeCap\",\"type\":\"bool\"}],\"internalType\":\"struct RightsManager.Rights\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"canPauseSwapping\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeSwapFee\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeWeights\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canAddRemoveTokens\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canWhitelistLPs\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeCap\",\"type\":\"bool\"}],\"internalType\":\"struct RightsManager.Rights\",\"name\":\"rights\",\"type\":\"tuple\"}],\"name\":\"convertRights\",\"outputs\":[{\"internalType\":\"bool[]\",\"name\":\"\",\"type\":\"bool[]\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"bool\",\"name\":\"canPauseSwapping\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeSwapFee\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeWeights\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canAddRemoveTokens\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canWhitelistLPs\",\"type\":\"bool\"},{\"internalType\":\"bool\",\"name\":\"canChangeCap\",\"type\":\"bool\"}],\"internalType\":\"struct RightsManager.Rights\",\"name\":\"self\",\"type\":\"tuple\"},{\"internalType\":\"enum RightsManager.Permissions\",\"name\":\"permission\",\"type\":\"RightsManager.Permissions\"}],\"name\":\"hasPermission\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"Balancer Labs\",\"kind\":\"dev\",\"methods\":{\"constructRights(bool[])\":{\"details\":\"If you pass an empty array, it will construct it using the defaults\",\"params\":{\"a\":\"- array input\"},\"returns\":{\"_0\":\"Rights struct\"}},\"convertRights(RightsManager.Rights)\":{\"details\":\"avoids multiple calls to hasPermission\",\"params\":{\"rights\":\"- the rights struct to convert\"},\"returns\":{\"_0\":\"boolean array containing the rights settings\"}},\"hasPermission(RightsManager.Rights,RightsManager.Permissions)\":{\"params\":{\"permission\":\"- The permission to check\",\"self\":\"- Rights struct containing the permissions\"},\"returns\":{\"_0\":\"Boolean true if it has the permission\"}}},\"title\":\"Manage Configurable Rights for the smart pool      canPauseSwapping - can setPublicSwap back to false after turning it on                         by default, it is off on initialization and can only be turned on      canChangeSwapFee - can setSwapFee after initialization (by default, it is fixed at create time)      canChangeWeights - can bind new token weights (allowed by default in base pool)      canAddRemoveTokens - can bind/unbind tokens (allowed by default in base pool)      canWhitelistLPs - can limit liquidity providers to a given set of addresses      canChangeCap - can change the BSP cap (max # of pool tokens)\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"constructRights(bool[])\":{\"notice\":\"create a struct from an array (or return defaults)\"},\"convertRights(RightsManager.Rights)\":{\"notice\":\"Convert rights struct to an array (e.g., for events, GUI)\"},\"hasPermission(RightsManager.Rights,RightsManager.Permissions)\":{\"notice\":\"Externally check permissions using the Enum\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/arseny/Projects/primeDAO/configurable-rights-pool/libraries/RightsManager.sol\":\"RightsManager\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/arseny/Projects/primeDAO/configurable-rights-pool/libraries/RightsManager.sol\":{\"keccak256\":\"0xfde5e523cad34e49de6d1a61697ee56671273b95d765f1ead68276f1ceb7a610\",\"license\":\"GPL-3.0-or-later\",\"urls\":[\"bzz-raw://8ddac98fd18b55dcdd8a4aba301110501e8e83c100df48ec9cff8340b8d8221d\",\"dweb:/ipfs/QmbkRvJefRfDqYJU9pGbApyyAA4cCxKQgvEB9zwkHxW2YL\"]}},\"version\":1}",
@@ -5892,9 +5901,17 @@
     "name": "solc",
     "version": "0.6.12+commit.27d51765.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0xF7423DB51bCb777f074c03Bec6CeDE6BBe70c3f3",
+      "transactionHash": "0x8b7599aa5fe9b3130a3bfc74f3f3ff03b1d7c2436e9f836d5bfcb22020c7dbac"
+    }
+  },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-22T18:15:13.721Z",
+  "updatedAt": "2020-09-25T12:33:45.578Z",
+  "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",
     "kind": "dev",

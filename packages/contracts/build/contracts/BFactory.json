@@ -55,7 +55,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -74,7 +75,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -100,7 +102,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -4243,9 +4246,56 @@
     "name": "solc",
     "version": "0.6.6+commit.6c089d02.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {
+        "0xf586fa6ee1fc42f5b727f3b214ccbd0b6d7e698c45d49ba32f224fbb8670155d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "blabs",
+              "type": "address"
+            }
+          ],
+          "name": "LOG_BLABS",
+          "type": "event"
+        },
+        "0x8ccec77b0cb63ac2cafd0f5de8cdfadab91ce656d262240ba8a6343bccc5f945": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "pool",
+              "type": "address"
+            }
+          ],
+          "name": "LOG_NEW_POOL",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xf4ebFFC4eb4D60206cad174D7E208480D62751B2",
+      "transactionHash": "0x1ec14b28aaf9bb83da81b9f907c0d66b67de533e965748ac728587a9c1aaa30a"
+    }
+  },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-10T09:24:20.998Z",
+  "updatedAt": "2020-09-25T12:33:45.655Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },
