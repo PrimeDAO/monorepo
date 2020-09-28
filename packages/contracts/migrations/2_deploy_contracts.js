@@ -28,13 +28,13 @@ module.exports = async function (deployer, network, accounts) {
     const dai = await deployer.deploy(ERC20Mock, 'DAI Stablecoin', 'DAI', 18);
     const weth = await deployer.deploy(WETH);
   
-    await weth.deposit({ value: toWei('13.7') });
+    await weth.deposit({ value: toWei('3') });
 
     const tokenAddresses = [dai.address, weth.address];
  
     const swapFee = 10 ** 15;
     const startWeights = [toWei('5'), toWei('5')];
-    const startBalances = [toWei('10000'), toWei('13.7')];
+    const startBalances = [toWei('10000'), toWei('3')];
     const SYMBOL = 'BPOOL';
     const NAME = 'Prime Balancer Pool Token';
 

@@ -5902,6 +5902,12 @@
     "version": "0.6.12+commit.27d51765.Emscripten.clang"
   },
   "networks": {
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0x5EfDE80486fAc3BcdEac290C43B29a0cBBA52530",
+      "transactionHash": "0x94aa0dd4ea20e37cda8cf1eda58530f1d81fd703e21aa2d97318b7d40ebb909c"
+    },
     "5777": {
       "events": {},
       "links": {},
@@ -5910,7 +5916,7 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-25T13:57:57.199Z",
+  "updatedAt": "2020-09-25T14:27:13.183Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",
