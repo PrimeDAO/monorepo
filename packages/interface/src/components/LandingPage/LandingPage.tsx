@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import React, { RefObject } from "react";
-import { Ethereum } from "services/ethereum";
+import EthereumService from "services/ethereumService";
 import "./LandingPage.scss";
 
 const goto = (where: string) => {
@@ -48,8 +48,8 @@ class LandingPage extends React.Component<unknown, IState> {
     };
   }
   async componentDidMount(): Promise<void> {
-    const provider = Ethereum.readOnlyProvider;
-    Ethereum.onConnect((info) => { alert(`Connected to: ${info.chainName}`); });
+    const provider = EthereumService.readOnlyProvider;
+    EthereumService.onConnect((info) => { alert(`Connected to: ${info.chainName}`); });
     this.setState( {
       balance: await provider.getBalance("0xc564cfaea4d720dc58fa4b4dc934a32d76664404"),
       blockNumber: await provider.getBlockNumber(),
@@ -57,7 +57,7 @@ class LandingPage extends React.Component<unknown, IState> {
   }
 
   private onConnect() {
-    Ethereum.connect();
+    EthereumService.connect();
   }
 
   render(): React.ReactElement {
