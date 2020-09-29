@@ -247,7 +247,7 @@ contract('BalancerProxy', (accounts) => {
                         const bPool = await BPool.at(pool);
                         expect((await bPool.getNumTokens()).toNumber()).to.equal(4);
                     });
-                    context('# removeToken', () => {
+                    context('» removeToken', () => {
                         context('» remove Token', () => {
                             before('!! deploy and initialize proxy', async () => {
                                 setup.data.proxy = await BalancerProxy.new();
