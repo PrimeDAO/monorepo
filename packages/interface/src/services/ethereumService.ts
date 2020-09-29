@@ -73,8 +73,6 @@ export default class EthereumService {
     let account: Signer | string;
     if (Signer.isSigner(provider)) {
       account = provider;
-      // } else if (this.isInfuraProvider) {
-      //   return resolve ('0x0000000000000000000000000000000000000000');
     } else {
       const accounts = await provider.listAccounts();
 

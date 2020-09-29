@@ -23,7 +23,6 @@ const ContractAddresses: INetworkContractAddresses = {
 
 export class ContractsService {
   private static signer: Signer;
-  private static walletProvider: Web3Provider;
   private static ABIs = new Map<IContract, any>(
     [
       [IContract.SmartPoolManager, SmartPoolManagerABI.abi],
@@ -38,33 +37,28 @@ export class ContractsService {
 
   // private static readOnlyProvider = EthereumService.readOnlyProvider;
 
-  private static initializeContracts(network: AllowedNetworks) {
+  private static initializeContracts(network: AllowedNetworks, walletProvider: Web3Provider) {
     const defaultAccount = EthereumService.defaultAccount;
-    if (this.walletProvider && defaultAccount) {
+    if (walletProvider && defaultAccount) {
       this.Contracts.forEach((_value, key) => {
         if (Signer.isSigner(defaultAccount)) {
           this.Contracts.set(key, new ethers.Contract(
             ContractAddresses[network].get(key),
             this.ABIs.get(key),
             defaultAccount));
-        // } else if (this.isInfuraProvider) {
-        //   return new Contract(address, abi, this.web3)
         } else {
           this.Contracts.set(key, new ethers.Contract(
             ContractAddresses[network].get(key),
             this.ABIs.get(key),
-            this.walletProvider.getSigner(defaultAccount)));
+            walletProvider.getSigner(defaultAccount)));
         }
       });
-    } else {
-      throw new Error("initializeContracts: there is no provider");
     }
   }
 
   public static initialize(): void {
     EthereumService.onConnect((info) => {
-      ContractsService.walletProvider = info.provider;
-      ContractsService.initializeContracts(info.chainName);
+      ContractsService.initializeContracts(info.chainName, info.provider);
     });
   }
 }
