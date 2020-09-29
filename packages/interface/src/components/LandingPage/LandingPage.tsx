@@ -4,6 +4,7 @@ import { IContract } from "services/contractsService";
 import EthereumService from "services/ethereumService";
 import { ContractsService } from "services/contractsService";
 import "./LandingPage.scss";
+import { formatEther } from "ethers/lib/utils";
 
 const goto = (where: string) => {
   window.open(where, "_blank", "noopener noreferrer");
@@ -36,8 +37,9 @@ const MobileMenu = (props: { container: RefObject<HTMLDivElement> }): React.Reac
 };
 
 interface IState {
-  balance: BigNumber;
+  balance: string;
   blockNumber: number;
+  bPoolAddress: string;
 }
 
 class LandingPage extends React.Component<unknown, IState> {
@@ -47,6 +49,7 @@ class LandingPage extends React.Component<unknown, IState> {
     this.state = {
       balance: null,
       blockNumber: 0,
+      bPoolAddress: "",
     };
   }
   async componentDidMount(): Promise<void> {
@@ -55,10 +58,16 @@ class LandingPage extends React.Component<unknown, IState> {
       // alert(`Connected to: ${info.chainName}`);
       const crPool = ContractsService.getContractFor(IContract.ConfigurableRightsPool);
       const bPoolAddress = await crPool.bPool();
-      alert(`bPoolAddress: ${bPoolAddress}`);
+      this.setState({
+        bPoolAddress,
+      });
+    });
+    EthereumService.onAccountsChanged(async (account) => {
+      this.setState({
+        balance: formatEther(await provider.getBalance(account)),
+      });
     });
     this.setState( {
-      balance: await provider.getBalance("0xc564cfaea4d720dc58fa4b4dc934a32d76664404"),
       blockNumber: await provider.getBlockNumber(),
     });
   }
@@ -71,8 +80,9 @@ class LandingPage extends React.Component<unknown, IState> {
 
     const wrapper = React.createRef<HTMLDivElement>();
     if (this.state.balance) {
-      console.log(`Balance: ${this.state.balance.toString()}`);
-      console.log(`BlockNumber: ${this.state.blockNumber}`);
+      console.info(`Balance: ${this.state.balance}`);
+      console.info(`BlockNumber: ${this.state.blockNumber}`);
+      console.info(`bPoolAddress: ${this.state.bPoolAddress}`);
     }
 
     return (
