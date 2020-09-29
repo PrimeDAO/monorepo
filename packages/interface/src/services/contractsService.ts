@@ -2,24 +2,18 @@ import { Contract, ethers, Signer } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
 import EthereumService, { AllowedNetworks } from "services/ethereumService";
 
+const ContractAddresses = require("@primedao/contracts/contractAddresses.json") as INetworkContractAddresses;
 const ConfigurableRightsPoolABI = require("@primedao/contracts/build/contracts/ConfigurableRightsPool.json");
 const WETHABI = require("@primedao/contracts/build/contracts/WETH.json");
 
 export enum IContract {
-  ConfigurableRightsPool,
-  WETH,
+  ConfigurableRightsPool = "ConfigurableRightsPool",
+  WETH = "WETH",
 }
 
 interface INetworkContractAddresses {
   [network: string]: Map<IContract, string>;
 }
-
-const ContractAddresses: INetworkContractAddresses = {
-  "rinkeby": new Map([
-    [IContract.ConfigurableRightsPool, "0x7Cb9dAfCB3E9841c939fa8ECB1C1697C02014e8A" ],
-    [ IContract.WETH, "0xD896FBFA5045D2e34Ba5bcf6b6d6047e14572dd0" ],
-  ]),
-};
 
 export class ContractsService {
   private static ABIs = new Map<IContract, any>(
@@ -42,12 +36,12 @@ export class ContractsService {
       this.Contracts.forEach((_value, key) => {
         if (Signer.isSigner(defaultAccount)) {
           this.Contracts.set(key, new ethers.Contract(
-            ContractAddresses[network].get(key),
+            ContractAddresses[network][key],
             this.ABIs.get(key),
             defaultAccount));
         } else {
           this.Contracts.set(key, new ethers.Contract(
-            ContractAddresses[network].get(key),
+            ContractAddresses[network][key],
             this.ABIs.get(key),
             walletProvider.getSigner(defaultAccount)));
         }

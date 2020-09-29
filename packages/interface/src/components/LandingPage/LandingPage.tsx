@@ -4,7 +4,8 @@ import { IContract } from "services/contractsService";
 import EthereumService from "services/ethereumService";
 import { ContractsService } from "services/contractsService";
 import "./LandingPage.scss";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, parseEther } from "ethers/lib/utils";
+import TransactionsService, { TransactionReceipt, TransactionResponse } from "services/transactionsService";
 
 const goto = (where: string) => {
   window.open(where, "_blank", "noopener noreferrer");
@@ -40,6 +41,7 @@ interface IState {
   balance: string;
   blockNumber: number;
   bPoolAddress: string;
+  withdrawGasUsed: BigNumber,
 }
 
 class LandingPage extends React.Component<unknown, IState> {
@@ -50,6 +52,7 @@ class LandingPage extends React.Component<unknown, IState> {
       balance: null,
       blockNumber: 0,
       bPoolAddress: "",
+      withdrawGasUsed: null,
     };
   }
   async componentDidMount(): Promise<void> {
@@ -61,6 +64,23 @@ class LandingPage extends React.Component<unknown, IState> {
       this.setState({
         bPoolAddress,
       });
+
+      // const weth = ContractsService.getContractFor(IContract.WETH);
+      // const response = await TransactionsService.send(() =>
+      //   weth.deposit(parseEther(".05"))
+      // );
+      // const receipt = await response.wait(6);
+      // if (receipt.status) {
+      //   const response2 = await TransactionsService.send(() =>
+      //     weth.withdraw(parseEther(".05"))
+      //   );
+      //   const receipt2 = await response2.wait(6);
+      //   if (receipt2.status) {
+      //     this.setState({
+      //       withdrawGasUsed: receipt2.gasUsed,
+      //     });
+      //   }
+      // }
     });
     EthereumService.onAccountsChanged(async (account) => {
       this.setState({
@@ -83,6 +103,7 @@ class LandingPage extends React.Component<unknown, IState> {
       console.info(`Balance: ${this.state.balance}`);
       console.info(`BlockNumber: ${this.state.blockNumber}`);
       console.info(`bPoolAddress: ${this.state.bPoolAddress}`);
+      console.info(`withdrawGasUsed: ${this.state.withdrawGasUsed?.toString()}`);
     }
 
     return (
