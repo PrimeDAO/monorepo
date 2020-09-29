@@ -276,7 +276,7 @@ contract BalancerProxy {
             avatar,
             0
         );
-        require(success, ADD_TOKEN);
+        require(success, REMOVE_TOKEN);
         emit RemoveToken(_token);
     }
 

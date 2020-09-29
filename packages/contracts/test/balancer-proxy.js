@@ -186,13 +186,24 @@ contract('BalancerProxy', (accounts) => {
             });
           });
         });
-
-        context('# addToken & remove token', () => {
+        context('# commitAddToken => applyAddToken => removeToken', () => {
             context('» generics', () => {
               before('!! deploy setup', async () => {
                 setup = await deploy(accounts);
               });
-              context('» add & remove Token', () => {
+              context('» commitAddToken is not triggered by avatar', () => {
+                before('!! deploy and initialize proxy', async () => {
+                  setup.data.proxy = await BalancerProxy.new();
+                  await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+                });
+                it('it reverts', async () => {
+                  await expectRevert(
+                    setup.data.proxy.commitAddToken(setup.tokens.erc20s[2].address, toWei('1000'), toWei('1')),
+                    'BalancerProxy: protected operation'
+                  );
+                });
+              });
+              context('» commit Add Token', () => {
                 before('!! deploy and initialize proxy', async () => {
                   setup.data.proxy = await BalancerProxy.new();
                   await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
@@ -208,6 +219,8 @@ contract('BalancerProxy', (accounts) => {
                 it('it emits a CommitAddToken event', async () => {
                   await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'CommitAddToken');
                 });
+              context('» applyAddToken', () => {
+
                 it('checks that the right address is commited', async () => {
                   expect((await setup.balancer.pool.newToken()).addr).to.equal(setup.tokens.erc20s[2].address);
                 });
@@ -238,26 +251,38 @@ contract('BalancerProxy', (accounts) => {
                   const bPool = await BPool.at(pool);
                   expect((await bPool.getNumTokens()).toNumber()).to.equal(4);
                 });
-                it('removes Token', async () => {
-                  const calldata = helpers.encodeRemoveToken(setup.tokens.erc20s[2].address);
-                  const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
-                  const proposalId = helpers.getNewProposalId(_tx);
-                  const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
 
-                  setup.data.tx = tx;
-                  await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'RemoveToken');
+                context('# removeToken', () => {
+                      context('» remove Token', () => {
+                        before('!! deploy and initialize proxy', async () => {
+                          setup.data.proxy = await BalancerProxy.new();
+                          await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+                        });
+                        it('removes Token', async () => {
+                          const calldata = helpers.encodeRemoveToken(setup.tokens.erc20s[2].address);
+                          const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                          const proposalId = helpers.getNewProposalId(_tx);
+                          const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+
+                          setup.data.tx = tx;
+                          await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'RemoveToken');
+                        });
+                        it('checks the number of tokens', async () => {
+                          const pool = await setup.balancer.pool.bPool();
+                          const bPool = await BPool.at(pool);
+                          expect((await bPool.getNumTokens()).toNumber()).to.equal(3);
+                        });
+                        it('checks the balance of bPool', async () => {
+                          expect((await setup.tokens.erc20s[2].balanceOf(await setup.balancer.pool.bPool())).toString()).to.equal('0');
+                        });
+                    });
                 });
-                it('checks the number of tokens', async () => {
-                  const pool = await setup.balancer.pool.bPool();
-                  const bPool = await BPool.at(pool);
-                  expect((await bPool.getNumTokens()).toNumber()).to.equal(3);
-                });
-                it('checks the balance of bPool', async () => {
-                  expect((await setup.tokens.erc20s[2].balanceOf(await setup.balancer.pool.bPool())).toString()).to.equal('0');
-                });
+
+              });
             });
           });
         });
+
         context('# updateWeightsGradually', () => {
           context('» generics', () => {
             before('!! deploy setup', async () => {
@@ -284,7 +309,7 @@ contract('BalancerProxy', (accounts) => {
             });
         });
     });
-        context('# joinPool & exitPool', () => {
+        context('# joinPool => exitPool', () => {
           context('» generics', () => {
             before('!! deploy setup', async () => {
               setup = await deploy(accounts);
@@ -294,7 +319,7 @@ contract('BalancerProxy', (accounts) => {
               minAmountsOut = [toWei('2000'), toWei('1000'), toWei('1000')];
 
             });
-            context('» call joinPool and exitPool', () => {
+            context('» call joinPool', () => {
               before('!! deploy and initialize proxy', async () => {
                 setup.data.proxy = await BalancerProxy.new();
                 await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
@@ -318,23 +343,22 @@ contract('BalancerProxy', (accounts) => {
               it('checks the balanceOf BPRIME tokens', async () => {
                 expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountOut);
               }); 
-              it('exits pool', async () => {
-                const calldata = helpers.encodeExitPool(poolAmountIn, minAmountsOut);
-                const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
-                const proposalId = helpers.getNewProposalId(_tx);
-                const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
-                // store data
-                setup.data.tx = tx;
+              context('» call exitPool', () => {
+                it('exits pool', async () => {
+                  const calldata = helpers.encodeExitPool(poolAmountIn, minAmountsOut);
+                  const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                  const proposalId = helpers.getNewProposalId(_tx);
+                  const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                  // store data
+                  setup.data.tx = tx;
 
-                await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'ExitPool');
+                  await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'ExitPool');
+                });
+                it('checks the balanceOf BPRIME tokens', async () => {
+                  expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountIn);
+                }); 
               });
-              it('checks the balanceOf BPRIME tokens', async () => {
-                expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountIn);
-              }); 
             });
         });
     });
-
-
 });
-
