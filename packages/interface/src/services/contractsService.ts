@@ -2,11 +2,11 @@ import { Contract, ethers, Signer } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
 import EthereumService, { AllowedNetworks } from "services/ethereumService";
 
-const SmartPoolManagerABI = require("@primedao/contracts/build/contracts/SmartPoolManager.json");
+const ConfigurableRightsPoolABI = require("@primedao/contracts/build/contracts/ConfigurableRightsPool.json");
 const WETHABI = require("@primedao/contracts/build/contracts/WETH.json");
 
 export enum IContract {
-  SmartPoolManager,
+  ConfigurableRightsPool,
   WETH,
 }
 
@@ -16,22 +16,21 @@ interface INetworkContractAddresses {
 
 const ContractAddresses: INetworkContractAddresses = {
   "rinkeby": new Map([
-    [ IContract.SmartPoolManager, "0x18fD8D945491AECc689bB88Af036499BFfBCd7e8" ],
+    [IContract.ConfigurableRightsPool, "0x7Cb9dAfCB3E9841c939fa8ECB1C1697C02014e8A" ],
     [ IContract.WETH, "0xD896FBFA5045D2e34Ba5bcf6b6d6047e14572dd0" ],
   ]),
 };
 
 export class ContractsService {
-  private static signer: Signer;
   private static ABIs = new Map<IContract, any>(
     [
-      [IContract.SmartPoolManager, SmartPoolManagerABI.abi],
+      [IContract.ConfigurableRightsPool, ConfigurableRightsPoolABI.abi],
       [IContract.WETH, WETHABI.abi],
     ]
   );
 
   private static Contracts = new Map<IContract, Contract>([
-    [IContract.SmartPoolManager, null],
+    [IContract.ConfigurableRightsPool, null],
     [IContract.WETH, null],
   ]);
 
@@ -60,5 +59,9 @@ export class ContractsService {
     EthereumService.onConnect((info) => {
       ContractsService.initializeContracts(info.chainName, info.provider);
     });
+  }
+
+  public static getContractFor(contractName: IContract): any {
+    return this.Contracts.get(contractName);
   }
 }

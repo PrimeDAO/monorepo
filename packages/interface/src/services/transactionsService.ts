@@ -1,5 +1,5 @@
 // import { ethers } from "ethers";
-// import { Ethereum } from "./ethereumService";
+// import { ContractsService } from "./contractsService";
 
 // export default class TransactionsService {
 

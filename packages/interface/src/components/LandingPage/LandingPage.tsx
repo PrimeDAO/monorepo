@@ -1,6 +1,8 @@
 import { BigNumber } from "ethers";
 import React, { RefObject } from "react";
+import { IContract } from "services/contractsService";
 import EthereumService from "services/ethereumService";
+import { ContractsService } from "services/contractsService";
 import "./LandingPage.scss";
 
 const goto = (where: string) => {
@@ -49,7 +51,12 @@ class LandingPage extends React.Component<unknown, IState> {
   }
   async componentDidMount(): Promise<void> {
     const provider = EthereumService.readOnlyProvider;
-    EthereumService.onConnect((info) => { alert(`Connected to: ${info.chainName}`); });
+    EthereumService.onConnect(async (_info) => {
+      // alert(`Connected to: ${info.chainName}`);
+      const crPool = ContractsService.getContractFor(IContract.ConfigurableRightsPool);
+      const bPoolAddress = await crPool.bPool();
+      alert(`bPoolAddress: ${bPoolAddress}`);
+    });
     this.setState( {
       balance: await provider.getBalance("0xc564cfaea4d720dc58fa4b4dc934a32d76664404"),
       blockNumber: await provider.getBlockNumber(),
