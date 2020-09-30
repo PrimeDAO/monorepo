@@ -31,6 +31,9 @@ export class ContractsService {
   // private static readOnlyProvider = EthereumService.readOnlyProvider;
 
   private static initializeContracts(network: AllowedNetworks, walletProvider: Web3Provider) {
+    if (!ContractAddresses) {
+      throw new Error("initializeContracts: ContractAddresses not set");
+    }
     const defaultAccount = EthereumService.defaultAccount;
     if (walletProvider && defaultAccount) {
       this.Contracts.forEach((_value, key) => {
