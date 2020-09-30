@@ -65,22 +65,22 @@ class LandingPage extends React.Component<unknown, IState> {
         bPoolAddress,
       });
 
-      // const weth = ContractsService.getContractFor(IContract.WETH);
-      // const response = await TransactionsService.send(() =>
-      //   weth.deposit(parseEther(".05"))
-      // );
-      // const receipt = await response.wait(6);
-      // if (receipt.status) {
-      //   const response2 = await TransactionsService.send(() =>
-      //     weth.withdraw(parseEther(".05"))
-      //   );
-      //   const receipt2 = await response2.wait(6);
-      //   if (receipt2.status) {
-      //     this.setState({
-      //       withdrawGasUsed: receipt2.gasUsed,
-      //     });
-      //   }
-      // }
+      const weth = ContractsService.getContractFor(IContract.WETH);
+      const response = await TransactionsService.send(() =>
+        weth.deposit({ value: parseEther(".05") })
+      );
+      const receipt = await response.wait(6);
+      if (receipt.status) {
+        const response2 = await TransactionsService.send(() =>
+          weth.withdraw(parseEther(".05"))
+        );
+        const receipt2 = await response2.wait(6);
+        if (receipt2.status) {
+          this.setState({
+            withdrawGasUsed: receipt2.gasUsed,
+          });
+        }
+      }
     });
     EthereumService.onAccountsChanged(async (account) => {
       this.setState({
