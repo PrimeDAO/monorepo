@@ -7,6 +7,7 @@ const BalancerSafeMathMock = artifacts.require('BalancerSafeMathMock');
 const ConfigurableRightsPool = artifacts.require('ConfigurableRightsPool')
 const ERC20Mock = artifacts.require('ERC20Mock');
 const WETH = artifacts.require('WETH');
+const BalancerProxy = artifacts.require('BalancerProxy');
 
 module.exports = async function (deployer, network, accounts) {
     await deployer.deploy(RightsManager);
@@ -14,7 +15,8 @@ module.exports = async function (deployer, network, accounts) {
     await deployer.deploy(BFactory);
     await deployer.deploy(BalancerSafeMath);
     await deployer.deploy(BalancerSafeMathMock);
-    
+    await deployer.deploy(BalancerProxy);
+
     deployer.link(BalancerSafeMath, CRPFactory);
     deployer.link(RightsManager, CRPFactory);
     deployer.link(SmartPoolManager, CRPFactory);
@@ -81,4 +83,5 @@ module.exports = async function (deployer, network, accounts) {
     await pool.createPool(toWei('1000'));
 
     await console.log('> contract address: ' + (pool.address).toString())
+    await console.log('> bPool address:    ' + (await pool.bPool()).toString())
 };

@@ -5905,8 +5905,8 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0x5EfDE80486fAc3BcdEac290C43B29a0cBBA52530",
-      "transactionHash": "0x94aa0dd4ea20e37cda8cf1eda58530f1d81fd703e21aa2d97318b7d40ebb909c"
+      "address": "0x0fE55a4d342f4d1BfC0e9A55DA9ef5F0355cBB7D",
+      "transactionHash": "0xf3a6641395d39e174fa9fab556a2153f687036b5052e5d14a2ae82a2dd2bd1e2"
     },
     "5777": {
       "events": {},
@@ -5916,7 +5916,7 @@
     }
   },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-25T14:27:13.183Z",
+  "updatedAt": "2020-10-01T15:10:39.953Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",

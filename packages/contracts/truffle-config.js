@@ -1,5 +1,5 @@
 let HDWalletProvider = require("@truffle/hdwallet-provider");
-let privateKey="7847a6d27aad97d4c6fdc93f47ccd386f3a9da8065eaf1a64db5a284fe6ba76d"; 
+let privateKey="4993eebcf49f8136809b4231fea1e311e78637f16bea9b8cde34faaf6999a97c"; 
 
 module.exports = {
   networks: {
