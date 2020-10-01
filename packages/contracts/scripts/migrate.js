@@ -4,8 +4,8 @@ const contracts = require('../contractAddresses.json');
 
 const migrate = async () => {
 
-  specs.CustomSchemes[0].address = contracts.BalancerProxy;
-  specs.CustomSchemes[1].params[2] = contracts.BalancerProxy;
+  specs.CustomSchemes[0].address = contracts.rinkeby.BalancerProxy;
+  specs.CustomSchemes[1].params[2] = contracts.rinkeby.BalancerProxy;
 
   const options = {
     arcVersion: '0.0.1-rc.44',
