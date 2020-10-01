@@ -45,5 +45,5 @@
   "unregisterOwner": true,
   "useUController": false,
   "useDaoCreator": true,
-  "founders": [{ "address": "0x95cED938F7991cd0dFcb48F0a06a40FA1aF46EBC", "tokens": 100, "reputation": 100 }]
+  "founders": [{ "address": "0x0a1034393f818882546FaC36500C8764805F8cef", "tokens": 100, "reputation": 100 }]
 }
