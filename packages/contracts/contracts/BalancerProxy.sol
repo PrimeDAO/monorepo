@@ -35,6 +35,8 @@ contract BalancerProxy {
     event UpdateWeightsGradually (uint[] newWeights, uint startBlock, uint endBlock);
     event JoinPool               (uint poolAmountOut, uint[] maxAmountsIn);
     event ExitPool               (uint poolAmountIn, uint[]  minAmountsOut);
+    event UpdateWeight           (address indexed token, uint newWeight);
+
 
     modifier initializer() {
         require(!initialized, "BalancerProxy: proxy already initialized");
@@ -68,9 +70,7 @@ contract BalancerProxy {
       * @param publicSwap Sets publicSwap that allows to use balancer pool for swapping.
       */
     function setPublicSwap(bool publicSwap) external protected {
-        bool success = _setPublicSwap(publicSwap);
-        require(success, ERROR_SET_PUBLIC_SWAP);
-        emit SetPublicSwap(publicSwap);
+        _setPublicSwap(publicSwap);
     }
 
     /**
@@ -78,9 +78,7 @@ contract BalancerProxy {
       * @param swapFee Sets Swap Fee.
       */
     function setSwapFee(uint swapFee) external protected {
-        bool success = _setSwapFee(swapFee);
-        require(success, ERROR_SET_SWAP_FEE);
-        emit SetSwapFee(swapFee);
+        _setSwapFee(swapFee);
     }
 
     /**
@@ -90,18 +88,14 @@ contract BalancerProxy {
       * @param denormalizedWeight expected denormalizedWeight
       */
     function commitAddToken(address token, uint balance, uint denormalizedWeight) external protected {
-        bool success = _commitAddToken(token, balance, denormalizedWeight);
-        require(success, COMMIT_TOKEN);
-        emit CommitAddToken(token, balance, denormalizedWeight);
+        _commitAddToken(token, balance, denormalizedWeight);
     }
 
     /**
       * @dev                      Add Token commited previously.
       */
     function applyAddToken() external protected {
-        bool success = _applyAddToken();
-        require(success, ADD_TOKEN);
-        emit ApplyAddToken(success);
+        _applyAddToken();
     }
 
     /**
@@ -109,9 +103,16 @@ contract BalancerProxy {
       * @param token              Token address
       */
     function removeToken(address token) external protected {
-        bool success = _removeToken(token);
-        require(success, ADD_TOKEN);
-        emit RemoveToken(token);
+        _removeToken(token);
+    }
+
+    /**
+      * @dev                     Sets the new weights that are going to be gradually ipdated.
+      * @param token             Address of a token
+      * @param newWeight         Start block for the update
+      */
+    function updateWeight(address token, uint newWeight) external protected {
+        _updateWeight(token, newWeight);
     }
 
     /**
@@ -121,9 +122,7 @@ contract BalancerProxy {
       * @param endBlock           End block for the update
       */
     function updateWeightsGradually(uint[] calldata newWeights, uint startBlock, uint endBlock) external protected {
-        bool success = _updateWeightsGradually(newWeights, startBlock, endBlock);
-        require(success, UPDATE_WEIGHTS_GRADUALLY);
-        emit UpdateWeightsGradually(newWeights, startBlock, endBlock);
+        _updateWeightsGradually(newWeights, startBlock, endBlock);
     }
 
     /**
@@ -135,9 +134,7 @@ contract BalancerProxy {
         address[] memory poolTokens = bpool.getCurrentTokens();
         require(poolTokens.length == maxAmountsIn.length, TOKEN_AMOUNTS);
         _approveAllTokens(poolTokens, maxAmountsIn);
-        bool success = _joinPool(poolAmountOut, maxAmountsIn);
-        require(success, JOIN_POOL);
-        emit JoinPool(poolAmountOut, maxAmountsIn);
+        _joinPool(poolAmountOut, maxAmountsIn);
     }
 
     /**
@@ -148,14 +145,12 @@ contract BalancerProxy {
     function exitPool(uint poolAmountIn, uint[] calldata minAmountsOut) external protected {
         address[] memory poolTokens = bpool.getCurrentTokens();
         require(poolTokens.length == minAmountsOut.length, TOKEN_AMOUNTS);
-        bool success = _exitPool(poolAmountIn, minAmountsOut);
-        require(success, EXIT_POOL);
-        emit ExitPool(poolAmountIn, minAmountsOut);
+        _exitPool(poolAmountIn, minAmountsOut);
     }
 
     /* internal state-modifying functions */
 
-    function _setPublicSwap(bool _publicSwap) internal returns(bool) {
+    function _setPublicSwap(bool _publicSwap) internal {
         bool             success;
     	Controller controller = Controller(avatar.owner());
 
@@ -168,10 +163,11 @@ contract BalancerProxy {
             avatar,
             0
         );
-        return success;
+        require(success, ERROR_SET_PUBLIC_SWAP);
+        emit SetPublicSwap(_publicSwap);
     }
 
-    function _setSwapFee(uint _swapFee) internal returns(bool) {
+    function _setSwapFee(uint _swapFee) internal {
         bool             success;
         Controller controller = Controller(avatar.owner());
 
@@ -184,7 +180,26 @@ contract BalancerProxy {
             avatar,
             0
         );
-        return success;        
+        require(success, ERROR_SET_SWAP_FEE);
+        emit SetSwapFee(_swapFee);
+    }
+
+    function _updateWeight(address _token, uint _newWeight) internal {
+        bool             success;
+        Controller controller = Controller(avatar.owner());
+
+        (success, ) = controller.genericCall(
+            address(crpool),
+            abi.encodeWithSelector(
+                crpool.updateWeight.selector,
+                _token,
+                _newWeight
+            ),
+            avatar,
+            0
+        );
+        require(success, ERROR_SET_SWAP_FEE);
+        emit UpdateWeight(_token, _newWeight);
     }
 
     function _updateWeightsGradually(
@@ -193,7 +208,6 @@ contract BalancerProxy {
         uint _endBlock
     )
     internal
-    returns(bool)
     {
         bool             success;
         Controller controller = Controller(avatar.owner());
@@ -209,10 +223,11 @@ contract BalancerProxy {
             avatar,
             0
         );
-        return success;        
+        require(success, UPDATE_WEIGHTS_GRADUALLY);
+        emit UpdateWeightsGradually(_newWeights, _startBlock, _endBlock);
     }
 
-    function _commitAddToken(address _token, uint _balance, uint _denormalizedWeight) internal returns(bool) {
+    function _commitAddToken(address _token, uint _balance, uint _denormalizedWeight) internal {
         bool             success;
         Controller controller = Controller(avatar.owner());
 
@@ -228,10 +243,11 @@ contract BalancerProxy {
             avatar,
             0
         );
-        return success;
+        require(success, COMMIT_TOKEN);
+        emit CommitAddToken(_token, _balance, _denormalizedWeight);
     }
 
-    function _applyAddToken() internal returns(bool) {
+    function _applyAddToken() internal {
         bool             success;
         Controller controller = Controller(avatar.owner());
 
@@ -243,10 +259,11 @@ contract BalancerProxy {
             avatar,
             0
         );
-        return success;
+        require(success, ADD_TOKEN);
+        emit ApplyAddToken(success);
     }
 
-    function _removeToken(address _token) internal returns(bool) {
+    function _removeToken(address _token) internal {
         bool             success;
         Controller controller = Controller(avatar.owner());
 
@@ -259,10 +276,11 @@ contract BalancerProxy {
             avatar,
             0
         );
-        return success;
+        require(success, REMOVE_TOKEN);
+        emit RemoveToken(_token);
     }
 
-    function _joinPool(uint _poolAmountOut, uint[] memory _maxAmountsIn) internal returns(bool) {
+    function _joinPool(uint _poolAmountOut, uint[] memory _maxAmountsIn) internal {
         bool             success;
         Controller controller = Controller(avatar.owner());
 
@@ -276,10 +294,11 @@ contract BalancerProxy {
             avatar,
             0
         );
-        return success;
+        require(success, JOIN_POOL);
+        emit JoinPool(_poolAmountOut, _maxAmountsIn);
     }
 
-    function _exitPool(uint _poolAmountIn, uint[] memory _minAmountsOut) internal returns(bool) {
+    function _exitPool(uint _poolAmountIn, uint[] memory _minAmountsOut) internal {
         bool             success;
         Controller controller = Controller(avatar.owner());
 
@@ -293,7 +312,8 @@ contract BalancerProxy {
             avatar,
             0
         );
-        return success;
+        require(success, EXIT_POOL);
+        emit ExitPool(_poolAmountIn, _minAmountsOut);
     }
 
     /* internal helpers functions */
