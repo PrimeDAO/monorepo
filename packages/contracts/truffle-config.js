@@ -1,11 +1,11 @@
 let HDWalletProvider = require("@truffle/hdwallet-provider");
-let privateKey="4993eebcf49f8136809b4231fea1e311e78637f16bea9b8cde34faaf6999a97c"; 
+let privateKey = process.env.KEY;
 
 module.exports = {
   networks: {
       rinkeby: {
           provider: function() {
-              return new HDWalletProvider(privateKey,"https://rinkeby.infura.io/v3/dcc8666668a54add9186aefcd22f23bf");
+              return new HDWalletProvider(privateKey, process.env.PROVIDER);
           },
           network_id: 4
       }

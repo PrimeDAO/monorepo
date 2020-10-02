@@ -9,9 +9,9 @@ const migrate = async () => {
 
   const options = {
     arcVersion: '0.0.1-rc.44',
-    network: "rinkeby",
-    provider: "https://rinkeby.infura.io/v3/dcc8666668a54add9186aefcd22f23bf",
-    privateKey: '0x4993eebcf49f8136809b4231fea1e311e78637f16bea9b8cde34faaf6999a97c',
+    network: process.env.NETWORK,
+    provider: process.env.PROVIDER,
+    privateKey: process.env.KEY,
     customAbisLocation: './build/contracts',
     gasPrice: 10,
     quiet: false,
