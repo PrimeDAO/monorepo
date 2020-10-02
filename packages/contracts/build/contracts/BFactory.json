@@ -55,7 +55,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -74,7 +75,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -100,7 +102,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -4243,9 +4246,101 @@
     "name": "solc",
     "version": "0.6.6+commit.6c089d02.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "4": {
+      "events": {
+        "0xf586fa6ee1fc42f5b727f3b214ccbd0b6d7e698c45d49ba32f224fbb8670155d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "blabs",
+              "type": "address"
+            }
+          ],
+          "name": "LOG_BLABS",
+          "type": "event"
+        },
+        "0x8ccec77b0cb63ac2cafd0f5de8cdfadab91ce656d262240ba8a6343bccc5f945": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "pool",
+              "type": "address"
+            }
+          ],
+          "name": "LOG_NEW_POOL",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xcf61D082ee15E2E4e444d6d67E08D897e8D0A605",
+      "transactionHash": "0xa6a594f89259889b0c0a6bd7a25df4e9a03b8ded88013177166c29e8eff356e0"
+    },
+    "5777": {
+      "events": {
+        "0xf586fa6ee1fc42f5b727f3b214ccbd0b6d7e698c45d49ba32f224fbb8670155d": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "blabs",
+              "type": "address"
+            }
+          ],
+          "name": "LOG_BLABS",
+          "type": "event"
+        },
+        "0x8ccec77b0cb63ac2cafd0f5de8cdfadab91ce656d262240ba8a6343bccc5f945": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "caller",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "pool",
+              "type": "address"
+            }
+          ],
+          "name": "LOG_NEW_POOL",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x1242428FdB703359eC19438812D8F755ddA34eFF",
+      "transactionHash": "0x1437dbea02f2985d3f743f8b8ecdb696db8afba1918d4bb59537cf76421a456b"
+    }
+  },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-09-10T09:24:20.998Z",
+  "updatedAt": "2020-10-01T15:10:39.997Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },

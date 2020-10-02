@@ -1,19 +1,19 @@
 const DAOstackMigration = require('@daostack/migration');
-const bre = require('@nomiclabs/buidler');
 const specs = require('./primeDAO.json');
+const contracts = require('../contractAddresses.json');
 
 const migrate = async () => {
-  const { log, get } = bre.deployments;
 
-  const proxy = await get('BalancerProxy');
-  specs.CustomSchemes[0].address = proxy.address;
-  specs.CustomSchemes[1].params[2] = proxy.address;
+  specs.CustomSchemes[0].address = contracts.rinkeby.BalancerProxy;
+  specs.CustomSchemes[1].params[2] = contracts.rinkeby.BalancerProxy;
 
   const options = {
-    network: bre.network.name,
-    provider: bre.network.config.url,
-    privateKey: process.env.KEY || '242d567b6917dce8f836dc1fb190259c65998d38b14dddf2b94f45f41bb9fd19',
-    customAbisLocation: './artifacts',
+    arcVersion: '0.0.1-rc.44',
+    network: process.env.NETWORK,
+    provider: process.env.PROVIDER,
+    privateKey: process.env.KEY,
+    customAbisLocation: './build/contracts',
+    gasPrice: 10,
     quiet: false,
     force: true,
     restart: true,
@@ -23,7 +23,7 @@ const migrate = async () => {
   };
 
   const result = await DAOstackMigration.migrateDAO(options);
-  log('+ Deployed DAO at ' + result.dao['0.0.1-rc.44'].Avatar);
+  console.log('+ Deployed DAO at ' + result.dao['0.0.1-rc.44'].Avatar);
 };
 
 migrate();
