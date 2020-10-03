@@ -1,7 +1,7 @@
 import * as React from "react";
 import { HashRouter, Route, Switch } from "react-router-dom";
-import { ContractsService } from "services/contractsService";
-import EthereumService from "services/ethereumService";
+import { ContractsService } from "services/ContractsService";
+import EthereumService from "services/EthereumService";
 import "./App.scss";
 import LandingPage from "./components/LandingPage/LandingPage";
 require("dotenv").config();

@@ -1,11 +1,10 @@
-import { BigNumber } from "ethers";
 import React, { RefObject } from "react";
-import { IContract } from "services/contractsService";
-import EthereumService from "services/ethereumService";
-import { ContractsService } from "services/contractsService";
+import { IContract } from "services/ContractsService";
+import EthereumService from "services/EthereumService";
+import { ContractsService } from "services/ContractsService";
 import "./LandingPage.scss";
 import { formatEther, parseEther } from "ethers/lib/utils";
-import TransactionsService, { TransactionReceipt, TransactionResponse } from "services/transactionsService";
+import TransactionsService from "services/TransactionsService";
 
 const goto = (where: string) => {
   window.open(where, "_blank", "noopener noreferrer");
@@ -59,13 +58,13 @@ class LandingPage extends React.Component<unknown, IState> {
     const provider = EthereumService.readOnlyProvider;
     EthereumService.onConnect(async (_info) => {
       // alert(`Connected to: ${info.chainName}`);
-      const crPool = ContractsService.getContractFor(IContract.ConfigurableRightsPool);
+      const crPool = await ContractsService.getContractFor(IContract.ConfigurableRightsPool);
       const bPoolAddress = await crPool.bPool();
       this.setState({
         bPoolAddress,
       });
 
-      const weth = ContractsService.getContractFor(IContract.WETH);
+      const weth = await ContractsService.getContractFor(IContract.WETH);
       const response = await TransactionsService.send(() =>
         weth.deposit({ value: parseEther(".05") })
       );

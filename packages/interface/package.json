@@ -13,6 +13,10 @@
   "author": "CL Cybernetix GmbH",
   "homepage": "./",
   "license": "MIT",
+  "engines": {
+    "node": ">=13.1.0 <14.0",
+    "npm": "6.12.1"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -40,6 +44,7 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.10.4",
+    "@types/node": "13.1.8",
     "@types/react": "^16.9.47",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
