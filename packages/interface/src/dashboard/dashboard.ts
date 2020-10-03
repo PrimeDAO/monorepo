@@ -51,10 +51,10 @@ export class Dashboard {
 
     EthereumService.onConnect(async (_info) => {
       // alert(`Connected to: ${info.chainName}`);
-      const crPool = ContractsService.getContractFor(IContract.ConfigurableRightsPool);
+      const crPool = await ContractsService.getContractFor(IContract.ConfigurableRightsPool);
       this.bPoolAddress = await crPool.bPool();
 
-      const weth = ContractsService.getContractFor(IContract.WETH);
+      const weth = await ContractsService.getContractFor(IContract.WETH);
       const response = await TransactionsService.send(() =>
         weth.deposit({ value: parseEther(".05") }),
       );

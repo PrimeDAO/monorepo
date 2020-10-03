@@ -2,9 +2,9 @@ import { Contract, ethers, Signer } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
 import EthereumService, { AllowedNetworks } from "services/EthereumService";
 
-const ContractAddresses = require("../../static/contractAddresses.json") as INetworkContractAddresses;
-const ConfigurableRightsPoolABI = require("../../static/ConfigurableRightsPool.json");
-const WETHABI = require("../../static/WETH.json");
+const ContractAddresses = require("@primedao/contracts/contractAddresses.json") as INetworkContractAddresses;
+const ConfigurableRightsPoolABI = require("@primedao/contracts/build/contracts/ConfigurableRightsPool.json");
+const WETHABI = require("@primedao/contracts/build/contracts/WETH.json");
 
 export enum IContract {
   ConfigurableRightsPool = "ConfigurableRightsPool",
@@ -15,7 +15,7 @@ interface INetworkContractAddresses {
   [network: string]: Map<IContract, string>;
 }
 
-export default class ContractsService {
+export class ContractsService {
   private static ABIs = new Map<IContract, any>(
     [
       [IContract.ConfigurableRightsPool, ConfigurableRightsPoolABI.abi],
@@ -29,8 +29,14 @@ export default class ContractsService {
   ]);
 
   // private static readOnlyProvider = EthereumService.readOnlyProvider;
+  private static initializingContracts: Promise<void>;
+  private static initializingContractsResolver: () => void;
 
-  private static initializeContracts(network: AllowedNetworks, walletProvider: Web3Provider) {
+  private static async assertContracts(): Promise<void> {
+    return this.initializingContracts;
+  }
+
+  private static initializeContracts(network: AllowedNetworks, walletProvider: Web3Provider): void {
     if (!ContractAddresses) {
       throw new Error("initializeContracts: ContractAddresses not set");
     }
@@ -50,15 +56,25 @@ export default class ContractsService {
         }
       });
     }
+    this.initializingContractsResolver();
   }
 
   public static initialize(): void {
+    /**
+     * jump through this hook because the order of receipt of `EthereumService.onConnect`
+     * is indeterminant, but we have to make sure `ContractsService.initializeContracts`
+     * has completed before someone tries to use `this.Contracts` (see `getContractFor`).
+     */
+    this.initializingContracts = new Promise<void>((resolve: () => void) => {
+      this.initializingContractsResolver = resolve;
+    });
     EthereumService.onConnect((info) => {
       ContractsService.initializeContracts(info.chainName, info.provider);
     });
   }
 
-  public static getContractFor(contractName: IContract): any {
+  public static async getContractFor(contractName: IContract): Promise<any> {
+    await this.assertContracts();
     return this.Contracts.get(contractName);
   }
 }
