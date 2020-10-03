@@ -21,7 +21,6 @@
     "lint.fix": "npm run lint -- --fix"
   },
   "dependencies": {
-    "@primedao/contracts": "^1.0.0",
     "@toruslabs/torus-embed": "^1.8.5",
     "@walletconnect/web3-provider": "^1.2.2",
     "aurelia-animator-css": "^1.0.4",

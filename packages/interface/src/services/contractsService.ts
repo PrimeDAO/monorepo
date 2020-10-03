@@ -2,9 +2,9 @@ import { Contract, ethers, Signer } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
 import EthereumService, { AllowedNetworks } from "services/EthereumService";
 
-const ContractAddresses = require("@primedao/contracts/contractAddresses.json") as INetworkContractAddresses;
-const ConfigurableRightsPoolABI = require("@primedao/contracts/build/contracts/ConfigurableRightsPool.json");
-const WETHABI = require("@primedao/contracts/build/contracts/WETH.json");
+const ContractAddresses = require("../../static/contractAddresses.json") as INetworkContractAddresses;
+const ConfigurableRightsPoolABI = require("../../static/ConfigurableRightsPool.json");
+const WETHABI = require("../../static/WETH.json");
 
 export enum IContract {
   ConfigurableRightsPool = "ConfigurableRightsPool",
