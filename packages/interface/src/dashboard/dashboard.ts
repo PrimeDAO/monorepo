@@ -50,7 +50,6 @@ export class Dashboard {
     const provider = EthereumService.readOnlyProvider;
 
     EthereumService.onConnect(async (_info) => {
-      // alert(`Connected to: ${info.chainName}`);
       const crPool = await ContractsService.getContractFor(IContract.ConfigurableRightsPool);
       this.bPoolAddress = await crPool.bPool();
 

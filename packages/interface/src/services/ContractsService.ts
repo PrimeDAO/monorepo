@@ -15,7 +15,7 @@ interface INetworkContractAddresses {
   [network: string]: Map<IContract, string>;
 }
 
-export class ContractsService {
+export default class ContractsService {
   private static ABIs = new Map<IContract, any>(
     [
       [IContract.ConfigurableRightsPool, ConfigurableRightsPoolABI.abi],
