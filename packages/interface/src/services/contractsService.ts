@@ -1,6 +1,6 @@
 import { Contract, ethers, Signer } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
-import EthereumService, { AllowedNetworks } from "services/ethereumService";
+import EthereumService, { AllowedNetworks } from "services/EthereumService";
 
 const ContractAddresses = require("@primedao/contracts/contractAddresses.json") as INetworkContractAddresses;
 const ConfigurableRightsPoolABI = require("@primedao/contracts/build/contracts/ConfigurableRightsPool.json");
@@ -15,12 +15,12 @@ interface INetworkContractAddresses {
   [network: string]: Map<IContract, string>;
 }
 
-export class ContractsService {
+export default class ContractsService {
   private static ABIs = new Map<IContract, any>(
     [
       [IContract.ConfigurableRightsPool, ConfigurableRightsPoolABI.abi],
       [IContract.WETH, WETHABI.abi],
-    ]
+    ],
   );
 
   private static Contracts = new Map<IContract, Contract>([

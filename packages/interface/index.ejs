@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>PrimeDAO.eth.interface</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"
+    content="A decentralized autonomous organization and ecosystem for the adoption of decentralized, open finance.">
+  <base href="<%- htmlWebpackPlugin.options.metadata.baseUrl %>">
+  <link rel="icon" href="favicon.ico">
+  <script>
+    (function () {
+      const { pathname, hostname, protocol } = window.location
+
+      // redirect to https on non-localhost
+      if (protocol === 'http:' && hostname !== 'localhost') {
+        window.location.protocol = 'https'
+        return
+      }
+
+      const ipfsMatch = /.*\/Qm\w{44}/.exec(pathname)
+      changeBaseHref(ipfsMatch)
+
+      window.IS_IPFS = !!ipfsMatch || hostname.endsWith('.eth.link')
+
+      function changeBaseHref(match) {
+        if (match && match.length > 0) {
+          let baseHref = match[0]
+          if (!baseHref.endsWith('/')) baseHref += '/'
+
+          const base = document.querySelector('base')
+          base.href = baseHref
+        }
+      }
+
+    })();
+  </script>
+  <!-- imported CSS are concatenated and added automatically -->
+</head>
+
+<body aurelia-app="main">
+</body>
+
+</html>
