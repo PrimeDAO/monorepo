@@ -27,6 +27,7 @@
     "@walletconnect/web3-provider": "^1.2.2",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.3.3",
+    "aurelia-dialog": "^2.0.0",
     "aurelia-event-aggregator": "^1.0.3",
     "ethers": "^5.0.14",
     "moment-timezone": "^0.5.31",

@@ -1,10 +1,11 @@
-import { BlockWithoutTransactionData, Web3 } from 'web3';
+import { BlockWithoutTransactionData, Web3 } from "web3";
 
 export class Utils {
   public static sleep(milliseconds: number): Promise<any> {
     return new Promise((resolve: () => void): any => setTimeout(resolve, milliseconds));
   }
 
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   public static getObjectKeys(obj: any): Array<string> {
     const temp = [];
     for (const prop in obj) {
@@ -22,7 +23,7 @@ export class Utils {
     let block;
     do {
       block = await (Promise as any).promisify((callback: any): any =>
-        web3.eth.getBlock('latest', callback))() as BlockWithoutTransactionData;
+        web3.eth.getBlock("latest", callback))() as BlockWithoutTransactionData;
     }
     while (!block);
 
@@ -36,16 +37,16 @@ export class Utils {
     return new Promise((resolve: (res: any) => any, reject: (err: any) => any): void => {
       web3.currentProvider.sendAsync({
         id,
-        jsonrpc: '2.0',
-        method: 'evm_increaseTime',
+        jsonrpc: "2.0",
+        method: "evm_increaseTime",
         params: [duration],
       }, (err1: any) => {
         if (err1) { return reject(err1); }
 
         web3.currentProvider.sendAsync({
           id: id + 1,
-          jsonrpc: '2.0',
-          method: 'evm_mine',
+          jsonrpc: "2.0",
+          method: "evm_mine",
         }, (err2: any, res: any): void => {
           return err2 ? reject(err2) : resolve(res);
         });
@@ -58,7 +59,7 @@ export class Utils {
    * @param date
    * @param func
    */
-  public static runTimerAtDate(date, func) {
+  public static runTimerAtDate(date: Date, func: () => void): void {
     const now = (new Date()).getTime();
     const then = date.getTime();
     const diff = Math.max((then - now), 0);
@@ -73,14 +74,14 @@ export class Utils {
    * Resets the position of an input label after any dynamic (non-UI) change in its value
    * @param id
    */
-  public static resetInputField(container: HTMLElement, id: string, val: any) {
-    const element = container.querySelector(`input#${id}`);
-    /**
-     * using jquery to do the following for some reason does not
-     * enable Aurelia to know that the change has happened.
-     *
-     */
-    (element[0] as HTMLInputElement).value = val;
-    element[0].dispatchEvent(new Event('change'));
-  }
+  // public static resetInputField(container: HTMLElement, id: string, val: unknown): void {
+  //   const element = container.querySelector(`input#${id}`);
+  //   /**
+  //    * using jquery to do the following for some reason does not
+  //    * enable Aurelia to know that the change has happened.
+  //    *
+  //    */
+  //   (element[0] as HTMLInputElement).value = val;
+  //   element[0].dispatchEvent(new Event("change"));
+  // }
 }

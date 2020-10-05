@@ -1,10 +1,11 @@
 import { autoinject, singleton } from "aurelia-framework";
 import { IContract } from "services/ContractsService";
-import EthereumService from "services/EthereumService";
-import ContractsService from "services/ContractsService";
+import {EthereumService} from "services/EthereumService";
+import {ContractsService} from "services/ContractsService";
 import "./dashboard.scss";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import TransactionsService from "services/TransactionsService";
+import { EventAggregator } from "aurelia-event-aggregator";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -36,7 +37,6 @@ import TransactionsService from "services/TransactionsService";
 //   );
 // };
 
-@singleton(false)
 @autoinject
 export class Dashboard {
 
@@ -45,15 +45,19 @@ export class Dashboard {
   private bPoolAddress = "";
   private withdrawTransactionHash: string = null;
 
+  constructor(
+    private eventAggregator: EventAggregator,
+    private ethereumService: EthereumService,
+    private contractsService: ContractsService) {
+  }
+
   protected async attached(): Promise<void> {
 
-    const provider = EthereumService.readOnlyProvider;
-
-    EthereumService.onConnect(async (_info) => {
-      const crPool = await ContractsService.getContractFor(IContract.ConfigurableRightsPool);
+    this.eventAggregator.subscribe("Network.Changed.Connected", async () => {
+      const crPool = await this.contractsService.getContractFor(IContract.ConfigurableRightsPool);
       this.bPoolAddress = await crPool.bPool();
 
-      const weth = await ContractsService.getContractFor(IContract.WETH);
+      const weth = await this.contractsService.getContractFor(IContract.WETH);
       const response = await TransactionsService.send(() =>
         weth.deposit({ value: parseEther(".05") }),
       );
@@ -68,14 +72,9 @@ export class Dashboard {
         }
       }
     });
-    EthereumService.onAccountsChanged(async (account) => {
-      this.balance = formatEther(await provider.getBalance(account));
-    });
-
-    this.blockNumber = await provider.getBlockNumber();
   }
 
   private onConnect() {
-    EthereumService.connect();
+    this.ethereumService.connect();
   }
 }

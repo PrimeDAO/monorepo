@@ -1,12 +1,12 @@
-﻿import { autoinject } from 'aurelia-framework';
-import * as moment from 'moment-timezone';
+﻿import { autoinject } from "aurelia-framework";
+import * as moment from "moment-timezone";
 import Moment = moment.Moment;
 
 @autoinject
 export class DateService {
 
   public get tomorrow(): Date {
-    const tomorrow = this.createMoment().add(1, 'days');
+    const tomorrow = this.createMoment().add(1, "days");
     const dtTomorrow = new Date(tomorrow.year(), tomorrow.month(), tomorrow.date());
     return dtTomorrow;
   }
@@ -39,52 +39,52 @@ export class DateService {
 
     const formatArray: Array<IFormat> = [
       {
-        format: 'ZZ',
-        key: 'GmtOffset',
+        format: "ZZ",
+        key: "GmtOffset",
       },
       {
-        format: 'h:mma',
-        key: 'amPmTime',
+        format: "h:mma",
+        key: "amPmTime",
       },
       {
-        format: 'h:mma z',
-        key: 'amPmHourTz',
+        format: "h:mma z",
+        key: "amPmHourTz",
       },
       {
-        format: 'MMM Do',
-        key: 'shortdayofmonth',
+        format: "MMM Do",
+        key: "shortdayofmonth",
       },
       {
-        format: 'MMMM Do',
-        key: 'dayofmonth',
+        format: "MMMM Do",
+        key: "dayofmonth",
       },
       {
-        format: 'MMMM Do, YYYY',
-        key: 'shortdate',
+        format: "MMMM Do, YYYY",
+        key: "shortdate",
       },
       {
-        format: 'dddd MMMM Do, YYYY',
-        key: 'friendly',
+        format: "dddd MMMM Do, YYYY",
+        key: "friendly",
       },
       {
-        format: 'YYYY-MM-DD',
-        key: 'table-date',
+        format: "YYYY-MM-DD",
+        key: "table-date",
       },
       {
-        format: 'YYYY-MM-DD HH:mm:ss',
-        key: 'table-datetime',
+        format: "YYYY-MM-DD HH:mm:ss",
+        key: "table-datetime",
       },
       {
-        format: 'HH:mm:ss',
-        key: 'table-time',
+        format: "HH:mm:ss",
+        key: "table-time",
       },
       {
-        format: 'HH[:]mm dddd MMMM Do, YYYY',
-        key: 'friendlyDateTime',
+        format: "HH[:]mm dddd MMMM Do, YYYY",
+        key: "friendlyDateTime",
       },
       {
-        format: 'YYYY-MM-DDTHH:mm:ss.sssZ',
-        key: 'json',
+        format: "YYYY-MM-DDTHH:mm:ss.sssZ",
+        key: "json",
       },
     ];
 
@@ -102,12 +102,12 @@ export class DateService {
    * computed as being in Utc and you want the local time.
    * @param d
    */
-  public translateUtcToLocal(d: Date) {
-    return this.createMoment(d).subtract(this.localTimezoneOffset, 'minutes').toDate();
+  public translateUtcToLocal(d: Date): Date {
+    return this.createMoment(d).subtract(this.localTimezoneOffset, "minutes").toDate();
   }
 
-  public translateLocalToUtc(d: Date) {
-    return this.createMoment(d).add(this.localTimezoneOffset, 'minutes').toDate();
+  public translateLocalToUtc(d: Date): Date {
+    return this.createMoment(d).add(this.localTimezoneOffset, "minutes").toDate();
   }
 
   /**
@@ -119,7 +119,7 @@ export class DateService {
   public convertFormat(
     dateString: string,
     paramsFrom?: IFormatParameters | string,
-    paramsTo?: IFormatParameters | string) {
+    paramsTo?: IFormatParameters | string): string {
 
     if (paramsFrom === paramsTo) {
       return dateString;
@@ -131,7 +131,7 @@ export class DateService {
 
   public ticksToString(ticks: number, params?: IFormatParameters | string): string | null {
     if (!ticks) {
-      return '';
+      return "";
     }
 
     const d = this.createMomentFromTicks(ticks).toDate();
@@ -170,7 +170,7 @@ export class DateService {
   public ticksToTimeSpanString(
     ms: number,
     resolution: TimespanResolution = TimespanResolution.milliseconds): string | null {
-    if ((ms === null) || (typeof ms === 'undefined')) {
+    if ((ms === null) || (typeof ms === "undefined")) {
       return null;
     }
 
@@ -185,7 +185,7 @@ export class DateService {
     const seconds = Math.floor(ms / 1000);
     ms = ms % 1000;
 
-    let result: string = '';
+    let result = "";
 
     if (days && (resolution <= TimespanResolution.days)) {
       result = `${days} days`;
@@ -199,7 +199,7 @@ export class DateService {
       (firstResolution > TimespanResolution.hours) ||
       (resolution === TimespanResolution.hours)) &&
       (resolution <= TimespanResolution.hours)) {
-      result += `${result.length ? ', ' : ''}${hours} hours`;
+      result += `${result.length ? ", " : ""}${hours} hours`;
       if (!firstResolution) {
         firstResolution = TimespanResolution.hours;
       }
@@ -210,21 +210,21 @@ export class DateService {
       (firstResolution > TimespanResolution.minutes) ||
       (resolution === TimespanResolution.minutes)) &&
       (resolution <= TimespanResolution.minutes)) {
-      result += `${result.length ? ', ' : ''}${minutes} minutes`;
+      result += `${result.length ? ", " : ""}${minutes} minutes`;
       if (!firstResolution) {
         firstResolution = TimespanResolution.minutes;
       }
     }
 
     if (resolution <= TimespanResolution.seconds) {
-      result += `${result.length ? ', ' : ''}${seconds} seconds`;
+      result += `${result.length ? ", " : ""}${seconds} seconds`;
       if (!firstResolution) {
         firstResolution = TimespanResolution.seconds;
       }
     }
 
     if (ms && (resolution === TimespanResolution.milliseconds)) {
-      result += `${result.length ? ', ' : ''}${ms} milliseconds`;
+      result += `${result.length ? ", " : ""}${ms} milliseconds`;
     }
 
     return result;
@@ -287,7 +287,7 @@ export class DateService {
    * *day is 0-6, where 0 is sunday
    * @param day
    */
-  public nextInstanceOfDay(dayTarget: number, includeToday: boolean = false): Date {
+  public nextInstanceOfDay(dayTarget: number, includeToday = false): Date {
     const today = this.today;
     const dayToday = today.getDay();
 
@@ -297,7 +297,7 @@ export class DateService {
 
     const weeklen = dayTarget > dayToday ? 0 : 7;
 
-    const nextInstance = this.createMoment(today).add(weeklen + dayTarget - dayToday, 'days');
+    const nextInstance = this.createMoment(today).add(weeklen + dayTarget - dayToday, "days");
     return new Date(nextInstance.year(), nextInstance.month(), nextInstance.date());
   }
 
@@ -316,7 +316,7 @@ export class DateService {
     /**
      * format can be either raw or a key into the config (this.formats)
      */
-    if (typeof params === 'string') {
+    if (typeof params === "string") {
       return { format: this.formats.get(params as string) || params as string };
     } else {
       const parms = params as IFormatParameters;
@@ -355,11 +355,11 @@ export class DateService {
    * for some reason it gets serialized using a different format, lacking the Z.
    * (at least with the fetch serialized this is true).
    */
-  private createMoment(date?: Date | string, utc: boolean = false): Moment {
-    return moment.tz(date, utc ? 'Etc/GMT-0' : this.localTimezone);
+  private createMoment(date?: Date | string, utc = false): Moment {
+    return moment.tz(date, utc ? "Etc/GMT-0" : this.localTimezone);
   }
 
-  private createMomentFromString(str: string, format?: string, utc: boolean = false): Moment {
+  private createMomentFromString(str: string, format?: string, utc = false): Moment {
     let m: Moment = moment(str, format, true); // true for strict
 
     if (utc) {
@@ -369,7 +369,7 @@ export class DateService {
     return m;
   }
 
-  private createMomentFromTicks(ticks: number, utc: boolean = false): Moment {
+  private createMomentFromTicks(ticks: number, utc = false): Moment {
     let m: Moment = moment(ticks);
 
     if (utc) {

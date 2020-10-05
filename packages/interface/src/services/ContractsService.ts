@@ -1,6 +1,9 @@
 import { Contract, ethers, Signer } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
-import EthereumService, { AllowedNetworks } from "services/EthereumService";
+import { AllowedNetworks, EthereumService } from "services/EthereumService";
+import { EventAggregator } from "aurelia-event-aggregator";
+import { autoinject } from "aurelia-framework";
+import { IDisposable } from "services/IDisposable";
 
 const ContractAddresses = require("../contracts/contractAddresses.json") as INetworkContractAddresses;
 const ConfigurableRightsPoolABI = require("../contracts/ConfigurableRightsPool.json");
@@ -15,7 +18,9 @@ interface INetworkContractAddresses {
   [network: string]: Map<IContract, string>;
 }
 
-export default class ContractsService {
+@autoinject
+export class ContractsService {
+
   private static ABIs = new Map<IContract, any>(
     [
       [IContract.ConfigurableRightsPool, ConfigurableRightsPoolABI.abi],
@@ -29,37 +34,12 @@ export default class ContractsService {
   ]);
 
   // private static readOnlyProvider = EthereumService.readOnlyProvider;
-  private static initializingContracts: Promise<void>;
-  private static initializingContractsResolver: () => void;
+  private initializingContracts: Promise<void>;
+  private initializingContractsResolver: () => void;
 
-  private static async assertContracts(): Promise<void> {
-    return this.initializingContracts;
-  }
-
-  private static initializeContracts(network: AllowedNetworks, walletProvider: Web3Provider): void {
-    if (!ContractAddresses) {
-      throw new Error("initializeContracts: ContractAddresses not set");
-    }
-    const defaultAccount = EthereumService.defaultAccount;
-    if (walletProvider && defaultAccount) {
-      this.Contracts.forEach((_value, key) => {
-        if (Signer.isSigner(defaultAccount)) {
-          this.Contracts.set(key, new ethers.Contract(
-            ContractAddresses[network][key],
-            this.ABIs.get(key),
-            defaultAccount));
-        } else {
-          this.Contracts.set(key, new ethers.Contract(
-            ContractAddresses[network][key],
-            this.ABIs.get(key),
-            walletProvider.getSigner(defaultAccount)));
-        }
-      });
-    }
-    this.initializingContractsResolver();
-  }
-
-  public static initialize(): void {
+  constructor(
+    private eventAggregator: EventAggregator,
+    private ethereumService: EthereumService) {
     /**
      * jump through this hook because the order of receipt of `EthereumService.onConnect`
      * is indeterminant, but we have to make sure `ContractsService.initializeContracts`
@@ -68,13 +48,39 @@ export default class ContractsService {
     this.initializingContracts = new Promise<void>((resolve: () => void) => {
       this.initializingContractsResolver = resolve;
     });
-    EthereumService.onConnect((info) => {
-      ContractsService.initializeContracts(info.chainName, info.provider);
+    this.eventAggregator.subscribe("Network.Changed.Connected", (info) => {
+      this.initializeContracts(info.chainName, info.provider);
     });
   }
+  private async assertContracts(): Promise<void> {
+    return this.initializingContracts;
+  }
 
-  public static async getContractFor(contractName: IContract): Promise<any> {
+  private initializeContracts(network: AllowedNetworks, walletProvider: Web3Provider): void {
+    if (!ContractAddresses) {
+      throw new Error("initializeContracts: ContractAddresses not set");
+    }
+    const defaultAccount = this.ethereumService.defaultAccount;
+    if (walletProvider && defaultAccount) {
+      ContractsService.Contracts.forEach((_value, key) => {
+        if (Signer.isSigner(defaultAccount)) {
+          ContractsService.Contracts.set(key, new ethers.Contract(
+            ContractAddresses[network][key],
+            ContractsService.ABIs.get(key),
+            defaultAccount));
+        } else {
+          ContractsService.Contracts.set(key, new ethers.Contract(
+            ContractAddresses[network][key],
+            ContractsService.ABIs.get(key),
+            walletProvider.getSigner(defaultAccount)));
+        }
+      });
+    }
+    this.initializingContractsResolver();
+  }
+
+  public async getContractFor(contractName: IContract): Promise<any> {
     await this.assertContracts();
-    return this.Contracts.get(contractName);
+    return ContractsService.Contracts.get(contractName);
   }
 }

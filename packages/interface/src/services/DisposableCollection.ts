@@ -1,5 +1,5 @@
-﻿import { transient } from 'aurelia-framework';
-import { IDisposable } from './IDisposable';
+﻿import { transient } from "aurelia-framework";
+import { IDisposable } from "./IDisposable";
 
 @transient()
 export class DisposableCollection implements IDisposable {

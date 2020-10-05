@@ -1,10 +1,10 @@
 export class EventConfig {
 
-  public style: string = 'snack-info';
+  public style = "snack-info";
   /**
    * in milliseconds, default 3000, 0 for never
    */
-  public duration: number = 3000;
+  public duration = 3000;
   public actionType: ActionType = ActionType.none;
 
   public action: () => void;
@@ -29,7 +29,7 @@ export class EventConfig {
   constructor(
     public message: string,
     public type: EventMessageType = EventMessageType.Info,
-    lifetime: SnackLifetime = SnackLifetime.transitory
+    lifetime: SnackLifetime = SnackLifetime.transitory,
   ) {
 
     switch (lifetime) {
@@ -49,14 +49,14 @@ export class EventConfig {
       case EventMessageType.Info:
       case EventMessageType.Debug:
       default:
-        this.style = 'snack-info';
+        this.style = "snack-info";
         break;
       case EventMessageType.Warning:
-        this.style = 'snack-warning';
+        this.style = "snack-warning";
         break;
       case EventMessageType.Failure:
       case EventMessageType.Exception:
-        this.style = 'snack-failure';
+        this.style = "snack-failure";
         break;
     }
   }
@@ -64,8 +64,8 @@ export class EventConfig {
 
 export class EventConfigFailure extends EventConfig {
   constructor(
-    message: string = 'An error occurred',
-    originatingUiElement?: HTMLElement
+    message = "An error occurred",
+    originatingUiElement?: HTMLElement,
   ) {
     super(message, EventMessageType.Failure, SnackLifetime.closeButton);
     this.message = `${this.message}`;
@@ -75,13 +75,13 @@ export class EventConfigFailure extends EventConfig {
 
 export class EventConfigException extends EventConfig {
   constructor(
-    message: string = 'An error occurred',
-    public exception: any,
-    originatingUiElement?: HTMLElement
+    message = "An error occurred",
+    public exception: unknown,
+    originatingUiElement?: HTMLElement,
   ) {
     super(message, EventMessageType.Exception, SnackLifetime.closeButton);
     // the stack trace, etc, will be logged by ConsoleLogService
-    this.message = this.message;
+    this.message = message;
     this.originatingUiElement = originatingUiElement;
   }
 }
@@ -98,7 +98,7 @@ export class EventConfigAction extends EventConfig {
      */
     public action: () => void,
     type: EventMessageType = EventMessageType.Info,
-    lifetime: SnackLifetime = SnackLifetime.clickToDismiss
+    lifetime: SnackLifetime = SnackLifetime.clickToDismiss,
   ) {
     super(message, type, lifetime);
     this.actionType = ActionType.button;
@@ -112,18 +112,18 @@ export class EventConfigAddress extends EventConfig {
     /**
      * text to display instead of address
      */
-    public actionText: string
+    public actionText: string,
   ) {
     super(message, EventMessageType.Info, SnackLifetime.clickToDismiss);
     this.actionType = ActionType.address;
-    this.addressType = 'address';
+    this.addressType = "address";
   }
 }
 
 export class EventConfigTransaction extends EventConfig {
   constructor(
     message: string,
-    public address: string
+    public address: string,
   ) {
     super(message);
     /**

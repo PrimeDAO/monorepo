@@ -1,6 +1,7 @@
 import {Aurelia} from "aurelia-framework";
 import * as environment from "../config/environment.json";
 import {PLATFORM} from "aurelia-pal";
+import { EthereumService, Networks } from "services/EthereumService";
 
 export function configure(aurelia: Aurelia): void {
   aurelia.use
@@ -16,5 +17,9 @@ export function configure(aurelia: Aurelia): void {
     aurelia.use.plugin(PLATFORM.moduleName("aurelia-testing"));
   }
 
-  aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName("app")));
+  aurelia.start().then(() =>
+  {
+    EthereumService.initialize(process.env.NODE_ENV === "development" ? Networks.Rinkeby : Networks.Mainnet);
+    aurelia.setRoot(PLATFORM.moduleName("app"));
+  });
 }

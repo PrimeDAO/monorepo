@@ -1,6 +1,6 @@
-﻿import { Container } from 'aurelia-dependency-injection';
-import { autoinject, BindingEngine, TemplatingEngine } from 'aurelia-framework';
-import { IDisposable } from 'services/IDisposable';
+﻿import { Container } from "aurelia-dependency-injection";
+import { autoinject, BindingEngine, TemplatingEngine } from "aurelia-framework";
+import { IDisposable } from "services/IDisposable";
 
 @autoinject
 export class AureliaHelperService {
@@ -8,7 +8,7 @@ export class AureliaHelperService {
   constructor(
     public container: Container,
     private templatingEngine: TemplatingEngine,
-    private bindingEngine: BindingEngine
+    private bindingEngine: BindingEngine,
   ) {
 
   }
@@ -20,7 +20,7 @@ export class AureliaHelperService {
    * @param func
    */
   public createPropertyWatch(
-    object: any,
+    object: unknown,
     propertyName: string,
     func: (newValue: any, oldValue: any) => void): IDisposable {
     return this.bindingEngine.propertyObserver(object, propertyName)
@@ -34,16 +34,16 @@ export class AureliaHelperService {
    * @param elementSelector
    * @param bindingContext -- The viewmodel against which the binding should run
    */
-  public enhance(elementSelector: string, bindingContext: any): void {
+  public enhance(elementSelector: string, bindingContext: unknown): void {
     const el = document.querySelector(elementSelector);
     this.enhanceElement(el, bindingContext);
 
   }
 
-  public enhanceElement(el: Element, bindingContext: any, reEnhance: boolean = false): void {
+  public enhanceElement(el: Element, bindingContext: unknown, reEnhance = false): void {
     if (el) {
       if (reEnhance) {
-        el.classList.remove('au-target');
+        el.classList.remove("au-target");
       }
       this.templatingEngine.enhance({ element: el, bindingContext });
     }
