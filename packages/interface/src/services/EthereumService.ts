@@ -120,6 +120,8 @@ export default class EthereumService {
 
   public static defaultAccount: Signer | string;
 
+  public static targettedNetwork: Signer | string;
+
   public static async getDefaultAccountAddress(): Promise<string | undefined> {
     if (Signer.isSigner(this.defaultAccount)) {
       return await this.defaultAccount.getAddress();
@@ -134,7 +136,15 @@ export default class EthereumService {
       throw new Error("Ethereum.initialize: `network` must be specified");
     }
 
-    this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[network]);
+    this.targettedNetwork = network;
+
+    const readonlyEndPoint = EthereumService.ProviderEndpoints[this.targettedNetwork];
+    if (!readonlyEndPoint) {
+      alert("Please connect to either mainnet, rinkeby or xdai");
+      return;
+    }
+
+    this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[this.targettedNetwork]);
   }
 
   public static async connect(network = "mainnet"): Promise<void> {
@@ -153,8 +163,8 @@ export default class EthereumService {
       const chainId = await this.getChainId(walletProvider);
       const chainName = this.chainNameById.get(chainId);
       const readonlyEndPoint = EthereumService.ProviderEndpoints[chainName];
-      if (!readonlyEndPoint) {
-        alert("Please connect to either mainnet, rinkeby or xdai");
+      if (chainName !== this.targettedNetwork) {
+        alert(`Please connect to ${this.targettedNetwork}`);
         return;
       }
       this.readOnlyProvider = ethers.getDefaultProvider(readonlyEndPoint);
