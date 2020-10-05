@@ -28,6 +28,7 @@ Thumbs.db
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+.editorconfig
 
 # Dependencies
 node_modules
