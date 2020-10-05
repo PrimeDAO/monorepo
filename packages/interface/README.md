@@ -22,10 +22,20 @@ To add a new dependency:
 npx lerna add [package name] --scope @primedao/interface
 ```
 
-## Formatting and Linting
+Import the required contracts from the sibling contracts package:
 
-Run `npm run lint` to confirm lint succeeds before git commits.
+```
+npm run updateScripts
+```
 
+## Import the required contracts
+
+The contract addresses and ABIs originate in the sibling package "contracts".
+Whenever you need to update the contract addresses or ABIs, run:
+
+```
+npm run updateScripts
+```
 ## Run dev app
 
 Run `npm start`, then open `http://localhost:3300`. Or more simply, run `au run --open`.
@@ -47,6 +57,10 @@ For long time aurelia-cli user, you can still use `au run` with those arguments 
 ## Build for production
 
 Run `npm run build`, or the old way `au build --env prod`.
+
+## Formatting and Linting
+
+Run `npm run lint` to confirm lint succeeds before git commits.
 
 ## Unit tests
 

@@ -18,7 +18,8 @@
     "test": "au test",
     "ipfs-deploy": "ipfs-deploy dist --pinner pinata --no-open --no-clipboard",
     "lint": "eslint --ext .ts ./src ./test",
-    "lint.fix": "npm run lint -- --fix"
+    "lint.fix": "npm run lint -- --fix",
+    "updateScripts": "node scripts/importContracts.js"
   },
   "dependencies": {
     "@primedao/contracts": "^1.0.0",
