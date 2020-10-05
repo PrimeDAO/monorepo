@@ -6,6 +6,7 @@ import { from, Subject } from "rxjs";
 import { concatMap } from "rxjs/operators";
 import { AureliaHelperService } from "services/AureliaHelperService";
 import { DisposableCollection } from "services/DisposableCollection";
+import "./banner.scss";
 
 @containerless
 @autoinject

@@ -1,9 +1,9 @@
-import { autoinject, singleton } from "aurelia-framework";
+import { autoinject } from "aurelia-framework";
 import { IContract } from "services/ContractsService";
 import {EthereumService} from "services/EthereumService";
 import {ContractsService} from "services/ContractsService";
 import "./dashboard.scss";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import { parseEther } from "ethers/lib/utils";
 import TransactionsService from "services/TransactionsService";
 import { EventAggregator } from "aurelia-event-aggregator";
 

@@ -26,6 +26,9 @@ const cssRules = [
     options: {
       esModule: false
     }
+  },
+  {
+    loader: 'sass-loader'
   }
 ];
 
@@ -204,7 +207,7 @@ module.exports = ({ production } = {}, { extractCss, analyze, tests, hmr, port, 
       // CSS required in JS/TS files should use the style-loader that auto-injects it into the website
       // only when the issuer is a .js/.ts file, so the loaders are not applied inside html templates
       {
-        test: /\.css$/i,
+        test: /\.(s)css$/i,
         issuer: [{ not: [{ test: /\.html$/i }] }],
         use: extractCss ? [{
           loader: MiniCssExtractPlugin.loader
@@ -212,7 +215,7 @@ module.exports = ({ production } = {}, { extractCss, analyze, tests, hmr, port, 
         ] : ['style-loader', ...cssRules]
       },
       {
-        test: /\.css$/i,
+        test: /\.(s)css$/i,
         issuer: [{ test: /\.html$/i }],
         // CSS required in templates cannot be extracted safely
         // because Aurelia would try to require it again in runtime

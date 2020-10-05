@@ -33,7 +33,6 @@
     "moment-timezone": "^0.5.31",
     "numeral": "^2.0.6",
     "rxjs": "^6.6.3",
-    "snackbarjs": "^1.1.0",
     "web3modal": "^1.9.0"
   },
   "devDependencies": {
@@ -69,7 +68,9 @@
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^0.11.2",
     "minimatch": "^3.0.4",
+    "node-sass": "^4.14.1",
     "promise-polyfill": "^8.1.3",
+    "sass-loader": "^10.0.2",
     "style-loader": "^1.2.1",
     "tree-kill": "^1.2.2",
     "ts-jest": "^26.4.1",
