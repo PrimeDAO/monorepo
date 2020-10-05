@@ -13,10 +13,12 @@ describe("Stage App Component", () => {
 
   afterEach(() => component.dispose());
 
-  it("should render message", done => {
-    component.create(bootstrap).then(() => {
-      const view = component.element;
-      expect(view.textContent.trim()).toBe("PrimeDAO.eth.interface!");
+  it("should showdashboard", done => {
+    component.create(bootstrap).then(async () => {
+      // const view = component.element;
+      const dashboardElement = document.querySelector("dashboard");
+      expect(dashboardElement).toBeDefined();
+      // expect(view.textContent.trim()).toBe("PrimeDAO.eth.interface!");
       done();
     }).catch(e => {
       fail(e);
