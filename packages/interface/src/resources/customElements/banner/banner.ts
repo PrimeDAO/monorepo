@@ -42,33 +42,34 @@ export class Banner {
      * of observables whose values don't resolve until they are observed
      */
     // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const that = this;
     this.queue.pipe(concatMap((config: IBannerConfig) => {
-      return from(new Promise(function (resolve: () => void) {
+      return from(new Promise((resolve: () => void) => {
         // with timeout, give a cleaner buffer in between consecutive snacks
-        setTimeout(async () => {
-          that.resolveToClose = resolve;
-          // fire up this banner
-          that.elMessage.innerHTML = config.message;
-          switch (config.type) {
-            case EventMessageType.Info:
-              that.banner.classList.add("info");
-              that.banner.classList.remove("failure");
-              break;
-            default:
-              that.banner.classList.add("failure");
-              that.banner.classList.remove("info");
-              break;
-          }
-          that.aureliaHelperService.enhanceElement(that.elMessage, that, true);
-          that.showing = true;
-          that.animator.enter(that.banner);
-        }, 200);
+        setTimeout(() => this.showBanner(config, resolve), 200);
       }));
     }))
       // this will initiate the execution of the promises
       // each promise is executed after the previous one has resolved
       .subscribe();
+  }
+
+  private async showBanner(config: IBannerConfig, resolve: () => void) {
+    this.resolveToClose = resolve;
+    // fire up this banner
+    this.elMessage.innerHTML = config.message;
+    switch (config.type) {
+      case EventMessageType.Info:
+        this.banner.classList.add("info");
+        this.banner.classList.remove("failure");
+        break;
+      default:
+        this.banner.classList.add("failure");
+        this.banner.classList.remove("info");
+        break;
+    }
+    this.aureliaHelperService.enhanceElement(this.elMessage, this, true);
+    this.showing = true;
+    this.animator.enter(this.banner);
   }
 
   public attached(): void {

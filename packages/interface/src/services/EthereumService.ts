@@ -6,6 +6,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import Torus from "@toruslabs/torus-embed";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
+import { EventConfigFailure } from "services/GeneralEvents";
 
 interface IEIP1193 {
   on(eventName: "accountsChanged", handler: (accounts: string) => void);
@@ -72,8 +73,7 @@ export class EthereumService {
 
     const readonlyEndPoint = EthereumService.ProviderEndpoints[this.targetedNetwork];
     if (!readonlyEndPoint) {
-      alert(`Please connect to either ${Networks.Mainnet} or ${Networks.Rinkeby}`);
-      return;
+      throw new Error(`Please connect to either ${Networks.Mainnet} or ${Networks.Rinkeby}`);
     }
 
     this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[this.targetedNetwork]);
@@ -169,7 +169,7 @@ export class EthereumService {
       const chainId = await this.getChainId(walletProvider);
       const chainName = this.chainNameById.get(chainId);
       if (chainName !== EthereumService.targetedNetwork) {
-        alert(`Please connect to ${EthereumService.targetedNetwork}`);
+        this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Please connect to ${EthereumService.targetedNetwork}`));
         return;
       }
       /**

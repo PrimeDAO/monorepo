@@ -3,6 +3,7 @@ import {PLATFORM} from "aurelia-pal";
 
 export function configure(config: FrameworkConfiguration): void {
   config.globalResources([
+    PLATFORM.moduleName("./customElements/banner/banner"),
     PLATFORM.moduleName("./customElements/EtherscanLink/EtherscanLink"),
     PLATFORM.moduleName("./customElements/EthBalance/EthBalance"),
     PLATFORM.moduleName("./customElements/UsersAddress/UsersAddress"),
