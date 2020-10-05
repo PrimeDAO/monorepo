@@ -3,7 +3,6 @@ import { Web3Provider } from "@ethersproject/providers";
 import { AllowedNetworks, EthereumService } from "services/EthereumService";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
-import { IDisposable } from "services/IDisposable";
 
 const ContractAddresses = require("../contracts/contractAddresses.json") as INetworkContractAddresses;
 const ConfigurableRightsPoolABI = require("../contracts/ConfigurableRightsPool.json");

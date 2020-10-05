@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { NumberService } from "../../src/services/numberService";
 
 /* tslint:disable:no-console */

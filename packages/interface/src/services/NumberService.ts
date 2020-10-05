@@ -1,5 +1,4 @@
-﻿import { BigNumber } from "ethers";
-import BN from "bignumber.js"; // buried in other packages
+﻿import BN from "bignumber.js"; // buried in other packages
 import * as numeral from "numeral";
 
 export class NumberService {
