@@ -2,7 +2,6 @@ const ERC20 = artifacts.require('ERC20Mock');
 const ControllerCreator = artifacts.require('./ControllerCreator.sol');
 const DaoCreator = artifacts.require('./DaoCreator.sol');
 const DAOTracker = artifacts.require('./DAOTracker.sol');
-// const WETH = artifacts.require('WETH');
 const GenericScheme = artifacts.require('GenericScheme');
 const Avatar = artifacts.require('./Avatar.sol');
 const DAOToken = artifacts.require('./DAOToken.sol');
@@ -17,6 +16,8 @@ const BalancerSafeMath = artifacts.require('BalancerSafeMath');
 const RightsManager = artifacts.require('RightsManager');
 const SmartPoolManager = artifacts.require('SmartPoolManager');
 const BalancerProxy = artifacts.require('BalancerProxy');
+// Incentives imports
+const IncentivesProxy = artifacts.require('IncentivesProxy');
 
 const { constants } = require('@openzeppelin/test-helpers');
 
@@ -68,6 +69,12 @@ const tokens = async (setup) => {
   // await weth.deposit({ value: INITIAL_CASH_BALANCE });
 
   return { erc20s };
+};
+
+const incentives = async (setup) => {
+  const incentivesProxy = await IncentivesProxy.new();
+
+  return { incentivesProxy };
 };
 
 const balancer = async (setup) => {
@@ -190,6 +197,7 @@ const scheme = async (setup) => {
 
 module.exports = {
   initialize,
+  incentives,
   tokens,
   balancer,
   DAOStack,

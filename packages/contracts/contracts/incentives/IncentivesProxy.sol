@@ -33,16 +33,12 @@
 */
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "openzeppelin-solidity/contracts/math/Math.sol";
 import "./LPTokenProxy.sol";
 import "./IRewardDistributionRecipient.sol";
-import "openzeppelin-solidity/contracts/math/Math.sol";
 
 pragma solidity >=0.5.13;
 
-// interface YAM {
-//     function yamsScalingFactor() external returns (uint256);
-//     function mint(address to, uint256 amount) external;
-// }
 
 contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
 
