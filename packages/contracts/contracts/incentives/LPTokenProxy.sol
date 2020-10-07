@@ -10,29 +10,29 @@ contract LPTokenProxy {
     using SafeERC20 for IERC20;
 
     IERC20 public poolToken;
-    bool   public initialized;
+    // bool   public initialized;
 
 
-    modifier initializer() {
-        require(!initialized, "LPTokenProxy: proxy already initialized");
-        initialized = true;
-        _;
-    }
+    // modifier initializer() {
+    //     require(!initialized, "LPTokenProxy: proxy already initialized");
+    //     initialized = true;
+    //     _;
+    // }
 
-    modifier protected() {
-        require(initialized,                   "LPTokenProxy: proxy not initialized");
-        _;
-    }
+    // modifier protected() {
+    //     require(initialized,                   "LPTokenProxy: proxy not initialized");
+    //     _;
+    // }
 
     /**
       * @dev           Initialize proxy.
       * @param _token  The address of the Avatar controlling this proxy.
       */
-    function initialize(address _token) external initializer {
-        require(_token != address(0),                  "LPTokenProxy: token cannot be null");
+    // function initialize(address _token) external initializer {
+    //     require(_token != address(0),                  "LPTokenProxy: token cannot be null");
 
-        poolToken  = IERC20(_token);
-    }
+    //     poolToken  = IERC20(_token);
+    // }
 
     uint256 private _totalSupply;
 
@@ -42,17 +42,17 @@ contract LPTokenProxy {
         return _totalSupply;
     }
 
-    function balanceOf(address account) public view returns (uint256) {
+    function balanceOf(address account) /*protected*/ public view returns (uint256) {
         return _balances[account];
     }
 
-    function stake(uint256 amount) public {
+    function stake(uint256 amount) /*protected*/ public {
         _totalSupply = _totalSupply.add(amount);
         _balances[msg.sender] = _balances[msg.sender].add(amount);
         poolToken.safeTransferFrom(msg.sender, address(this), amount);
     }
 
-    function withdraw(uint256 amount) public {
+    function withdraw(uint256 amount) /*protected*/ public {
         _totalSupply = _totalSupply.sub(amount);
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
         poolToken.safeTransfer(msg.sender, amount);

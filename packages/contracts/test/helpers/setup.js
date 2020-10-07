@@ -64,9 +64,7 @@ const initialize = async (root) => {
 };
 
 const tokens = async (setup) => {
-  // const weth = await WETH.new();
   const erc20s = [await ERC20.new('DAI Stablecoin', 'DAI', 18), await ERC20.new('USDC Stablecoin', 'USDC', 15), await ERC20.new('USDT Stablecoin', 'USDT', 18)];
-  // await weth.deposit({ value: INITIAL_CASH_BALANCE });
 
   return { erc20s };
 };

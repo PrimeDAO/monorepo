@@ -123,13 +123,13 @@ contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
     }
 
     // stake visibility is public as overriding LPTokenWrapper's stake() function
-     function stake(uint256 amount) public updateReward(msg.sender) /*checkhalve*/ checkStart {
-        require(amount > 0, "Cannot stake 0");
+     function stake(uint256 amount) public updateReward(msg.sender) /*checkhalve*/ protected checkStart {
+        require(amount > 0, "IncentivesProxy: cannot stake 0");
         super.stake(amount);
         emit Staked(msg.sender, amount);
     }
 
-    function withdraw(uint256 amount) public updateReward(msg.sender) checkStart {
+    function withdraw(uint256 amount) public updateReward(msg.sender) protected checkStart {
         require(amount > 0, "Cannot withdraw 0");
         super.withdraw(amount);
         emit Withdrawn(msg.sender, amount);
@@ -140,7 +140,7 @@ contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
         getReward();
     }
 
-    function getReward() public updateReward(msg.sender) /*checkhalve*/ checkStart {
+    function getReward() public updateReward(msg.sender) /*checkhalve*/ protected checkStart {
         uint256 reward = earned(msg.sender);
         if (reward > 0) {
             rewards[msg.sender] = 0;
@@ -157,7 +157,7 @@ contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
     }
 
 
-   function notifyRewardAmount(uint256 reward) external onlyRewardDistribution updateReward(address(0)) {
+   function notifyRewardAmount(uint256 reward) external protected onlyRewardDistribution updateReward(address(0)) {
         if (block.timestamp >= periodFinish) {
             rewardRate = reward.div(DURATION);
         } else {
@@ -185,6 +185,7 @@ contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
     // It also allows for removal of airdropped tokens.
     function rescueTokens(IERC20 _token, uint256 amount, address to)
         external
+        protected
     {
         // only gov
         require(msg.sender == owner(), "!governance");
