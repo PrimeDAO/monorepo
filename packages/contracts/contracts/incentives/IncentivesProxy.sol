@@ -33,16 +33,21 @@
 */
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
-import "./LPTokenProxy.sol";
 import "./IRewardDistributionRecipient.sol";
 
 pragma solidity >=0.5.13;
 
 
-contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
+contract IncentivesProxy is IRewardDistributionRecipient {
+
+    using SafeMath for uint256;
+    using SafeERC20 for IERC20;
 
     IERC20 public rewardToken;
+    IERC20 public stakingToken;
     bool   public initialized;
 
     modifier initializer() {
@@ -58,13 +63,17 @@ contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
 
     /**
       * @dev           Initialize proxy.
-      * @param _token  The address of the Avatar controlling this proxy.
+      * @param _rewardToken  The address
+      * @param _stakingToken The address 
       */
-    function initialize(address _token) external initializer {
-        require(_token != address(0),                  "IncentivesProxy: token cannot be null");
+    function initialize(address _rewardToken, address _stakingToken) external initializer {
+        require(_rewardToken  != address(0),                  "IncentivesProxy: rewardToken cannot be null");
+        require(_stakingToken != address(0),                  "IncentivesProxy: stakingToken cannot be null");
 
-        rewardToken  = IERC20(_token);
+        rewardToken  = IERC20(_rewardToken);
+        stakingToken = IERC20(_stakingToken);
     }
+
 
     uint256 public constant DURATION = 7 days;
 
@@ -75,11 +84,11 @@ contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
     uint256 public lastUpdateTime;
     uint256 public rewardPerTokenStored;
 
-    // bool public initialized = false;
-
     mapping(address => uint256) public userRewardPerTokenPaid;
     mapping(address => uint256) public rewards;
 
+    uint256 private _totalSupply;
+    mapping(address => uint256) private _balances;
 
     event RewardAdded(uint256 reward);
     event Staked(address indexed user, uint256 amount);
@@ -125,13 +134,13 @@ contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
     // stake visibility is public as overriding LPTokenWrapper's stake() function
      function stake(uint256 amount) public updateReward(msg.sender) /*checkhalve*/ protected checkStart {
         require(amount > 0, "IncentivesProxy: cannot stake 0");
-        super.stake(amount);
+        _stake(amount);
         emit Staked(msg.sender, amount);
     }
 
     function withdraw(uint256 amount) public updateReward(msg.sender) protected checkStart {
-        require(amount > 0, "Cannot withdraw 0");
-        super.withdraw(amount);
+        require(amount > 0, "IncentivesProxy: Cannot withdraw 0");
+        _withdraw(amount);
         emit Withdrawn(msg.sender, amount);
     }
 
@@ -152,7 +161,7 @@ contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
     }
 
     modifier checkStart(){
-        require(block.timestamp >= starttime,"not start");
+        require(block.timestamp >= starttime,"IncentivesProxy: not start");
         _;
     }
 
@@ -171,7 +180,7 @@ contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
         // very high values of rewardRate in the earned and rewardsPerToken functions;
         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
         uint balance = rewardToken.balanceOf(address(this));
-        require(rewardRate <= balance.div(DURATION), "Provided reward too high");
+        require(rewardRate <= balance.div(DURATION), "IncentivesProxy: Provided reward too high");
 
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(DURATION);
@@ -188,13 +197,33 @@ contract IncentivesProxy is LPTokenProxy, IRewardDistributionRecipient {
         protected
     {
         // only gov
-        require(msg.sender == owner(), "!governance");
+        require(msg.sender == owner(), "IncentivesProxy: !governance");
         // cant take staked asset
-        require(_token != poolToken, "uni_lp");
+        require(_token != stakingToken, "IncentivesProxy: stakingToken");
         // cant take reward asset
-        require(_token != rewardToken, "yam");
+        require(_token != rewardToken, "IncentivesProxy: rewardToken");
 
         // transfer to
         _token.safeTransfer(to, amount);
+    }
+
+    function totalSupply() public view returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) /*protected*/ public view returns (uint256) {
+        return _balances[account];
+    }
+
+    function _stake(uint256 _amount) private {
+        _totalSupply = _totalSupply.add(_amount);
+        _balances[msg.sender] = _balances[msg.sender].add(_amount);
+        stakingToken.safeTransferFrom(msg.sender, address(this), _amount);
+    }
+
+    function _withdraw(uint256 _amount) private {
+        _totalSupply = _totalSupply.sub(_amount);
+        _balances[msg.sender] = _balances[msg.sender].sub(_amount);
+        stakingToken.safeTransfer(msg.sender, _amount);
     }
 }

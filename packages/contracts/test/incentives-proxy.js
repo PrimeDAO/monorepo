@@ -41,7 +41,7 @@ contract('IncentivesProxy', (accounts) => {
         context('» parameters are valid', () => {
             // proxy has already been initialized during setup
             it('it initializes proxy', async () => {
-            	await setup.incentives.incentivesProxy.initialize(setup.organization.token.address);
+            	await setup.incentives.incentivesProxy.initialize(setup.organization.token.address, setup.balancer.pool.address);
             });
         });
         context('» token parameter is not valid', () => {
@@ -49,14 +49,14 @@ contract('IncentivesProxy', (accounts) => {
                 setup.data.incentives = await IncentivesProxy.new();
             });
             it('it reverts', async () => {
-                await expectRevert(setup.data.incentives.initialize(constants.ZERO_ADDRESS), 'IncentivesProxy: token cannot be null');
+                await expectRevert(setup.data.incentives.initialize(constants.ZERO_ADDRESS, setup.balancer.pool.address), 'IncentivesProxy: rewardToken cannot be null');
             });
         });
     });
     context('» proxy is already initialized', () => {
         // proxy has already been initialized during setup
         it('it reverts', async () => {
-            await expectRevert(setup.incentives.incentivesProxy.initialize(setup.organization.token.address), 'IncentivesProxy: proxy already initialized');
+            await expectRevert(setup.incentives.incentivesProxy.initialize(setup.organization.token.address, setup.balancer.pool.address), 'IncentivesProxy: proxy already initialized');
         });
     });
     context('# stake', () => {
@@ -78,7 +78,7 @@ contract('IncentivesProxy', (accounts) => {
             });
             context('» stake parameter is not valid', () => {
                 before('!! initialize proxy', async () => {
-	            	await setup.incentives.incentivesProxy.initialize(setup.organization.token.address);
+	            	await setup.incentives.incentivesProxy.initialize(setup.organization.token.address, setup.balancer.pool.address);
                 });
                 it('it reverts', async () => {
                     await expectRevert(
@@ -87,36 +87,6 @@ contract('IncentivesProxy', (accounts) => {
                     );
                 });
             });
-            // context('» stakes BPOOL tokens', () => {
-            //     it('stake succesfull', async () => {
-            //         await setup.incentives.incentivesProxy.stake(stakeAmount);
-            //     });
-            // });
-
-            // context('» pauses the contract by changing setPublicSwap', () => {
-            //     before('!! deploy and initialize proxy', async () => {
-            //         setup.data.proxy = await BalancerProxy.new();
-            //         await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
-            //     });
-            //     it('bPool.isPublicSwap() == publicSwap', async () => {
-            //         const calldata = helpers.encodeSetPublicSwap(publicSwap);
-            //         const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
-            //         const proposalId = helpers.getNewProposalId(_tx);
-            //         const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
-            //         //store data
-            //         setup.data.tx = tx;
-                
-            //         const pool = await setup.balancer.pool.bPool();
-            //         const bPool = await BPool.at(pool);
-  
-            //         expect(await bPool.isPublicSwap()).to.equal(publicSwap);
-            //     });
-            //     it('it emits a setPublicSwap event', async () => {
-            //         await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'SetPublicSwap', {
-            //             publicSwap: publicSwap
-            //         });
-            //     });
-            // });
         });
     });
 
