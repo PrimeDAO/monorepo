@@ -23,65 +23,67 @@ module.exports = async function (deployer, network, accounts) {
     
     await deployer.deploy(CRPFactory);
 
- 
-    const { toWei } = web3.utils
-    const MAX = web3.utils.toTwosComplement(-1)
+    if (network === 'rinkeby') {
+        const { toWei } = web3.utils
+        const MAX = web3.utils.toTwosComplement(-1)
 
-    const dai = await deployer.deploy(ERC20Mock, 'DAI Stablecoin', 'DAI', 18);
-    const weth = await deployer.deploy(WETH);
-  
-    await weth.deposit({ value: toWei('3') });
+        const prime = await deployer.deploy(toWei('21000000'), toWei('90000000'), setup.root);
+        const dai = await deployer.deploy(ERC20Mock, 'DAI Stablecoin', 'DAI', 18);
+        const weth = await deployer.deploy(WETH);
+      
+        await weth.deposit({ value: toWei('3') });
 
-    const tokenAddresses = [dai.address, weth.address];
- 
-    const swapFee = 10 ** 15;
-    const startWeights = [toWei('5'), toWei('5')];
-    const startBalances = [toWei('10000'), toWei('3')];
-    const SYMBOL = 'BPOOL';
-    const NAME = 'Prime Balancer Pool Token';
+        const tokenAddresses = [prime.address, dai.address, weth.address];
+     
+        const swapFee = 10 ** 15;
+        const startWeights = [toWei('8'), toWei('1'), toWei('1')];
+        const startBalances = [toWei('500000'), toWei('10000'), toWei('3')];
+        const SYMBOL = 'BPOOL';
+        const NAME = 'Prime Balancer Pool Token';
 
-    const permissions = {
-          canPauseSwapping: true,
-          canChangeSwapFee: true,
-          canChangeWeights: true,
-          canAddRemoveTokens: true,
-          canWhitelistLPs: false,
-    };
+        const permissions = {
+              canPauseSwapping: true,
+              canChangeSwapFee: true,
+              canChangeWeights: true,
+              canAddRemoveTokens: true,
+              canWhitelistLPs: false,
+        };
 
-    const poolParams = {
-          poolTokenSymbol: SYMBOL,
-          poolTokenName: NAME,
-          constituentTokens: tokenAddresses,
-          tokenBalances: startBalances,
-          tokenWeights: startWeights,
-          swapFee: swapFee,
-    };
+        const poolParams = {
+              poolTokenSymbol: SYMBOL,
+              poolTokenName: NAME,
+              constituentTokens: tokenAddresses,
+              tokenBalances: startBalances,
+              tokenWeights: startWeights,
+              swapFee: swapFee,
+        };
 
-    await console.log("   Creating 'Balancer' pool")
-    await console.log("   --------------------")
+        await console.log("   Creating 'Balancer' pool")
+        await console.log("   --------------------")
 
-    const crpFactory = await CRPFactory.deployed();
-    const bfactory = await BFactory.deployed();
+        const crpFactory = await CRPFactory.deployed();
+        const bfactory = await BFactory.deployed();
 
-    POOL = await crpFactory.newCrp.call(
-            bfactory.address,
-            poolParams,
-            permissions,
-    );
-    
-    await crpFactory.newCrp(
-            bfactory.address,
-            poolParams,
-            permissions,
-    );
+        POOL = await crpFactory.newCrp.call(
+                bfactory.address,
+                poolParams,
+                permissions,
+        );
+        
+        await crpFactory.newCrp(
+                bfactory.address,
+                poolParams,
+                permissions,
+        );
 
-    const pool = await ConfigurableRightsPool.at(POOL);
+        const pool = await ConfigurableRightsPool.at(POOL);
 
-    await dai.approve(POOL, MAX);
-    await weth.approve(POOL, MAX);
+        await dai.approve(POOL, MAX);
+        await weth.approve(POOL, MAX);
 
-    await pool.createPool(toWei('1000'));
+        await pool.createPool(toWei('1000'));
 
-    await console.log('> contract address: ' + (pool.address).toString())
-    await console.log('> bPool address:    ' + (await pool.bPool()).toString())
+        await console.log('> contract address: ' + (pool.address).toString())
+        await console.log('> bPool address:    ' + (await pool.bPool()).toString())  
+    }
 };

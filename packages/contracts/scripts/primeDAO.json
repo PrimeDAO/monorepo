@@ -1,7 +1,7 @@
 {
   "orgName": "primeDAO",
-  "tokenName": "Prime Token",
-  "tokenSymbol": "PRIME",
+  "tokenName": "PrimeDAO Token",
+  "tokenSymbol": "PDAO",
   "ContributionReward": [{ "voteParams": 0 }],
   "SchemeRegistrar": [{ "voteRegisterParams": 0, "voteRemoveParams": 0 }],
   "UpgradeScheme": [{ "voteParams": 0 }],
@@ -45,5 +45,5 @@
   "unregisterOwner": true,
   "useUController": false,
   "useDaoCreator": true,
-  "founders": [{ "address": "0x64947E10E6EacEb8C4cB8cF3EeF306344C4F4ED0", "tokens": 100, "reputation": 100 }]
+  "founders": [{ "address": "0x64947E10E6EacEb8C4cB8cF3EeF306344C4F4ED0", "tokens": 100, "reputation": 50 }]
 }

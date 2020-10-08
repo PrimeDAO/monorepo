@@ -318,7 +318,7 @@ contract('BalancerProxy', (accounts) => {
                     await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
                 });
                 it('transfers tokens to the avatar address', async () => {
-                    await setup.organization.token.transfer(setup.organization.avatar.address, maxAmountsIn[0]);
+                    await setup.tokens.primeToken.transfer(setup.organization.avatar.address, maxAmountsIn[0]);
                     await setup.tokens.erc20s[0].transfer(setup.organization.avatar.address, maxAmountsIn[1]);
                     await setup.tokens.erc20s[1].transfer(setup.organization.avatar.address, maxAmountsIn[2]);
                 });
