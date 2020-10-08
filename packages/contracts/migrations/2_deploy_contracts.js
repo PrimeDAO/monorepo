@@ -8,8 +8,10 @@ const ConfigurableRightsPool = artifacts.require('ConfigurableRightsPool')
 const ERC20Mock = artifacts.require('ERC20Mock');
 const WETH = artifacts.require('WETH');
 const BalancerProxy = artifacts.require('BalancerProxy');
+const PrimeToken = artifacts.require('PrimeToken');
 
-module.exports = async function (deployer, network, accounts) {
+module.exports = async function (deployer, network) {
+
     await deployer.deploy(RightsManager);
     await deployer.deploy(SmartPoolManager);
     await deployer.deploy(BFactory);
@@ -23,20 +25,21 @@ module.exports = async function (deployer, network, accounts) {
     
     await deployer.deploy(CRPFactory);
 
-    if (network === 'rinkeby') {
+    if (network === 'rinkeby' || network === 'rinkeby-fork') {
         const { toWei } = web3.utils
         const MAX = web3.utils.toTwosComplement(-1)
 
-        const prime = await deployer.deploy(toWei('21000000'), toWei('90000000'), setup.root);
+        // TODO: add gnosis safe setup
+        const prime = await deployer.deploy(PrimeToken, toWei('21000000'), toWei('90000000'), deployer.networks.rinkeby.from);
         const dai = await deployer.deploy(ERC20Mock, 'DAI Stablecoin', 'DAI', 18);
         const weth = await deployer.deploy(WETH);
-      
+
         await weth.deposit({ value: toWei('3') });
 
         const tokenAddresses = [prime.address, dai.address, weth.address];
      
         const swapFee = 10 ** 15;
-        const startWeights = [toWei('8'), toWei('1'), toWei('1')];
+        const startWeights = [toWei('12'), toWei('1.5'), toWei('1.5')];
         const startBalances = [toWei('500000'), toWei('10000'), toWei('3')];
         const SYMBOL = 'BPOOL';
         const NAME = 'Prime Balancer Pool Token';
@@ -80,6 +83,7 @@ module.exports = async function (deployer, network, accounts) {
 
         await dai.approve(POOL, MAX);
         await weth.approve(POOL, MAX);
+        await prime.approve(POOL, MAX);
 
         await pool.createPool(toWei('1000'));
 
