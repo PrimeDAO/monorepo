@@ -5,9 +5,9 @@ const goto = (where: string) => {
   window.open(where, '_blank', 'noopener noreferrer');
 };
 
-const MainMenu = (props: {container: RefObject<HTMLDivElement>}): React.ReactElement => {
+const MainMenu = (props: { container: RefObject<HTMLDivElement> }): React.ReactElement => {
 
-  const {container} = props;
+  const { container } = props;
 
   const showMenu = (which: string, show: boolean) => {
     if (show) {
@@ -39,7 +39,7 @@ const MainMenu = (props: {container: RefObject<HTMLDivElement>}): React.ReactEle
         <div className="learnMenu">
           <div onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
           <div onClick={() => goto('https://drive.google.com/file/d/1E2qHiOPVQ_3sUbODgkJYl1aSo60s0H_a/view?usp=sharing')}><div className="name">Litepaper</div><div className="triangle"></div></div>
-          <div onClick={() => { document.getElementById('wall').scrollIntoView();}}><div className="name">Members</div><div className="triangle"></div></div>
+          <div onClick={() => { document.getElementById('wall').scrollIntoView(); }}><div className="name">Members</div><div className="triangle"></div></div>
           <div onClick={() => goto('https://docs.primedao.io/primedao/faqs')}><div className="name">FAQ</div><div className="triangle"></div></div>
         </div>
       </div>
@@ -122,19 +122,19 @@ const LandingPage = (): React.ReactElement => {
             </div>
           </div>
           <div className="rightColumn" ref={rightMenu}>
-            <MainMenu container ={rightMenu}/>
+            <MainMenu container={rightMenu} />
           </div>
         </div>
       </div>
       <div className="aboutUs">
         <div className="title">
-          <div className="triangle"><img/></div>
+          <div className="triangle"><img /></div>
           <div className="name">About Us</div>
           <div className="subtitle">Catalyzing DeFi Mass Adoption</div>
         </div>
         <div className="subsections">
           <div className="section">
-            <div className="icon"><img src="PD_LP_ICON_01_02.jpg"/></div>
+            <div className="icon"><img src="PD_LP_ICON_01_02.jpg" /></div>
             <div className="title">Decentralized Prime Brokerage</div>
             <div className="body">PrimeDAO will deliver open finance support structures that a centralized prime broker would otherwise provide, such as efficient order matching, guaranteed settlement, liquidity for spot trades, lending, derivatives, and leverage. We are making decentralized finance more approachable by democratizing access to legacy financial tools and simplifying how people interact with the future of finance.</div>
           </div>
@@ -166,7 +166,7 @@ const LandingPage = (): React.ReactElement => {
             <a className="moreInfoButton">App Coming Soon</a>
           </div>
           <div className="rightColumn">
-            <img src="CURVE_PD_LP_PRIMER-ROUTER-GRAPHIC_V01-2_web.jpg"/>
+            <img src="CURVE_PD_LP_PRIMER-ROUTER-GRAPHIC_V01-2_web.jpg" />
           </div>
         </div>
       </div>
@@ -219,13 +219,15 @@ const LandingPage = (): React.ReactElement => {
         </div>
       </div>
 
-      <div id="wall" className="wall"></div>
+
+      <div id="wall" className="wall">
+        <img src="primedao_logo_wall_web.jpg"></img>
+      </div>
 
       <div className="primeDev">
         <div className="logo"><img src="pd_foundation_logo_web_01.jpg"></img></div>
         <div className="body">The <span className="primefoundation">Prime Development Foundation</span>, based in Curaçao, provides PrimeDAO with a legal anchor into the traditional legal world. The Foundation is mandated to support the initiation and development of the network, but does not own PrimeDAO or any of its products.</div>
         <a className="button" href="mailto:hello@primedao.io" target="#" rel="noopener noreferrer">Contact the Foundation</a>
-
       </div>
 
       <div className="join">

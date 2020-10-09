@@ -641,10 +641,12 @@ $text-transform-uppercase: uppercase;
   }
 
   .wall {
-    background-size: contain;
-    background-repeat: no-repeat;
-    height: 840px;
-    margin-bottom: 120px;
+    padding: 0;
+    margin-bottom: 140px;
+
+    img {
+      width: 100%;
+    }
   }
 
   .primeDev {
