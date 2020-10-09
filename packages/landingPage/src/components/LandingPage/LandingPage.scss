@@ -925,9 +925,20 @@ $text-transform-uppercase: uppercase;
       }
     }
 
-    .ecosystem {
-      margin-bottom: 40px;
+    .products {
+      .title {
+        .triangle {
+          left: 50%;
 
+          img {
+            position: relative;
+            left: -50%;
+          }
+        }
+      }
+    }
+
+    .ecosystem {
       .title {
         .triangle {
           left: 50%;
