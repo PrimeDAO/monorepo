@@ -8,8 +8,10 @@ const ConfigurableRightsPool = artifacts.require('ConfigurableRightsPool')
 const ERC20Mock = artifacts.require('ERC20Mock');
 const WETH = artifacts.require('WETH');
 const BalancerProxy = artifacts.require('BalancerProxy');
+const PrimeToken = artifacts.require('PrimeToken');
 
-module.exports = async function (deployer, network, accounts) {
+module.exports = async function (deployer, network) {
+
     await deployer.deploy(RightsManager);
     await deployer.deploy(SmartPoolManager);
     await deployer.deploy(BFactory);
@@ -23,65 +25,69 @@ module.exports = async function (deployer, network, accounts) {
     
     await deployer.deploy(CRPFactory);
 
- 
-    const { toWei } = web3.utils
-    const MAX = web3.utils.toTwosComplement(-1)
+    if (network === 'rinkeby' || network === 'rinkeby-fork') {
+        const { toWei } = web3.utils
+        const MAX = web3.utils.toTwosComplement(-1)
 
-    const dai = await deployer.deploy(ERC20Mock, 'DAI Stablecoin', 'DAI', 18);
-    const weth = await deployer.deploy(WETH);
-  
-    await weth.deposit({ value: toWei('3') });
+        // TODO: add gnosis safe setup
+        const prime = await deployer.deploy(PrimeToken, toWei('21000000'), toWei('90000000'), deployer.networks.rinkeby.from);
+        const dai = await deployer.deploy(ERC20Mock, 'DAI Stablecoin', 'DAI', 18);
+        const weth = await deployer.deploy(WETH);
 
-    const tokenAddresses = [dai.address, weth.address];
- 
-    const swapFee = 10 ** 15;
-    const startWeights = [toWei('5'), toWei('5')];
-    const startBalances = [toWei('10000'), toWei('3')];
-    const SYMBOL = 'BPOOL';
-    const NAME = 'Prime Balancer Pool Token';
+        await weth.deposit({ value: toWei('3') });
 
-    const permissions = {
-          canPauseSwapping: true,
-          canChangeSwapFee: true,
-          canChangeWeights: true,
-          canAddRemoveTokens: true,
-          canWhitelistLPs: false,
-    };
+        const tokenAddresses = [prime.address, dai.address, weth.address];
+     
+        const swapFee = 10 ** 15;
+        const startWeights = [toWei('12'), toWei('1.5'), toWei('1.5')];
+        const startBalances = [toWei('500000'), toWei('10000'), toWei('3')];
+        const SYMBOL = 'BPOOL';
+        const NAME = 'Prime Balancer Pool Token';
 
-    const poolParams = {
-          poolTokenSymbol: SYMBOL,
-          poolTokenName: NAME,
-          constituentTokens: tokenAddresses,
-          tokenBalances: startBalances,
-          tokenWeights: startWeights,
-          swapFee: swapFee,
-    };
+        const permissions = {
+              canPauseSwapping: true,
+              canChangeSwapFee: true,
+              canChangeWeights: true,
+              canAddRemoveTokens: true,
+              canWhitelistLPs: false,
+        };
 
-    await console.log("   Creating 'Balancer' pool")
-    await console.log("   --------------------")
+        const poolParams = {
+              poolTokenSymbol: SYMBOL,
+              poolTokenName: NAME,
+              constituentTokens: tokenAddresses,
+              tokenBalances: startBalances,
+              tokenWeights: startWeights,
+              swapFee: swapFee,
+        };
 
-    const crpFactory = await CRPFactory.deployed();
-    const bfactory = await BFactory.deployed();
+        await console.log("   Creating 'Balancer' pool")
+        await console.log("   --------------------")
 
-    POOL = await crpFactory.newCrp.call(
-            bfactory.address,
-            poolParams,
-            permissions,
-    );
-    
-    await crpFactory.newCrp(
-            bfactory.address,
-            poolParams,
-            permissions,
-    );
+        const crpFactory = await CRPFactory.deployed();
+        const bfactory = await BFactory.deployed();
 
-    const pool = await ConfigurableRightsPool.at(POOL);
+        POOL = await crpFactory.newCrp.call(
+                bfactory.address,
+                poolParams,
+                permissions,
+        );
+        
+        await crpFactory.newCrp(
+                bfactory.address,
+                poolParams,
+                permissions,
+        );
 
-    await dai.approve(POOL, MAX);
-    await weth.approve(POOL, MAX);
+        const pool = await ConfigurableRightsPool.at(POOL);
 
-    await pool.createPool(toWei('1000'));
+        await dai.approve(POOL, MAX);
+        await weth.approve(POOL, MAX);
+        await prime.approve(POOL, MAX);
 
-    await console.log('> contract address: ' + (pool.address).toString())
-    await console.log('> bPool address:    ' + (await pool.bPool()).toString())
+        await pool.createPool(toWei('1000'));
+
+        await console.log('> contract address: ' + (pool.address).toString())
+        await console.log('> bPool address:    ' + (await pool.bPool()).toString())  
+    }
 };
