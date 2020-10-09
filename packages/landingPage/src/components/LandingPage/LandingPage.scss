@@ -275,14 +275,15 @@ $text-transform-uppercase: uppercase;
 
         .buttons {
           margin-bottom: 96px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-around;
           .button {
             @extend .stdButton;
             display: inline-block;
             width: 320px;
-
-            &.litepaper {
-              margin-right: 32px;
-            }
+            margin-bottom: 12px;
+            margin-right: 6px;
           }
         }
 
