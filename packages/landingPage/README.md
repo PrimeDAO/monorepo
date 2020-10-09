@@ -9,7 +9,12 @@ The web page is written in Javascript and Typescript, it uses ReactJS and Webpac
 ## Install
 Note this is part of a monorepo.  Install dependencies with the following command:
 ```
-nps lerna bootstrap
+npx lerna bootstrap
+```
+To add a new dependency:
+
+```
+npx lerna add [package name] --scope @primedao/landingPage
 ```
 
 ## Test
