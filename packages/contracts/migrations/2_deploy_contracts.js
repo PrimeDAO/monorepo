@@ -25,7 +25,7 @@ module.exports = async function (deployer, network) {
     
     await deployer.deploy(CRPFactory);
 
-    if (network === 'rinkeby' || network === 'rinkeby-fork') {
+    if (network === 'rinkeby') {
         const { toWei } = web3.utils
         const MAX = web3.utils.toTwosComplement(-1)
 

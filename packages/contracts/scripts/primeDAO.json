@@ -12,7 +12,7 @@
       "alias": "BalancerProxy",
       "isUniversal": false,
       "address": "",
-      "params": ["0x0d9e66ab4F174F336B016534F6c8162f08B7Fe29", "0x2b1beD53e7c68e899A7C505788259Fa498a2ba97"],
+      "params": [],
       "permissions": "0x00000010"
     },
     {
@@ -23,7 +23,25 @@
       "permissions": "0x00000010",
       "alias": "GenericSchemeBalancer",
       "fromArc": true
-    }
+    },
+    {
+       "name":"ContinuousLocking4Reputation",
+       "schemeName":"ContinuousLocking4Reputation",
+       "isUniversal":false,
+       "params":[
+         850000,
+         1573128000,
+         108000,
+         1573236000,
+         12,
+         85000,
+         900,
+         100
+       ],
+       "permissions":"0x00000010",
+       "alias":"InfiniteReputation4Token",
+       "fromArc":true
+     }
   ],
   "VotingMachinesParams": [
     {
