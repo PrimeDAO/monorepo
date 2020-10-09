@@ -1,0 +1,26 @@
+@import "./animations";
+@import "./dialogs";
+
+etherscanlink {
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.smallEtherScanLink {
+  display: inline-block;
+  vertical-align: middle;
+  width: 4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.copy-to-clip-button {
+  color: $color-ds-black;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.copy-to-clip-button:hover {
+  background-color: transparent;
+  color: $color-ds-black;
+}
