@@ -1,7 +1,7 @@
 {
   "orgName": "primeDAO",
-  "tokenName": "Prime Token",
-  "tokenSymbol": "PRIME",
+  "tokenName": "PrimeDAO Token",
+  "tokenSymbol": "PDAO",
   "ContributionReward": [{ "voteParams": 0 }],
   "SchemeRegistrar": [{ "voteRegisterParams": 0, "voteRemoveParams": 0 }],
   "UpgradeScheme": [{ "voteParams": 0 }],
@@ -12,7 +12,7 @@
       "alias": "BalancerProxy",
       "isUniversal": false,
       "address": "",
-      "params": ["0x7Cb9dAfCB3E9841c939fa8ECB1C1697C02014e8A", "0xd66BCeF957451a036Ceb24475186CDA5bFf344E0"],
+      "params": ["0x0d9e66ab4F174F336B016534F6c8162f08B7Fe29", "0x2b1beD53e7c68e899A7C505788259Fa498a2ba97"],
       "permissions": "0x00000010"
     },
     {
@@ -41,9 +41,9 @@
       "votersReputationLossRatio": 0
     }
   ],
-  "schemes": { "ContributionReward": true, "GenericScheme": true, "SchemeRegistrar": true, "GlobalConstraintRegistrar": false, "UpgradeScheme": true },
+  "schemes": {"ContributionReward": true, "GenericScheme": true, "SchemeRegistrar": true, "GlobalConstraintRegistrar": false, "UpgradeScheme": true },
   "unregisterOwner": true,
   "useUController": false,
   "useDaoCreator": true,
-  "founders": [{ "address": "0x64947E10E6EacEb8C4cB8cF3EeF306344C4F4ED0", "tokens": 100, "reputation": 100 }]
+  "founders": [{ "address": "0x64947E10E6EacEb8C4cB8cF3EeF306344C4F4ED0", "tokens": 100, "reputation": 50 }]
 }
