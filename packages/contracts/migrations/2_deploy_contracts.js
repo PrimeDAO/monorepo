@@ -10,8 +10,11 @@ const WETH = artifacts.require('WETH');
 const BalancerProxy = artifacts.require('BalancerProxy');
 const PrimeToken = artifacts.require('PrimeToken');
 
-module.exports = async function (deployer, network) {
+const contracts = require('../contractAddresses.json');
+const FileSystem = require("fs");
 
+
+module.exports = async function (deployer, network) {
     await deployer.deploy(RightsManager);
     await deployer.deploy(SmartPoolManager);
     await deployer.deploy(BFactory);
@@ -26,6 +29,15 @@ module.exports = async function (deployer, network) {
     await deployer.deploy(CRPFactory);
 
     if (network === 'rinkeby') {
+        // overwrite contractAddresses.json
+        contracts.rinkeby.RightsManager = await RightsManager.address
+        contracts.rinkeby.SmartPoolManager = await SmartPoolManager.address
+        contracts.rinkeby.BFactory = await BFactory.address
+        contracts.rinkeby.BalancerSafeMath = await BalancerSafeMath.address
+        contracts.rinkeby.BalancerSafeMathMock = await BalancerSafeMathMock.address
+        contracts.rinkeby.BalancerProxy = await BalancerProxy.address
+        contracts.rinkeby.CRPFactory = await CRPFactory.address
+
         const { toWei } = web3.utils
         const MAX = web3.utils.toTwosComplement(-1)
 
@@ -87,7 +99,14 @@ module.exports = async function (deployer, network) {
 
         await pool.createPool(toWei('1000'));
 
+        contracts.rinkeby.BalancerProxy = await pool.address
+        contracts.rinkeby.CRPFactory = await pool.bPool()
+
         await console.log('> contract address: ' + (pool.address).toString())
         await console.log('> bPool address:    ' + (await pool.bPool()).toString())  
+
+         FileSystem.writeFile('../contractAddresses.json', JSON.stringify(contracts), (err) => {
+            if (e) throw e;
+          });
     }
 };
