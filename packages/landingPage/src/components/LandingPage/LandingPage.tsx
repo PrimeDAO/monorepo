@@ -38,7 +38,7 @@ const MainMenu = (props: { container: RefObject<HTMLDivElement> }): React.ReactE
       >
         <div className="learnMenu">
           <div onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
-          <div onClick={() => goto('https://drive.google.com/file/d/1E2qHiOPVQ_3sUbODgkJYl1aSo60s0H_a/view?usp=sharing')}><div className="name">Litepaper</div><div className="triangle"></div></div>
+          <div onClick={() => goto('https://ipfs.io/ipfs/QmNTcjL8sSrhDcYXoJfH2xD6XnvQAwmWxXSySeZN7UG1jJ')}><div className="name">Litepaper</div><div className="triangle"></div></div>
           <div onClick={() => { document.getElementById('wall').scrollIntoView(); }}><div className="name">Members</div><div className="triangle"></div></div>
           <div onClick={() => goto('https://docs.primedao.io/primedao/faqs')}><div className="name">FAQ</div><div className="triangle"></div></div>
         </div>
@@ -78,10 +78,9 @@ const MobileMenu = (props: { container: RefObject<HTMLDivElement> }): React.Reac
       </div>
 
       <div className="item" onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
-      <div className="item" onClick={() => goto('https://drive.google.com/file/d/1E2qHiOPVQ_3sUbODgkJYl1aSo60s0H_a/view?usp=sharing')}><div className="name">Litepaper</div><div className="triangle"></div></div>
+      <div className="item" onClick={() => goto('https://ipfs.io/ipfs/QmNTcjL8sSrhDcYXoJfH2xD6XnvQAwmWxXSySeZN7UG1jJ')}><div className="name">Litepaper</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
-      <div className="item" onClick={() => goto('https://github.com/PrimeDAO')}><div className="name">Github</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://t.me/primedao')}><div className="name">Telegram</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://primedao.substack.com/')}><div className="name">Newsletter</div><div className="triangle"></div></div>
       <div className="item" onClick={() => { window.open('mailto:hello@primedao.io', '#', 'noopener noreferrer'); }}><div className="name">Contact</div><div className="triangle"></div></div>
@@ -114,7 +113,7 @@ const LandingPage = (): React.ReactElement => {
               <div className="body">A new system of open finance based on programmable money is being realized on Ethereum. PrimeDAO is here to catalyze and coordinate an open-source ecosystem of partners, builders, and users that simplifies, secures, and makes decentralized finance (<a href="https://defipulse.com/blog/what-is-defi/" target="_blank" rel="noopener noreferrer">DeFi</a>) accessible for the masses.</div>
             </div>
             <div className="buttons">
-              <a className="button litepaper" href="https://drive.google.com/file/d/1E2qHiOPVQ_3sUbODgkJYl1aSo60s0H_a/view?usp=sharing" target="_blank" rel="noopener noreferrer">Read the Litepaper</a>
+              <a className="button litepaper" href="https://ipfs.io/ipfs/QmNTcjL8sSrhDcYXoJfH2xD6XnvQAwmWxXSySeZN7UG1jJ" target="_blank" rel="noopener noreferrer">Read the Litepaper</a>
               <a className="button joinecosystem" href="https://docs.primedao.io/primedao/call-for-contributors" target="_blank" rel="noopener noreferrer">Join the Ecosystem</a>
             </div>
             <div className="footer">
