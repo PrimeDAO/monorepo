@@ -126,6 +126,7 @@ const LandingPage = (): React.ReactElement => {
           </div>
         </div>
       </div>
+
       <div className="aboutUs">
         <div className="title">
           <div className="triangle"><img /></div>

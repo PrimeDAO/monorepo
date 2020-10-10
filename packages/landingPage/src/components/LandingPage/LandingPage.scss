@@ -164,11 +164,11 @@ $text-transform-uppercase: uppercase;
 
   .stdButton {
     @extend .text-button;
-    height: 48px;
     background-color: $color-white;
-    padding: 14px;
+    padding: 12px 24px;
     color: $color-black;
     text-align: center;
+    max-width: 280px;
 
     &:hover {
       background-color: $color-black;
@@ -179,7 +179,7 @@ $text-transform-uppercase: uppercase;
   .stdButton2 {
     font-family: $font-family-product-buttons;
     font-size: $font-size-28;
-    padding: 26px 48px;
+    padding: 24px 46px;
     color: $color-white;
     background-color: $color-black;
     border: 2px solid $color-white;
@@ -199,7 +199,7 @@ $text-transform-uppercase: uppercase;
   .stdButton3 {
     font-family: $font-family-product-buttons;
     font-size: $font-size-28;
-    padding: 20px;
+    padding: 20px 26px;
     border: 4px solid $color-white;
     display: inline-block;
     color: $color-white;
@@ -422,11 +422,29 @@ $text-transform-uppercase: uppercase;
     }
   }
 
+  .products,
+  .liquiditypool,
+  .safety {
+    .productName {
+      font-family: $font-family-headers;
+      letter-spacing: $character-spacing-0;
+      font-size: 60px;
+      border-bottom: 5px solid $color-white;
+      padding-bottom: 24px;
+      margin-bottom: 46px;
+      line-height: 64px;
+    }
+    .body {
+      @extend .text-2;
+      margin-bottom: 64px;
+    }
+  }
+
   .products {
     background-color: $color-ff6975;
     color: $color-white;
     padding-top: 130px;
-    padding-bottom: 140px;
+    padding-bottom: 130px;
 
     .firstRow {
       z-index: -1;
@@ -466,21 +484,6 @@ $text-transform-uppercase: uppercase;
         flex-basis: 50%;
         align-self: center;
 
-        .productName {
-          font-family: $font-family-headers;
-          letter-spacing: $character-spacing-0;
-          font-size: 60px;
-          border-bottom: 5px solid $color-white;
-          padding-bottom: 24px;
-          margin-bottom: 46px;
-          line-height: 64px;
-        }
-
-        .body {
-          @extend .text-2;
-          margin-bottom: 64px;
-        }
-
         .moreInfoButton {
           @extend .stdButton3;
           /**
@@ -510,7 +513,7 @@ $text-transform-uppercase: uppercase;
     color: $color-white;
     display: flex;
     padding-top: 140px;
-    padding-bottom: 150px;
+    padding-bottom: 140px;
 
     .leftColumn {
       flex-basis: 50%;
@@ -522,21 +525,6 @@ $text-transform-uppercase: uppercase;
 
     .rightColumn {
       flex-basis: 50%;
-
-      .productName {
-        font-family: $font-family-headers;
-        letter-spacing: $character-spacing-0;
-        font-size: 60px;
-        border-bottom: 5px solid $color-white;
-        padding-bottom: 24px;
-        margin-bottom: 46px;
-        line-height: 64px;
-      }
-
-      .body {
-        @extend .text-2;
-        margin-bottom: 64px;
-      }
 
       .moreInfoButton {
         @extend .stdButton3;
@@ -551,26 +539,11 @@ $text-transform-uppercase: uppercase;
     display: flex;
     padding-top: 140px;
     padding-bottom: 140px;
-    margin-bottom: 140px;
+    margin-bottom: 130px;
 
     .leftColumn {
       flex-basis: 50%;
       align-self: center;
-
-      .productName {
-        font-family: $font-family-headers;
-        letter-spacing: $character-spacing-0;
-        font-size: 60px;
-        border-bottom: 5px solid $color-white;
-        padding-bottom: 24px;
-        margin-bottom: 46px;
-        line-height: 64px;
-      }
-
-      .body {
-        @extend .text-2;
-        margin-bottom: 64px;
-      }
     }
 
     .rightColumn {
@@ -585,7 +558,7 @@ $text-transform-uppercase: uppercase;
 
   .ecosystem {
     color: $color-101519;
-    margin-bottom: 120px;
+    margin-bottom: 130px;
 
     .firstRow {
       .title {
@@ -635,7 +608,7 @@ $text-transform-uppercase: uppercase;
         flex-basis: 55%;
 
         .pic img {
-          width: 100%;
+          max-width: 100%;
         }
       }
     }
@@ -643,10 +616,10 @@ $text-transform-uppercase: uppercase;
 
   .wall {
     padding: 0;
-    margin-bottom: 140px;
+    margin-bottom: 130px;
 
     img {
-      width: 100%;
+      max-width: 100%;
     }
   }
 
@@ -654,10 +627,14 @@ $text-transform-uppercase: uppercase;
     margin: auto;
     width: 44%;
     text-align: center;
-    margin-bottom: 160px;
+    margin-bottom: 130px;
 
     .logo {
       margin-bottom: 66px;
+
+      img {
+        max-width: 100%;
+      }
     }
 
     .body {
@@ -770,7 +747,7 @@ $text-transform-uppercase: uppercase;
     bottom: 0;
     right: 0;
     box-sizing: border-box;
-    padding-top: 43px;
+    padding-top: 60px;
     padding-left: 50px;
     padding-bottom: 43px;
     padding-right: 50px;
@@ -778,7 +755,7 @@ $text-transform-uppercase: uppercase;
     .header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 80px;
+      margin-bottom: 40px;
 
       .logo {
         img {
@@ -796,11 +773,12 @@ $text-transform-uppercase: uppercase;
 
     .item {
       @extend .text-menu-item;
-      font-size: 24px;
+      font-size: 18px;
+      line-height: 10px;
       background-color: $color-white;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
       display: flex;
-      padding: 20px;
+      padding: 16px;
       cursor: pointer;
       color: $color-black;
 
@@ -835,7 +813,12 @@ $text-transform-uppercase: uppercase;
 
     > .introduction,
     > .aboutUs,
+    > .products,
+    > .liquiditypool,
+    > .safety,
     > .ecosystem,
+    > .wall,
+    > .primeDev,
     > .join,
     > .moreInfo {
       padding-left: 50px;
@@ -951,9 +934,8 @@ $text-transform-uppercase: uppercase;
         }
       }
       .pic {
-        margin-left: -30px;
         img {
-          width: 52vh;
+          max-width: 100%;
         }
       }
     }
@@ -982,6 +964,12 @@ $text-transform-uppercase: uppercase;
 }
 
 @media screen and (max-width: 600px) {
+  .stdButton,
+  .stdButton2,
+  .stdButton3 {
+    font-size: 24px;
+  }
+
   .landingPageWrapper {
     .introduction {
       .container {
@@ -1003,11 +991,89 @@ $text-transform-uppercase: uppercase;
               display: unset;
             }
           }
+          .buttons {
+            .button {
+              width: unset;
+              margin-right: 0;
+            }
+          }
         }
       }
     }
+
+    .products,
+    .liquiditypool,
+    .safety {
+      .productName {
+        font-size: 36px;
+        line-height: 38px;
+      }
+    }
+
+    .products {
+      padding-top: 100px;
+      padding-bottom: 110px;
+      .secondRow {
+        flex-direction: column-reverse;
+        .rightColumn {
+          text-align: center;
+          padding-bottom: 40px;
+          img {
+            max-width: 100%;
+          }
+        }
+      }
+    }
+
+    .liquiditypool {
+      flex-direction: column;
+      padding-top: 100px;
+      padding-bottom: 110px;
+
+      .leftColumn {
+        padding-bottom: 40px;
+        img {
+          max-width: 100%;
+        }
+      }
+    }
+
+    .safety {
+      flex-direction: column-reverse;
+      padding-top: 100px;
+      padding-bottom: 110px;
+      margin-bottom: 110px;
+
+      .rightColumn {
+        padding-bottom: 40px;
+        img {
+          max-width: 100%;
+        }
+      }
+    }
+
     .ecosystem {
-      margin-bottom: 30px;
+      margin-bottom: 110px;
+      .secondRow {
+        flex-direction: column-reverse;
+        .rightColumn {
+          text-align: center;
+          padding-bottom: 40px;
+        }
+      }
+    }
+
+    .wall {
+      margin-bottom: 110px;
+    }
+
+    .primeDev {
+      flex-direction: column-reverse;
+      margin-bottom: 110px;
+      width: unset;
+      .rightColumn {
+        padding-bottom: 40px;
+      }
     }
   }
 }
