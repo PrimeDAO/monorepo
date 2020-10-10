@@ -825,6 +825,21 @@ $text-transform-uppercase: uppercase;
       padding-right: 50px;
     }
 
+    .stdButton,
+    .stdButton2,
+    .stdButton3 {
+      font-size: 24px;
+    }
+
+    .products,
+    .liquiditypool,
+    .safety {
+      .productName {
+        font-size: 36px;
+        line-height: 38px;
+      }
+    }
+
     .introduction {
       padding-top: 60px;
       padding-bottom: 40px;
@@ -963,13 +978,7 @@ $text-transform-uppercase: uppercase;
   }
 }
 
-@media screen and (max-width: 600px) {
-  .stdButton,
-  .stdButton2,
-  .stdButton3 {
-    font-size: 24px;
-  }
-
+@media screen and (max-width: 760px) {
   .landingPageWrapper {
     .introduction {
       .container {
@@ -998,15 +1007,6 @@ $text-transform-uppercase: uppercase;
             }
           }
         }
-      }
-    }
-
-    .products,
-    .liquiditypool,
-    .safety {
-      .productName {
-        font-size: 36px;
-        line-height: 38px;
       }
     }
 
