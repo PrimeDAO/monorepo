@@ -13,7 +13,6 @@ const PrimeToken = artifacts.require('PrimeToken');
 const contracts = require('../contractAddresses.json');
 const FileSystem = require("fs");
 
-
 module.exports = async function (deployer, network) {
     await deployer.deploy(RightsManager);
     await deployer.deploy(SmartPoolManager);
@@ -105,8 +104,8 @@ module.exports = async function (deployer, network) {
         await console.log('> contract address: ' + (pool.address).toString())
         await console.log('> bPool address:    ' + (await pool.bPool()).toString())  
 
-         FileSystem.writeFile('../contractAddresses.json', JSON.stringify(contracts), (err) => {
-            if (e) throw e;
-          });
+        FileSystem.writeFile('../contractAddresses.json', JSON.stringify(contracts), (err) => {
+           if (e) throw e;
+         });
     }
 };

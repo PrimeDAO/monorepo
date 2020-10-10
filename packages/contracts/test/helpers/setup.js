@@ -2,12 +2,12 @@ const ERC20 = artifacts.require('ERC20Mock');
 const ControllerCreator = artifacts.require('./ControllerCreator.sol');
 const DaoCreator = artifacts.require('./DaoCreator.sol');
 const DAOTracker = artifacts.require('./DAOTracker.sol');
-// const WETH = artifacts.require('WETH');
 const GenericScheme = artifacts.require('GenericScheme');
 const Avatar = artifacts.require('./Avatar.sol');
 const DAOToken = artifacts.require('./DAOToken.sol');
 const Reputation = artifacts.require('./Reputation.sol');
 const AbsoluteVote = artifacts.require('./AbsoluteVote.sol');
+const ContinuousLocking4Reputation = artifacts.require('./ContinuousLocking4Reputation.sol');
 // Balancer imports
 const ConfigurableRightsPool = artifacts.require('ConfigurableRightsPool');
 const BPool = artifacts.require('BPool');
@@ -169,6 +169,16 @@ const proxy = async (setup) => {
   return proxy;
 };
 
+const token4rep = async (setup) => {
+  // deploy token4rep
+  const token4rep = await ContinuousLocking4Reputation.new();
+  // initialize proxy
+  await token4rep.initialize(setup.organization.avatar.address, 850000, 1573128000, 108000, 1573236000, 12, 85000, 900, 100, setup.tokens.primeToken.address, "0x0000000000000000000000000000000000000000");
+
+  return token4rep;
+};
+
+
 const scheme = async (setup) => {
   // deploy scheme
   const scheme = await GenericScheme.new();
@@ -180,9 +190,9 @@ const scheme = async (setup) => {
   const permissions = '0x00000010';
   await setup.DAOStack.daoCreator.setSchemes(
     setup.organization.avatar.address,
-    [setup.proxy.address, scheme.address],
-    [constants.ZERO_BYTES32, constants.ZERO_BYTES32],
-    [permissions, permissions],
+    [setup.proxy.address, setup.token4rep.address, scheme.address],
+    [constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32],
+    [permissions, permissions, permissions],
     'metaData'
   );
 
@@ -197,4 +207,5 @@ module.exports = {
   organization,
   proxy,
   scheme,
+  token4rep,
 };
