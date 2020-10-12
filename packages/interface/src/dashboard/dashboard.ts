@@ -4,7 +4,7 @@ import { EthereumService } from "services/EthereumService";
 import { ContractsService } from "services/ContractsService";
 import "./dashboard.scss";
 import { EventAggregator } from "aurelia-event-aggregator";
-import { EventConfig, EventConfigException } from 'services/GeneralEvents';
+import { EventConfig } from "services/GeneralEvents";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");

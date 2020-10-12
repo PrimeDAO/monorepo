@@ -1,7 +1,7 @@
 .dashboardWrapper {
   .content {
     display: grid;
-    grid-template-columns: 34% 33% 33%;
+    grid-template-columns: 50% 50%;
 
     grid-template-areas:
       "header header"
@@ -9,12 +9,31 @@
 
     .header {
       grid-area: header;
+      text-align: right;
+      padding: 12px;
+
+      .connectButton {
+        button {
+          padding: 0.5rem;
+          color: rgb(109, 168, 255);
+          background-color: rgba(21, 61, 111, 0.44);
+          border-radius: 12px;
+          border: 1px solid rgba(21, 61, 111, 0.44);
+
+          &:hover,
+          &:focus {
+            color: rgb(83, 153, 255);
+          }
+        }
+      }
     }
     .farmers {
       grid-area: farmers;
+      text-align: center;
     }
     .governors {
       grid-area: governors;
+      text-align: center;
     }
   }
 }

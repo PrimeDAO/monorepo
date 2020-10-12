@@ -25,13 +25,13 @@ export enum Networks {
 @autoinject
 export class EthereumService {
 
-  constructor(private eventAggregator: EventAggregator) {}
+  constructor (private eventAggregator: EventAggregator) { }
 
   private static ProviderEndpoints =
-  {
-    "mainnet": `https://${process.env.RIVET_ID}.eth.rpc.rivet.cloud/`,
-    "rinkeby": `https://${process.env.RIVET_ID}.rinkeby.rpc.rivet.cloud/`,
-  }
+    {
+      "mainnet": `https://${process.env.RIVET_ID}.eth.rpc.rivet.cloud/`,
+      "rinkeby": `https://${process.env.RIVET_ID}.rinkeby.rpc.rivet.cloud/`,
+    }
   private static providerOptions = {
     torus: {
       package: Torus, // required
@@ -86,8 +86,8 @@ export class EthereumService {
   private web3ModalProvider: Web3Provider & IEIP1193;
 
   private chainNameById = new Map<number, AllowedNetworks>([
-    [1, Networks.Mainnet ],
-    [4, Networks.Rinkeby ],
+    [1, Networks.Mainnet],
+    [4, Networks.Rinkeby],
   ]);
 
   // private static chainIdByName = new Map<AllowedNetworks, number>([
@@ -160,6 +160,7 @@ export class EthereumService {
         network, // optional
         // cacheProvider: true, // optional
         providerOptions: EthereumService.providerOptions, // required
+        theme: "dark",
       });
     }
 
@@ -185,7 +186,7 @@ export class EthereumService {
       /**
        * because the events aren't fired on first connection
        */
-      this.fireConnectHandler({ chainId, chainName, provider: this.walletProvider});
+      this.fireConnectHandler({ chainId, chainName, provider: this.walletProvider });
       this.fireAccountsChangedHandler(this.defaultAccountAddress);
 
       this.web3ModalProvider.on("accountsChanged", async (accounts: string) => {
