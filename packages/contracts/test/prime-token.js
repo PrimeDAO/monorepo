@@ -32,14 +32,19 @@ const deploy = async (accounts) => {
 };
 
 contract('PrimeToken', (accounts) => {
+    let testSetup;
+
     before('!! deploy setup', async () => {
         setup = await deploy(accounts);
+        testSetup = setup.token4rep.params
     });
     context('» token4rep', () => {
         context('» parameters are valid', () => {
-            // proxy has already been initialized during setup
-            it('it initializes proxy', async () => {
-                await console.log(await setup.token4rep);
+            it('it should check that scheme is intitalized', async () => {
+                expect((await setup.token4rep.contract.reputationRewardLeft()).toNumber()).to.equal(testSetup.reputationReward);
+                expect((await setup.token4rep.contract.startTime()).toNumber()).to.equal(testSetup.startTime);
+                expect((await setup.token4rep.contract.batchTime()).toNumber()).to.equal(testSetup.batchTime);
+                expect((await setup.token4rep.contract.redeemEnableTime()).toNumber()).to.equal(testSetup.redeemEnableTime);
             });
         });
     });

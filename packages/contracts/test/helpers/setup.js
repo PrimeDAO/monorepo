@@ -170,12 +170,38 @@ const proxy = async (setup) => {
 };
 
 const token4rep = async (setup) => {
-  // deploy token4rep
-  const token4rep = await ContinuousLocking4Reputation.new();
-  // initialize proxy
-  await token4rep.initialize(setup.organization.avatar.address, 850000, 1573128000, 108000, 1573236000, 12, 85000, 900, 100, setup.tokens.primeToken.address, "0x0000000000000000000000000000000000000000");
+  // scheme parameters
+  const params = {
+        reputationReward: 850000,
+        startTime: 0,
+        batchTime: (30*60*60),
+        redeemEnableTime: (30*60*60),
+        maxLockingBatch: 12,
+        repRewardConstA: 85000,
+        repRewardConstB: 900,
+        periodsCap: 100,
+        agreementHash: "0x0000000000000000000000000000000000000000"
+  }
 
-  return token4rep;
+
+  // deploy token4rep contract
+  const contract = await ContinuousLocking4Reputation.new();
+  // initialize token4rep contract
+  await contract.initialize(
+    setup.organization.avatar.address,
+    params.reputationReward,
+    params.startTime,
+    params.batchTime,
+    params.redeemEnableTime,
+    params.maxLockingBatch,
+    params.repRewardConstA,
+    params.repRewardConstB,
+    params.periodsCap,
+    setup.tokens.primeToken.address,
+    params.agreementHash
+    );
+
+  return { params, contract };
 };
 
 
@@ -190,7 +216,7 @@ const scheme = async (setup) => {
   const permissions = '0x00000010';
   await setup.DAOStack.daoCreator.setSchemes(
     setup.organization.avatar.address,
-    [setup.proxy.address, setup.token4rep.address, scheme.address],
+    [setup.proxy.address, setup.token4rep.contract.address, scheme.address],
     [constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32],
     [permissions, permissions, permissions],
     'metaData'
