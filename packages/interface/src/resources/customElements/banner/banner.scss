@@ -1,15 +1,18 @@
 @import "styles/colors.scss";
 
 .banner {
-  position: absolute;
-  z-index: 997;
-  width: 100%;
+  position: fixed;
+  width: fit-content;
+  margin: auto;
+  right: 0;
+  left: 0;
+  z-index: 1000;
   text-align: center;
 }
 
 .banner .body {
-  padding-top: 0.75rem;
-  padding-right: 1.75rem;
+  padding-top: 0.6rem;
+  padding-right: 1.25rem;
   padding-bottom: 0.75rem;
   padding-left: 1.25rem;
   display: inline-block;
@@ -17,6 +20,16 @@
   -webkit-box-shadow: 0px 0px 4px 1px rgba(255, 255, 255, 0.75);
   -moz-box-shadow: 0px 0px 4px 1px rgba(255, 255, 255, 0.75);
   box-shadow: 0px 0px 4px 1px rgba(255, 255, 255, 0.75);
+
+  border-radius: 0px 0px 10px 10px;
+  -moz-border-radius: 0px 0px 10px 10px;
+  -webkit-border-radius: 0px 0px 10px 10px;
+  border: 0px solid #000000;
+}
+
+.banner.warning .body {
+  color: $color-ds-darkblue;
+  background-color: $color-ds-yellow;
 }
 
 .banner.failure .body {
@@ -49,12 +62,12 @@
   color: $color-ds-white;
   cursor: pointer;
   background-color: $color-ds-red;
-  position: absolute;
   border: none;
-  top: 0;
   right: 0;
-  padding-top: 0.3rem;
+  position: relative;
+  top: 2px;
   font-size: 18px;
+  padding: 0;
 }
 
 .banner button.close span {
@@ -66,7 +79,7 @@
 }
 
 .banner.au-leave-active {
-  animation: slideUp 0.5s;
+  animation: slideUp 1s;
 }
 
 .banner.au-stagger {

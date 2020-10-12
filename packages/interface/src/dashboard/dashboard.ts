@@ -1,11 +1,12 @@
 import { autoinject } from "aurelia-framework";
 import { IContract } from "services/ContractsService";
-import {EthereumService} from "services/EthereumService";
-import {ContractsService} from "services/ContractsService";
+import { EthereumService } from "services/EthereumService";
+import { ContractsService } from "services/ContractsService";
 import "./dashboard.scss";
 import { parseEther } from "ethers/lib/utils";
 import TransactionsService from "services/TransactionsService";
 import { EventAggregator } from "aurelia-event-aggregator";
+import { EventConfigException } from 'services/GeneralEvents';
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -45,7 +46,7 @@ export class Dashboard {
   private bPoolAddress = "";
   private withdrawTransactionHash: string = null;
 
-  constructor(
+  constructor (
     private eventAggregator: EventAggregator,
     private ethereumService: EthereumService,
     private contractsService: ContractsService) {
@@ -56,21 +57,22 @@ export class Dashboard {
     this.eventAggregator.subscribe("Network.Changed.Connected", async () => {
       const crPool = await this.contractsService.getContractFor(IContract.ConfigurableRightsPool);
       this.bPoolAddress = await crPool.bPool();
+      this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an unexpected error occurred", new Error("You hey!")));
 
-      const weth = await this.contractsService.getContractFor(IContract.WETH);
-      const response = await TransactionsService.send(() =>
-        weth.deposit({ value: parseEther(".05") }),
-      );
-      const receipt = await response.wait(1);
-      if (receipt.status) {
-        const response2 = await TransactionsService.send(() =>
-          weth.withdraw(parseEther(".05")),
-        );
-        const receipt2 = await response2.wait(1);
-        if (receipt2.status) {
-          this.withdrawTransactionHash = receipt2.transactionHash;
-        }
-      }
+      // const weth = await this.contractsService.getContractFor(IContract.WETH);
+      // const response = await TransactionsService.send(() =>
+      //   weth.deposit({ value: parseEther(".05") }),
+      // );
+      // const receipt = await response.wait(1);
+      // if (receipt.status) {
+      //   const response2 = await TransactionsService.send(() =>
+      //     weth.withdraw(parseEther(".05")),
+      //   );
+      //   const receipt2 = await response2.wait(1);
+      //   if (receipt2.status) {
+      //     this.withdrawTransactionHash = receipt2.transactionHash;
+      //   }
+      // }
     });
   }
 

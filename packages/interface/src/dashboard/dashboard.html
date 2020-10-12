@@ -1,8 +1,12 @@
 <template>
-  <div class="landingPageWrapper animated-page au-animate">
-    <button click.delegate="onConnect()">Connect</button>
-    <div show.bind="withdrawTransactionHash"><a href.bind="'https://rinkeby.etherscan.io/tx/' + withdrawTransactionHash"
-        target="_blank" rel="noopener noreferrer">withdrawtransactionHash</a>
+  <div class="dashboardWrapper animated-page au-animate">
+    <div className="content">
+      <div className="header">
+        <button click.delegate="onConnect()">Connect</button>
+      </div>
+      <div className="farmers"></div>
+      <div className="governors"></div>
+
     </div>
   </div>
 </template>

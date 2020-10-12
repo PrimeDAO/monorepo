@@ -1,3 +1,20 @@
-.landingPageWrapper {
-  background-color: gold;
+.dashboardWrapper {
+  .content {
+    display: grid;
+    grid-template-columns: 34% 33% 33%;
+
+    grid-template-areas:
+      "header header"
+      "farmers governors";
+
+    .header {
+      grid-area: header;
+    }
+    .farmers {
+      grid-area: farmers;
+    }
+    .governors {
+      grid-area: governors;
+    }
+  }
 }

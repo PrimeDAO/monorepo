@@ -1,6 +1,10 @@
 @import "./animations";
 @import "./dialogs";
 
+body {
+  margin: 0;
+}
+
 etherscanlink {
   white-space: nowrap;
   display: inline-block;

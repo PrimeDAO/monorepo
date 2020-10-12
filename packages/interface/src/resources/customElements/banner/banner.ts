@@ -26,7 +26,7 @@ export class Banner {
   //   trigger: "hover",
   // };
 
-  constructor(
+  constructor (
     eventAggregator: EventAggregator,
     private animator: CssAnimator,
     private aureliaHelperService: AureliaHelperService,
@@ -59,23 +59,30 @@ export class Banner {
     this.elMessage.innerHTML = config.message;
     switch (config.type) {
       case EventMessageType.Info:
-        this.banner.classList.add("info");
         this.banner.classList.remove("failure");
+        this.banner.classList.remove("warning");
+        this.banner.classList.add("info");
+        break;
+      case EventMessageType.Warning:
+        this.banner.classList.remove("info");
+        this.banner.classList.remove("failure");
+        this.banner.classList.add("warning");
         break;
       default:
-        this.banner.classList.add("failure");
+        this.banner.classList.remove("warning");
         this.banner.classList.remove("info");
+        this.banner.classList.add("failure");
         break;
     }
     this.aureliaHelperService.enhanceElement(this.elMessage, this, true);
+    await this.animator.addClass(this.banner, "au-enter-active");
     this.showing = true;
-    this.animator.enter(this.banner);
   }
 
-  public attached(): void {
-    // attach-focus doesn't work
-    this.okButton.focus();
-  }
+  // public attached(): void {
+  //   // attach-focus doesn't work
+  //   //this.okButton.focus();
+  // }
 
   public dispose(): void {
     this.subscriptions.dispose();

@@ -11,7 +11,7 @@ export class ConsoleLogService {
   private subscriptions: DisposableCollection = new DisposableCollection();
   private logger = LogManager.getLogger("PrimeDAO.eth");
 
-  constructor(
+  constructor (
     eventAggregator: EventAggregator,
   ) {
     this.subscriptions.push(eventAggregator
@@ -67,7 +67,7 @@ export class ConsoleLogService {
   }
 
   private handleWarning(config: EventConfig | string) {
-    this.logger.debug(this.getMessage(config));
+    this.logger.warn(this.getMessage(config));
   }
 
   private handleMessage(config: EventConfig | string) {
