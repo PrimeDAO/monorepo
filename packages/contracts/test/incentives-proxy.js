@@ -91,4 +91,3 @@ contract('IncentivesProxy', (accounts) => {
     });
 
 });
-

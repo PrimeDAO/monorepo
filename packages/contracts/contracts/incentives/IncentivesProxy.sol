@@ -36,12 +36,13 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
+import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
 import "./IRewardDistributionRecipient.sol";
 
 pragma solidity >=0.5.13;
 
 
-contract IncentivesProxy is IRewardDistributionRecipient {
+contract IncentivesProxy is IRewardDistributionRecipient, ReentrancyGuard {
 
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
@@ -57,14 +58,14 @@ contract IncentivesProxy is IRewardDistributionRecipient {
     }
 
     modifier protected() {
-        require(initialized,                   "IncentivesProxy: proxy not initialized");
+        require(initialized, "IncentivesProxy: proxy not initialized");
         _;
     }
 
     /**
       * @dev           Initialize proxy.
       * @param _rewardToken  The address
-      * @param _stakingToken The address 
+      * @param _stakingToken The address
       */
     function initialize(address _rewardToken, address _stakingToken) external initializer {
         require(_rewardToken  != address(0),                  "IncentivesProxy: rewardToken cannot be null");
@@ -131,25 +132,29 @@ contract IncentivesProxy is IRewardDistributionRecipient {
                 .add(rewards[account]);
     }
 
-    // stake visibility is public as overriding LPTokenWrapper's stake() function
-     function stake(uint256 amount) public updateReward(msg.sender) /*checkhalve*/ protected checkStart {
+    /* stake visibility is public as overriding LPTokenWrapper's stake() function */
+    /* added nonReentrant modifier as calling _stake(): calls token contract */
+     function stake(uint256 amount) public nonReentrant updateReward(msg.sender) /*checkhalve*/ protected checkStart {
         require(amount > 0, "IncentivesProxy: cannot stake 0");
         _stake(amount);
         emit Staked(msg.sender, amount);
     }
 
-    function withdraw(uint256 amount) public updateReward(msg.sender) protected checkStart {
+    /* added nonReentrant modifier as calling _withdraw(): calls token contract */
+    function withdraw(uint256 amount) public nonReentrant updateReward(msg.sender) protected checkStart {
         require(amount > 0, "IncentivesProxy: Cannot withdraw 0");
         _withdraw(amount);
         emit Withdrawn(msg.sender, amount);
     }
 
+    /* added nonReentrant modifier as calling withdraw() and getReward(): these call token contract */
     function exit() external {
         withdraw(balanceOf(msg.sender));
         getReward();
     }
 
-    function getReward() public updateReward(msg.sender) /*checkhalve*/ protected checkStart {
+    /* added nonReentrant modifier as calling token contract */
+    function getReward() public nonReentrant updateReward(msg.sender) /*checkhalve*/ protected checkStart {
         uint256 reward = earned(msg.sender);
         if (reward > 0) {
             rewards[msg.sender] = 0;
