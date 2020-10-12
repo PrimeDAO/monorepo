@@ -35,6 +35,8 @@ export class Banner {
       .subscribe("handleException", (config: EventConfigException | any) => this.handleException(config)));
     this.subscriptions.push(eventAggregator
       .subscribe("handleFailure", (config: EventConfig | string) => this.handleFailure(config)));
+    this.subscriptions.push(eventAggregator
+      .subscribe("handleInfo", (config: EventConfig | string) => this.handleInfo(config)));
 
     this.queue = new Subject<IBannerConfig>();
     /**
@@ -119,6 +121,21 @@ export class Banner {
       message: (typeof config === "string")
         ? config as string : config.message,
       type: EventMessageType.Failure,
+    };
+
+    this.queueEventConfig(bannerConfig);
+  }
+
+  private handleInfo(config: EventConfig | string): void {
+
+    if ((config as any).originatingUiElement) {
+      return;
+    }
+
+    const bannerConfig = {
+      message: (typeof config === "string")
+        ? config as string : config.message,
+      type: EventMessageType.Info,
     };
 
     this.queueEventConfig(bannerConfig);

@@ -55,7 +55,7 @@
 
 .banner .message {
   display: inline-block;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 .banner button.close {
@@ -63,11 +63,14 @@
   cursor: pointer;
   background-color: $color-ds-red;
   border: none;
-  right: 0;
   position: relative;
   top: 2px;
   font-size: 18px;
   padding: 0;
+}
+
+.banner.info button.close {
+  background-color: $color-ds-darkblue;
 }
 
 .banner button.close span {
