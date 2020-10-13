@@ -7,7 +7,8 @@ const Avatar = artifacts.require('./Avatar.sol');
 const DAOToken = artifacts.require('./DAOToken.sol');
 const Reputation = artifacts.require('./Reputation.sol');
 const AbsoluteVote = artifacts.require('./AbsoluteVote.sol');
-const ContinuousLocking4Reputation = artifacts.require('./ContinuousLocking4Reputation.sol');
+const LockingToken4Reputation = artifacts.require('./LockingToken4Reputation.sol');
+const PriceOracle = artifacts.require('./PriceOracle.sol');
 // Balancer imports
 const ConfigurableRightsPool = artifacts.require('ConfigurableRightsPool');
 const BPool = artifacts.require('BPool');
@@ -170,38 +171,34 @@ const proxy = async (setup) => {
 };
 
 const token4rep = async (setup) => {
+  const priceOracle = await PriceOracle.new();
+
+  await priceOracle.setTokenPrice(setup.tokens.primeToken.address, 100, 4);
   // scheme parameters
   const params = {
         reputationReward: 850000,
-        startTime: 0,
-        batchTime: (30*60*60),
-        redeemEnableTime: (30*60*60),
-        maxLockingBatch: 12,
-        repRewardConstA: 85000,
-        repRewardConstB: 900,
-        periodsCap: 100,
+        lockingStartTime: await time.latest(), // start of the locking period
+        lockingEndTime: await time.latest() + (30*60*60), // one month after the start of the locking period
+        redeemEnableTime: (45*60*60), // 6 weeks after the start of the locking period
+        maxLockingPeriod: (180*60*60), // 6 months
         agreementHash: "0x0000000000000000000000000000000000000000"
   }
 
-
   // deploy token4rep contract
-  const contract = await ContinuousLocking4Reputation.new();
+  const contract = await LockingToken4Reputation.new();
   // initialize token4rep contract
   await contract.initialize(
     setup.organization.avatar.address,
     params.reputationReward,
-    params.startTime + await time.latest(),
-    params.batchTime,
+    params.lockingStartTime,
+    params.lockingEndTime,
     params.redeemEnableTime + await time.latest(),
-    params.maxLockingBatch,
-    params.repRewardConstA,
-    params.repRewardConstB,
-    params.periodsCap,
-    setup.tokens.primeToken.address,
+    params.maxLockingPeriod,
+    priceOracle.address,
     params.agreementHash
     );
 
-  return { params, contract };
+  return { params, contract, priceOracle };
 };
 
 

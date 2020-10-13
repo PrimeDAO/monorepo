@@ -25,21 +25,18 @@
       "fromArc": true
     },
     {
-       "name":"ContinuousLocking4Reputation",
-       "schemeName":"ContinuousLocking4Reputation",
+       "name":"LockingToken4Reputation",
+       "schemeName":"LockingToken4Reputation",
        "isUniversal":false,
        "params":[
          850000,
          1573128000,
-         108000,
          1573236000,
          12,
-         85000,
-         900,
-         100
+         24
        ],
        "permissions":"0x00000010",
-       "alias":"InfiniteReputation4Token",
+       "alias":"LockingToken4Reputation",
        "fromArc":true
      }
   ],

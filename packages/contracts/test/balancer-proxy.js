@@ -5,7 +5,6 @@ const { expect } = require('chai');
 const { constants, time, expectRevert, expectEvent } = require('@openzeppelin/test-helpers');
 const helpers = require('./helpers');
 const BPool = artifacts.require('BPool');
-// const Controller = artifacts.require('Controller');
 const BalancerProxy = artifacts.require('BalancerProxy');
 
 const { toWei } = web3.utils;
