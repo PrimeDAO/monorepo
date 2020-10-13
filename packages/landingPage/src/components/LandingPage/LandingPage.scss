@@ -861,6 +861,14 @@ $text-transform-uppercase: uppercase;
                 z-index: 2;
               }
             }
+
+            .centerMenu {
+              display: none;
+            }
+
+            .mobilemenuButton {
+              display: unset;
+            }
           }
           .body {
             margin-bottom: 30px;
@@ -990,14 +998,6 @@ $text-transform-uppercase: uppercase;
                 width: 58px;
                 height: 58px;
               }
-            }
-
-            .centerMenu {
-              display: none;
-            }
-
-            .mobilemenuButton {
-              display: unset;
             }
           }
           .buttons {
