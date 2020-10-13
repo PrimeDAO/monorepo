@@ -19,7 +19,7 @@ const SmartPoolManager = artifacts.require('SmartPoolManager');
 const BalancerProxy = artifacts.require('BalancerProxy');
 const PrimeToken = artifacts.require('PrimeToken');
 
-const { constants } = require('@openzeppelin/test-helpers');
+const { time, constants } = require('@openzeppelin/test-helpers');
 
 const MAX = web3.utils.toTwosComplement(-1);
 
@@ -190,9 +190,9 @@ const token4rep = async (setup) => {
   await contract.initialize(
     setup.organization.avatar.address,
     params.reputationReward,
-    params.startTime,
+    params.startTime + await time.latest(),
     params.batchTime,
-    params.redeemEnableTime,
+    params.redeemEnableTime + await time.latest(),
     params.maxLockingBatch,
     params.repRewardConstA,
     params.repRewardConstB,

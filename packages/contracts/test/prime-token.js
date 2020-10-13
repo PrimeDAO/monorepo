@@ -42,9 +42,15 @@ contract('PrimeToken', (accounts) => {
         context('» parameters are valid', () => {
             it('it should check that scheme is intitalized', async () => {
                 expect((await setup.token4rep.contract.reputationRewardLeft()).toNumber()).to.equal(testSetup.reputationReward);
-                expect((await setup.token4rep.contract.startTime()).toNumber()).to.equal(testSetup.startTime);
                 expect((await setup.token4rep.contract.batchTime()).toNumber()).to.equal(testSetup.batchTime);
-                expect((await setup.token4rep.contract.redeemEnableTime()).toNumber()).to.equal(testSetup.redeemEnableTime);
+                expect(await setup.token4rep.contract.token()).to.equal(setup.tokens.primeToken.address);
+            });
+
+            it('it should lock tokens for reputation', async () => {
+                await setup.tokens.primeToken.approve(setup.token4rep.contract.address, toWei('100'));
+                let tx = await setup.token4rep.contract.lock(toWei('1'), 12, 0,"0x0000000000000000000000000000000000000000");
+                setup.data.tx = tx;
+                await expectEvent.inTransaction(setup.data.tx.tx, setup.token4rep.contract, 'LockToken');
             });
         });
     });
