@@ -87,7 +87,47 @@ contract('IncentivesProxy', (accounts) => {
                     );
                 });
             });
+            context('» stake parameter is valid: stakes tokens', () => {
+                before('!! initialize proxy', async () => {
+                    await setup.incentives.incentivesProxy.initialize(setup.organization.token.address, setup.balancer.pool.address);
+                    // before - populate account with tokens
+                    console.log(accounts[0]);
+                });
+                // stake()
+            });
         });
     });
+    context('# withdraw', () => {
+        context('» generics', () => {
+            before('!! deploy setup', async () => {
+                setup = await deploy(accounts);
+                stakeAmount = toWei('100');
+            });
+        });
+        context('» proxy is not initialized', () => {
+            before('!! deploy proxy', async () => {
+                setup.data.incentives = await IncentivesProxy.new();
+            });
+            it('it reverts', async () => {
+                await expectRevert(
+                    setup.data.incentives.stake(stakeAmount),
+                    'IncentivesProxy: proxy not initialized'
+                );
+            });
+        });
+        context('» withdraw parameter is not valid: too low', () => {
+            /*
+              Implement stake
+            */
+
+        //     it('it reverts', async () => {
+        //         await expectRevert(
+        //             setup.data.incentives.withdraw(toWei('0')),
+        //             'IncentivesProxy: Cannot withdraw 0'
+        //         );
+        //     });
+        });
+
+    }); // end #withdraw
 
 });
