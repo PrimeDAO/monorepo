@@ -126,10 +126,10 @@ contract('BalancerProxy', (accounts) => {
                     const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                     //store data
                     setup.data.tx = tx;
-                
+
                     const pool = await setup.balancer.pool.bPool();
                     const bPool = await BPool.at(pool);
-  
+
                     expect(await bPool.isPublicSwap()).to.equal(publicSwap);
                 });
                 it('it emits a setPublicSwap event', async () => {
@@ -170,7 +170,7 @@ contract('BalancerProxy', (accounts) => {
                     const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                     //store data
                     setup.data.tx = tx;
-                
+
                     const pool = await setup.balancer.pool.bPool();
                     const bPool = await BPool.at(pool);
                     expect(await (await bPool.getSwapFee()).toString()).to.equal(swapFee.toString());
@@ -235,7 +235,7 @@ contract('BalancerProxy', (accounts) => {
                         const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                         const proposalId = helpers.getNewProposalId(_tx);
                         const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
-  
+
                         setup.data.tx = tx;
                         await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'ApplyAddToken');
                     });
@@ -258,7 +258,7 @@ contract('BalancerProxy', (accounts) => {
                                 const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                                 const proposalId = helpers.getNewProposalId(_tx);
                                 const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
-    
+
                                 setup.data.tx = tx;
                                 await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'RemoveToken');
                             });
@@ -334,7 +334,7 @@ contract('BalancerProxy', (accounts) => {
                 });
                 it('checks the balanceOf BPRIME tokens', async () => {
                     expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountOut);
-                }); 
+                });
                 context('» call exitPool', () => {
                     it('exits pool', async () => {
                         const calldata = helpers.encodeExitPool(poolAmountIn, minAmountsOut);
@@ -348,7 +348,7 @@ contract('BalancerProxy', (accounts) => {
                     });
                     it('checks the balanceOf BPRIME tokens', async () => {
                         expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountIn);
-                    }); 
+                    });
                 });
             });
         });
