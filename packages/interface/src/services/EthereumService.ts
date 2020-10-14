@@ -4,6 +4,9 @@ import { BaseProvider, Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import Torus from "@toruslabs/torus-embed";
+import { EventAggregator } from "aurelia-event-aggregator";
+import { autoinject } from "aurelia-framework";
+import { EventConfigFailure } from "services/GeneralEvents";
 
 interface IEIP1193 {
   on(eventName: "accountsChanged", handler: (accounts: string) => void);
@@ -12,15 +15,23 @@ interface IEIP1193 {
   on(eventName: "disconnect", handler: (error: { code: number; message: string }) => void);
 }
 
-export type AllowedNetworks = "mainnet" | "rinkeby" | "xdai";
+export type AllowedNetworks = "mainnet" | "rinkeby";
 
-export default class EthereumService {
+export enum Networks {
+  Mainnet = "mainnet",
+  Rinkeby = "rinkeby",
+}
+
+@autoinject
+export class EthereumService {
+
+  constructor (private eventAggregator: EventAggregator) { }
+
   private static ProviderEndpoints =
-  {
-    "mainnet": `https://${process.env.RIVET_ID}.eth.rpc.rivet.cloud/`,
-    "rinkeby": `https://${process.env.RIVET_ID}.rinkeby.rpc.rivet.cloud/`,
-    "xdai": "https://dai.poa.network",
-  }
+    {
+      "mainnet": `https://${process.env.RIVET_ID}.eth.rpc.rivet.cloud/`,
+      "rinkeby": `https://${process.env.RIVET_ID}.rinkeby.rpc.rivet.cloud/`,
+    }
   private static providerOptions = {
     torus: {
       package: Torus, // required
@@ -39,37 +50,56 @@ export default class EthereumService {
       package: WalletConnectProvider, // required
       options: {
         rpc: {
-          1: EthereumService.ProviderEndpoints["mainnet"],
-          4: EthereumService.ProviderEndpoints["rinkeby"],
-          100: EthereumService.ProviderEndpoints["xdai"],
+          1: EthereumService.ProviderEndpoints[Networks.Mainnet],
+          4: EthereumService.ProviderEndpoints[Networks.Rinkeby],
         },
       },
     },
   };
 
-  private static web3Modal: Web3Modal;
+  public static targetedNetwork: Signer | string;
+  /**
+   * provided by ethers
+   */
+  public static readOnlyProvider: BaseProvider;
+
+  public static initialize(network: AllowedNetworks): void {
+
+    if (!network) {
+      throw new Error("Ethereum.initialize: `network` must be specified");
+    }
+
+    this.targetedNetwork = network;
+
+    const readonlyEndPoint = EthereumService.ProviderEndpoints[this.targetedNetwork];
+    if (!readonlyEndPoint) {
+      throw new Error(`Please connect to either ${Networks.Mainnet} or ${Networks.Rinkeby}`);
+    }
+
+    this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[this.targetedNetwork]);
+  }
+
+  private web3Modal: Web3Modal;
   /**
    * provided by Web3Modal
    */
-  private static web3ModalProvider: Web3Provider & IEIP1193;
+  private web3ModalProvider: Web3Provider & IEIP1193;
 
-  private static chainNameById = new Map<number, AllowedNetworks>([
-    [ 1, "mainnet" ],
-    [ 4, "rinkeby" ],
-    [ 100, "xdai" ],
+  private chainNameById = new Map<number, AllowedNetworks>([
+    [1, Networks.Mainnet],
+    [4, Networks.Rinkeby],
   ]);
 
   // private static chainIdByName = new Map<AllowedNetworks, number>([
   //   ["mainnet", 1],
   //   ["rinkeby", 4],
-  //   ["xdai", 100],
   // ]);
 
-  private static async getChainId(provider: Web3Provider): Promise<number> {
+  private async getChainId(provider: Web3Provider): Promise<number> {
     return Number((await provider.send("net_version", [])));
   }
 
-  private static async getCurrentAccountFromProvider(provider: Web3Provider): Promise<Signer | string> {
+  private async getCurrentAccountFromProvider(provider: Web3Provider): Promise<Signer | string> {
     let account: Signer | string;
     if (Signer.isSigner(provider)) {
       account = provider;
@@ -85,42 +115,27 @@ export default class EthereumService {
     return account;
   }
 
-  /**
-   * using `Set` means dups are prevented.  They are maintained in the order added.
-   */
-  private static onAccountsChangedHandlers: Set<(account: string) => void> = new Set();
-  private static onChainChangedHandlers: Set<(chainId: number) => void> = new Set();
-  private static onConnectHandlers: Set<(info: { chainId: number, chainName: AllowedNetworks, provider: Web3Provider }) => void> = new Set();
-  private static onDisconnectHandlers: Set<(error: { code: number; message: string }) => void> = new Set();
-
-  private static fireAccountsChangedHandler(account: string) {
+  private fireAccountsChangedHandler(account: string) {
     console.info(`account changed: ${account}`);
-    this.onAccountsChangedHandlers.forEach((fn) => fn(account));
+    this.eventAggregator.publish("Network.Changed.Account", account);
   }
-  private static fireChainChangedHandler(chainId: number) {
+  private fireChainChangedHandler(chainId: number) {
     console.info(`chain changed: ${chainId}`);
-    this.onChainChangedHandlers.forEach((fn) => fn(chainId));
+    this.eventAggregator.publish("Network.Changed.Id", chainId);
   }
-  private static fireConnectHandler(info: { chainId: number, chainName: AllowedNetworks, provider: Web3Provider }) {
+  private fireConnectHandler(info: { chainId: number, chainName: AllowedNetworks, provider: Web3Provider }) {
     console.info(`connected: ${info.chainName}`);
-    this.onConnectHandlers.forEach((fn) => fn(info));
+    this.eventAggregator.publish("Network.Changed.Connected", info);
   }
-  private static fireDisconnectHandler(error: { code: number; message: string }) {
+  private fireDisconnectHandler(error: { code: number; message: string }) {
     console.info(`disconnected: ${error?.code}: ${error?.message}`);
-    this.onDisconnectHandlers.forEach((fn) => fn(error));
+    this.eventAggregator.publish("Network.Changed.Disconnect", error);
   }
-  /**
-   * provided by ethers
-   */
-  public static readOnlyProvider: BaseProvider;
-  /**
-   * provided by ethers given provider from Web3Modal
-   */
-  public static walletProvider: Web3Provider;
 
-  public static defaultAccount: Signer | string;
-
-  public static async getDefaultAccountAddress(): Promise<string | undefined> {
+  /**
+   * address, even if signer
+   */
+  private async getDefaultAccountAddress(): Promise<string | undefined> {
     if (Signer.isSigner(this.defaultAccount)) {
       return await this.defaultAccount.getAddress();
     } else {
@@ -128,22 +143,24 @@ export default class EthereumService {
     }
   }
 
-  public static initialize(network: AllowedNetworks): void {
+  /**
+   * provided by ethers given provider from Web3Modal
+   */
+  public walletProvider: Web3Provider;
+  /**
+   * signer or address
+   */
+  public defaultAccount: Signer | string;
+  public defaultAccountAddress: string;
 
-    if (!network) {
-      throw new Error("Ethereum.initialize: `network` must be specified");
-    }
-
-    this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[network]);
-  }
-
-  public static async connect(network = "mainnet"): Promise<void> {
+  public async connect(network = Networks.Mainnet): Promise<void> {
 
     if (!this.web3Modal) {
       this.web3Modal = new Web3Modal({
         network, // optional
         // cacheProvider: true, // optional
-        providerOptions: this.providerOptions, // required
+        providerOptions: EthereumService.providerOptions, // required
+        theme: "dark",
       });
     }
 
@@ -152,23 +169,29 @@ export default class EthereumService {
       const walletProvider = new ethers.providers.Web3Provider(web3ModalProvider);
       const chainId = await this.getChainId(walletProvider);
       const chainName = this.chainNameById.get(chainId);
-      const readonlyEndPoint = EthereumService.ProviderEndpoints[chainName];
-      if (!readonlyEndPoint) {
-        alert("Please connect to either mainnet, rinkeby or xdai");
+      if (chainName !== EthereumService.targetedNetwork) {
+        this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Please connect to ${EthereumService.targetedNetwork}`));
         return;
       }
-      this.readOnlyProvider = ethers.getDefaultProvider(readonlyEndPoint);
+      /**
+       * we will keep the original readonly provider which should still be fine since
+       * the targeted network cannot have changed.
+       */
+      // const readonlyEndPoint = EthereumService.ProviderEndpoints[chainName];
+      // this.readOnlyProvider = ethers.getDefaultProvider(readonlyEndPoint);
       this.walletProvider = walletProvider;
       this.web3ModalProvider = web3ModalProvider;
       this.defaultAccount = await this.getCurrentAccountFromProvider(this.walletProvider);
+      this.defaultAccountAddress = await this.getDefaultAccountAddress();
       /**
        * because the events aren't fired on first connection
        */
-      this.fireConnectHandler({ chainId, chainName, provider: this.walletProvider});
-      this.fireAccountsChangedHandler(await this.getDefaultAccountAddress());
+      this.fireConnectHandler({ chainId, chainName, provider: this.walletProvider });
+      this.fireAccountsChangedHandler(this.defaultAccountAddress);
 
       this.web3ModalProvider.on("accountsChanged", async (accounts: string) => {
         this.defaultAccount = await this.getCurrentAccountFromProvider(this.walletProvider);
+        this.defaultAccountAddress = await this.getDefaultAccountAddress();
         this.fireAccountsChangedHandler(accounts?.[0]);
       });
 
@@ -182,18 +205,5 @@ export default class EthereumService {
         this.fireDisconnectHandler(error);
       });
     }
-  }
-
-  public static onAccountsChanged(handler: (account: string) => void): void {
-    this.onAccountsChangedHandlers.add(handler);
-  }
-  public static onChainChanged(handler: (chainId: number) => void): void {
-    this.onChainChangedHandlers.add(handler);
-  }
-  public static onConnect(handler: (info: { chainId: number; chainName: AllowedNetworks; provider: Web3Provider }) => void): void {
-    this.onConnectHandlers.add(handler);
-  }
-  public static onDisconnect(handler: (error: { code: number; message: string; }) => void): void {
-    this.onDisconnectHandlers.add(handler);
   }
 }

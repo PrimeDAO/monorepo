@@ -1,11 +1,10 @@
 let HDWalletProvider = require("@truffle/hdwallet-provider");
-let privateKey = process.env.KEY;
 
 module.exports = {
   networks: {
       rinkeby: {
           provider: function() {
-              return new HDWalletProvider(privateKey, process.env.PROVIDER);
+              return new HDWalletProvider(process.env.KEY, process.env.PROVIDER);
           },
           network_id: 4
       }

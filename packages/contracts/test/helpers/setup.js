@@ -8,33 +8,37 @@ const DAOToken = artifacts.require('./DAOToken.sol');
 const Reputation = artifacts.require('./Reputation.sol');
 const AbsoluteVote = artifacts.require('./AbsoluteVote.sol');
 // Balancer imports
-const ConfigurableRightsPool = artifacts.require('ConfigurableRightsPool')
-const BPool = artifacts.require('BPool')
-const BFactory = artifacts.require('BFactory')
+const ConfigurableRightsPool = artifacts.require('ConfigurableRightsPool');
+const BPool = artifacts.require('BPool');
+const BFactory = artifacts.require('BFactory');
 const CRPFactory = artifacts.require('CRPFactory')
 const BalancerSafeMath = artifacts.require('BalancerSafeMath');
 const RightsManager = artifacts.require('RightsManager');
 const SmartPoolManager = artifacts.require('SmartPoolManager');
 const BalancerProxy = artifacts.require('BalancerProxy');
+const PrimeToken = artifacts.require('PrimeToken');
+
 // Incentives imports
 const IncentivesProxy = artifacts.require('IncentivesProxy');
 
 const { constants } = require('@openzeppelin/test-helpers');
 
-const MAX = web3.utils.toTwosComplement(-1)
+const MAX = web3.utils.toTwosComplement(-1);
 
-const { toWei } = web3.utils
-const { fromWei } = web3.utils
+const { toWei } = web3.utils;
+const { fromWei } = web3.utils;
 
 const ARC_GAS_LIMIT = 6200000;
 const INITIAL_CASH_SUPPLY = '2000000000000000000000';
 const INITIAL_CASH_BALANCE = '100000000000000';
-const DAO_TOKENS = '10000000000000000000000000';
+const PDAO_TOKENS = toWei('1000');
+const PRIME_CAP = toWei('90000000');
+const PRIME_SUPPLY = toWei('21000000');
 const REPUTATION = '1000';
 
 const deployOrganization = async (daoCreator, daoCreatorOwner, founderToken, founderReputation, cap = 0) => {
   var org = {};
-  var tx = await daoCreator.forgeOrg('testOrg', 'TEST', 'TST', daoCreatorOwner, founderToken, founderReputation, cap, { gas: constants.ARC_GAS_LIMIT });
+  var tx = await daoCreator.forgeOrg('primeDAO', 'PrimeDAO token', 'PDAO', daoCreatorOwner, founderToken, founderReputation, cap, { gas: constants.ARC_GAS_LIMIT });
   assert.equal(tx.logs.length, 1);
   assert.equal(tx.logs[0].event, 'NewOrg');
   var avatarAddress = tx.logs[0].args._avatar;
@@ -66,7 +70,9 @@ const initialize = async (root) => {
 const tokens = async (setup) => {
   const erc20s = [await ERC20.new('DAI Stablecoin', 'DAI', 18), await ERC20.new('USDC Stablecoin', 'USDC', 15), await ERC20.new('USDT Stablecoin', 'USDT', 18)];
 
-  return { erc20s };
+  const primeToken = await PrimeToken.new(PRIME_SUPPLY, PRIME_CAP, setup.root);
+
+  return { erc20s, primeToken};
 };
 
 const incentives = async (setup) => {
@@ -91,14 +97,14 @@ const balancer = async (setup) => {
 
   const usdc = await setup.tokens.erc20s[1];
   const dai = await setup.tokens.erc20s[0];
-  const daotoken = await setup.organization.token;
+  const primetoken = await setup.tokens.primeToken;
   const usdt = await setup.tokens.erc20s[2];
 
   const USDC = await usdc.address;
   const DAI = await dai.address;
-  const DAOToken = await daotoken.address;
+  const PRIMEToken = await primetoken.address;
 
-  const tokenAddresses = [DAOToken, DAI, USDC];
+  const tokenAddresses = [PRIMEToken, DAI, USDC];
   
   const swapFee = 10 ** 15;
   const startWeights = [toWei('8'), toWei('1'), toWei('1')];
@@ -128,7 +134,7 @@ const balancer = async (setup) => {
           poolParams,
           permissions,
   );
-    
+
   await crpFactory.newCrp(
           bfactory.address,
           poolParams,
@@ -139,7 +145,7 @@ const balancer = async (setup) => {
 
   await usdc.approve(POOL, MAX);
   await dai.approve(POOL, MAX);
-  await daotoken.approve(POOL, MAX);
+  await primetoken.approve(POOL, MAX);
 
   await pool.createPool(toWei('1000'), 10, 10);
 
@@ -159,7 +165,7 @@ const DAOStack = async () => {
 
 const organization = async (setup) => {
   // deploy organization
-  const organization = await deployOrganization(setup.DAOStack.daoCreator, [setup.root], [DAO_TOKENS], [REPUTATION]);
+  const organization = await deployOrganization(setup.DAOStack.daoCreator, [setup.root], [PDAO_TOKENS], [REPUTATION]);
 
   return organization;
 };

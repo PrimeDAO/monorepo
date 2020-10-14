@@ -11,7 +11,7 @@ const migrate = async () => {
     arcVersion: '0.0.1-rc.44',
     network: process.env.NETWORK,
     provider: process.env.PROVIDER,
-    privateKey: process.env.KEY,
+    privateKey: '0x'+process.env.KEY,
     customAbisLocation: './build/contracts',
     gasPrice: 10,
     quiet: false,
