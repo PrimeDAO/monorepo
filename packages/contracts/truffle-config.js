@@ -6,7 +6,8 @@ module.exports = {
           provider: function() {
               return new HDWalletProvider(process.env.KEY, process.env.PROVIDER);
           },
-          network_id: 4
+          network_id: 4,
+          networkCheckTimeout: 100000000
       }
   },
   compilers: {
