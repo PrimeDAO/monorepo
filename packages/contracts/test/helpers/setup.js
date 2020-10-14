@@ -2,7 +2,6 @@ const ERC20 = artifacts.require('ERC20Mock');
 const ControllerCreator = artifacts.require('./ControllerCreator.sol');
 const DaoCreator = artifacts.require('./DaoCreator.sol');
 const DAOTracker = artifacts.require('./DAOTracker.sol');
-// const WETH = artifacts.require('WETH');
 const GenericScheme = artifacts.require('GenericScheme');
 const Avatar = artifacts.require('./Avatar.sol');
 const DAOToken = artifacts.require('./DAOToken.sol');
@@ -18,6 +17,9 @@ const RightsManager = artifacts.require('RightsManager');
 const SmartPoolManager = artifacts.require('SmartPoolManager');
 const BalancerProxy = artifacts.require('BalancerProxy');
 const PrimeToken = artifacts.require('PrimeToken');
+
+// Incentives imports
+const IncentivesProxy = artifacts.require('IncentivesProxy');
 
 const { constants } = require('@openzeppelin/test-helpers');
 
@@ -67,8 +69,16 @@ const initialize = async (root) => {
 
 const tokens = async (setup) => {
   const erc20s = [await ERC20.new('DAI Stablecoin', 'DAI', 18), await ERC20.new('USDC Stablecoin', 'USDC', 15), await ERC20.new('USDT Stablecoin', 'USDT', 18)];
+
   const primeToken = await PrimeToken.new(PRIME_SUPPLY, PRIME_CAP, setup.root);
+
   return { erc20s, primeToken};
+};
+
+const incentives = async (setup) => {
+  const incentivesProxy = await IncentivesProxy.new();
+
+  return { incentivesProxy };
 };
 
 const balancer = async (setup) => {
@@ -191,6 +201,7 @@ const scheme = async (setup) => {
 
 module.exports = {
   initialize,
+  incentives,
   tokens,
   balancer,
   DAOStack,
