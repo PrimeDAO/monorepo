@@ -12,7 +12,7 @@ const PrimeToken = artifacts.require('PrimeToken');
 const PriceOracle = artifacts.require('PriceOracle');
 
 const contracts = require('../contractAddresses.json');
-const FileSystem = require("fs");
+const fs = require("fs");
 
 module.exports = async function (deployer, network) {
     await deployer.deploy(RightsManager);
@@ -105,10 +105,11 @@ module.exports = async function (deployer, network) {
         contracts.rinkeby.CRPFactory = await pool.bPool()
 
         await console.log('> contract address: ' + (pool.address).toString())
-        await console.log('> bPool address:    ' + (await pool.bPool()).toString())  
+        await console.log('> bPool address:    ' + (await pool.bPool()).toString())
 
         // overwrite contranctAddresses.json
-        FileSystem.writeFile('../contractAddresses.json', JSON.stringify(contracts), (err) => {
+        var options = { flag : 'a' };
+        fs.writeFile('../contractAddresses.json', JSON.stringify(contracts), options, (err) => {
            if (err) throw err;
          });
     }
