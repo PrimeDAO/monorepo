@@ -41,7 +41,7 @@ contract('IncentivesProxy', (accounts) => {
         context('» parameters are valid', () => {
             // proxy has already been initialized during setup
             it('it initializes proxy', async () => {
-            	await setup.incentives.incentivesProxy.initialize(setup.organization.token.address, setup.balancer.pool.address);
+            	await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address);
             });
         });
         context('» token parameter is not valid', () => {
@@ -56,7 +56,7 @@ contract('IncentivesProxy', (accounts) => {
     context('» proxy is already initialized', () => {
         // proxy has already been initialized during setup
         it('it reverts', async () => {
-            await expectRevert(setup.incentives.incentivesProxy.initialize(setup.organization.token.address, setup.balancer.pool.address), 'IncentivesProxy: proxy already initialized');
+            await expectRevert(setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address), 'IncentivesProxy: proxy already initialized');
         });
     });
     context('# stake', () => {
@@ -78,7 +78,7 @@ contract('IncentivesProxy', (accounts) => {
             });
             context('» stake parameter is not valid', () => {
                 before('!! initialize proxy', async () => {
-	            	await setup.incentives.incentivesProxy.initialize(setup.organization.token.address, setup.balancer.pool.address);
+	            	await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address);
                 });
                 it('it reverts', async () => {
                     await expectRevert(
@@ -89,12 +89,11 @@ contract('IncentivesProxy', (accounts) => {
             });
             context('» stake parameter is valid: stakes tokens', () => {
                 before('!! populate accounts', async () => {
-                    await setup.tokens.erc20s[0].transfer(accounts[1], 100);
-                    // await setup.tokens.erc20s[0].approve(setup.incentives.incentivesProxy.address, 100);
-                    await setup.tokens.erc20s[0].approve(setup.incentives.incentivesProxy.address, 100);
+                    await setup.balancer.pool.transfer(accounts[1], stakeAmount);
+                    await setup.balancer.pool.approve(setup.incentives.incentivesProxy.address, stakeAmount, { from: accounts[1]});
                 });
                 it('stakes', async () => {
-                    await setup.incentives.incentivesProxy.stake(100, { from: accounts[1]});
+                    await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1]});
                     // await expect(
 
                     // );
