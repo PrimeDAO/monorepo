@@ -88,12 +88,17 @@ contract('IncentivesProxy', (accounts) => {
                 });
             });
             context('» stake parameter is valid: stakes tokens', () => {
-                before('!! initialize proxy', async () => {
-                    await setup.incentives.incentivesProxy.initialize(setup.organization.token.address, setup.balancer.pool.address);
-                    // before - populate account with tokens
-                    console.log(accounts[0]);
+                before('!! populate accounts', async () => {
+                    await setup.tokens.erc20s[0].transfer(accounts[1], 100);
+                    // await setup.tokens.erc20s[0].approve(setup.incentives.incentivesProxy.address, 100);
+                    await setup.tokens.erc20s[0].approve(setup.incentives.incentivesProxy.address, 100);
                 });
-                // stake()
+                it('stakes', async () => {
+                    await setup.incentives.incentivesProxy.stake(100, { from: accounts[1]});
+                    // await expect(
+
+                    // );
+                });
             });
         });
     });
