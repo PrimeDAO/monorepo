@@ -162,7 +162,7 @@ contract IncentivesProxy is IRewardDistributionRecipient, ReentrancyGuard {
             // uint256 trueReward = reward.mul(scalingFactor).div(10**18);
             rewardToken.safeTransfer(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);
-        }
+        } 
     }
 
     modifier checkStart(){

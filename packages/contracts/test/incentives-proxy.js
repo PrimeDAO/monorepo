@@ -34,6 +34,7 @@ const deploy = async (accounts) => {
 contract('IncentivesProxy', (accounts) => {
     let stakeAmount;
     let halfStake;
+    let blockNumber;
 
     before('!! deploy setup', async () => {
         setup = await deploy(accounts);
@@ -144,12 +145,53 @@ contract('IncentivesProxy', (accounts) => {
                 await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1] });
             });
             it('withdraws', async () => {
-                await setup.incentives.incentivesProxy.withdraw(halfStake, { from: accounts[1] });
-                expect((await setup.balancer.pool.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(halfStake);
-                expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(halfStake);
+                await setup.incentives.incentivesProxy.withdraw(toWei('50'), { from: accounts[1] });
+                expect((await setup.balancer.pool.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(toWei('50'));
+                expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(toWei('50'));
+            });
+        });
+    });
+    context('# getReward', () => {
+        context('» generics', () => {
+            before('!! deploy setup', async () => {
+                setup = await deploy(accounts);
+                stakeAmount = toWei('100');
+            });
+        });
+        context('» proxy is not initialized', () => {
+            before('!! deploy proxy', async () => {
+                setup.data.incentives = await IncentivesProxy.new();
+            });
+            it('it reverts', async () => {
+                await expectRevert(
+                    setup.data.incentives.getReward( { from: accounts[1] }),
+                    'IncentivesProxy: proxy not initialized'
+                );
+            });
+        });
+        context('» getReward param valid: rewards 0', async () => {
+            it('rewards 0', async () => {
+                expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
+                setup.incentives.incentivesProxy.getReward( { from: accounts[1]} );
+                expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
+            });
+        });
+        context('» getReward param valid: rewards', async () => {
+            it('rewards after time period', async () => {
+                expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
+                // check amount that's staked - if 0 then stake
+
+                // move blocks forward block.timestamp > periodFinish
+                /* From other test suite:
+                  blockNumber = (await setup.balancer.pool.newToken()).commitBlock;
+                  await time.advanceBlockTo(blockNumber.toNumber()+11);  */
+                blockNumber = (await setup.incentives.incentivesProxy.stake(stakeAmount));
+
+                setup.incentives.incentivesProxy.getReward( { from: accounts[1]} );
+                // expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal();
             });
         });
 
-    }); // end #withdraw
+    }); // end getReward
 
 });
