@@ -74,8 +74,16 @@ const tokens = async (setup) => {
 };
 
 const vesting = async (setup) => {
-  const vesting = await VestingFactory.new();
-  return vesting;
+  const factory = await VestingFactory.new();
+
+  // scheme parameters
+  const params = {
+        cliffDuration: 0,
+        duration: 45*60*60,
+        revocable: false
+  }
+
+  return { factory, params };
 };
 
 

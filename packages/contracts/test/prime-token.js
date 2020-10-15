@@ -36,6 +36,9 @@ contract('PrimeToken', (accounts) => {
     let testSetup;
     let tokenLockAmount;
     let lockId;
+    let owner; // vesting contract owner
+    let beneficiary; // vesting beneficiary
+    let start; // vesting start
 
     before('!! deploy setup', async () => {
         setup = await deploy(accounts);
@@ -70,17 +73,12 @@ contract('PrimeToken', (accounts) => {
     context('» vesting', () => {
         context('» parameters are valid', () => {
             it('it should create a vesting contract', async () => {
-                let owner = accounts[0];
-                let beneficiary = accounts[1];
-                //TODO: move to setup
-                let start = await time.latest();
-                let cliffDuration = 0;
-                let duration = 45*60*60;
-                let revocable = false;
-
-                let tx = await setup.vesting.create(owner, beneficiary, start, cliffDuration, duration, revocable);
+                owner = accounts[0];
+                beneficiary = accounts[1];
+                start = await time.latest();
+                let tx = await setup.vesting.factory.create(owner, beneficiary, start, setup.vesting.params.cliffDuration, setup.vesting.params.duration, setup.vesting.params.revocable);
                 setup.data.tx = tx;
-                await expectEvent.inTransaction(setup.data.tx.tx, setup.vesting, 'VestingCreated');
+                await expectEvent.inTransaction(setup.data.tx.tx, setup.vesting.factory, 'VestingCreated');
             });
         });
     });
