@@ -46970,8 +46970,8 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0x12C0669E00e0c2E6660D7469a272100FC5634E27",
-      "transactionHash": "0x2f5d3e30b46291be4dd3de812aa727247aae0e32db80d9cd7b7795b7c24abc80"
+      "address": "0xc9fACd96879178b86387d24335126bE7917675d3",
+      "transactionHash": "0xe561d9b38ab7741c4e5759fba4c5d94a0ee575c8715104bdbf4923c18eaae1a7"
     },
     "5777": {
       "events": {},
@@ -46980,8 +46980,8 @@
       "transactionHash": "0x7129a135c1ecca10982246d18ff486793eef70a93575c9b0e0f8c53ad9e86a13"
     }
   },
-  "schemaVersion": "3.2.4",
-  "updatedAt": "2020-10-01T15:10:39.973Z",
+  "schemaVersion": "3.2.5",
+  "updatedAt": "2020-10-15T09:49:38.479Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",

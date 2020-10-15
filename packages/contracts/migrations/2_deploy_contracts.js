@@ -9,23 +9,37 @@ const ERC20Mock = artifacts.require('ERC20Mock');
 const WETH = artifacts.require('WETH');
 const BalancerProxy = artifacts.require('BalancerProxy');
 const PrimeToken = artifacts.require('PrimeToken');
+const PriceOracle = artifacts.require('PriceOracle');
+
+const contracts = require('../contractAddresses.json');
+const fs = require("fs");
 
 module.exports = async function (deployer, network) {
-
     await deployer.deploy(RightsManager);
     await deployer.deploy(SmartPoolManager);
     await deployer.deploy(BFactory);
     await deployer.deploy(BalancerSafeMath);
     await deployer.deploy(BalancerSafeMathMock);
     await deployer.deploy(BalancerProxy);
+    await deployer.deploy(PriceOracle);
 
     deployer.link(BalancerSafeMath, CRPFactory);
     deployer.link(RightsManager, CRPFactory);
     deployer.link(SmartPoolManager, CRPFactory);
-    
+
     await deployer.deploy(CRPFactory);
 
-    if (network === 'rinkeby' || network === 'rinkeby-fork') {
+    if (network === 'rinkeby') {
+        // overwrite contrancts object
+        contracts.rinkeby.RightsManager = await RightsManager.address
+        contracts.rinkeby.SmartPoolManager = await SmartPoolManager.address
+        contracts.rinkeby.BFactory = await BFactory.address
+        contracts.rinkeby.BalancerSafeMath = await BalancerSafeMath.address
+        contracts.rinkeby.BalancerSafeMathMock = await BalancerSafeMathMock.address
+        contracts.rinkeby.BalancerProxy = await BalancerProxy.address
+        contracts.rinkeby.CRPFactory = await CRPFactory.address
+        contracts.rinkeby.PriceOracle = await PriceOracle.address
+
         const { toWei } = web3.utils
         const MAX = web3.utils.toTwosComplement(-1)
 
@@ -37,7 +51,7 @@ module.exports = async function (deployer, network) {
         await weth.deposit({ value: toWei('3') });
 
         const tokenAddresses = [prime.address, dai.address, weth.address];
-     
+
         const swapFee = 10 ** 15;
         const startWeights = [toWei('12'), toWei('1.5'), toWei('1.5')];
         const startBalances = [toWei('500000'), toWei('10000'), toWei('3')];
@@ -72,7 +86,7 @@ module.exports = async function (deployer, network) {
                 poolParams,
                 permissions,
         );
-        
+
         await crpFactory.newCrp(
                 bfactory.address,
                 poolParams,
@@ -87,7 +101,16 @@ module.exports = async function (deployer, network) {
 
         await pool.createPool(toWei('1000'));
 
+        contracts.rinkeby.BalancerProxy = await pool.address
+        contracts.rinkeby.CRPFactory = await pool.bPool()
+
         await console.log('> contract address: ' + (pool.address).toString())
-        await console.log('> bPool address:    ' + (await pool.bPool()).toString())  
+        await console.log('> bPool address:    ' + (await pool.bPool()).toString())
+
+        // overwrite contranctAddresses.json
+        // var options = { flag : 'a' };
+        // fs.writeFile('../contractAddresses.json', JSON.stringify(contracts), options, (err) => {
+        //    if (err) throw err;
+        //  });
     }
 };

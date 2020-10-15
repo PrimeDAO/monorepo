@@ -5,7 +5,6 @@ const { expect } = require('chai');
 const { constants, time, expectRevert, expectEvent } = require('@openzeppelin/test-helpers');
 const helpers = require('./helpers');
 const BPool = artifacts.require('BPool');
-// const Controller = artifacts.require('Controller');
 const BalancerProxy = artifacts.require('BalancerProxy');
 
 const { toWei } = web3.utils;
@@ -23,6 +22,8 @@ const deploy = async (accounts) => {
     setup.balancer = await helpers.setup.balancer(setup);
     // deploy proxy
     setup.proxy = await helpers.setup.proxy(setup);
+    // deploy token4rep
+    setup.token4rep = await helpers.setup.token4rep(setup);
     // deploy generic scheme
     setup.scheme = await helpers.setup.scheme(setup);
 
