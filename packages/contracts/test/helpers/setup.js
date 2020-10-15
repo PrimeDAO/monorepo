@@ -2,12 +2,13 @@ const ERC20 = artifacts.require('ERC20Mock');
 const ControllerCreator = artifacts.require('./ControllerCreator.sol');
 const DaoCreator = artifacts.require('./DaoCreator.sol');
 const DAOTracker = artifacts.require('./DAOTracker.sol');
-// const WETH = artifacts.require('WETH');
 const GenericScheme = artifacts.require('GenericScheme');
 const Avatar = artifacts.require('./Avatar.sol');
 const DAOToken = artifacts.require('./DAOToken.sol');
 const Reputation = artifacts.require('./Reputation.sol');
 const AbsoluteVote = artifacts.require('./AbsoluteVote.sol');
+const LockingToken4Reputation = artifacts.require('./LockingToken4Reputation.sol');
+const PriceOracle = artifacts.require('./PriceOracle.sol');
 // Balancer imports
 const ConfigurableRightsPool = artifacts.require('ConfigurableRightsPool');
 const BPool = artifacts.require('BPool');
@@ -19,7 +20,7 @@ const SmartPoolManager = artifacts.require('SmartPoolManager');
 const BalancerProxy = artifacts.require('BalancerProxy');
 const PrimeToken = artifacts.require('PrimeToken');
 
-const { constants } = require('@openzeppelin/test-helpers');
+const { time, constants } = require('@openzeppelin/test-helpers');
 
 const MAX = web3.utils.toTwosComplement(-1);
 
@@ -169,6 +170,38 @@ const proxy = async (setup) => {
   return proxy;
 };
 
+const token4rep = async (setup) => {
+  const priceOracle = await PriceOracle.new();
+
+  await priceOracle.setTokenPrice(setup.tokens.primeToken.address, 100, 4);
+  // scheme parameters
+  const params = {
+        reputationReward: 850000,
+        lockingStartTime: await time.latest(), // start of the locking period
+        lockingEndTime: await time.latest() + (30*60*60), // one month after the start of the locking period
+        redeemEnableTime: (45*60*60), // 6 weeks after the start of the locking period
+        maxLockingPeriod: (180*60*60), // 6 months
+        agreementHash: "0x0000000000000000000000000000000000000000"
+  }
+
+  // deploy token4rep contract
+  const contract = await LockingToken4Reputation.new();
+  // initialize token4rep contract
+  await contract.initialize(
+    setup.organization.avatar.address,
+    params.reputationReward,
+    params.lockingStartTime,
+    params.lockingEndTime,
+    params.redeemEnableTime + await time.latest(),
+    params.maxLockingPeriod,
+    priceOracle.address,
+    params.agreementHash
+    );
+
+  return { params, contract, priceOracle };
+};
+
+
 const scheme = async (setup) => {
   // deploy scheme
   const scheme = await GenericScheme.new();
@@ -180,9 +213,9 @@ const scheme = async (setup) => {
   const permissions = '0x00000010';
   await setup.DAOStack.daoCreator.setSchemes(
     setup.organization.avatar.address,
-    [setup.proxy.address, scheme.address],
-    [constants.ZERO_BYTES32, constants.ZERO_BYTES32],
-    [permissions, permissions],
+    [setup.proxy.address, setup.token4rep.contract.address, scheme.address],
+    [constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32],
+    [permissions, permissions, permissions],
     'metaData'
   );
 
@@ -197,4 +230,5 @@ module.exports = {
   organization,
   proxy,
   scheme,
+  token4rep,
 };

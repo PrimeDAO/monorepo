@@ -5,7 +5,10 @@ const contracts = require('../contractAddresses.json');
 const migrate = async () => {
 
   specs.CustomSchemes[0].address = contracts.rinkeby.BalancerProxy;
+  specs.CustomSchemes[0].params = [contracts.rinkeby.ConfigurableRightsPool, contracts.rinkeby.BPool];
   specs.CustomSchemes[1].params[2] = contracts.rinkeby.BalancerProxy;
+  specs.CustomSchemes[2].params[5] = contracts.rinkeby.PriceOracle;
+  specs.CustomSchemes[2].params[6] = "0x0000000000000000000000000000000000000000";
 
   const options = {
     arcVersion: '0.0.1-rc.44',
