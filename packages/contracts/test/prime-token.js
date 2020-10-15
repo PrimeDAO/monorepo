@@ -14,6 +14,8 @@ const deploy = async (accounts) => {
     const setup = await helpers.setup.initialize(accounts[0]);
     // deploy ERC20s
     setup.tokens = await helpers.setup.tokens(setup);
+    // deploy VestingFactory
+    setup.vesting = await helpers.setup.vesting(setup);
     // deploy DAOStack meta-contracts
     setup.DAOStack = await helpers.setup.DAOStack(setup);
     // deploy organization
@@ -62,6 +64,23 @@ contract('PrimeToken', (accounts) => {
                 let tx = await setup.token4rep.contract.release(setup.root, lockingId);
                 setup.data.tx = tx;
                 await expectEvent.inTransaction(setup.data.tx.tx, setup.token4rep.contract, 'Release');
+            });
+        });
+    });
+    context('» vesting', () => {
+        context('» parameters are valid', () => {
+            it('it should create a vesting contract', async () => {
+                let owner = accounts[0];
+                let beneficiary = accounts[1];
+                //TODO: move to setup
+                let start = await time.latest();
+                let cliffDuration = 0;
+                let duration = 45*60*60;
+                let revocable = false;
+
+                let tx = await setup.vesting.create(owner, beneficiary, start, cliffDuration, duration, revocable);
+                setup.data.tx = tx;
+                await expectEvent.inTransaction(setup.data.tx.tx, setup.vesting, 'VestingCreated');
             });
         });
     });
