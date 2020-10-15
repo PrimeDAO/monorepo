@@ -108,9 +108,9 @@ module.exports = async function (deployer, network) {
         await console.log('> bPool address:    ' + (await pool.bPool()).toString())
 
         // overwrite contranctAddresses.json
-        var options = { flag : 'a' };
-        fs.writeFile('../contractAddresses.json', JSON.stringify(contracts), options, (err) => {
-           if (err) throw err;
-         });
+        // var options = { flag : 'a' };
+        // fs.writeFile('../contractAddresses.json', JSON.stringify(contracts), options, (err) => {
+        //    if (err) throw err;
+        //  });
     }
 };
