@@ -7,7 +7,8 @@
     "test": "truffle test",
     "lint": "solhint 'contracts/**/*.sol' && npx eslint test/*.js",
     "deploy:dao:rinkeby": "npx run scripts/migrate.js --network rinkeby",
-    "deploy:dapp:rinkeby": "truffle migrate --network rinkeby --reset"
+    "deploy:dapp:rinkeby": "truffle migrate --network rinkeby --reset",
+    "coverage": "truffle run coverage"
   },
   "author": "",
   "license": "ISC",
