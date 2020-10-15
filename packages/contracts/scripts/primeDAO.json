@@ -29,11 +29,11 @@
        "schemeName":"LockingToken4Reputation",
        "isUniversal":false,
        "params":[
-         850000,
-         1573128000,
-         1573236000,
-         12,
-         24
+         100,
+         0,
+         3000,
+         3000,
+         6000
        ],
        "permissions":"0x00000010",
        "alias":"LockingToken4Reputation",

@@ -3198,12 +3198,12 @@
         }
       },
       "links": {
-        "BalancerSafeMath": "0x90393d763357F0Ab98101bff3fF28c5Bb2c1FA6b",
-        "RightsManager": "0x0fE55a4d342f4d1BfC0e9A55DA9ef5F0355cBB7D",
-        "SmartPoolManager": "0x12C0669E00e0c2E6660D7469a272100FC5634E27"
+        "BalancerSafeMath": "0x3C267EEf67B49A8809eC8E4f0C581A21cc67039e",
+        "RightsManager": "0xf510aC0A5836ABd8925E5B5C8FB7052469A49971",
+        "SmartPoolManager": "0xc9fACd96879178b86387d24335126bE7917675d3"
       },
-      "address": "0x3950Df83a166F037fE08B2DE850aBfD1ae445E71",
-      "transactionHash": "0x616351c5be609ce54dbdc0e90ab0c99a62f76444dc81c3e87528bde65788dabe"
+      "address": "0x5bE32400E89b3034483d941Ad0abDd20c6ceDbAb",
+      "transactionHash": "0x20aca0a31c95133a40a6983cea82e722567a8f7f363a98645dcd38fd3f0e6b66"
     },
     "5777": {
       "events": {
@@ -3236,8 +3236,8 @@
       "transactionHash": "0xdf8f4bf0823a4fac02e48fb7f72ccfae40f820c305eb3d62b6426fddd84d14d5"
     }
   },
-  "schemaVersion": "3.2.4",
-  "updatedAt": "2020-10-01T15:10:39.992Z",
+  "schemaVersion": "3.2.5",
+  "updatedAt": "2020-10-15T09:49:38.501Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",

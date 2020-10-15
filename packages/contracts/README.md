@@ -2,7 +2,14 @@
 
 ## Development
 
-To run unit tests:
+To compile contract
+
+```
+truffle compile
+```
+
+
+To run unit tests
 
 ```
 npm run test
