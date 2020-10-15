@@ -19,6 +19,6 @@ module.exports = {
     await shell.cp('./build/contracts/SmartPoolManager.json' , './.coverage_artifacts/contracts')
     await shell.cp('./build/contracts/WETH.json' , './.coverage_artifacts/contracts')
     console.log('---------------------------------------------------------------------')
-    await shell.exec('npx run ./migrations/3_coverage_contracts.js', {async:true})
+    // await shell.exec('npx run ./migrations/3_coverage_contracts.js', {async:true})
   }
 };
