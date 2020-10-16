@@ -10,7 +10,6 @@ module.exports = {
           networkCheckTimeout: 100000000
       },
       coverage: {
-        gas: 0x1fffffffffffff,
         host: '127.0.0.1',
         port: 8555,
         network_id: "*",

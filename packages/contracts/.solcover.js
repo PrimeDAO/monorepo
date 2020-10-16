@@ -4,7 +4,6 @@ const shell = require('shelljs');
 module.exports = {
   skipFiles: ['test/Import.sol', 'test/ERC20Mock', 'interfaces/IBPool.sol', 'IConfiguarableRightsPool.sol'],
   providerOptions: {
-    gasLimit: 0x1fffffffffffff,
     allowUnlimitedContractSize: true,
     default_balance_ether: 0x1fffffffffffff,
   },
@@ -19,6 +18,5 @@ module.exports = {
     await shell.cp('./build/contracts/SmartPoolManager.json' , './.coverage_artifacts/contracts')
     await shell.cp('./build/contracts/WETH.json' , './.coverage_artifacts/contracts')
     console.log('---------------------------------------------------------------------')
-    // await shell.exec('npx run ./migrations/3_coverage_contracts.js', {async:true})
   }
 };
