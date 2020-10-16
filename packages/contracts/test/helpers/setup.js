@@ -105,7 +105,7 @@ const balancer = async (setup) => {
   const PRIMEToken = await primetoken.address;
 
   const tokenAddresses = [PRIMEToken, DAI, USDC];
-  
+
   const swapFee = 10 ** 15;
   const startWeights = [toWei('8'), toWei('1'), toWei('1')];
   const startBalances = [toWei('10000'), toWei('5000'), toWei('5000')];
