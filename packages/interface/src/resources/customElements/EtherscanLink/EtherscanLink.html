@@ -1,13 +1,14 @@
 <template>
-  <span class="etherscanlink">
-    <a ref="hotElement" class="${css}" if.bind="networkExplorerUri" href='${networkExplorerUri}' target='${internal ? "" : "_blank"}'>
+  <div class="etherscanlink">
+    <a ref="hotElement" class="text" if.bind="networkExplorerUri" href='${networkExplorerUri}'
+      target='${internal ? "" : "_blank"}' rel="noopener noreferrer">
       ${text || address}
     </a>
 
-    <span ref="coldElement" else class="${css}">
+    <div else ref="coldElement" class="text">
       ${text || address}
-    </span>
+    </div>
 
     <copy-to-clipboard-button text-to-copy.bind="address" message.bind="copyMessage"></copy-to-clipboard-button>
-  </span>
+  </div>
 </template>

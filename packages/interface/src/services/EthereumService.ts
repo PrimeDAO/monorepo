@@ -9,7 +9,7 @@ import { autoinject } from "aurelia-framework";
 import { EventConfigFailure } from "services/GeneralEvents";
 
 interface IEIP1193 {
-  on(eventName: "accountsChanged", handler: (accounts: string) => void);
+  on(eventName: "accountsChanged", handler: (accounts: Array<Address>) => void);
   on(eventName: "chainChanged", handler: (chainId: number) => void);
   on(eventName: "connect", handler: (info: { chainId: number }) => void);
   on(eventName: "disconnect", handler: (error: { code: number; message: string }) => void);
@@ -25,7 +25,7 @@ export enum Networks {
 @autoinject
 export class EthereumService {
 
-  constructor (private eventAggregator: EventAggregator) { }
+  constructor(private eventAggregator: EventAggregator) { }
 
   private static ProviderEndpoints =
     {
@@ -57,7 +57,7 @@ export class EthereumService {
     },
   };
 
-  public static targetedNetwork: Signer | string;
+  public static targetedNetwork: AllowedNetworks;
   /**
    * provided by ethers
    */
@@ -115,7 +115,7 @@ export class EthereumService {
     return account;
   }
 
-  private fireAccountsChangedHandler(account: string) {
+  private fireAccountsChangedHandler(account: Address) {
     console.info(`account changed: ${account}`);
     this.eventAggregator.publish("Network.Changed.Account", account);
   }
@@ -135,7 +135,7 @@ export class EthereumService {
   /**
    * address, even if signer
    */
-  private async getDefaultAccountAddress(): Promise<string | undefined> {
+  private async getDefaultAccountAddress(): Promise<Address | undefined> {
     if (Signer.isSigner(this.defaultAccount)) {
       return await this.defaultAccount.getAddress();
     } else {
@@ -150,8 +150,8 @@ export class EthereumService {
   /**
    * signer or address
    */
-  public defaultAccount: Signer | string;
-  public defaultAccountAddress: string;
+  public defaultAccount: Signer | Address;
+  public defaultAccountAddress: Address;
 
   public async connect(network = Networks.Mainnet): Promise<void> {
 
@@ -189,7 +189,7 @@ export class EthereumService {
       this.fireConnectHandler({ chainId, chainName, provider: this.walletProvider });
       this.fireAccountsChangedHandler(this.defaultAccountAddress);
 
-      this.web3ModalProvider.on("accountsChanged", async (accounts: string) => {
+      this.web3ModalProvider.on("accountsChanged", async (accounts: Array<Address>) => {
         this.defaultAccount = await this.getCurrentAccountFromProvider(this.walletProvider);
         this.defaultAccountAddress = await this.getDefaultAccountAddress();
         this.fireAccountsChangedHandler(accounts?.[0]);
@@ -207,3 +207,5 @@ export class EthereumService {
     }
   }
 }
+
+export type Address = string;

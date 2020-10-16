@@ -26,7 +26,7 @@ export class Banner {
   //   trigger: "hover",
   // };
 
-  constructor (
+  constructor(
     eventAggregator: EventAggregator,
     private animator: CssAnimator,
     private aureliaHelperService: AureliaHelperService,
@@ -37,6 +37,8 @@ export class Banner {
       .subscribe("handleFailure", (config: EventConfig | string) => this.handleFailure(config)));
     this.subscriptions.push(eventAggregator
       .subscribe("handleInfo", (config: EventConfig | string) => this.handleInfo(config)));
+    this.subscriptions.push(eventAggregator
+      .subscribe("showMessage", (config: EventConfig | string) => this.handleInfo(config)));
 
     this.queue = new Subject<IBannerConfig>();
     /**

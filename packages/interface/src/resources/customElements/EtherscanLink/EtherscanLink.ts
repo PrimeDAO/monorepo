@@ -1,5 +1,6 @@
 ﻿import { autoinject, bindable, bindingMode, customElement } from "aurelia-framework";
 import { EthereumService, Networks } from "../../../services/EthereumService";
+import "./EtherscanLink.scss";
 
 @autoinject
 @customElement("etherscanlink")

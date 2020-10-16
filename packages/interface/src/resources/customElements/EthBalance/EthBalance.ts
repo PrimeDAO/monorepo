@@ -1,5 +1,5 @@
 import { EventAggregator } from "aurelia-event-aggregator";
-import { autoinject, bindable, bindingMode, containerless, customElement } from "aurelia-framework";
+import { autoinject, containerless, customElement } from "aurelia-framework";
 import { DisposableCollection } from "services/DisposableCollection";
 import { formatEther } from "ethers/lib/utils";
 import { EthereumService } from "services/EthereumService";
@@ -8,7 +8,7 @@ import { EthereumService } from "services/EthereumService";
 @containerless
 @customElement("ethbalance")
 export class EthBalance {
-  @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
+  // @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
 
   private balance: string = null;
   private filter: any;
@@ -70,7 +70,7 @@ export class EthBalance {
           this.balance = null;
         }
         // tslint:disable-next-line:no-empty
-      // eslint-disable-next-line no-empty
+        // eslint-disable-next-line no-empty
       } catch (ex) {
       } finally {
         this.checking = false;

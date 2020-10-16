@@ -1,3 +1,5 @@
+@import "styles/colors.scss";
+
 .dashboardWrapper {
   .content {
     display: grid;
@@ -10,14 +12,26 @@
     .header {
       grid-area: header;
       text-align: right;
-      padding: 12px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
-      .connectButton {
-        button {
-          padding: 0.5rem;
+      .networkfeedback {
+        display: inline-block;
+        color: rgb(109, 168, 255);
+        .testnet {
+          color: $color-ds-red;
+        }
+      }
+
+      .connectButtonContainer {
+        background-color: transparent;
+        border-color: transparent;
+
+        .connectButton {
           color: rgb(109, 168, 255);
           background-color: rgba(21, 61, 111, 0.44);
-          border-radius: 12px;
           border: 1px solid rgba(21, 61, 111, 0.44);
 
           &:hover,
@@ -25,8 +39,30 @@
             color: rgb(83, 153, 255);
           }
         }
+
+        &.connected {
+          background-color: rgb(64, 68, 79);
+          border-color: rgba(21, 61, 111, 0.44);
+
+          .connectButton {
+            color: white;
+            background-color: rgb(44, 47, 54);
+            border-color: transparent;
+
+            .etherscanlink a {
+              color: white;
+              text-decoration: none;
+
+              &:hover,
+              &:focus {
+                color: white;
+              }
+            }
+          }
+        }
       }
     }
+
     .farmers {
       grid-area: farmers;
       text-align: center;

@@ -1,5 +1,5 @@
 import { FrameworkConfiguration } from "aurelia-framework";
-import {PLATFORM} from "aurelia-pal";
+import { PLATFORM } from "aurelia-pal";
 
 export function configure(config: FrameworkConfiguration): void {
   config.globalResources([
@@ -10,6 +10,8 @@ export function configure(config: FrameworkConfiguration): void {
     PLATFORM.moduleName("./customElements/copyToClipboardButton/copyToClipboardButton"),
     PLATFORM.moduleName("./customElements/numericInput/numericInput"),
     PLATFORM.moduleName("./customElements/floatingPointNumber/floatingPointNumber"),
+    PLATFORM.moduleName("./customElements/ConnectButton/ConnectButton"),
+    PLATFORM.moduleName("./customElements/NetworkFeedback/NetworkFeedback"),
     PLATFORM.moduleName("./valueConverters/number"),
     PLATFORM.moduleName("./valueConverters/ethwei"),
     PLATFORM.moduleName("./valueConverters/date"),

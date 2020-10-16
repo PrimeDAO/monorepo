@@ -34,10 +34,10 @@ export class NumberService {
     exponentialAt: number | [number, number] = [-7, 20],
     roundUp = false): string | null | undefined {
 
-    // this helps to display the erroneus value in the GUI
-    if (typeof value === "string") {
-      return value as any;
-    }
+    // // this helps to display the erroneus value in the GUI
+    // if (typeof value === "string") {
+    //   return value as any;
+    // }
 
     if ((value === null) || (value === undefined)) {
       return value as any;

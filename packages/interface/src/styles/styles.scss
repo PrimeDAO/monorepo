@@ -21,13 +21,11 @@ etherscanlink {
   text-overflow: ellipsis;
 }
 
-.copy-to-clip-button {
-  color: $color-ds-black;
-  white-space: nowrap;
-  display: inline-block;
+.copy-to-clip-button,
+.copy-to-clip-button:focus {
+  color: $color-ds-white;
 }
 
 .copy-to-clip-button:hover {
-  background-color: transparent;
-  color: $color-ds-black;
+  color: $color-ds-grey-3;
 }

@@ -1,0 +1,14 @@
+<template>
+  <div class="connectButtonContainer ${accountAddress ? 'connected' : ''}">
+    <div if.bind="accountAddress">
+      <div class="ethBalanceContainer">
+        <ethbalance></ethbalance> ETH
+      </div>
+      <div class="connectButton">
+        <etherscanlink address.bind="accountAddress" text.bind="accountAddressText"></etherscanlink>
+      </div>
+    </div>
+    <div else class="connectButton" click.delegate="onConnect()">Connect to a Wallet</div>
+  </div>
+  </div>
+</template>
