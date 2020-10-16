@@ -23,14 +23,15 @@ module.exports = async function (deployer, network) {
     await deployer.deploy(BalancerProxy);
     await deployer.deploy(PriceOracle);
 
-    console.log(BalancerSafeMath.address);
-
+    console.log('---------------------------------------------------------------------')
     await deployer.link(BalancerSafeMath, CRPFactory);
-    console.log('balancerSafeMath -> crpFactory linked');
+    console.log('BalancerSafeMath -> CRPFactory linked');
     await deployer.link(RightsManager, CRPFactory);
-    console.log('RightsManager -> crpFactory linked');
+    console.log('RightsManager -> CRPFactory linked');
     await deployer.link(SmartPoolManager, CRPFactory);
-    console.log('linkage complete');
+    console.log('SmartPoolManager -> CRPFactory linked')
+    console.log('Linking complete');
+    console.log('---------------------------------------------------------------------')
 
     await deployer.deploy(CRPFactory);
 

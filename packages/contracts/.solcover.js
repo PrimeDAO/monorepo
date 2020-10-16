@@ -18,5 +18,7 @@ module.exports = {
     await shell.cp('./build/contracts/SmartPoolManager.json' , './.coverage_artifacts/contracts')
     await shell.cp('./build/contracts/WETH.json' , './.coverage_artifacts/contracts')
     console.log('---------------------------------------------------------------------')
+    console.log('ABIs manually copied to ./.coverage_artifacts/contracts')
+    console.log('---------------------------------------------------------------------')
   }
 };
