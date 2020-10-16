@@ -19,6 +19,7 @@ const RightsManager = artifacts.require('RightsManager');
 const SmartPoolManager = artifacts.require('SmartPoolManager');
 const BalancerProxy = artifacts.require('BalancerProxy');
 const PrimeToken = artifacts.require('PrimeToken');
+const VestingFactory = artifacts.require('VestingFactory');
 
 const { time, constants } = require('@openzeppelin/test-helpers');
 
@@ -201,6 +202,18 @@ const token4rep = async (setup) => {
   return { params, contract, priceOracle };
 };
 
+const vesting = async (setup) => {
+  const factory = await VestingFactory.new();
+
+  // vesting parameters
+  const params = {
+        cliffDuration: 0,
+        duration: 45*60*60,
+        revocable: true
+  }
+
+  return { factory, params };
+};
 
 const scheme = async (setup) => {
   // deploy scheme
@@ -225,6 +238,7 @@ const scheme = async (setup) => {
 module.exports = {
   initialize,
   tokens,
+  vesting,
   balancer,
   DAOStack,
   organization,
