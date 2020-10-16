@@ -73,20 +73,6 @@ const tokens = async (setup) => {
   return { erc20s, primeToken};
 };
 
-const vesting = async (setup) => {
-  const factory = await VestingFactory.new();
-
-  // scheme parameters
-  const params = {
-        cliffDuration: 0,
-        duration: 45*60*60,
-        revocable: false
-  }
-
-  return { factory, params };
-};
-
-
 const balancer = async (setup) => {
   // deploy balancer infrastructure
   const bfactory = await BFactory.new();
@@ -216,6 +202,18 @@ const token4rep = async (setup) => {
   return { params, contract, priceOracle };
 };
 
+const vesting = async (setup) => {
+  const factory = await VestingFactory.new();
+
+  // vesting parameters
+  const params = {
+        cliffDuration: 0,
+        duration: 45*60*60,
+        revocable: true
+  }
+
+  return { factory, params };
+};
 
 const scheme = async (setup) => {
   // deploy scheme
