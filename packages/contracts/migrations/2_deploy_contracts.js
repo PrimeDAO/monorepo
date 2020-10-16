@@ -25,9 +25,11 @@ module.exports = async function (deployer, network) {
 
     console.log(BalancerSafeMath.address);
 
-    deployer.link(BalancerSafeMath, CRPFactory);
-    deployer.link(RightsManager, CRPFactory);
-    deployer.link(SmartPoolManager, CRPFactory);
+    await deployer.link(BalancerSafeMath, CRPFactory);
+    console.log('balancerSafeMath -> crpFactory linked');
+    await deployer.link(RightsManager, CRPFactory);
+    console.log('RightsManager -> crpFactory linked');
+    await deployer.link(SmartPoolManager, CRPFactory);
     console.log('linkage complete');
 
     await deployer.deploy(CRPFactory);
