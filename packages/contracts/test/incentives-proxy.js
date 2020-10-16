@@ -192,7 +192,7 @@ contract('IncentivesProxy', (accounts) => {
             });
             /* needs checking */
             context('» getReward param valid: rewards', async () => {
-                before('!! fund accounts & mint PRIME', async () => {
+                before('!! fund accounts', async () => {
                     await setup.balancer.pool.transfer(accounts[1], stakeAmount);
                     await setup.balancer.pool.approve(setup.incentives.incentivesProxy.address, stakeAmount, { from: accounts[1] });
                     expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(stakeAmount);
@@ -201,17 +201,16 @@ contract('IncentivesProxy', (accounts) => {
                     expect((await setup.tokens.primeToken.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(rewardAmount);
                     await setup.tokens.primeToken.approve(accounts[1], rewardAmount);
                 });
-                /* hanging because of fast-forward */
                 it('rewards after time period', async () => {
                     expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
                     /* stake */
                     await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1] });
                     /* fast-forward 1 week */
-                    // await time.advanceBlockTo(BigInt(time.duration.weeks(1)));
                     await time.increase(time.duration.weeks(1));
-                
-                    setup.incentives.incentivesProxy.getReward( { from: accounts[1]} );
-                    // expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal();
+
+                    /* reward is still 0 for some reason */
+                    await setup.incentives.incentivesProxy.getReward( { from: accounts[1]} );
+                    expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
                 });
             });
         });
@@ -239,29 +238,30 @@ contract('IncentivesProxy', (accounts) => {
                 before('!! initialize proxy', async () => {
                     await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address);
                 });
-                before('!! fund accounts and stake', async () => {
-                    await setup.balancer.pool.transfer(accounts[1], stakeAmount);
-                    await setup.balancer.pool.approve(setup.incentives.incentivesProxy.address, halfStake, { from: accounts[1] });
-                    await setup.incentives.incentivesProxy.stake(halfStake, { from: accounts[1] });
-                    expect((await setup.balancer.pool.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(halfStake);
-                    expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(halfStake);
-                });
-                it('cannot exit', async () => {
+                it('cannot exit with no funds', async () => {
                     await expectRevert(
-                        setup.incentives.incentivesProxy.exit( {from: accounts[0] }),
+                        setup.incentives.incentivesProxy.exit( {from: accounts[1] }),
                         'IncentivesProxy: Cannot withdraw 0.'
                     );
                 });
             });
-            /* needs checking */
             context('» it exits successfully', () => {
+                // before('!! fund with PRIME tokens', async () => {
+                //     await setup.tokens.primeToken.transfer(accounts[1], stakeAmount);
+                //     await setup.tokens.primeToken.transfer(setup.incentives.incentivesProxy.address, stakeAmount);
+                // });
+                before('!! fund accounts and stake', async () => {
+                    await setup.balancer.pool.transfer(accounts[1], stakeAmount);
+                    await setup.balancer.pool.approve(setup.incentives.incentivesProxy.address, stakeAmount, { from: accounts[1] });
+                    await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1] });
+                });
                 it('exits', async () => {
-                    await setup.incentives.incentivesProxy.exit( {from: accounts[0] });
+                    await setup.incentives.incentivesProxy.exit( {from: accounts[1] });
+                    // check balances
                 });
             });
         });
     });
-
     context('# rescueTokens', async () => {
         context('» generics', () => {
             before('!! deploy setup', async () => {
