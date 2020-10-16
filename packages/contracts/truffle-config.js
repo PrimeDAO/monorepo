@@ -8,8 +8,14 @@ module.exports = {
           },
           network_id: 4,
           networkCheckTimeout: 100000000
+      },
+      coverage: {
+        host: '127.0.0.1',
+        port: 8555,
+        network_id: "*",
       }
   },
+  plugins: ["solidity-coverage"],
   compilers: {
     solc: {
       version: "0.5.13",
