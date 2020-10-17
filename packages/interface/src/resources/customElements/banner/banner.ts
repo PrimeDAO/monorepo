@@ -7,6 +7,7 @@ import { concatMap } from "rxjs/operators";
 import { AureliaHelperService } from "services/AureliaHelperService";
 import { DisposableCollection } from "services/DisposableCollection";
 import "./banner.scss";
+import { TransactionReceipt } from "services/TransactionsService";
 
 @containerless
 @autoinject
@@ -39,6 +40,10 @@ export class Banner {
       .subscribe("handleInfo", (config: EventConfig | string) => this.handleInfo(config)));
     this.subscriptions.push(eventAggregator
       .subscribe("showMessage", (config: EventConfig | string) => this.handleInfo(config)));
+
+    eventAggregator.subscribe("transaction.failed", (ex) => this.handleException(ex));
+    eventAggregator.subscribe("transaction.confirmed", (receipt: TransactionReceipt) =>
+      this.handleInfo(`tx confirmed: ${receipt.transactionHash}`));
 
     this.queue = new Subject<IBannerConfig>();
     /**

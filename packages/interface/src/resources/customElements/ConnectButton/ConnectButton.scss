@@ -15,8 +15,14 @@
   }
 
   &.connected {
-    .connectButton {
+    .connectButton,
+    .pending {
       border: 0;
+    }
+    .pending {
+      i {
+        margin-left: 6px;
+      }
     }
     .ethBalanceContainer {
       display: inline-block;

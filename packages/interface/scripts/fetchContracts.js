@@ -29,7 +29,7 @@ jsonFiles.forEach((file) => {
   if (file !== "contractAddresses.json") {
     const fileSpec = `${destPath}/${file}`;
     const abi = fs.readJsonSync(fileSpec).abi;
-    fs.writeJsonSync(`${destPath}/${file}`, abi);
+    fs.writeJsonSync(`${destPath}/${file}`, { abi: abi });
   }
 });
 

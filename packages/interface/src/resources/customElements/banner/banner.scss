@@ -3,6 +3,11 @@
 .banner {
   position: fixed;
   width: fit-content;
+  max-width: 95vw;
+  max-height: 43px;
+  // white-space: pre-wrap;
+  // word-break: break-word;
+  overflow: hidden;
   margin: auto;
   right: 0;
   left: 0;

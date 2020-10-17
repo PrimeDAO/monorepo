@@ -11,7 +11,6 @@ export class EthBalance {
   // @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
 
   private balance: string = null;
-  private filter: any;
   private subscriptions = new DisposableCollection();
   private checking = false;
   private account: string;
@@ -38,17 +37,12 @@ export class EthBalance {
     /**
      * this is supposed to fire whenever a new block is created
      */
-    this.filter = EthereumService.readOnlyProvider.on("block", () => {
-      this.getBalance();
-    });
+    EthereumService.readOnlyProvider.on("block", this.getBalance);
     this.getBalance();
   }
 
   private stop(): void {
-    if (this.filter) {
-      this.filter.stopWatching();
-      this.filter = null;
-    }
+    EthereumService.readOnlyProvider.off("block", this.getBalance);
   }
 
   private detached(): void {

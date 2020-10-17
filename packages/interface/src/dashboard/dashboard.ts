@@ -3,7 +3,9 @@ import { IContract } from "services/ContractsService";
 import { ContractsService } from "services/ContractsService";
 import "./dashboard.scss";
 import { EventAggregator } from "aurelia-event-aggregator";
-import { EventConfig } from "services/GeneralEvents";
+import TransactionsService from "services/TransactionsService";
+import { parseEther } from "ethers/lib/utils";
+import { Address } from "services/EthereumService";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -37,38 +39,45 @@ import { EventConfig } from "services/GeneralEvents";
 
 @autoinject
 export class Dashboard {
-
-  private balance: string = null;
-  private blockNumber = 0;
-  private bPoolAddress = "";
-  private withdrawTransactionHash: string = null;
+  private weth: any;
+  private connected = false;
 
   constructor(
     private eventAggregator: EventAggregator,
-    private contractsService: ContractsService) {
+    private contractsService: ContractsService,
+    private transactionsService: TransactionsService) {
   }
 
-  // protected async attached(): Promise<void> {
+  protected async attached(): Promise<void> {
 
-  // this.eventAggregator.subscribe("Network.Changed.Connected", async () => {
-  // const crPool = await this.contractsService.getContractFor(IContract.ConfigurableRightsPool);
-  // this.bPoolAddress = await crPool.bPool();
-  // this.eventAggregator.publish("handleInfo", new EventConfig("You hey!"));
+    this.eventAggregator.subscribe("Network.Changed.Account", async (account: Address) => {
+      if (account) {
+        // const crPool = await this.contractsService.getContractFor(IContract.ConfigurableRightsPool);
+        // this.bPoolAddress = await crPool.bPool();
+        this.weth = await this.contractsService.getContractFor(IContract.WETH);
+        this.connected = true;
+      } else {
+        this.connected = false;
+      }
+    });
+  }
 
-  // const weth = await this.contractsService.getContractFor(IContract.WETH);
-  // const response = await TransactionsService.send(() =>
-  //   weth.deposit({ value: parseEther(".05") }),
-  // );
-  // const receipt = await response.wait(1);
-  // if (receipt.status) {
-  //   const response2 = await TransactionsService.send(() =>
-  //     weth.withdraw(parseEther(".05")),
-  //   );
-  //   const receipt2 = await response2.wait(1);
-  //   if (receipt2.status) {
-  //     this.withdrawTransactionHash = receipt2.transactionHash;
-  //   }
-  // }
-  // });
-  // }
+  private handleDeposit() {
+    this.transactionsService.send(() =>
+      this.weth.deposit({ value: parseEther(".05") }),
+      //   const receipt = await response.wait(1);
+    );
+  }
+
+  private handleWithdraw() {
+    this.transactionsService.send(() =>
+      this.weth.withdraw(parseEther(".05")),
+    );
+    //   if (receipt.status) {
+    //     const receipt2 = await response2.wait(1);
+    //     if (receipt2.status) {
+    //       this.withdrawTransactionHash = receipt2.transactionHash;
+    //     }
+    //   }
+  }
 }
