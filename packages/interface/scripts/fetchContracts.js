@@ -23,4 +23,14 @@ fs.copySync(addressesSrcPath, addressesDestPath,
     preserveTimestamps: true
   });
 
+const jsonFiles = fs.readdirSync(destPath);
+
+jsonFiles.forEach((file) => {
+  if (file !== "contractAddresses.json") {
+    const fileSpec = `${destPath}/${file}`;
+    const abi = fs.readJsonSync(fileSpec).abi;
+    fs.writeJsonSync(`${destPath}/${file}`, abi);
+  }
+});
+
 exit(0);
