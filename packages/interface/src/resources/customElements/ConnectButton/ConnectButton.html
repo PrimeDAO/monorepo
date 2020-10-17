@@ -5,7 +5,7 @@
         <ethbalance></ethbalance> ETH
       </div>
       <div class="connectButton">
-        <etherscanlink address.bind="accountAddress" text.bind="accountAddressText"></etherscanlink>
+        <etherscanlink address.to-view="accountAddress" text.to-view="accountAddressText"></etherscanlink>
       </div>
     </div>
     <div else class="connectButton" click.delegate="onConnect()">Connect to a Wallet</div>

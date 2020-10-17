@@ -10,12 +10,16 @@ import "./ConnectButton.scss";
 export class ConnectButton {
 
   private subscriptions: DisposableCollection = new DisposableCollection();
-  private accountAddress: Address;
+  private accountAddress: Address = null;
 
   @computedFrom("accountAddress")
   private get accountAddressText(): string {
-    const len = this.accountAddress.length;
-    return `${this.accountAddress.slice(0, 6)}...${this.accountAddress.slice(len - 5, len - 1)}`;
+    if (this.accountAddress) {
+      const len = this.accountAddress.length;
+      return `${this.accountAddress.slice(0, 6)}...${this.accountAddress.slice(len - 5, len - 1)}`;
+    } else {
+      return "";
+    }
   }
 
   constructor(
@@ -26,7 +30,7 @@ export class ConnectButton {
       this.accountAddress = account;
     }));
 
-    this.accountAddress = this.ethereumService.defaultAccountAddress;
+    this.accountAddress = this.ethereumService.defaultAccountAddress || null;
   }
 
   public dispose(): void {
