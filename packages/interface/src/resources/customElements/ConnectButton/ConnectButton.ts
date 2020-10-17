@@ -65,9 +65,11 @@ export class ConnectButton {
 
   private gotoTx() {
     if (this.txReceipt) {
-      let targetedNetwork = `${EthereumService.targetedNetwork}.`;
+      let targetedNetwork = EthereumService.targetedNetwork as string;
       if (targetedNetwork === Networks.Mainnet) {
         targetedNetwork = "";
+      } else {
+        targetedNetwork = targetedNetwork + ".";
       }
       const where = `http://${targetedNetwork}etherscan.io/tx/${this.txReceipt.transactionHash}`;
       window.open(where, "_blank", "noopener noreferrer");

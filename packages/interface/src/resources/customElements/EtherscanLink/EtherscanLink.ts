@@ -34,9 +34,11 @@ export class EtherscanLink {
   private hotElement: HTMLElement;
 
   public attached(): void {
-    let targetedNetwork = `${EthereumService.targetedNetwork}.`;
+    let targetedNetwork = EthereumService.targetedNetwork as string;
     if (targetedNetwork === Networks.Mainnet) {
       targetedNetwork = "";
+    } else {
+      targetedNetwork = targetedNetwork + ".";
     }
     const isGanache = targetedNetwork === "Ganache.";
     if (this.type === "tx") {
