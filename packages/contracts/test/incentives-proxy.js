@@ -100,7 +100,9 @@ contract('IncentivesProxy', (accounts) => {
                     expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(stakeAmount);
                 });
                 it('stakes', async () => {
-                    await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1] });
+                    let tx = await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1] });
+                    setup.data.tx = tx;
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.incentivesProxy, 'Staked'); //tx # , contract, event (as string)
                     expect((await setup.balancer.pool.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(stakeAmount);
                     expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(toWei('0'));
                 });
@@ -144,7 +146,9 @@ contract('IncentivesProxy', (accounts) => {
                 });
                 it('withdraws', async () => {
                     expect((await setup.balancer.pool.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(stakeAmount);
-                    await setup.incentives.incentivesProxy.withdraw(stakeAmount, { from: accounts[1] });
+                    let tx = await setup.incentives.incentivesProxy.withdraw(stakeAmount, { from: accounts[1] });
+                    setup.data.tx = tx;
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.incentivesProxy, 'Withdrawn');
                     expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(stakeAmount);
                     expect((await setup.balancer.pool.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(toWei('0'));
                 });
@@ -155,7 +159,9 @@ contract('IncentivesProxy', (accounts) => {
                     await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1] });
                 });
                 it('withdraws', async () => {
-                    await setup.incentives.incentivesProxy.withdraw(halfStake, { from: accounts[1] });
+                    let tx = await setup.incentives.incentivesProxy.withdraw(halfStake, { from: accounts[1] });
+                    setup.data.tx = tx;
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.incentivesProxy, 'Withdrawn');
                     expect((await setup.balancer.pool.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(halfStake);
                     expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(halfStake);
                 });
@@ -186,7 +192,7 @@ contract('IncentivesProxy', (accounts) => {
                 });
                 it('rewards 0', async () => {
                     expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
-                    setup.incentives.incentivesProxy.getReward( { from: accounts[1]} );
+                    await setup.incentives.incentivesProxy.getReward( { from: accounts[1]} );
                     expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
                 });
             });
@@ -209,8 +215,10 @@ contract('IncentivesProxy', (accounts) => {
                     await time.increase(time.duration.weeks(1));
 
                     /* reward is still 0 for some reason */
-                    await setup.incentives.incentivesProxy.getReward( { from: accounts[1]} );
-                    expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
+                    let tx = await setup.incentives.incentivesProxy.getReward( { from: accounts[1] } );
+                    setup.data.tx = tx;
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.incentivesProxy, 'RewardPaid');
+                    // expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
                 });
             });
         });
@@ -246,17 +254,16 @@ contract('IncentivesProxy', (accounts) => {
                 });
             });
             context('» it exits successfully', () => {
-                // before('!! fund with PRIME tokens', async () => {
-                //     await setup.tokens.primeToken.transfer(accounts[1], stakeAmount);
-                //     await setup.tokens.primeToken.transfer(setup.incentives.incentivesProxy.address, stakeAmount);
-                // });
                 before('!! fund accounts and stake', async () => {
                     await setup.balancer.pool.transfer(accounts[1], stakeAmount);
                     await setup.balancer.pool.approve(setup.incentives.incentivesProxy.address, stakeAmount, { from: accounts[1] });
                     await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1] });
                 });
                 it('exits', async () => {
-                    await setup.incentives.incentivesProxy.exit( {from: accounts[1] });
+                    let tx = await setup.incentives.incentivesProxy.exit( {from: accounts[1] });
+                    setup.data.tx = tx;
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.incentivesProxy, 'Withdrawn');
+                    // add additional check for rewarding when that is sorted out
                     // check balances
                 });
             });
@@ -318,6 +325,6 @@ contract('IncentivesProxy', (accounts) => {
                 });
             });
         });
-    }); // end
+    }); 
 
 });
