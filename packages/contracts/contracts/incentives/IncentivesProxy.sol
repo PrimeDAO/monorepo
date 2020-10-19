@@ -67,12 +67,13 @@ contract IncentivesProxy is IRewardDistributionRecipient, ReentrancyGuard {
       * @param _rewardToken  The address
       * @param _stakingToken The address
       */
-    function initialize(address _rewardToken, address _stakingToken) external initializer {
+    function initialize(address _rewardToken, address _stakingToken, address _owner) external initializer {
         require(_rewardToken  != address(0),                  "IncentivesProxy: rewardToken cannot be null");
         require(_stakingToken != address(0),                  "IncentivesProxy: stakingToken cannot be null");
 
         rewardToken  = IERC20(_rewardToken);
         stakingToken = IERC20(_stakingToken);
+        rewardDistribution = _owner;
     }
 
 

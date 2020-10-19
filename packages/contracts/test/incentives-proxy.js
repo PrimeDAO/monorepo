@@ -46,7 +46,7 @@ contract('IncentivesProxy', (accounts) => {
         context('» parameters are valid', () => {
             // proxy has already been initialized during setup
             it('it initializes proxy', async () => {
-            	await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address);
+            	await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
             });
         });
         context('» token parameter is not valid', () => {
@@ -54,14 +54,14 @@ contract('IncentivesProxy', (accounts) => {
                 setup.data.incentives = await IncentivesProxy.new();
             });
             it('it reverts', async () => {
-                await expectRevert(setup.data.incentives.initialize(constants.ZERO_ADDRESS, setup.balancer.pool.address), 'IncentivesProxy: rewardToken cannot be null');
+                await expectRevert(setup.data.incentives.initialize(constants.ZERO_ADDRESS, setup.balancer.pool.address, accounts[0]), 'IncentivesProxy: rewardToken cannot be null');
             });
         });
     });
     context('» proxy is already initialized', () => {
         // proxy has already been initialized during setup
         it('it reverts', async () => {
-            await expectRevert(setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address), 'IncentivesProxy: proxy already initialized');
+            await expectRevert(setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]), 'IncentivesProxy: proxy already initialized');
         });
     });
     context('# stake', () => {
@@ -83,7 +83,7 @@ contract('IncentivesProxy', (accounts) => {
             });
             context('» stake parameter is not valid', () => {
                 before('!! initialize proxy', async () => {
-	            	    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address);
+	            	    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
                 });
                 it('it reverts', async () => {
                     await expectRevert(
@@ -129,7 +129,7 @@ contract('IncentivesProxy', (accounts) => {
             });
             context('» withdraw parameter is not valid: too low', () => {
                 before('!! initialize proxy', async () => {
-                    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address);
+                    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
                 });
                 it('it reverts', async () => {
                     await expectRevert(
@@ -172,8 +172,8 @@ contract('IncentivesProxy', (accounts) => {
         context('» generics', () => {
             before('!! deploy setup', async () => {
                 setup = await deploy(accounts);
-                stakeAmount = toWei('999');
-                rewardAmount = toWei('999');
+                stakeAmount = toWei('100');
+                rewardAmount = toWei('100');
             });
             context('» proxy is not initialized', () => {
                 before('!! deploy proxy', async () => {
@@ -188,7 +188,7 @@ contract('IncentivesProxy', (accounts) => {
             });
             context('» getReward param valid: rewards 0', async () => {
                 before('!! initialize proxy', async () => {
-                    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address);
+                    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
                 });
                 it('rewards 0', async () => {
                     expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
@@ -196,29 +196,35 @@ contract('IncentivesProxy', (accounts) => {
                     expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
                 });
             });
-            /* needs checking */
+            /* needs checking
+              PRIME = reward
+              BALANCER = staking
+            */
             context('» getReward param valid: rewards', async () => {
                 before('!! fund accounts', async () => {
                     await setup.balancer.pool.transfer(accounts[1], stakeAmount);
                     await setup.balancer.pool.approve(setup.incentives.incentivesProxy.address, stakeAmount, { from: accounts[1] });
                     expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(stakeAmount);
 
+                    // await setup.balancer.pool.transfer(setup.incentives.incentivesProxy.address, rewardAmount);
+                    // expect((await setup.balancer.pool.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(rewardAmount);
+
                     await setup.tokens.primeToken.transfer(setup.incentives.incentivesProxy.address, rewardAmount);
                     expect((await setup.tokens.primeToken.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(rewardAmount);
                     await setup.tokens.primeToken.approve(accounts[1], rewardAmount);
                 });
                 it('rewards after time period', async () => {
+                    /* not staked - no reward earned */
                     expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
+                    await setup.incentives.incentivesProxy.notifyRewardAmount(rewardAmount);
                     /* stake */
                     await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1] });
                     /* fast-forward 1 week */
                     await time.increase(time.duration.weeks(1));
 
-                    /* reward is still 0 for some reason */
                     let tx = await setup.incentives.incentivesProxy.getReward( { from: accounts[1] } );
                     setup.data.tx = tx;
                     await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.incentivesProxy, 'RewardPaid');
-                    // expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
                 });
             });
         });
@@ -244,7 +250,7 @@ contract('IncentivesProxy', (accounts) => {
             });
             context(' cannot exit with 0', async () => {
                 before('!! initialize proxy', async () => {
-                    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address);
+                    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
                 });
                 it('cannot exit with no funds', async () => {
                     await expectRevert(
@@ -289,7 +295,7 @@ contract('IncentivesProxy', (accounts) => {
             });
             context('» rescueTokens token parameter is not valid: governance', () => {
                 before('!! initialize proxy', async () => {
-                    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address);
+                    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
                 });
                 it('it reverts', async () => {
                     await expectRevert(
@@ -325,6 +331,6 @@ contract('IncentivesProxy', (accounts) => {
                 });
             });
         });
-    }); 
+    });
 
 });
