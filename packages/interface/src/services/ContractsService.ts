@@ -1,6 +1,6 @@
 import { Contract, ethers, Signer } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
-import { AllowedNetworks, EthereumService } from "services/EthereumService";
+import { Address, AllowedNetworks, EthereumService, IChainEventInfo } from "services/EthereumService";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
 
@@ -35,6 +35,8 @@ export class ContractsService {
   // private static readOnlyProvider = EthereumService.readOnlyProvider;
   private initializingContracts: Promise<void>;
   private initializingContractsResolver: () => void;
+  private networkInfo: IChainEventInfo;
+  private accountAddress: Address;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -47,31 +49,47 @@ export class ContractsService {
     this.initializingContracts = new Promise<void>((resolve: () => void) => {
       this.initializingContractsResolver = resolve;
     });
-    this.eventAggregator.subscribe("Network.Changed.Connected", (info) => {
-      this.initializeContracts(info.chainName, info.provider);
+    this.eventAggregator.subscribe("Network.Changed.Account", (account: Address): void => {
+      if (account !== this.accountAddress) {
+        this.accountAddress = account;
+        this.initializeContracts();
+      }
+    });
+    this.eventAggregator.subscribe("Network.Changed.Connected", (info: IChainEventInfo): void => {
+
+      if ((this.networkInfo?.chainId !== info.chainId) ||
+        (this.networkInfo?.chainName !== info.chainName) ||
+        (this.networkInfo?.provider !== info.provider)) {
+        this.networkInfo = info;
+        this.initializeContracts();
+      }
     });
   }
+
   private async assertContracts(): Promise<void> {
     return this.initializingContracts;
   }
 
-  private initializeContracts(network: AllowedNetworks, walletProvider: Web3Provider): void {
+  private initializeContracts(): void {
     if (!ContractAddresses) {
       throw new Error("initializeContracts: ContractAddresses not set");
     }
-    const defaultAccount = this.ethereumService.defaultAccount;
-    if (walletProvider && defaultAccount) {
+
+    const account = this.accountAddress;
+    const networkInfo = this.networkInfo;
+
+    if (networkInfo.provider && account) {
       ContractsService.Contracts.forEach((_value, key) => {
-        if (Signer.isSigner(defaultAccount)) {
+        if (Signer.isSigner(account)) {
           ContractsService.Contracts.set(key, new ethers.Contract(
-            ContractAddresses[network][key],
+            ContractAddresses[networkInfo.chainName][key],
             ContractsService.ABIs.get(key),
-            defaultAccount));
+            account));
         } else {
           ContractsService.Contracts.set(key, new ethers.Contract(
-            ContractAddresses[network][key],
+            ContractAddresses[networkInfo.chainName][key],
             ContractsService.ABIs.get(key),
-            walletProvider.getSigner(defaultAccount)));
+            networkInfo.provider.getSigner(account)));
         }
       });
     }

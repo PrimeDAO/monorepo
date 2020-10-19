@@ -22,16 +22,21 @@ export enum Networks {
   Rinkeby = "rinkeby",
 }
 
+export interface IChainEventInfo {
+  chainId: number;
+  chainName: AllowedNetworks;
+  provider: Web3Provider;
+}
+
 @autoinject
 export class EthereumService {
 
   constructor(private eventAggregator: EventAggregator) { }
 
-  private static ProviderEndpoints =
-    {
-      "mainnet": `https://${process.env.RIVET_ID}.eth.rpc.rivet.cloud/`,
-      "rinkeby": `https://${process.env.RIVET_ID}.rinkeby.rpc.rivet.cloud/`,
-    }
+  private static ProviderEndpoints = {
+    "mainnet": `https://${process.env.RIVET_ID}.eth.rpc.rivet.cloud/`,
+    "rinkeby": `https://${process.env.RIVET_ID}.rinkeby.rpc.rivet.cloud/`,
+  }
   private static providerOptions = {
     torus: {
       package: Torus, // required
@@ -119,11 +124,12 @@ export class EthereumService {
     console.info(`account changed: ${account}`);
     this.eventAggregator.publish("Network.Changed.Account", account);
   }
-  private fireChainChangedHandler(chainId: number) {
-    console.info(`chain changed: ${chainId}`);
-    this.eventAggregator.publish("Network.Changed.Id", chainId);
-  }
-  private fireConnectHandler(info: { chainId: number, chainName: AllowedNetworks, provider: Web3Provider }) {
+  // since we are limited to a single network, I don't think this can every happen
+  // private fireChainChangedHandler(info: IChainEventInfo) {
+  //   console.info(`chain changed: ${info.chainId}`);
+  //   this.eventAggregator.publish("Network.Changed.Id", info);
+  // }
+  private fireConnectHandler(info: IChainEventInfo) {
     console.info(`connected: ${info.chainName}`);
     this.eventAggregator.publish("Network.Changed.Connected", info);
   }
@@ -177,8 +183,6 @@ export class EthereumService {
        * we will keep the original readonly provider which should still be fine since
        * the targeted network cannot have changed.
        */
-      // const readonlyEndPoint = EthereumService.ProviderEndpoints[chainName];
-      // this.readOnlyProvider = ethers.getDefaultProvider(readonlyEndPoint);
       this.walletProvider = walletProvider;
       this.web3ModalProvider = web3ModalProvider;
       this.defaultAccount = await this.getCurrentAccountFromProvider(this.walletProvider);
@@ -195,9 +199,17 @@ export class EthereumService {
         this.fireAccountsChangedHandler(accounts?.[0]);
       });
 
-      this.web3ModalProvider.on("chainChanged", (chainId: number) => {
-        this.fireChainChangedHandler(chainId);
-      });
+      // since we are limited to a single network, I don't think this can every happen
+      // this.web3ModalProvider.on("chainChanged", (chainId: number) => {
+      //   const chainName = this.chainNameById.get(chainId);
+      //   if (chainName !== EthereumService.targetedNetwork) {
+      //     this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Please connect to ${EthereumService.targetedNetwork}`));
+      //     return;
+      //   }
+      //   else {
+      //     this.fireChainChangedHandler({ chainId, chainName, provider: this.walletProvider });
+      //   }
+      // });
 
       this.web3ModalProvider.on("disconnect", (error: { code: number; message: string }) => {
         this.web3ModalProvider = undefined;
