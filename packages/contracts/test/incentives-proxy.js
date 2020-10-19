@@ -206,9 +206,6 @@ contract('IncentivesProxy', (accounts) => {
                     await setup.balancer.pool.approve(setup.incentives.incentivesProxy.address, stakeAmount, { from: accounts[1] });
                     expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(stakeAmount);
 
-                    // await setup.balancer.pool.transfer(setup.incentives.incentivesProxy.address, rewardAmount);
-                    // expect((await setup.balancer.pool.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(rewardAmount);
-
                     await setup.tokens.primeToken.transfer(setup.incentives.incentivesProxy.address, rewardAmount);
                     expect((await setup.tokens.primeToken.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(rewardAmount);
                     await setup.tokens.primeToken.approve(accounts[1], rewardAmount);
