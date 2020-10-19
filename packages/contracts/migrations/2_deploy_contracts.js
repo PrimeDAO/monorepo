@@ -15,27 +15,28 @@ const contracts = require('../contractAddresses.json');
 const fs = require("fs");
 
 module.exports = async function (deployer, network) {
-    await deployer.deploy(RightsManager);
-    await deployer.deploy(SmartPoolManager);
-    await deployer.deploy(BFactory);
-    await deployer.deploy(BalancerSafeMath);
-    await deployer.deploy(BalancerSafeMathMock);
-    await deployer.deploy(BalancerProxy);
-    await deployer.deploy(PriceOracle);
-
-    console.log('---------------------------------------------------------------------')
-    await deployer.link(BalancerSafeMath, CRPFactory);
-    console.log('BalancerSafeMath -> CRPFactory linked');
-    await deployer.link(RightsManager, CRPFactory);
-    console.log('RightsManager -> CRPFactory linked');
-    await deployer.link(SmartPoolManager, CRPFactory);
-    console.log('SmartPoolManager -> CRPFactory linked')
-    console.log('Linking complete');
-    console.log('---------------------------------------------------------------------')
-
-    await deployer.deploy(CRPFactory);
-
     if (network === 'rinkeby') {
+        // deploy balancer configurable rights pool
+        await deployer.deploy(RightsManager);
+        await deployer.deploy(SmartPoolManager);
+        await deployer.deploy(BFactory);
+        await deployer.deploy(BalancerSafeMath);
+        await deployer.deploy(BalancerSafeMathMock);
+        await deployer.deploy(BalancerProxy);
+        await deployer.deploy(PriceOracle);
+
+        console.log('---------------------------------------------------------------------')
+        await deployer.link(BalancerSafeMath, CRPFactory);
+        console.log('BalancerSafeMath -> CRPFactory linked');
+        await deployer.link(RightsManager, CRPFactory);
+        console.log('RightsManager -> CRPFactory linked');
+        await deployer.link(SmartPoolManager, CRPFactory);
+        console.log('SmartPoolManager -> CRPFactory linked')
+        console.log('Linking complete');
+        console.log('---------------------------------------------------------------------')
+
+        await deployer.deploy(CRPFactory);
+
         // overwrite contrancts object
         contracts.rinkeby.RightsManager = await RightsManager.address
         contracts.rinkeby.SmartPoolManager = await SmartPoolManager.address
@@ -115,8 +116,8 @@ module.exports = async function (deployer, network) {
 
         // overwrite contranctAddresses.json
         // var options = { flag : 'a' };
-        // fs.writeFile('../contractAddresses.json', JSON.stringify(contracts), options, (err) => {
-        //    if (err) throw err;
-        //  });
+        fs.writeFile('./contractAddresses.json', JSON.stringify(contracts), (err) => {
+           if (err) throw err;
+         });
     }
 };
