@@ -347,6 +347,70 @@ contract('IncentivesProxy', (accounts) => {
             });
         });
     });
-    // context rewardAmount
+    context('# lastTimeRewardApplicable', async () => {
+        context('» generics', () => {
+            before('!! deploy setup', async () => {
+                setup = await deploy(accounts);
+                stakeAmount = toWei('100');
+                rewardAmount = toWei('100');
+            });
+            context('» periodFinish is 0 on deployment', async () => {
+                before('!! initialize proxy', async () => {
+                    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
+                });
+                it('returns 0', async () => {
+                    let periodFinish = (await setup.incentives.incentivesProxy.periodFinish()).toString();
+                    let lastTimeRewardApplicable = (await setup.incentives.incentivesProxy.lastTimeRewardApplicable()).toString();
+                    expect(periodFinish).to.equal(lastTimeRewardApplicable);
+                });
+            });
+            context('» periodFinish == notifyRewardAmount + 1 week', async () => {
+                before('!! notify reward amount', async () => {
+                    await setup.balancer.pool.approve(setup.incentives.incentivesProxy.address, stakeAmount, { from: accounts[1] });
+                    await setup.tokens.primeToken.transfer(setup.incentives.incentivesProxy.address, rewardAmount);
+                    await setup.tokens.primeToken.approve(accounts[1], rewardAmount);
+                    await setup.incentives.incentivesProxy.notifyRewardAmount(rewardAmount);
+                });
+                it('returns correct finish', async () => {
+                    let periodFinish = (await setup.incentives.incentivesProxy.periodFinish()).toString();
+                    await time.increase(time.duration.weeks(1));
+                    let blockNow = (await time.now()).toNumber();
+                    expect(blockNow).to.equal(periodFinish);
+                });
+            });
+        });
+    });
+    context('# notifyRewardAmount', async () => {
+        context('» generics', () => {
+            before('!! deploy setup', async () => {
+                setup = await deploy(accounts);
+                stakeAmount = toWei('100');
+                rewardAmount = toWei('100');
+            });
+            context('» reverts when balanceOf reward tokens == 0', async () => {
+                before('!! initialize proxy', async () => {
+                    await setup.incentives.incentivesProxy.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
+                });
+                it('reverts', async () => {
+                    await expectRevert(
+                        setup.incentives.incentivesProxy.notifyRewardAmount(rewardAmount),
+                        'IncentivesProxy: Provided reward too high'
+                    );
+                });
+            });
+            context('» updates reward', async () => {
+                it('updates', async () => {
+                    await setup.balancer.pool.approve(setup.incentives.incentivesProxy.address, stakeAmount, { from: accounts[1] });
+                    await setup.tokens.primeToken.transfer(setup.incentives.incentivesProxy.address, rewardAmount);
+                    await setup.tokens.primeToken.approve(accounts[1], rewardAmount);
+
+                    let tx = await setup.incentives.incentivesProxy.notifyRewardAmount(rewardAmount);
+                    setup.data.tx = tx;
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.incentivesProxy, 'RewardAdded');
+                });
+            });
+        });
+    });
+
 
 });
