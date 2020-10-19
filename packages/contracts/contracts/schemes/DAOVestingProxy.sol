@@ -2,15 +2,15 @@ pragma solidity >=0.5.13;
 
 import "@daostack/arc/contracts/controller/Avatar.sol";
 import "@daostack/arc/contracts/controller/Controller.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "@daostack/arc/contracts/libs/SafeERC20.sol";
 import "../utils/interfaces/IVestingFactory.sol";
 import "../utils/interfaces/ITokenVesting.sol";
 
 
-contract DAOVesting {
+contract DAOVestingProxy {
 
-	address                 public primeToken;
-	address[]				public daoVestings;
+    address                 public primeToken;
+    address[]				public daoVestings;
     bool               		public initialized;
     Avatar             		public avatar;
     IVestingFactory			public factory;
@@ -79,6 +79,19 @@ contract DAOVesting {
         require(success, "DAOVesting: vesting contract creation fails");
 
         address vestingContract = _parseReturn(returned); 
+
+        (success, ) = controller.genericCall(
+            primeToken,
+            abi.encodeWithSelector(
+                IERC20(primeToken).transfer.selector,
+                vestingContract
+            ),
+            avatar,
+            0
+        );
+
+        require(success, "DAOVesting: prime token transfer fails");
+
         emit VestingCreated(vestingContract, daoVestings.length);
 
         daoVestings.push(vestingContract);
