@@ -196,10 +196,6 @@ contract('IncentivesProxy', (accounts) => {
                     expect((await setup.incentives.incentivesProxy.earned(accounts[1])).toString()).to.equal(toWei('0'));
                 });
             });
-            /* needs checking
-              PRIME = reward
-              BALANCER = staking
-            */
             context('» getReward param valid: rewards', async () => {
                 before('!! fund accounts', async () => {
                     await setup.balancer.pool.transfer(accounts[1], stakeAmount);
@@ -218,10 +214,12 @@ contract('IncentivesProxy', (accounts) => {
                     await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1] });
                     /* fast-forward 1 week */
                     await time.increase(time.duration.weeks(1));
-
+                    let earned = BigInt(await setup.incentives.incentivesProxy.earned(accounts[1]));
                     let tx = await setup.incentives.incentivesProxy.getReward( { from: accounts[1] } );
                     setup.data.tx = tx;
                     await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.incentivesProxy, 'RewardPaid');
+                    let balance = BigInt(await setup.tokens.primeToken.balanceOf(accounts[1]));
+                    expect(earned).to.equal(balance);
                 });
             });
         });
@@ -262,12 +260,32 @@ contract('IncentivesProxy', (accounts) => {
                     await setup.balancer.pool.approve(setup.incentives.incentivesProxy.address, stakeAmount, { from: accounts[1] });
                     await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1] });
                 });
-                it('exits', async () => {
+                it('exits successfully where reward is 0', async () => {
                     let tx = await setup.incentives.incentivesProxy.exit( {from: accounts[1] });
                     setup.data.tx = tx;
                     await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.incentivesProxy, 'Withdrawn');
-                    // add additional check for rewarding when that is sorted out
-                    // check balances
+                    expect((await setup.balancer.pool.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(toWei('0'));
+                    expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(stakeAmount);
+                });
+                it('exits successfully where reward is > 0', async () => {
+                    await setup.balancer.pool.approve(setup.incentives.incentivesProxy.address, stakeAmount, { from: accounts[1] });
+                    await setup.tokens.primeToken.transfer(setup.incentives.incentivesProxy.address, rewardAmount);
+                    await setup.tokens.primeToken.approve(accounts[1], rewardAmount);
+
+                    await setup.incentives.incentivesProxy.notifyRewardAmount(rewardAmount);
+
+                    await setup.incentives.incentivesProxy.stake(stakeAmount, { from: accounts[1] });
+                    await time.increase(time.duration.weeks(1));
+
+                    let rewardEarned = BigInt(await setup.incentives.incentivesProxy.earned(accounts[1]));
+                    let tx = await setup.incentives.incentivesProxy.exit( {from: accounts[1] });
+                    setup.data.tx = tx;
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.incentivesProxy, 'Withdrawn');
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.incentivesProxy, 'RewardPaid');
+                    let balance = BigInt(await setup.tokens.primeToken.balanceOf(accounts[1]));
+                    expect(rewardEarned).to.equal(balance);
+                    expect((await setup.balancer.pool.balanceOf(setup.incentives.incentivesProxy.address)).toString()).to.equal(toWei('0'));
+                    expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(stakeAmount);
                 });
             });
         });
@@ -329,5 +347,6 @@ contract('IncentivesProxy', (accounts) => {
             });
         });
     });
+    // context rewardAmount
 
 });
