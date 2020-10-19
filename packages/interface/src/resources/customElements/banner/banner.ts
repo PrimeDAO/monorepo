@@ -20,6 +20,7 @@ export class Banner {
   private elMessage: HTMLElement;
   private subscriptions: DisposableCollection = new DisposableCollection();
   private queue: Subject<IBannerConfig>;
+  private timeoutId: any;
   // private etherScanTooltipConfig = {
   //   placement: "bottom",
   //   title: "Click to go to etherscan.io transaction information page",
@@ -63,9 +64,6 @@ export class Banner {
   }
 
   private async showBanner(config: IBannerConfig, resolve: () => void) {
-    this.resolveToClose = resolve;
-    // fire up this banner
-    this.elMessage.innerHTML = config.message;
     switch (config.type) {
       case EventMessageType.Info:
         this.banner.classList.remove("failure");
@@ -84,7 +82,10 @@ export class Banner {
         break;
     }
     this.aureliaHelperService.enhanceElement(this.elMessage, this, true);
+    this.resolveToClose = resolve;
+    this.elMessage.innerHTML = config.message;
     await this.animator.addClass(this.banner, "au-enter-active");
+    this.timeoutId = setInterval(() => this.close(), 20000);
     this.showing = true;
   }
 
@@ -98,9 +99,14 @@ export class Banner {
   }
 
   private async close(): Promise<void> {
-    await this.animator.leave(this.banner);
-    this.showing = false;
-    this.resolveToClose();
+    if (this.resolveToClose) {
+      await this.animator.leave(this.banner);
+      this.showing = false;
+      this.resolveToClose();
+      this.resolveToClose = null;
+      clearInterval(this.timeoutId);
+      this.timeoutId = 0;
+    }
   }
 
   private handleException(config: EventConfigException | any): void {

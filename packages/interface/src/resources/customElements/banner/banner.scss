@@ -22,10 +22,6 @@
   padding-left: 1.25rem;
   display: inline-block;
   position: relative; /* for the close icon */
-  -webkit-box-shadow: 0px 0px 4px 1px rgba(255, 255, 255, 0.75);
-  -moz-box-shadow: 0px 0px 4px 1px rgba(255, 255, 255, 0.75);
-  box-shadow: 0px 0px 4px 1px rgba(255, 255, 255, 0.75);
-
   border-radius: 0px 0px 10px 10px;
   -moz-border-radius: 0px 0px 10px 10px;
   -webkit-border-radius: 0px 0px 10px 10px;
@@ -87,7 +83,7 @@
 }
 
 .banner.au-leave-active {
-  animation: slideUp 1s;
+  animation: slideUp 0.6s;
 }
 
 .banner.au-stagger {
