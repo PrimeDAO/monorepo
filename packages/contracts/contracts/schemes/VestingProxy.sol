@@ -7,7 +7,7 @@ import "../utils/interfaces/IVestingFactory.sol";
 import "../utils/interfaces/ITokenVesting.sol";
 
 
-contract DAOVestingProxy {
+contract VestingProxy {
 
     address                 public primeToken;
     address[]				public daoVestings;
@@ -18,14 +18,14 @@ contract DAOVestingProxy {
     event VestingCreated(address vestingContractAddress, uint id);
 
     modifier initializer() {
-        require(!initialized, "DAOVesting: scheme already initialized");
+        require(!initialized, "VestingProxy: scheme already initialized");
         initialized = true;
         _;
     }
 
     modifier protected() {
-        require(initialized,                   "DAOVesting: scheme not initialized");
-        require(msg.sender == address(avatar), "DAOVesting: protected operation");
+        require(initialized,                   "VestingProxy: scheme not initialized");
+        require(msg.sender == address(avatar), "VestingProxy: protected operation");
         _;
     }
 
@@ -33,9 +33,9 @@ contract DAOVestingProxy {
       * @dev           Initialize proxy.
       */
     function initialize(Avatar _avatar, IVestingFactory _vestingFactory, address _primeToken) external initializer {
-        require(_avatar != Avatar(0),             	   "DAOVesting: avatar cannot be null");
-        require(_vestingFactory != IVestingFactory(0), "DAOVesting: vestingFactory cannot be null");
-        require(IERC20(_primeToken) != IERC20(0),  	   "DAOVesting: primeToken cannot be null");
+        require(_avatar != Avatar(0),             	   "VestingProxy: avatar cannot be null");
+        require(_vestingFactory != IVestingFactory(0), "VestingProxy: vestingFactory cannot be null");
+        require(IERC20(_primeToken) != IERC20(0),  	   "VestingProxy: primeToken cannot be null");
 
         avatar = _avatar;
         factory = _vestingFactory;
@@ -76,7 +76,7 @@ contract DAOVestingProxy {
             avatar,
             0
         );
-        require(success, "DAOVesting: vesting contract creation fails");
+        require(success, "VestingProxy: vesting contract creation fails");
 
         // address vestingContract = _parseReturn(returned); 
 
@@ -90,7 +90,7 @@ contract DAOVestingProxy {
         //     0
         // );
 
-        // require(success, "DAOVesting: prime token transfer fails");
+        // require(success, "VestingProxy: prime token transfer fails");
 
         // emit VestingCreated(vestingContract, daoVestings.length);
         emit VestingCreated(msg.sender, 1);
@@ -99,7 +99,7 @@ contract DAOVestingProxy {
     }
 
     function _revoke(uint256 _id) internal {
-    	require(_id <= daoVestings.length, "DAOVesting: id is out of index");
+    	require(_id <= daoVestings.length, "VestingProxy: id is out of index");
 
     	bool             success;
         Controller controller = Controller(avatar.owner());
@@ -114,7 +114,7 @@ contract DAOVestingProxy {
             avatar,
             0
         );
-        require(success, "DAOVesting: revoke vesting fails");
+        require(success, "VestingProxy: revoke vesting fails");
     }
 
     /* internal helpers functions */

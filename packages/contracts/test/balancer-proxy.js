@@ -20,12 +20,12 @@ const deploy = async (accounts) => {
     setup.organization = await helpers.setup.organization(setup);
     // deploy balancer infrastructure
     setup.balancer = await helpers.setup.balancer(setup);
-    // deploy proxy
-    setup.proxy = await helpers.setup.proxy(setup);
     // deploy token4rep
     setup.token4rep = await helpers.setup.token4rep(setup);
-    // deploy generic scheme
-    setup.scheme = await helpers.setup.scheme(setup);
+    // deploy vesting
+    setup.vesting = await helpers.setup.vesting(setup);
+    // deploy primeDAO governance
+    setup.primeDAO = await helpers.setup.primeDAO(setup);
 
     return setup;
 };
@@ -50,9 +50,9 @@ contract('BalancerProxy', (accounts) => {
         context('» parameters are valid', () => {
             // proxy has already been initialized during setup
             it('it initializes proxy', async () => {
-                expect(await setup.proxy.initialized()).to.equal(true);
-                expect(await setup.proxy.avatar()).to.equal(setup.organization.avatar.address);
-                expect(await setup.proxy.crpool()).to.equal(setup.balancer.pool.address);
+                expect(await setup.balancer.proxy.initialized()).to.equal(true);
+                expect(await setup.balancer.proxy.avatar()).to.equal(setup.organization.avatar.address);
+                expect(await setup.balancer.proxy.crpool()).to.equal(setup.balancer.pool.address);
             });
         });
         context('» avatar parameter is not valid', () => {
@@ -83,7 +83,7 @@ contract('BalancerProxy', (accounts) => {
     context('» proxy is already initialized', () => {
         // proxy has already been initialized during setup
         it('it reverts', async () => {
-            await expectRevert(setup.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool()), 'BalancerProxy: proxy already initialized');
+            await expectRevert(setup.balancer.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool()), 'BalancerProxy: proxy already initialized');
         });
     });
     context('# setPublicSwap', () => {
@@ -122,9 +122,9 @@ contract('BalancerProxy', (accounts) => {
                 });
                 it('bPool.isPublicSwap() == publicSwap', async () => {
                     const calldata = helpers.encodeSetPublicSwap(publicSwap);
-                    const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                    const _tx = await setup.primeDAO.balancer.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                     const proposalId = helpers.getNewProposalId(_tx);
-                    const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                    const tx = await  setup.primeDAO.balancer.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                     //store data
                     setup.data.tx = tx;
                 
@@ -134,7 +134,7 @@ contract('BalancerProxy', (accounts) => {
                     expect(await bPool.isPublicSwap()).to.equal(publicSwap);
                 });
                 it('it emits a setPublicSwap event', async () => {
-                    await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'SetPublicSwap', {
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'SetPublicSwap', {
                         publicSwap: publicSwap
                     });
                 });
@@ -166,9 +166,9 @@ contract('BalancerProxy', (accounts) => {
                 });
                 it('bPool.getSwapFee() == swapFee', async () => {
                     const calldata = helpers.encodeSetSwapFee(swapFee);
-                    const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                    const _tx = await setup.primeDAO.balancer.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                     const proposalId = helpers.getNewProposalId(_tx);
-                    const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                    const tx = await  setup.primeDAO.balancer.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                     //store data
                     setup.data.tx = tx;
                 
@@ -177,7 +177,7 @@ contract('BalancerProxy', (accounts) => {
                     expect(await (await bPool.getSwapFee()).toString()).to.equal(swapFee.toString());
                 });
                 it('it emits a SetSwapFee event', async () => {
-                    await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'SetSwapFee', {
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'SetSwapFee', {
                         swapFee: swapFee.toString()
                     });
                 });
@@ -208,14 +208,14 @@ contract('BalancerProxy', (accounts) => {
                 });
                 it('commit add Token', async () => {
                     const calldata = helpers.encodeCommitAddToken(setup.tokens.erc20s[2].address, toWei('1000'), toWei('1'));
-                    const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                    const _tx = await setup.primeDAO.balancer.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                     const proposalId = helpers.getNewProposalId(_tx);
-                    const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                    const tx = await  setup.primeDAO.balancer.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                     //store data
                     setup.data.tx = tx;
                 });
                 it('it emits a CommitAddToken event', async () => {
-                    await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'CommitAddToken');
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'CommitAddToken');
                 });
                 context('» applyAddToken', () => {
                     it('checks that the right address is commited', async () => {
@@ -233,12 +233,12 @@ contract('BalancerProxy', (accounts) => {
                     });
                     it('apply add Token', async () => {
                         const calldata = helpers.encodeApplyAddToken();
-                        const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                        const _tx = await setup.primeDAO.balancer.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                         const proposalId = helpers.getNewProposalId(_tx);
-                        const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                        const tx = await  setup.primeDAO.balancer.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
   
                         setup.data.tx = tx;
-                        await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'ApplyAddToken');
+                        await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'ApplyAddToken');
                     });
                     it('checks the balance of bPool', async () => {
                         expect((await setup.tokens.erc20s[2].balanceOf(await setup.balancer.pool.bPool())).toString()).to.equal(toWei('1000'));
@@ -256,12 +256,12 @@ contract('BalancerProxy', (accounts) => {
                             });
                             it('removes Token', async () => {
                                 const calldata = helpers.encodeRemoveToken(setup.tokens.erc20s[2].address);
-                                const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                                const _tx = await setup.primeDAO.balancer.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                                 const proposalId = helpers.getNewProposalId(_tx);
-                                const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                                const tx = await  setup.primeDAO.balancer.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
     
                                 setup.data.tx = tx;
-                                await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'RemoveToken');
+                                await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'RemoveToken');
                             });
                             it('checks the number of tokens', async () => {
                                 const pool = await setup.balancer.pool.bPool();
@@ -293,13 +293,13 @@ contract('BalancerProxy', (accounts) => {
                 });
                 it('update weights gradually', async () => {
                     const calldata = helpers.encodeUpdateWeightsGradually(newWeights, startBLock, endBlock);
-                    const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                    const _tx = await setup.primeDAO.balancer.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                     const proposalId = helpers.getNewProposalId(_tx);
-                    const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                    const tx = await  setup.primeDAO.balancer.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                     //store data
                     setup.data.tx = tx;
 
-                    await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'UpdateWeightsGradually');
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'UpdateWeightsGradually');
                 });
             });
         });
@@ -325,13 +325,13 @@ contract('BalancerProxy', (accounts) => {
                 });
                 it('joins pool', async () => {
                     const calldata = helpers.encodeJoinPool(poolAmountOut, maxAmountsIn);
-                    const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                    const _tx = await setup.primeDAO.balancer.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                     const proposalId = helpers.getNewProposalId(_tx);
-                    const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                    const tx = await  setup.primeDAO.balancer.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                     // store data
                     setup.data.tx = tx;
 
-                    await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'JoinPool');
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'JoinPool');
                 });
                 it('checks the balanceOf BPRIME tokens', async () => {
                     expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountOut);
@@ -339,13 +339,13 @@ contract('BalancerProxy', (accounts) => {
                 context('» call exitPool', () => {
                     it('exits pool', async () => {
                         const calldata = helpers.encodeExitPool(poolAmountIn, minAmountsOut);
-                        const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                        const _tx = await setup.primeDAO.balancer.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                         const proposalId = helpers.getNewProposalId(_tx);
-                        const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                        const tx = await  setup.primeDAO.balancer.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                         // store data
                         setup.data.tx = tx;
 
-                        await expectEvent.inTransaction(setup.data.tx.tx, setup.proxy, 'ExitPool');
+                        await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'ExitPool');
                     });
                     it('checks the balanceOf BPRIME tokens', async () => {
                         expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountIn);
