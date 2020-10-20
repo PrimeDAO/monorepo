@@ -15,31 +15,30 @@
   }
 
   &.connected {
-    .connectButton,
-    .pending {
+    .connectButton {
       cursor: default;
       border: 0;
-    }
-    .pending {
-      .phase {
-        display: inline-block;
-        margin-right: 6px;
+      .pending {
+        .phase {
+          display: inline-block;
+          margin-right: 6px;
+        }
+
+        &.confirming {
+          cursor: pointer;
+          .phase:hover {
+            text-decoration: underline;
+          }
+        }
       }
 
-      &.confirming {
-        cursor: pointer;
-        .phase:hover {
-          text-decoration: underline;
-        }
+      .etherscanlink .text {
+        margin-right: 0.25rem;
       }
     }
     .ethBalanceContainer {
       display: inline-block;
       margin-right: 0.5rem;
-    }
-
-    .etherscanlink .text {
-      margin-right: 0.25rem;
     }
   }
 }

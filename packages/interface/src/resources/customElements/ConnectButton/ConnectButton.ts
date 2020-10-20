@@ -43,8 +43,8 @@ export class ConnectButton {
     }));
 
     this.subscriptions.push(this.eventAggregator.subscribe("transaction.confirmed", async () => {
-      // this.txPhase = Phase.None;
-      // this.txReceipt = null;
+      this.txPhase = Phase.None;
+      this.txReceipt = null;
     }));
 
     this.subscriptions.push(this.eventAggregator.subscribe("transaction.failed", async () => {
