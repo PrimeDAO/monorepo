@@ -18,9 +18,9 @@ export default class TransactionsService {
       const response = await methodCall();
       this.eventAggregator.publish("transaction.sent", response);
       receipt = await response.wait(1);
-      this.eventAggregator.publish("transaction.mined", receipt);
+      this.eventAggregator.publish("transaction.mined", { message: "Transaction was mined", receipt });
       receipt = await response.wait(TransactionsService.blocksToConfirm);
-      this.eventAggregator.publish("transaction.confirmed", receipt);
+      this.eventAggregator.publish("transaction.confirmed", { message: "Transaction was confirmed", receipt });
       return receipt;
     } catch (ex) {
       this.eventAggregator.publish("transaction.failed", ex);

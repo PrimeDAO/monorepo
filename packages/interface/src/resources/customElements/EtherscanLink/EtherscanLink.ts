@@ -1,4 +1,4 @@
-﻿import { autoinject, bindable, bindingMode, customElement } from "aurelia-framework";
+﻿import { autoinject, bindable, bindingMode, customElement, computedFrom } from "aurelia-framework";
 import { EthereumService, Networks } from "../../../services/EthereumService";
 import "./EtherscanLink.scss";
 
@@ -22,18 +22,14 @@ export class EtherscanLink {
    */
   // @bindable({ defaultBindingMode: bindingMode.oneTime }) public tooltip?: any;
 
-  private clipbutton: HTMLElement;
-
-  private networkExplorerUri: string;
-
   private copyMessage: string;
-
   private internal = false;
+  // private coldElement: HTMLElement;
+  // private hotElement: HTMLElement;
 
-  private coldElement: HTMLElement;
-  private hotElement: HTMLElement;
 
-  public attached(): void {
+  @computedFrom("address")
+  private get networkExplorerUri(): string {
     let targetedNetwork = EthereumService.targetedNetwork as string;
     if (targetedNetwork === Networks.Mainnet) {
       targetedNetwork = "";
@@ -41,23 +37,24 @@ export class EtherscanLink {
       targetedNetwork = targetedNetwork + ".";
     }
     const isGanache = targetedNetwork === "Ganache.";
+
+    if (isGanache) {
+      if (this.type === "tx") {
+        this.internal = true;
+        return `/#/txInfo/${this.address}`;
+      }
+    } else {
+      // go with etherscan
+      return `http://${targetedNetwork}etherscan.io/${this.type === "tx" ? "tx" : "address"}/${this.address}`;
+    }
+  }
+
+  public attached(): void {
     if (this.type === "tx") {
       this.copyMessage = "Hash has been copied to the clipboard";
     } else {
       this.copyMessage = "Address has been copied to the clipboard";
     }
-
-    if (isGanache) {
-      if (this.type === "tx") {
-        this.internal = true;
-        this.networkExplorerUri = `/#/txInfo/${this.address}`;
-      }
-    } else {
-      // go with etherscan
-      this.networkExplorerUri =
-        `http://${targetedNetwork}etherscan.io/${this.type === "tx" ? "tx" : "address"}/${this.address}`;
-    }
-
     /** timeout so setting of this.networkExplorerUri takes effect in DOM */
     // setTimeout(() => {
     //   if (this.tooltip) {

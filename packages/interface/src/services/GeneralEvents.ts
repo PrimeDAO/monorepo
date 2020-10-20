@@ -1,3 +1,5 @@
+import { TransactionReceipt } from "@ethersproject/providers";
+
 export class EventConfig {
 
   public style = "snack-info";
@@ -29,18 +31,18 @@ export class EventConfig {
   constructor(
     public message: string,
     public type: EventMessageType = EventMessageType.Info,
-    lifetime: SnackLifetime = SnackLifetime.transitory,
+    lifetime: Lifetime = Lifetime.transitory,
   ) {
 
     switch (lifetime) {
-      case SnackLifetime.clickToDismiss:
-      case SnackLifetime.closeButton:
+      case Lifetime.clickToDismiss:
+      case Lifetime.closeButton:
         this.duration = 0;
         break;
-      case SnackLifetime.transitory:
+      case Lifetime.transitory:
         this.duration = 3000;
         break;
-      case SnackLifetime.none:
+      case Lifetime.none:
         this.duration = -1; // means no snack
         break;
     }
@@ -67,7 +69,7 @@ export class EventConfigFailure extends EventConfig {
     message = "An error occurred",
     originatingUiElement?: HTMLElement,
   ) {
-    super(message, EventMessageType.Failure, SnackLifetime.closeButton);
+    super(message, EventMessageType.Failure, Lifetime.closeButton);
     this.message = `${this.message}`;
     this.originatingUiElement = originatingUiElement;
   }
@@ -79,7 +81,7 @@ export class EventConfigException extends EventConfig {
     public exception: unknown,
     originatingUiElement?: HTMLElement,
   ) {
-    super(message, EventMessageType.Exception, SnackLifetime.closeButton);
+    super(message, EventMessageType.Exception, Lifetime.closeButton);
     // the stack trace, etc, will be logged by ConsoleLogService
     this.message = message;
     this.originatingUiElement = originatingUiElement;
@@ -98,7 +100,7 @@ export class EventConfigAction extends EventConfig {
      */
     public action: () => void,
     type: EventMessageType = EventMessageType.Info,
-    lifetime: SnackLifetime = SnackLifetime.clickToDismiss,
+    lifetime: Lifetime = Lifetime.clickToDismiss,
   ) {
     super(message, type, lifetime);
     this.actionType = ActionType.button;
@@ -114,7 +116,7 @@ export class EventConfigAddress extends EventConfig {
      */
     public actionText: string,
   ) {
-    super(message, EventMessageType.Info, SnackLifetime.clickToDismiss);
+    super(message, EventMessageType.Info, Lifetime.clickToDismiss);
     this.actionType = ActionType.address;
     this.addressType = "address";
   }
@@ -123,7 +125,7 @@ export class EventConfigAddress extends EventConfig {
 export class EventConfigTransaction extends EventConfig {
   constructor(
     message: string,
-    public address: string,
+    public receipt: TransactionReceipt,
   ) {
     super(message);
     /**
@@ -146,7 +148,7 @@ export enum ActionType {
   address = 2,
 }
 
-export enum SnackLifetime {
+export enum Lifetime {
   none = 0,
   transitory = 1,
   clickToDismiss = 2,

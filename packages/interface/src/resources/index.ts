@@ -18,6 +18,7 @@ export function configure(config: FrameworkConfiguration): void {
     PLATFORM.moduleName("./valueConverters/timespan"),
     PLATFORM.moduleName("./valueConverters/boolean"),
     PLATFORM.moduleName("./valueConverters/secondsDays"),
+    PLATFORM.moduleName("./valueConverters/smallHexString"),
     PLATFORM.moduleName("./dialogs/alert/alert"),
   ]);
 }

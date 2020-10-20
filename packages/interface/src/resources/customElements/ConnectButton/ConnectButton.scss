@@ -17,11 +17,20 @@
   &.connected {
     .connectButton,
     .pending {
+      cursor: default;
       border: 0;
     }
     .pending {
-      i {
-        margin-left: 6px;
+      .phase {
+        display: inline-block;
+        margin-right: 6px;
+      }
+
+      &.confirming {
+        cursor: pointer;
+        .phase:hover {
+          text-decoration: underline;
+        }
       }
     }
     .ethBalanceContainer {

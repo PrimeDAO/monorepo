@@ -1,13 +1,14 @@
 import { CssAnimator } from "aurelia-animator-css";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject, containerless } from "aurelia-framework";
-import { EventConfig, EventConfigException, EventMessageType } from "../../../services/GeneralEvents";
+import { EventConfig, EventConfigException, EventConfigTransaction, EventMessageType } from "../../../services/GeneralEvents";
 import { from, Subject } from "rxjs";
 import { concatMap } from "rxjs/operators";
 import { AureliaHelperService } from "services/AureliaHelperService";
 import { DisposableCollection } from "services/DisposableCollection";
 import "./banner.scss";
 import { TransactionReceipt } from "services/TransactionsService";
+import { Utils } from "services/utils";
 
 @containerless
 @autoinject
@@ -43,8 +44,7 @@ export class Banner {
       .subscribe("showMessage", (config: EventConfig | string) => this.handleInfo(config)));
 
     eventAggregator.subscribe("transaction.failed", (ex) => this.handleException(ex));
-    eventAggregator.subscribe("transaction.confirmed", (receipt: TransactionReceipt) =>
-      this.handleInfo(`tx confirmed: ${receipt.transactionHash}`));
+    eventAggregator.subscribe("transaction.confirmed", (config: EventConfigTransaction) => this.handleTransaction(config));
 
     this.queue = new Subject<IBannerConfig>();
     /**
@@ -81,9 +81,9 @@ export class Banner {
         this.banner.classList.add("failure");
         break;
     }
+    this.elMessage.innerHTML = config.message;
     this.aureliaHelperService.enhanceElement(this.elMessage, this, true);
     this.resolveToClose = resolve;
-    this.elMessage.innerHTML = config.message;
     await this.animator.addClass(this.banner, "au-enter-active");
     this.timeoutId = setInterval(() => this.close(), 20000);
     this.showing = true;
@@ -107,6 +107,16 @@ export class Banner {
       clearInterval(this.timeoutId);
       this.timeoutId = 0;
     }
+  }
+
+  private handleTransaction(config: EventConfigTransaction) {
+    if ((config as any).originatingUiElement) {
+      return;
+    }
+
+    const message = `${config.message}: <span class="transactionHash"><etherscanlink text="${Utils.smallHexString(config.receipt.transactionHash)}" address="${config.receipt.transactionHash}" type="tx"></etherscanlink></span>`;
+
+    this.queueEventConfig({ message, type: EventMessageType.Info });
   }
 
   private handleException(config: EventConfigException | any): void {

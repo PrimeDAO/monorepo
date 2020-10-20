@@ -2,8 +2,15 @@ import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject, containerless, customElement, computedFrom } from "aurelia-framework";
 import { DisposableCollection } from "services/DisposableCollection";
 import { Address, EthereumService, Networks } from "services/EthereumService";
+import { EventConfigTransaction } from "services/GeneralEvents";
 import { TransactionReceipt } from "services/TransactionsService";
 import "./ConnectButton.scss";
+
+enum Phase {
+  None = "None",
+  Mining = "Mining",
+  Confirming = "Confirming"
+}
 
 @containerless
 @autoinject
@@ -12,18 +19,8 @@ export class ConnectButton {
 
   private subscriptions: DisposableCollection = new DisposableCollection();
   private accountAddress: Address = null;
-  private busySendingTx = false;
+  private txPhase = Phase.None;
   private txReceipt: TransactionReceipt;
-
-  @computedFrom("accountAddress")
-  private get accountAddressText(): string {
-    if (this.accountAddress) {
-      const len = this.accountAddress.length;
-      return `${this.accountAddress.slice(0, 6)}...${this.accountAddress.slice(len - 5, len - 1)}`;
-    } else {
-      return "";
-    }
-  }
 
   constructor(
     private ethereumService: EthereumService,
@@ -31,25 +28,28 @@ export class ConnectButton {
   ) {
     this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account", async (account: Address) => {
       this.accountAddress = account;
+      this.txPhase = Phase.None;
+      this.txReceipt = null;
     }));
 
     this.subscriptions.push(this.eventAggregator.subscribe("transaction.sent", async () => {
-      this.busySendingTx = true;
+      this.txPhase = Phase.Mining;
+      this.txReceipt = null;
     }));
 
-    this.subscriptions.push(this.eventAggregator.subscribe("transaction.mined", async (receipt: TransactionReceipt) => {
-      this.txReceipt = receipt;
-      this.busySendingTx = true;
+    this.subscriptions.push(this.eventAggregator.subscribe("transaction.mined", async (event: EventConfigTransaction) => {
+      this.txPhase = Phase.Confirming;
+      this.txReceipt = event.receipt;
     }));
 
     this.subscriptions.push(this.eventAggregator.subscribe("transaction.confirmed", async () => {
-      this.txReceipt = null;
-      this.busySendingTx = false;
+      // this.txPhase = Phase.None;
+      // this.txReceipt = null;
     }));
 
     this.subscriptions.push(this.eventAggregator.subscribe("transaction.failed", async () => {
+      this.txPhase = Phase.None;
       this.txReceipt = null;
-      this.busySendingTx = false;
     }));
 
     this.accountAddress = this.ethereumService.defaultAccountAddress || null;

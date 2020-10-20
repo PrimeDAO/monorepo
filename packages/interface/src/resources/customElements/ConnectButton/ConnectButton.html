@@ -5,9 +5,12 @@
         <ethbalance></ethbalance> ETH
       </div>
       <div class="connectButton">
-        <div if.to-view="busySendingTx" click.delegate="gotoTx()" class="pending">Pending<i
-            class="spinner fas fa-circle-notch fa-spin"></i></div>
-        <etherscanlink else address.to-view="accountAddress" text.to-view="accountAddressText"></etherscanlink>
+        <div if.to-view="txPhase !== 'None'" click.delegate="gotoTx()" class.bind="'pending' + ((txPhase==='Confirming')
+          ? ' confirming' : '')">
+          <div class="phase">${txPhase}</div><i class="spinner fas fa-circle-notch fa-spin"></i>
+        </div>
+        <etherscanlink else address.to-view="accountAddress" text.to-view="accountAddress | smallHexString">
+        </etherscanlink>
       </div>
     </div>
     <div else class="connectButton" click.delegate="onConnect()">Connect to a Wallet</div>
