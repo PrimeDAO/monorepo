@@ -374,7 +374,7 @@ contract('IncentivesProxy', (accounts) => {
                 it('returns correct finish', async () => {
                     let periodFinish = (await setup.incentives.incentivesProxy.periodFinish()).toString();
                     await time.increase(time.duration.weeks(1));
-                    let blockNow = (await time.now()).toNumber();
+                    let blockNow = (await time.latest()).toString();
                     expect(blockNow).to.equal(periodFinish);
                 });
             });
