@@ -1,6 +1,5 @@
 .connectButtonContainer {
   display: inline-block;
-  padding-left: 0.7rem;
   padding-right: 1px;
   padding-top: 1px;
   padding-bottom: 1px;
@@ -9,12 +8,16 @@
 
   .connectButton {
     display: inline-block;
-    padding: 0.6rem 0.7rem;
+    padding: 0.6rem 0.9rem;
     border-radius: 0.75rem;
-    cursor: pointer;
+  }
+
+  .ethBalanceContainer {
+    display: inline-block;
   }
 
   &.connected {
+    padding-left: 14px;
     .connectButton {
       cursor: default;
       border: 0;
@@ -23,13 +26,6 @@
           display: inline-block;
           margin-right: 6px;
         }
-
-        &.confirming {
-          cursor: pointer;
-          .phase:hover {
-            text-decoration: underline;
-          }
-        }
       }
 
       .etherscanlink .text {
@@ -37,7 +33,6 @@
       }
     }
     .ethBalanceContainer {
-      display: inline-block;
       margin-right: 0.5rem;
     }
   }

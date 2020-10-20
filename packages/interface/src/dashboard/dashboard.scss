@@ -26,13 +26,15 @@
       }
 
       .connectButtonContainer {
-        background-color: transparent;
+        background-color: rgb(33, 36, 41);
         border-color: transparent;
 
         .connectButton {
           color: rgb(109, 168, 255);
-          background-color: rgba(21, 61, 111, 0.44);
+          background-color: rgb(33, 36, 41);
           border: 1px solid rgba(21, 61, 111, 0.44);
+          cursor: pointer;
+          font-weight: 500;
 
           &:hover,
           &:focus {
@@ -49,23 +51,29 @@
             background-color: rgb(44, 47, 54);
             border-color: transparent;
 
+            .pending {
+              i {
+                color: rgb(109, 168, 255);
+              }
+              &.confirming {
+                cursor: pointer;
+                .phase:hover {
+                  text-decoration: underline;
+                }
+              }
+            }
+
             .etherscanlink a {
               color: white;
               text-decoration: none;
-
-              &:hover {
-                text-decoration: underline;
-              }
 
               &:hover,
               &:focus {
                 color: white;
               }
-            }
 
-            .pending {
-              i {
-                color: rgb(109, 168, 255);
+              &:hover {
+                text-decoration: underline;
               }
             }
           }
