@@ -1,6 +1,6 @@
 /node_modules/
 /build/
 /coverage.json
-/migrations/coverage/
 /.coverage_artifacts
 /coverage/
+/migrations/coverage
