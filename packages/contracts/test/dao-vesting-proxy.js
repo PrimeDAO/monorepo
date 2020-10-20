@@ -36,6 +36,8 @@ const deploy = async (accounts) => {
 
 contract('DAOVesting', (accounts) => {
 	let setup;
+	let beneficiary;
+	let start;
     before('!! deploy setup', async () => {
         setup = await deploy(accounts);
     });
@@ -73,4 +75,28 @@ contract('DAOVesting', (accounts) => {
             });
         });
     });
+    context('» proxy is already initialized', () => {
+	    // proxy has already been initialized during setup
+	    it('it reverts', async () => {
+	        await expectRevert(setup.vestingProxy.initialize(setup.organization.avatar.address, setup.vesting.factory.address, setup.tokens.primeToken.address), 'DAOVesting: scheme already initialized');
+	    });
+ 	});
+    context('# createVesing', () => {
+   	    context('» generics', () => {
+            before('!! deploy setup', async () => {
+                setup = await deploy(accounts);
+                beneficiary = accounts[1];
+                start = (await time.latest()).toNumber();
+            });
+            it('creates vesting', async () => {
+                // const calldata = helpers.encodeCreateVesing(beneficiary, start, setup.vesting.params.cliffDuration, setup.vesting.params.duration, setup.vesting.params.revocable);
+                // const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                // const proposalId = helpers.getNewProposalId(_tx);
+                // const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                // //store data
+                // setup.data.tx = tx;
+                // await expectEvent.inTransaction(setup.data.tx.tx, setup.vestingProxy, 'VestingCreated');
+            });
+	    });
+ 	});
 });

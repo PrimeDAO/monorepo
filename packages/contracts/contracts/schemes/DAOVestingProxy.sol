@@ -78,23 +78,24 @@ contract DAOVestingProxy {
         );
         require(success, "DAOVesting: vesting contract creation fails");
 
-        address vestingContract = _parseReturn(returned); 
+        // address vestingContract = _parseReturn(returned); 
 
-        (success, ) = controller.genericCall(
-            primeToken,
-            abi.encodeWithSelector(
-                IERC20(primeToken).transfer.selector,
-                vestingContract
-            ),
-            avatar,
-            0
-        );
+        // (success, ) = controller.genericCall(
+        //     primeToken,
+        //     abi.encodeWithSelector(
+        //         IERC20(primeToken).transfer.selector,
+        //         vestingContract
+        //     ),
+        //     avatar,
+        //     0
+        // );
 
-        require(success, "DAOVesting: prime token transfer fails");
+        // require(success, "DAOVesting: prime token transfer fails");
 
-        emit VestingCreated(vestingContract, daoVestings.length);
+        // emit VestingCreated(vestingContract, daoVestings.length);
+        emit VestingCreated(msg.sender, 1);
 
-        daoVestings.push(vestingContract);
+        // daoVestings.push(msg.sender);
     }
 
     function _revoke(uint256 _id) internal {

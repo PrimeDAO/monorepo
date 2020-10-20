@@ -1,6 +1,7 @@
 const { BN } = require('@openzeppelin/test-helpers');
 const setup = require('./setup');
 const BalancerProxy = artifacts.require('BalancerProxy');
+const DAOVestingProxy = artifacts.require('DAOVestingProxy');
 
 const AMOUNT = new BN('1000');
 const EXPECTED = new BN('500');
@@ -30,6 +31,9 @@ const encodeJoinPool = (poolAmountOut, maxAmountsIn) => {
 };
 const encodeExitPool = (poolAmountIn, minAmountsOut) => {
   return new web3.eth.Contract(BalancerProxy.abi).methods.exitPool(poolAmountIn, minAmountsOut).encodeABI();
+};
+const encodeCreateVesing = (beneficiary, start, cliffDuration, duration, revocable) => {
+  return new web3.eth.Contract(DAOVestingProxy.abi).methods.createVesing(beneficiary, start, cliffDuration, duration, revocable).encodeABI();
 };
 const getValueFromLogs = (tx, arg, eventName, index = 0) => {
   /**
@@ -89,6 +93,7 @@ module.exports = {
   encodeJoinPool,
   encodeExitPool,
   getNewProposalId,
+  encodeCreateVesing,
   values: {
     AMOUNT,
     EXPECTED,
