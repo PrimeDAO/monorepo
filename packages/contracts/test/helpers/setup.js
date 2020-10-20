@@ -20,6 +20,7 @@ const SmartPoolManager = artifacts.require('SmartPoolManager');
 const BalancerProxy = artifacts.require('BalancerProxy');
 const PrimeToken = artifacts.require('PrimeToken');
 const VestingFactory = artifacts.require('VestingFactory');
+const DAOVestingProxy = artifacts.require('DAOVestingProxy');
 
 const { time, constants } = require('@openzeppelin/test-helpers');
 
@@ -215,6 +216,15 @@ const vesting = async (setup) => {
   return { factory, params };
 };
 
+const vestingProxy = async (setup) => {
+  const daoVestingProxy = await DAOVestingProxy.new();
+
+  await daoVestingProxy.initialize(setup.organization.avatar.address, setup.vesting.factory.address, setup.tokens.primeToken.address);
+
+  return daoVestingProxy;
+};
+
+
 const scheme = async (setup) => {
   // deploy scheme
   const scheme = await GenericScheme.new();
@@ -226,9 +236,9 @@ const scheme = async (setup) => {
   const permissions = '0x00000010';
   await setup.DAOStack.daoCreator.setSchemes(
     setup.organization.avatar.address,
-    [setup.proxy.address, setup.token4rep.contract.address, scheme.address],
-    [constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32],
-    [permissions, permissions, permissions],
+    [setup.proxy.address, setup.token4rep.contract.address, setup.vestingProxy.address, scheme.address],
+    [constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32],
+    [permissions, permissions, permissions, permissions],
     'metaData'
   );
 
@@ -245,4 +255,5 @@ module.exports = {
   proxy,
   scheme,
   token4rep,
+  vestingProxy
 };
