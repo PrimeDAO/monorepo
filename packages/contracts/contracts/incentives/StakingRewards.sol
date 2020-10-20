@@ -73,24 +73,28 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
       address _rewardToken,
       address _stakingToken,
       uint256 _initreward,
-      uint256 _starttime
+      uint256 _starttime,
+      uint256 _duration
     ) external initializer {
         require(_rewardToken  != address(0),                  "StakingRewards: rewardToken cannot be null");
         require(_stakingToken != address(0),                  "StakingRewards: stakingToken cannot be null");
         require(_initreward != 0,                             "StakingRewards: initreward cannot be null");
         require(_starttime != 0,                              "StakingRewards: starttime cannot be null");
+        require(_duration != 0,                               "StakingRewards: duration cannot be null");
 
         rewardToken  = IERC20(_rewardToken);
         stakingToken = IERC20(_stakingToken);
         rewardDistribution = msg.sender;
         initreward = _initreward;
         starttime = _starttime;
+        DURATION = (_duration * 24 hours);
     }
 
-    uint256 public constant DURATION = 7 days;
+    // uint256 public constant DURATION = 7 days;
+    uint256 public DURATION;
 
     uint256 public initreward;
-    uint256 public starttime; 
+    uint256 public starttime;
     uint256 public periodFinish;
     uint256 public rewardRate;
     uint256 public lastUpdateTime;
