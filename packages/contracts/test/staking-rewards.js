@@ -38,6 +38,8 @@ contract('StakingRewards', (accounts) => {
     let halfStake;
     let blockNumber;
     let rewardAmount;
+    let _initreward = (BigInt(925 * 100 * 1000000000000000000)).toString(); // "92500000000000003145728"
+    let _starttime = 1600560000; // 2020-09-20 00:00:00 (UTC +00:00)
 
     before('!! deploy setup', async () => {
         setup = await deploy(accounts);
@@ -46,22 +48,46 @@ contract('StakingRewards', (accounts) => {
         context('» parameters are valid', () => {
             // contract has already been initialized during setup
             it('it initializes contract', async () => {
-            	await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
+            	await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime);
             });
         });
-        context('» token parameter is not valid', () => {
+        context('» reward token parameter is not valid', () => {
             before('!! deploy contract', async () => {
                 setup.data.incentives = await StakingRewards.new();
             });
             it('it reverts', async () => {
-                await expectRevert(setup.data.incentives.initialize(constants.ZERO_ADDRESS, setup.balancer.pool.address, accounts[0]), 'StakingRewards: rewardToken cannot be null');
+                await expectRevert(setup.data.incentives.initialize(constants.ZERO_ADDRESS, setup.balancer.pool.address, _initreward, _starttime), 'StakingRewards: rewardToken cannot be null');
+            });
+        });
+        context('» staking token parameter is not valid', () => {
+            before('!! deploy contract', async () => {
+                setup.data.incentives = await StakingRewards.new();
+            });
+            it('it reverts', async () => {
+                await expectRevert(setup.data.incentives.initialize(setup.tokens.primeToken.address, constants.ZERO_ADDRESS, _initreward, _starttime), 'StakingRewards: stakingToken cannot be null');
+            });
+        });
+        context('» _initreward parameter is not valid: 0', () => {
+            before('!! deploy contract', async () => {
+                setup.data.incentives = await StakingRewards.new();
+            });
+            it('it reverts', async () => {
+                await expectRevert(setup.data.incentives.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, 0, _starttime), 'StakingRewards: initreward cannot be null');
+            });
+        });
+        context('» _starttime parameter is not valid: 0', () => {
+            before('!! deploy contract', async () => {
+                setup.data.incentives = await StakingRewards.new();
+            });
+            it('it reverts', async () => {
+                await expectRevert(setup.data.incentives.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, 0), 'StakingRewards: starttime cannot be null');
             });
         });
     });
     context('» contract is already initialized', () => {
         // contract has already been initialized during setup
         it('it reverts', async () => {
-            await expectRevert(setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]), 'StakingRewards: contract already initialized');
+            await expectRevert(setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime), 'StakingRewards: contract already initialized');
         });
     });
     context('# stake', () => {
@@ -83,7 +109,7 @@ contract('StakingRewards', (accounts) => {
             });
             context('» stake parameter is not valid', () => {
                 before('!! initialize contract', async () => {
-	            	    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
+	            	    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime);
                 });
                 it('it reverts', async () => {
                     await expectRevert(
@@ -129,7 +155,7 @@ contract('StakingRewards', (accounts) => {
             });
             context('» withdraw parameter is not valid: too low', () => {
                 before('!! initialize contract', async () => {
-                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
+                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime);
                 });
                 it('it reverts', async () => {
                     await expectRevert(
@@ -188,7 +214,7 @@ contract('StakingRewards', (accounts) => {
             });
             context('» getReward param valid: rewards 0', async () => {
                 before('!! initialize contract', async () => {
-                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
+                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime);
                 });
                 it('rewards 0', async () => {
                     expect((await setup.incentives.stakingRewards.earned(accounts[1])).toString()).to.equal(toWei('0'));
@@ -245,7 +271,7 @@ contract('StakingRewards', (accounts) => {
             });
             context(' cannot exit with 0', async () => {
                 before('!! initialize contract', async () => {
-                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
+                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime);
                 });
                 it('cannot exit with no funds', async () => {
                     await expectRevert(
@@ -310,7 +336,7 @@ contract('StakingRewards', (accounts) => {
             });
             context('» rescueTokens token parameter is not valid: governance', () => {
                 before('!! initialize contract', async () => {
-                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
+                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime);
                 });
                 it('it reverts', async () => {
                     await expectRevert(
@@ -356,7 +382,7 @@ contract('StakingRewards', (accounts) => {
             });
             context('» periodFinish is 0 on deployment', async () => {
                 before('!! initialize contract', async () => {
-                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
+                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime);
                 });
                 it('returns 0', async () => {
                     let periodFinish = (await setup.incentives.stakingRewards.periodFinish()).toString();
@@ -389,7 +415,7 @@ contract('StakingRewards', (accounts) => {
             });
             context('» reverts when balanceOf reward tokens == 0', async () => {
                 before('!! initialize contract', async () => {
-                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, accounts[0]);
+                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime);
                 });
                 it('reverts', async () => {
                     await expectRevert(
