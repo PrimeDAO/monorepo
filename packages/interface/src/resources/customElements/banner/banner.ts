@@ -64,7 +64,6 @@ export class Banner {
   }
 
   private async showBanner(config: IBannerConfig, resolve: () => void) {
-    let onTimer = true; // really ought to configure this in the EventConfig
     switch (config.type) {
       case EventMessageType.Info:
         this.banner.classList.remove("failure");
@@ -80,15 +79,14 @@ export class Banner {
         this.banner.classList.remove("warning");
         this.banner.classList.remove("info");
         this.banner.classList.add("failure");
-        onTimer = false;
         break;
     }
     this.elMessage.innerHTML = config.message;
     this.aureliaHelperService.enhanceElement(this.elMessage, this, true);
     this.resolveToClose = resolve;
     await this.animator.addClass(this.banner, "au-enter-active");
-    if (onTimer) {
-      this.timeoutId = setInterval(() => this.close(), 20000);
+    if (config.timer) {
+      this.timeoutId = setInterval(() => this.close(), config.timer);
     }
     this.showing = true;
   }
@@ -108,8 +106,10 @@ export class Banner {
       this.showing = false;
       this.resolveToClose();
       this.resolveToClose = null;
-      clearInterval(this.timeoutId);
-      this.timeoutId = 0;
+      if (this.timeoutId) {
+        clearInterval(this.timeoutId);
+        this.timeoutId = 0;
+      }
     }
   }
 
@@ -163,6 +163,7 @@ export class Banner {
       message: (typeof config === "string")
         ? config as string : config.message,
       type: EventMessageType.Info,
+      timer: 10000,
     };
 
     this.queueEventConfig(bannerConfig);
@@ -176,4 +177,5 @@ export class Banner {
 interface IBannerConfig {
   type: EventMessageType;
   message: string;
+  timer?: number;
 }
