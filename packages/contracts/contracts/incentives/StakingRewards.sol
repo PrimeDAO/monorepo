@@ -42,7 +42,7 @@ import "./IRewardDistributionRecipient.sol";
 pragma solidity >=0.5.13;
 
 
-contract IncentivesProxy is IRewardDistributionRecipient, ReentrancyGuard {
+contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
 
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
@@ -52,24 +52,24 @@ contract IncentivesProxy is IRewardDistributionRecipient, ReentrancyGuard {
     bool   public initialized;
 
     modifier initializer() {
-        require(!initialized, "IncentivesProxy: proxy already initialized");
+        require(!initialized, "StakingRewards: contract already initialized");
         initialized = true;
         _;
     }
 
     modifier protected() {
-        require(initialized, "IncentivesProxy: proxy not initialized");
+        require(initialized, "StakingRewards: contract not initialized");
         _;
     }
 
     /**
-      * @dev           Initialize proxy.
+      * @dev           Initialize contract.
       * @param _rewardToken  The address
       * @param _stakingToken The address
       */
     function initialize(address _rewardToken, address _stakingToken, address _owner) external initializer {
-        require(_rewardToken  != address(0),                  "IncentivesProxy: rewardToken cannot be null");
-        require(_stakingToken != address(0),                  "IncentivesProxy: stakingToken cannot be null");
+        require(_rewardToken  != address(0),                  "StakingRewards: rewardToken cannot be null");
+        require(_stakingToken != address(0),                  "StakingRewards: stakingToken cannot be null");
 
         rewardToken  = IERC20(_rewardToken);
         stakingToken = IERC20(_stakingToken);
@@ -136,14 +136,14 @@ contract IncentivesProxy is IRewardDistributionRecipient, ReentrancyGuard {
     /* stake visibility is public as overriding LPTokenWrapper's stake() function */
     /* added nonReentrant modifier as calling _stake(): calls token contract */
      function stake(uint256 amount) public nonReentrant updateReward(msg.sender) /*checkhalve*/ protected checkStart {
-        require(amount > 0, "IncentivesProxy: cannot stake 0");
+        require(amount > 0, "StakingRewards: cannot stake 0");
         _stake(amount);
         emit Staked(msg.sender, amount);
     }
 
     /* added nonReentrant modifier as calling _withdraw(): calls token contract */
     function withdraw(uint256 amount) public nonReentrant updateReward(msg.sender) protected checkStart {
-        require(amount > 0, "IncentivesProxy: Cannot withdraw 0");
+        require(amount > 0, "StakingRewards: Cannot withdraw 0");
         _withdraw(amount);
         emit Withdrawn(msg.sender, amount);
     }
@@ -167,7 +167,7 @@ contract IncentivesProxy is IRewardDistributionRecipient, ReentrancyGuard {
     }
 
     modifier checkStart(){
-        require(block.timestamp >= starttime,"IncentivesProxy: not start");
+        require(block.timestamp >= starttime,"StakingRewards: not start");
         _;
     }
 
@@ -186,7 +186,7 @@ contract IncentivesProxy is IRewardDistributionRecipient, ReentrancyGuard {
         // very high values of rewardRate in the earned and rewardsPerToken functions;
         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
         uint balance = rewardToken.balanceOf(address(this));
-        require(rewardRate <= balance.div(DURATION), "IncentivesProxy: Provided reward too high");
+        require(rewardRate <= balance.div(DURATION), "StakingRewards: Provided reward too high");
 
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(DURATION);
@@ -203,11 +203,11 @@ contract IncentivesProxy is IRewardDistributionRecipient, ReentrancyGuard {
         protected
     {
         // only gov
-        require(msg.sender == owner(), "IncentivesProxy: !governance");
+        require(msg.sender == owner(), "StakingRewards: !governance");
         // cant take staked asset
-        require(_token != stakingToken, "IncentivesProxy: stakingToken");
+        require(_token != stakingToken, "StakingRewards: stakingToken");
         // cant take reward asset
-        require(_token != rewardToken, "IncentivesProxy: rewardToken");
+        require(_token != rewardToken, "StakingRewards: rewardToken");
 
         // transfer to
         _token.safeTransfer(to, amount);

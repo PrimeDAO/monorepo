@@ -23,7 +23,7 @@ const VestingFactory = artifacts.require('VestingFactory');
 
 const { time, constants } = require('@openzeppelin/test-helpers');
 // Incentives imports
-const IncentivesProxy = artifacts.require('IncentivesProxy');
+const StakingRewards = artifacts.require('StakingRewards');
 
 const MAX = web3.utils.toTwosComplement(-1);
 
@@ -78,9 +78,9 @@ const tokens = async (setup) => {
 };
 
 const incentives = async (setup) => {
-  const incentivesProxy = await IncentivesProxy.new();
+  const stakingRewards = await StakingRewards.new();
 
-  return { incentivesProxy };
+  return { stakingRewards };
 };
 
 const balancer = async (setup) => {
