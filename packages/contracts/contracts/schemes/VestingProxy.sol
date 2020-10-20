@@ -44,8 +44,8 @@ contract VestingProxy {
     /**
       * @dev           Create vesting contract.
       */
-    function createVesing(address beneficiary, uint256 start, uint256 cliffDuration, uint256 duration, bool revocable)  external protected  {
-    	_create(beneficiary, start, cliffDuration, duration, revocable);
+    function createVesing(address beneficiary, uint256 amount, uint256 start, uint256 cliffDuration, uint256 duration, bool revocable)  external protected  {
+    	_create(beneficiary, amount, start, cliffDuration, duration, revocable);
     }
 
     /**
@@ -57,7 +57,9 @@ contract VestingProxy {
 
     /* internal state-modifying functions */
 
-    function _create(address _beneficiary, uint256 _start, uint256 _cliffDuration, uint256 _duration, bool _revocable)  internal  {
+    function _create(address _beneficiary, uint256 _amount, uint256 _start, uint256 _cliffDuration, uint256 _duration, bool _revocable)  internal  {
+        require(_amount >= 0, "VestingProxy: cannot transfer 0 amount");
+
         bool             success;
         bytes     memory returned;
         Controller controller = Controller(avatar.owner());
@@ -78,24 +80,24 @@ contract VestingProxy {
         );
         require(success, "VestingProxy: vesting contract creation fails");
 
-        // address vestingContract = _parseReturn(returned); 
+        address vestingContract = _parseReturn(returned); 
 
-        // (success, ) = controller.genericCall(
-        //     primeToken,
-        //     abi.encodeWithSelector(
-        //         IERC20(primeToken).transfer.selector,
-        //         vestingContract
-        //     ),
-        //     avatar,
-        //     0
-        // );
+        (success, ) = controller.genericCall(
+            primeToken,
+            abi.encodeWithSelector(
+                IERC20(primeToken).transfer.selector,
+                vestingContract,
+                _amount
+            ),
+            avatar,
+            0
+        );
 
-        // require(success, "VestingProxy: prime token transfer fails");
+        require(success, "VestingProxy: prime token transfer fails");
 
-        // emit VestingCreated(vestingContract, daoVestings.length);
-        emit VestingCreated(msg.sender, 1);
+        emit VestingCreated(vestingContract, daoVestings.length);
 
-        // daoVestings.push(msg.sender);
+        daoVestings.push(vestingContract);
     }
 
     function _revoke(uint256 _id) internal {

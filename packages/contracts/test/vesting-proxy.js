@@ -86,13 +86,14 @@ contract('VestingProxy', (accounts) => {
                 start = (await time.latest()).toNumber();
             });
             it('creates vesting', async () => {
-                // const calldata = helpers.encodeCreateVesing(beneficiary, start, setup.vesting.params.cliffDuration, setup.vesting.params.duration, setup.vesting.params.revocable);
-                // const _tx = await setup.scheme.proposeCall(calldata, 0, constants.ZERO_BYTES32);
-                // const proposalId = helpers.getNewProposalId(_tx);
-                // const tx = await  setup.scheme.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
-                // //store datav
-                // setup.data.tx = tx;
-                // await expectEvent.inTransaction(setup.data.tx.tx, setup.vesting.proxy, 'VestingCreated');
+                const calldata = helpers.encodeCreateVesing(beneficiary, toWei('100'), start, setup.vesting.params.cliffDuration, setup.vesting.params.duration, setup.vesting.params.revocable);
+                const _tx = await setup.primeDAO.vesting.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                const proposalId = helpers.getNewProposalId(_tx);
+                const tx = await  setup.primeDAO.vesting.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                //store data
+                setup.data.tx = tx;
+                await expectEvent.inTransaction(setup.data.tx.tx, setup.vesting.proxy, 'VestingCreated');
+                // await console.log(await setup.vesting.proxy.daoVestings(0));
             });
 	    });
  	});

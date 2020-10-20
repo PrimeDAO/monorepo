@@ -32,8 +32,8 @@ const encodeJoinPool = (poolAmountOut, maxAmountsIn) => {
 const encodeExitPool = (poolAmountIn, minAmountsOut) => {
   return new web3.eth.Contract(BalancerProxy.abi).methods.exitPool(poolAmountIn, minAmountsOut).encodeABI();
 };
-const encodeCreateVesing = (beneficiary, start, cliffDuration, duration, revocable) => {
-  return new web3.eth.Contract(VestingProxy.abi).methods.createVesing(beneficiary, start, cliffDuration, duration, revocable).encodeABI();
+const encodeCreateVesing = (beneficiary, amount, start, cliffDuration, duration, revocable) => {
+  return new web3.eth.Contract(VestingProxy.abi).methods.createVesing(beneficiary, amount, start, cliffDuration, duration, revocable).encodeABI();
 };
 const getValueFromLogs = (tx, arg, eventName, index = 0) => {
   /**
