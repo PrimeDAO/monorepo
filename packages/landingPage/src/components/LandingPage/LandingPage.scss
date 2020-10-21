@@ -168,7 +168,6 @@ $text-transform-uppercase: uppercase;
     padding: 12px 24px;
     color: $color-black;
     text-align: center;
-    max-width: 280px;
 
     &:hover {
       background-color: $color-black;
@@ -278,12 +277,14 @@ $text-transform-uppercase: uppercase;
           display: flex;
           flex-wrap: wrap;
           justify-content: space-around;
+          padding-right: 8%;
           .button {
             @extend .stdButton;
             display: inline-block;
-            width: 320px;
+            width: 308px;
             margin-bottom: 12px;
             margin-right: 6px;
+            white-space: nowrap;
           }
         }
 
@@ -303,7 +304,7 @@ $text-transform-uppercase: uppercase;
       .rightColumn {
         text-align: right;
         @extend .text-menu;
-        min-width: 320px;
+        min-width: 345px;
         display: grid;
         grid-template-columns: auto auto;
         grid-template-rows: 50px max-content;
@@ -1001,6 +1002,7 @@ $text-transform-uppercase: uppercase;
             }
           }
           .buttons {
+            padding-right: unset;
             .button {
               width: unset;
               margin-right: 0;
