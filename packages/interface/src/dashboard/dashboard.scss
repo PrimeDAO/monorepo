@@ -3,6 +3,7 @@
 .dashboardWrapper {
   display: flex;
   flex-direction: column;
+  height: 100%;
 
   .header {
     text-align: right;
@@ -77,21 +78,28 @@
   }
 
   .content {
+    height: 100%;
     display: flex;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 30px;
+    padding-top: 30px;
+    box-sizing: border-box;
 
     .farmers,
     .governors {
       flex-basis: 50%;
       text-align: center;
+      padding-bottom: 30px;
 
       .heading {
         padding-bottom: 16px;
         font-size: 22px;
         font-weight: 500;
       }
+    }
+    .farmers {
+      padding-left: 30px;
+    }
+    .governors {
+      padding-right: 30px;
     }
   }
 }

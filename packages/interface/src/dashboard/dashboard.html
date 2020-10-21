@@ -8,54 +8,55 @@
         <connectbutton></connectbutton>
       </div>
     </div>
-    <div class="content">
-      <modalscreen if.to-view="onOff"></modalscreen>
-      <div class="farmers">
-        <div class="heading">Farmers</div>
-        <div class="class">Wrap ETH to WETH to provide liquidity!</div>
-        <wethwrapper></wethwrapper>
-        <div if.to-view="connected">
-          <button click.delegate="handleDeposit()">Deposit</button>
-          <button click.delegate="handleWithdraw()">Withdraw</button>
+    <modalscreen on-off.to-view="onOff">
+      <div class="content">
+        <div class="farmers">
+          <div class="heading">Farmers</div>
+          <div class="class">Wrap ETH to WETH to provide liquidity!</div>
+          <wethwrapper></wethwrapper>
+          <div if.to-view="connected">
+            <button click.delegate="handleDeposit()">Deposit</button>
+            <button click.delegate="handleWithdraw()">Withdraw</button>
+          </div>
+          <div class="class">Want to put your PRIME to use? Contribute liquidity to the Prime Pool to earn more PRIME
+            tokens.</div>
+          <div class="class">Adding liquidity will exchange your PRIME or WETH (wrapped ETH) into liquidity provider
+            tokens called BPRIME.</div>
+          <div>Removing liquidity will exchange your liquidity provider tokens into PRIME and WETH, claiming any accrued
+            rewards.</div>
+          <div class="poolStatus">
+            <div class="liquidity">
+              <div class="label">Liquidity</div>
+              <div class="value"></div>
+            </div>
+            <div class="volume">
+              <div class="label">Volume (24hr)</div>
+              <div class="value"></div>
+            </div>
+            <div class="swapfee">
+              <div class="label">Swap fee</div>
+              <div class="value"></div>
+            </div>
+            <div class="poolshare">
+              <div class="label">My pool share</div>
+              <div class="value"></div>
+            </div>
+            <div class="visitBalancer">Visit the Prime Liquidity Pool on Balancer for more pool information</div>
+            <div class="addLiquidity">Add Liquidity</div>
+            <div class="removeLiquidity">Remove Liquidity</div>
+            <div class="class">Stake your BPRIME tokens to the Prime Liquidity Pool to earn more PRIME tokens.</div>
+            <div class="currentAPY">
+              <div class="label">Current APY</div>
+              <div class="value"></div>
+            </div>
+            <div class="primeFarmed">You've farmed XX PRIME!</div>
+            <div class="stakeBPrime">Stake BPRIME tokens</div>
+            <div class="harvestYield">Harvest Yield</div>
+          </div>
         </div>
-        <div class="class">Want to put your PRIME to use? Contribute liquidity to the Prime Pool to earn more PRIME
-          tokens.</div>
-        <div class="class">Adding liquidity will exchange your PRIME or WETH (wrapped ETH) into liquidity provider
-          tokens called BPRIME.</div>
-        <div>Removing liquidity will exchange your liquidity provider tokens into PRIME and WETH, claiming any accrued
-          rewards.</div>
-        <div class="poolStatus">
-          <div class="liquidity">
-            <div class="label">Liquidity</div>
-            <div class="value"></div>
-          </div>
-          <div class="volume">
-            <div class="label">Volume (24hr)</div>
-            <div class="value"></div>
-          </div>
-          <div class="swapfee">
-            <div class="label">Swap fee</div>
-            <div class="value"></div>
-          </div>
-          <div class="poolshare">
-            <div class="label">My pool share</div>
-            <div class="value"></div>
-          </div>
-          <div class="visitBalancer">Visit the Prime Liquidity Pool on Balancer for more pool information</div>
-          <div class="addLiquidity">Add Liquidity</div>
-          <div class="removeLiquidity">Remove Liquidity</div>
-          <div class="class">Stake your BPRIME tokens to the Prime Liquidity Pool to earn more PRIME tokens.</div>
-          <div class="currentAPY">
-            <div class="label">Current APY</div>
-            <div class="value"></div>
-          </div>
-          <div class="primeFarmed">You've farmed XX PRIME!</div>
-          <div class="stakeBPrime">Stake BPRIME tokens</div>
-          <div class="harvestYield">Harvest Yield</div>
+        <div class="governors">
+          <div class="heading">Governors</div>
         </div>
-      </div>
-      <div class="governors">
-        <div class="heading">Governors</div>
-      </div>
-    </div>
+    </modalscreen>
+  </div>
 </template>

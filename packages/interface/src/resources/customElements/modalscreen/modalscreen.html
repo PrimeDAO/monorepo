@@ -1,5 +1,13 @@
 <template>
-  <div class="container">
-    <i class="fas fa-circle-notch fa-spin"></i>
+  <div class="modalScreenContainer" ref="container">
+    <slot></slot>
+    <div class="modalMask" ref="mask">
+      <div>
+        <div class="modelContent">
+          <i class="fas fa-circle-notch fa-spin"></i>
+          <div class="body">Awaiting the transaction...</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
