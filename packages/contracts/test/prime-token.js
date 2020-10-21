@@ -15,20 +15,18 @@ const deploy = async (accounts) => {
     const setup = await helpers.setup.initialize(accounts[0]);
     // deploy ERC20s
     setup.tokens = await helpers.setup.tokens(setup);
-    // deploy VestingFactory
-    setup.vesting = await helpers.setup.vesting(setup);
     // deploy DAOStack meta-contracts
     setup.DAOStack = await helpers.setup.DAOStack(setup);
     // deploy organization
     setup.organization = await helpers.setup.organization(setup);
     // deploy balancer infrastructure
     setup.balancer = await helpers.setup.balancer(setup);
-    // deploy proxy
-    setup.proxy = await helpers.setup.proxy(setup);
     // deploy token4rep
     setup.token4rep = await helpers.setup.token4rep(setup);
-    // deploy generic scheme
-    setup.scheme = await helpers.setup.scheme(setup);
+    // deploy VestingFactory
+    setup.vesting = await helpers.setup.vesting(setup);
+    // deploy primeDAO governance
+    setup.primeDAO = await helpers.setup.primeDAO(setup);
 
     return setup;
 };

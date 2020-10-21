@@ -20,6 +20,7 @@ const SmartPoolManager = artifacts.require('SmartPoolManager');
 const BalancerProxy = artifacts.require('BalancerProxy');
 const PrimeToken = artifacts.require('PrimeToken');
 const VestingFactory = artifacts.require('VestingFactory');
+const VestingProxy = artifacts.require('VestingProxy');
 
 const { time, constants } = require('@openzeppelin/test-helpers');
 // Incentives imports
@@ -154,7 +155,12 @@ const balancer = async (setup) => {
   // move ownership to avatar
   await pool.setController(setup.organization.avatar.address);
 
-  return { pool };
+  // deploy proxy
+  const proxy = await BalancerProxy.new();
+  // initialize proxy
+  await proxy.initialize(setup.organization.avatar.address, pool.address, await pool.bPool()); 
+
+  return { pool, proxy };
 };
 
 const DAOStack = async () => {
@@ -170,15 +176,6 @@ const organization = async (setup) => {
   const organization = await deployOrganization(setup.DAOStack.daoCreator, [setup.root], [PDAO_TOKENS], [REPUTATION]);
 
   return organization;
-};
-
-const proxy = async (setup) => {
-  // deploy proxy
-  const proxy = await BalancerProxy.new();
-  // initialize proxy
-  await proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
-
-  return proxy;
 };
 
 const token4rep = async (setup) => {
@@ -213,8 +210,6 @@ const token4rep = async (setup) => {
 };
 
 const vesting = async (setup) => {
-  const factory = await VestingFactory.new();
-
   // vesting parameters
   const params = {
         cliffDuration: 0,
@@ -222,27 +217,39 @@ const vesting = async (setup) => {
         revocable: true
   }
 
-  return { factory, params };
+  const factory = await VestingFactory.new();
+  const proxy = await VestingProxy.new();
+
+  await proxy.initialize(setup.organization.avatar.address, factory.address, setup.tokens.primeToken.address);
+
+  return { factory, proxy, params };
 };
 
-const scheme = async (setup) => {
-  // deploy scheme
-  const scheme = await GenericScheme.new();
-  // deploy scheme voting machine
-  scheme.voting = await setAbsoluteVote(constants.ZERO_ADDRESS, 50, scheme.address);
-  // initialize scheme
-  await scheme.initialize(setup.organization.avatar.address, scheme.voting.absoluteVote.address, scheme.voting.params, setup.proxy.address);
-  // register scheme
+
+const primeDAO = async (setup) => {
+  // deploy balancer generic scheme
+  const balancer = await GenericScheme.new();
+  // deploy balancer scheme voting machine
+  balancer.voting = await setAbsoluteVote(constants.ZERO_ADDRESS, 50, balancer.address);
+  // initialize balancer scheme
+  await balancer.initialize(setup.organization.avatar.address, balancer.voting.absoluteVote.address, balancer.voting.params, setup.balancer.proxy.address);
+  // deploy balancer generic scheme
+  const vesting = await GenericScheme.new();
+  // deploy balancer scheme voting machine
+  vesting.voting = await setAbsoluteVote(constants.ZERO_ADDRESS, 50, vesting.address);
+  // initialize balancer scheme
+  await vesting.initialize(setup.organization.avatar.address, vesting.voting.absoluteVote.address, vesting.voting.params, setup.vesting.proxy.address);
+  // register schemes
   const permissions = '0x00000010';
   await setup.DAOStack.daoCreator.setSchemes(
     setup.organization.avatar.address,
-    [setup.proxy.address, setup.token4rep.contract.address, scheme.address],
-    [constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32],
-    [permissions, permissions, permissions],
+    [setup.balancer.proxy.address, setup.vesting.proxy.address, setup.token4rep.contract.address, balancer.address, vesting.address],
+    [constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32],
+    [permissions, permissions, permissions, permissions, permissions],
     'metaData'
   );
 
-  return scheme;
+  return {balancer, vesting};
 };
 
 module.exports = {
@@ -253,7 +260,6 @@ module.exports = {
   balancer,
   DAOStack,
   organization,
-  proxy,
-  scheme,
   token4rep,
+  primeDAO,
 };
