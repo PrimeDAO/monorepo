@@ -4,7 +4,6 @@
 const { expect } = require('chai');
 const { constants, time, expectRevert, expectEvent } = require('@openzeppelin/test-helpers');
 const helpers = require('./helpers');
-const BPool = artifacts.require('BPool');
 const StakingRewards = artifacts.require('StakingRewards');
 
 
@@ -21,22 +20,20 @@ const deploy = async (accounts) => {
     setup.organization = await helpers.setup.organization(setup);
     // deploy balancer infrastructure
     setup.balancer = await helpers.setup.balancer(setup);
-    // deploy proxy
-    setup.proxy = await helpers.setup.proxy(setup);
     // deploy token4rep
     setup.token4rep = await helpers.setup.token4rep(setup);
-    // deploy generic scheme
-    setup.scheme = await helpers.setup.scheme(setup);
     // deploy incentives contract
     setup.incentives = await helpers.setup.incentives(setup);
+    // deploy primeDAO governance
+    setup.primeDAO = await helpers.setup.primeDAO(setup);
 
     return setup;
 };
 
 contract('StakingRewards', (accounts) => {
+    let setup;
     let stakeAmount;
     let halfStake;
-    let blockNumber;
     let rewardAmount;
     let _initreward = (BigInt(925 * 100 * 1000000000000000000)).toString(); // "92500000000000003145728"
     let _starttime = 1600560000; // 2020-09-20 00:00:00 (UTC +00:00)
@@ -49,7 +46,7 @@ contract('StakingRewards', (accounts) => {
         context('» parameters are valid', () => {
             // contract has already been initialized during setup
             it('it initializes contract', async () => {
-            	await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
+                await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
             });
         });
         context('» reward token parameter is not valid', () => {
@@ -118,7 +115,7 @@ contract('StakingRewards', (accounts) => {
             });
             context('» stake parameter is not valid', () => {
                 before('!! initialize contract', async () => {
-	            	    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
+                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
                 });
                 it('it reverts', async () => {
                     await expectRevert(

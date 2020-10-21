@@ -4,8 +4,6 @@
 const { expect } = require('chai');
 const { constants, time, expectRevert, expectEvent } = require('@openzeppelin/test-helpers');
 const helpers = require('./helpers');
-const BPool = artifacts.require('BPool');
-const BalancerProxy = artifacts.require('BalancerProxy');
 const TokenVesting = artifacts.require('TokenVesting');
 
 const { toWei } = web3.utils;
@@ -15,28 +13,27 @@ const deploy = async (accounts) => {
     const setup = await helpers.setup.initialize(accounts[0]);
     // deploy ERC20s
     setup.tokens = await helpers.setup.tokens(setup);
-    // deploy VestingFactory
-    setup.vesting = await helpers.setup.vesting(setup);
     // deploy DAOStack meta-contracts
     setup.DAOStack = await helpers.setup.DAOStack(setup);
     // deploy organization
     setup.organization = await helpers.setup.organization(setup);
     // deploy balancer infrastructure
     setup.balancer = await helpers.setup.balancer(setup);
-    // deploy proxy
-    setup.proxy = await helpers.setup.proxy(setup);
     // deploy token4rep
     setup.token4rep = await helpers.setup.token4rep(setup);
-    // deploy generic scheme
-    setup.scheme = await helpers.setup.scheme(setup);
+    // deploy VestingFactory
+    setup.vesting = await helpers.setup.vesting(setup);
+    // deploy primeDAO governance
+    setup.primeDAO = await helpers.setup.primeDAO(setup);
 
     return setup;
 };
 
 contract('PrimeToken', (accounts) => {
+    let setup;
     let testSetup;
     let tokenLockAmount;
-    let lockId;
+    let lockingId;
     let owner; // vesting contract owner
     let beneficiary; // vesting beneficiary
     let start; // vesting start
