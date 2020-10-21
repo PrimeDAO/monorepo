@@ -1,93 +1,97 @@
 @import "styles/colors.scss";
 
 .dashboardWrapper {
-  .content {
-    display: grid;
-    grid-template-columns: 50% 50%;
+  display: flex;
+  flex-direction: column;
 
-    grid-template-areas:
-      "header header"
-      "farmers governors";
+  .header {
+    text-align: right;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-    .header {
-      grid-area: header;
-      text-align: right;
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .networkfeedback {
+      display: inline-block;
+      color: rgb(109, 168, 255);
+      .testnet {
+        color: $color-ds-red;
+      }
+    }
 
-      .networkfeedback {
-        display: inline-block;
+    .connectButtonContainer {
+      background-color: rgb(33, 36, 41);
+      border-color: transparent;
+      z-index: 1000;
+
+      .connectButton {
         color: rgb(109, 168, 255);
-        .testnet {
-          color: $color-ds-red;
+        background-color: rgb(33, 36, 41);
+        border: 1px solid rgba(21, 61, 111, 0.44);
+        cursor: pointer;
+        font-weight: 500;
+
+        &:hover,
+        &:focus {
+          color: rgb(83, 153, 255);
         }
       }
 
-      .connectButtonContainer {
-        background-color: rgb(33, 36, 41);
-        border-color: transparent;
+      &.connected {
+        background-color: rgb(64, 68, 79);
+        border-color: rgba(21, 61, 111, 0.44);
 
         .connectButton {
-          color: rgb(109, 168, 255);
-          background-color: rgb(33, 36, 41);
-          border: 1px solid rgba(21, 61, 111, 0.44);
-          cursor: pointer;
-          font-weight: 500;
+          color: white;
+          background-color: rgb(44, 47, 54);
+          border-color: transparent;
 
-          &:hover,
-          &:focus {
-            color: rgb(83, 153, 255);
-          }
-        }
-
-        &.connected {
-          background-color: rgb(64, 68, 79);
-          border-color: rgba(21, 61, 111, 0.44);
-
-          .connectButton {
-            color: white;
-            background-color: rgb(44, 47, 54);
-            border-color: transparent;
-
-            .pending {
-              i {
-                color: rgb(109, 168, 255);
-              }
-              &.confirming {
-                cursor: pointer;
-                .phase:hover {
-                  text-decoration: underline;
-                }
-              }
+          .pending {
+            i {
+              color: rgb(109, 168, 255);
             }
-
-            .etherscanlink a {
-              color: white;
-              text-decoration: none;
-
-              &:hover,
-              &:focus {
-                color: white;
-              }
-
-              &:hover {
+            &.confirming {
+              cursor: pointer;
+              .phase:hover {
                 text-decoration: underline;
               }
             }
           }
+
+          .etherscanlink a {
+            color: white;
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+              color: white;
+            }
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
         }
       }
     }
+  }
 
-    .farmers {
-      grid-area: farmers;
-      text-align: center;
-    }
+  .content {
+    display: flex;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+
+    .farmers,
     .governors {
-      grid-area: governors;
+      flex-basis: 50%;
       text-align: center;
+
+      .heading {
+        padding-bottom: 16px;
+        font-size: 22px;
+        font-weight: 500;
+      }
     }
   }
 }

@@ -12,6 +12,7 @@ export function configure(config: FrameworkConfiguration): void {
     PLATFORM.moduleName("./customElements/floatingPointNumber/floatingPointNumber"),
     PLATFORM.moduleName("./customElements/ConnectButton/ConnectButton"),
     PLATFORM.moduleName("./customElements/NetworkFeedback/NetworkFeedback"),
+    PLATFORM.moduleName("./customElements/modalscreen/modalscreen"),
     PLATFORM.moduleName("./valueConverters/number"),
     PLATFORM.moduleName("./valueConverters/ethwei"),
     PLATFORM.moduleName("./valueConverters/date"),

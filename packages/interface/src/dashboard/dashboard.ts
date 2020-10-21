@@ -41,6 +41,7 @@ import { Address } from "services/EthereumService";
 export class Dashboard {
   private weth: any;
   private connected = false;
+  private onOff=false;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -59,6 +60,18 @@ export class Dashboard {
       } else {
         this.connected = false;
       }
+    });
+
+    this.eventAggregator.subscribe("transaction.sent", async () => {
+      this.onOff = true;
+    });
+
+    this.eventAggregator.subscribe("transaction.confirmed", async () => {
+      this.onOff = false;
+    });
+
+    this.eventAggregator.subscribe("transaction.failed", async () => {
+      this.onOff = false;
     });
   }
 

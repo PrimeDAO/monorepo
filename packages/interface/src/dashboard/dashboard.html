@@ -1,16 +1,17 @@
 <template>
   <div class="dashboardWrapper animated-page au-animate">
-    <div class="content">
-      <div class="header">
-        <div>
-          <networkfeedback></networkfeedback>
-        </div>
-        <div>
-          <connectbutton></connectbutton>
-        </div>
+    <div class="header">
+      <div>
+        <networkfeedback></networkfeedback>
       </div>
+      <div>
+        <connectbutton></connectbutton>
+      </div>
+    </div>
+    <div class="content">
+      <modalscreen if.to-view="onOff"></modalscreen>
       <div class="farmers">
-        <div class="class">Farmers</div>
+        <div class="heading">Farmers</div>
         <div class="class">Wrap ETH to WETH to provide liquidity!</div>
         <wethwrapper></wethwrapper>
         <div if.to-view="connected">
@@ -53,6 +54,8 @@
           <div class="harvestYield">Harvest Yield</div>
         </div>
       </div>
-      <div class="governors">Governors</div>
+      <div class="governors">
+        <div class="heading">Governors</div>
+      </div>
     </div>
 </template>
