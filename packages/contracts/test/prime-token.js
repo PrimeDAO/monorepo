@@ -4,8 +4,6 @@
 const { expect } = require('chai');
 const { constants, time, expectRevert, expectEvent } = require('@openzeppelin/test-helpers');
 const helpers = require('./helpers');
-const BPool = artifacts.require('BPool');
-const BalancerProxy = artifacts.require('BalancerProxy');
 const TokenVesting = artifacts.require('TokenVesting');
 
 const { toWei } = web3.utils;
@@ -32,9 +30,10 @@ const deploy = async (accounts) => {
 };
 
 contract('PrimeToken', (accounts) => {
+    let setup;
     let testSetup;
     let tokenLockAmount;
-    let lockId;
+    let lockingId;
     let owner; // vesting contract owner
     let beneficiary; // vesting beneficiary
     let start; // vesting start

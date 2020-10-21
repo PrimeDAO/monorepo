@@ -20,7 +20,6 @@ const SmartPoolManager = artifacts.require('SmartPoolManager');
 const BalancerProxy = artifacts.require('BalancerProxy');
 const PrimeToken = artifacts.require('PrimeToken');
 const VestingFactory = artifacts.require('VestingFactory');
-const VestingProxy = artifacts.require('VestingProxy');
 
 const { time, constants } = require('@openzeppelin/test-helpers');
 // Incentives imports
@@ -218,11 +217,8 @@ const vesting = async (setup) => {
   }
 
   const factory = await VestingFactory.new();
-  const proxy = await VestingProxy.new();
 
-  await proxy.initialize(setup.organization.avatar.address, factory.address, setup.tokens.primeToken.address);
-
-  return { factory, proxy, params };
+  return { factory, params };
 };
 
 
@@ -233,23 +229,17 @@ const primeDAO = async (setup) => {
   balancer.voting = await setAbsoluteVote(constants.ZERO_ADDRESS, 50, balancer.address);
   // initialize balancer scheme
   await balancer.initialize(setup.organization.avatar.address, balancer.voting.absoluteVote.address, balancer.voting.params, setup.balancer.proxy.address);
-  // deploy balancer generic scheme
-  const vesting = await GenericScheme.new();
-  // deploy balancer scheme voting machine
-  vesting.voting = await setAbsoluteVote(constants.ZERO_ADDRESS, 50, vesting.address);
-  // initialize balancer scheme
-  await vesting.initialize(setup.organization.avatar.address, vesting.voting.absoluteVote.address, vesting.voting.params, setup.vesting.proxy.address);
   // register schemes
   const permissions = '0x00000010';
   await setup.DAOStack.daoCreator.setSchemes(
     setup.organization.avatar.address,
-    [setup.balancer.proxy.address, setup.vesting.proxy.address, setup.token4rep.contract.address, balancer.address, vesting.address],
-    [constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32],
-    [permissions, permissions, permissions, permissions, permissions],
+    [setup.balancer.proxy.address, setup.token4rep.contract.address, balancer.address],
+    [constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32],
+    [permissions, permissions, permissions, ],
     'metaData'
   );
 
-  return {balancer, vesting};
+  return {balancer};
 };
 
 module.exports = {
