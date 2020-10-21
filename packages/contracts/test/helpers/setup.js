@@ -23,6 +23,8 @@ const VestingFactory = artifacts.require('VestingFactory');
 const VestingProxy = artifacts.require('VestingProxy');
 
 const { time, constants } = require('@openzeppelin/test-helpers');
+// Incentives imports
+const StakingRewards = artifacts.require('StakingRewards');
 
 const MAX = web3.utils.toTwosComplement(-1);
 
@@ -70,8 +72,16 @@ const initialize = async (root) => {
 
 const tokens = async (setup) => {
   const erc20s = [await ERC20.new('DAI Stablecoin', 'DAI', 18), await ERC20.new('USDC Stablecoin', 'USDC', 15), await ERC20.new('USDT Stablecoin', 'USDT', 18)];
+
   const primeToken = await PrimeToken.new(PRIME_SUPPLY, PRIME_CAP, setup.root);
+
   return { erc20s, primeToken};
+};
+
+const incentives = async (setup) => {
+  const stakingRewards = await StakingRewards.new();
+
+  return { stakingRewards };
 };
 
 const balancer = async (setup) => {
@@ -98,7 +108,7 @@ const balancer = async (setup) => {
   const PRIMEToken = await primetoken.address;
 
   const tokenAddresses = [PRIMEToken, DAI, USDC];
-  
+
   const swapFee = 10 ** 15;
   const startWeights = [toWei('8'), toWei('1'), toWei('1')];
   const startBalances = [toWei('10000'), toWei('5000'), toWei('5000')];
@@ -244,6 +254,7 @@ const primeDAO = async (setup) => {
 
 module.exports = {
   initialize,
+  incentives,
   tokens,
   vesting,
   balancer,
