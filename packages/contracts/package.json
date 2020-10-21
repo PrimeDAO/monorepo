@@ -8,6 +8,7 @@
     "lint": "solhint 'contracts/**/*.sol' && npx eslint test/*.js",
     "deploy:dao:rinkeby": "npx run scripts/migrate.js --network rinkeby",
     "deploy:dapp:rinkeby": "truffle migrate --network rinkeby --reset",
+    "deploy:dapp:kovan": "truffle migrate --network kovan --reset",
     "coverage": "truffle run coverage"
   },
   "author": "",

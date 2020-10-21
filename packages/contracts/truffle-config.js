@@ -9,6 +9,13 @@ module.exports = {
           network_id: 4,
           networkCheckTimeout: 100000000
       },
+      kovan: {
+          provider: function() {
+              return new HDWalletProvider(process.env.KEY, process.env.PROVIDER);
+          },
+          network_id: 42,
+          networkCheckTimeout: 100000000
+      },
       coverage: {
         host: '127.0.0.1',
         port: 8555,

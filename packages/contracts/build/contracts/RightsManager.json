@@ -5893,8 +5893,9 @@
     "version": "0.6.12+commit.27d51765.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.3.0",
-  "updatedAt": "2020-10-21T10:57:31.056Z",
+  "schemaVersion": "3.2.4",
+  "updatedAt": "2020-10-21T15:20:13.132Z",
+  "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",
     "kind": "dev",
