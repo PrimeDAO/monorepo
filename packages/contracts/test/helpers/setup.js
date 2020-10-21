@@ -224,22 +224,22 @@ const vesting = async (setup) => {
 
 const primeDAO = async (setup) => {
   // deploy balancer generic scheme
-  const balancer = await GenericScheme.new();
+  const poolManager = await GenericScheme.new();
   // deploy balancer scheme voting machine
-  balancer.voting = await setAbsoluteVote(constants.ZERO_ADDRESS, 50, balancer.address);
+  poolManager.voting = await setAbsoluteVote(constants.ZERO_ADDRESS, 50, poolManager.address);
   // initialize balancer scheme
-  await balancer.initialize(setup.organization.avatar.address, balancer.voting.absoluteVote.address, balancer.voting.params, setup.balancer.proxy.address);
+  await poolManager.initialize(setup.organization.avatar.address, poolManager.voting.absoluteVote.address, poolManager.voting.params, setup.balancer.proxy.address);
   // register schemes
   const permissions = '0x00000010';
   await setup.DAOStack.daoCreator.setSchemes(
     setup.organization.avatar.address,
-    [setup.balancer.proxy.address, setup.token4rep.contract.address, balancer.address],
+    [setup.balancer.proxy.address, setup.token4rep.contract.address, poolManager.address],
     [constants.ZERO_BYTES32, constants.ZERO_BYTES32, constants.ZERO_BYTES32],
     [permissions, permissions, permissions, ],
     'metaData'
   );
 
-  return {balancer};
+  return {poolManager};
 };
 
 module.exports = {

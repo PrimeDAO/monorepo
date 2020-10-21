@@ -37,7 +37,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
-import "./IRewardDistributionRecipient.sol";
+import "../utils/interfaces/IRewardDistributionRecipient.sol";
 
 pragma solidity >=0.5.13;
 
