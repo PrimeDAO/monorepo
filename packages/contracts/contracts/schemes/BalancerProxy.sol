@@ -3,8 +3,8 @@ pragma solidity >=0.5.13;
 import "@daostack/arc/contracts/controller/Avatar.sol";
 import "@daostack/arc/contracts/controller/Controller.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "./utils/interfaces/IConfigurableRightsPool.sol";
-import "./utils/interfaces/IBPool.sol";
+import "../utils/interfaces/IConfigurableRightsPool.sol";
+import "../utils/interfaces/IBPool.sol";
 
 /**
  * @title A Balancer Configurable Rights Pool proxy
