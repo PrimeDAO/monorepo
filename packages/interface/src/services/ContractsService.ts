@@ -6,10 +6,12 @@ import { autoinject } from "aurelia-framework";
 const ContractAddresses = require("../contracts/contractAddresses.json") as INetworkContractAddresses;
 const ConfigurableRightsPoolABI = require("../contracts/ConfigurableRightsPool.json");
 const WETHABI = require("../contracts/WETH.json");
+const BPOOL = require("../contracts/BPool.json");
 const ERC20ABI = require("../contracts/ERC20.json");
 
 export enum ContractNames {
   ConfigurableRightsPool = "ConfigurableRightsPool"
+  , BPOOL = "BPool"
   , WETH = "WETH"
   , PRIMETOKEN = "PRIMETOKEN"
   , USDC = "USDC"
@@ -26,6 +28,7 @@ export class ContractsService {
   private static ABIs = new Map<ContractNames, any>(
     [
       [ContractNames.ConfigurableRightsPool, ConfigurableRightsPoolABI.abi]
+      , [ContractNames.BPOOL, BPOOL.abi]
       , [ContractNames.WETH, WETHABI.abi]
       , [ContractNames.PRIMETOKEN, ERC20ABI.abi]
       , [ContractNames.USDC, ERC20ABI.abi]
@@ -35,6 +38,7 @@ export class ContractsService {
 
   private static Contracts = new Map<ContractNames, Contract>([
     [ContractNames.ConfigurableRightsPool, null]
+    , [ContractNames.BPOOL, null]
     , [ContractNames.WETH, null]
     , [ContractNames.PRIMETOKEN, null]
     , [ContractNames.USDC, null]

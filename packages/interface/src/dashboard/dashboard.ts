@@ -1,4 +1,4 @@
-import { autoinject } from "aurelia-framework";
+import { autoinject, computedFrom } from "aurelia-framework";
 import { ContractNames } from "services/ContractsService";
 import { ContractsService } from "services/ContractsService";
 import "./dashboard.scss";
@@ -40,8 +40,13 @@ import { BigNumber } from "ethers";
 @autoinject
 export class Dashboard {
   private weth: any;
+  private crPool: any;
+  private bPool: any;
+  private primeToken: any;
+  private usdcToken: any;
   private connected = false;
   private onOff=false;
+  private liquidityBalance: BigNumber;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -54,9 +59,14 @@ export class Dashboard {
 
     this.eventAggregator.subscribe("Network.Changed.Account", async (account: Address) => {
       if (account) {
-        // const crPool = await this.contractsService.getContractFor(IContract.ConfigurableRightsPool);
+        this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
+        this.bPool = await this.contractsService.getContractFor(ContractNames.BPOOL);
         // this.bPoolAddress = await crPool.bPool();
         this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
+        this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
+        this.usdcToken = await this.contractsService.getContractFor(ContractNames.USDC);
+        this.liquidityBalance = await this.bPool.getBalance(account);
+
         this.connected = true;
       } else {
         this.connected = false;

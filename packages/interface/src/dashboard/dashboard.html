@@ -51,7 +51,11 @@
           <div class="poolStatus">
             <div class="liquidity">
               <div class="label">Liquidity</div>
-              <div class="value"></div>
+              <div class="value">
+                <floating-point-number class="balance" value.to-view="liquidityBalance | ethwei" precision="4"
+                  placement.to-view="top"></floating-point-number>
+              </div>
+
             </div>
             <div class="volume">
               <div class="label">Volume (24hr)</div>
