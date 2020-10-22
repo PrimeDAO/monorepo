@@ -15,11 +15,12 @@ interface IEIP1193 {
   on(eventName: "disconnect", handler: (error: { code: number; message: string }) => void);
 }
 
-export type AllowedNetworks = "mainnet" | "rinkeby";
+export type AllowedNetworks = "mainnet" | "kovan";
 
 export enum Networks {
   Mainnet = "mainnet",
   Rinkeby = "rinkeby",
+  Kovan = "kovan",
 }
 
 export interface IChainEventInfo {
@@ -36,6 +37,8 @@ export class EthereumService {
   private static ProviderEndpoints = {
     "mainnet": `https://${process.env.RIVET_ID}.eth.rpc.rivet.cloud/`,
     "rinkeby": `https://${process.env.RIVET_ID}.rinkeby.rpc.rivet.cloud/`,
+    // "kovan": `https://${process.env.RIVET_ID}.kovan.rpc.rivet.cloud/`,
+    "kovan": `https://kovan.infura.io/v3/${process.env.INFURA_ID}`,
   }
   private static providerOptions = {
     torus: {
@@ -56,7 +59,8 @@ export class EthereumService {
       options: {
         rpc: {
           1: EthereumService.ProviderEndpoints[Networks.Mainnet],
-          4: EthereumService.ProviderEndpoints[Networks.Rinkeby],
+          // 4: EthereumService.ProviderEndpoints[Networks.Rinkeby],
+          42: EthereumService.ProviderEndpoints[Networks.Kovan],
         },
       },
     },
@@ -78,7 +82,7 @@ export class EthereumService {
 
     const readonlyEndPoint = EthereumService.ProviderEndpoints[this.targetedNetwork];
     if (!readonlyEndPoint) {
-      throw new Error(`Please connect to either ${Networks.Mainnet} or ${Networks.Rinkeby}`);
+      throw new Error(`Please connect to either ${Networks.Mainnet} or ${Networks.Kovan}`);
     }
 
     this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[this.targetedNetwork]);
@@ -92,13 +96,9 @@ export class EthereumService {
 
   private chainNameById = new Map<number, AllowedNetworks>([
     [1, Networks.Mainnet],
-    [4, Networks.Rinkeby],
+    // [4, Networks.Rinkeby],
+    [42, Networks.Kovan],
   ]);
-
-  // private static chainIdByName = new Map<AllowedNetworks, number>([
-  //   ["mainnet", 1],
-  //   ["rinkeby", 4],
-  // ]);
 
   private async getChainId(provider: Web3Provider): Promise<number> {
     return Number((await provider.send("net_version", [])));

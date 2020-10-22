@@ -1,11 +1,11 @@
 import { autoinject } from "aurelia-framework";
-import { IContract } from "services/ContractsService";
+import { ContractNames } from "services/ContractsService";
 import { ContractsService } from "services/ContractsService";
 import "./dashboard.scss";
 import { EventAggregator } from "aurelia-event-aggregator";
 import TransactionsService from "services/TransactionsService";
-import { parseEther } from "ethers/lib/utils";
-import { Address } from "services/EthereumService";
+import { Address, EthereumService } from "services/EthereumService";
+import { BigNumber } from "ethers";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -46,6 +46,7 @@ export class Dashboard {
   constructor(
     private eventAggregator: EventAggregator,
     private contractsService: ContractsService,
+    private ethereumService: EthereumService,
     private transactionsService: TransactionsService) {
   }
 
@@ -55,7 +56,7 @@ export class Dashboard {
       if (account) {
         // const crPool = await this.contractsService.getContractFor(IContract.ConfigurableRightsPool);
         // this.bPoolAddress = await crPool.bPool();
-        this.weth = await this.contractsService.getContractFor(IContract.WETH);
+        this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
         this.connected = true;
       } else {
         this.connected = false;
@@ -75,22 +76,23 @@ export class Dashboard {
     });
   }
 
-  private handleDeposit() {
-    this.transactionsService.send(() =>
-      this.weth.deposit({ value: parseEther(".05") }),
-      //   const receipt = await response.wait(1);
-    );
+  private maxWeth = false;
+  private ethWethAmount: BigNumber | string = BigNumber.from(0);
+  private wethEthAmount: BigNumber | string = BigNumber.from(0);
+
+  private async setMaxWeth() {
+    if (this.maxWeth) {
+      this.wethEthAmount = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
+    } else {
+      this.wethEthAmount = "0.0";
+    }
   }
 
-  private handleWithdraw() {
-    this.transactionsService.send(() =>
-      this.weth.withdraw(parseEther(".05")),
-    );
-    //   if (receipt.status) {
-    //     const receipt2 = await response2.wait(1);
-    //     if (receipt2.status) {
-    //       this.withdrawTransactionHash = receipt2.transactionHash;
-    //     }
-    //   }
+  private handleDeposit() {
+    this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
+  }
+
+  private async handleWithdraw() {
+    this.transactionsService.send(() => this.weth.withdraw(this.wethEthAmount));
   }
 }

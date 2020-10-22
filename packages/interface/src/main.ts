@@ -27,7 +27,7 @@ export function configure(aurelia: Aurelia): void {
   aurelia.start().then(() => {
     aurelia.container.get(ConsoleLogService);
     try {
-      EthereumService.initialize(process.env.NODE_ENV === "development" ? Networks.Rinkeby : Networks.Mainnet);
+      EthereumService.initialize(process.env.NODE_ENV === "development" ? Networks.Kovan : Networks.Mainnet);
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException("Sorry, couldn't connect to ethereum", ex));
     }

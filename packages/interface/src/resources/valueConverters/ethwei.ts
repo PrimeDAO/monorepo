@@ -17,12 +17,12 @@ export class EthweiValueConverter {
    * incorrect value is not persisted.
    * @param ethValue
    */
-  public fromView(ethValue: string): BigNumber {
+  public fromView(ethValue: string | number): BigNumber {
     if ((ethValue === undefined) || (ethValue === null)) {
       return null;
     }
 
-    return parseEther(ethValue);
+    return parseEther(ethValue.toString());
   }
 
   /**

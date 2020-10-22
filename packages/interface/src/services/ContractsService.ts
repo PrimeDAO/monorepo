@@ -1,35 +1,44 @@
 import { Contract, ethers, Signer } from "ethers";
-import { Web3Provider } from "@ethersproject/providers";
-import { Address, AllowedNetworks, EthereumService, IChainEventInfo } from "services/EthereumService";
+import { Address, EthereumService, IChainEventInfo } from "services/EthereumService";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
 
 const ContractAddresses = require("../contracts/contractAddresses.json") as INetworkContractAddresses;
 const ConfigurableRightsPoolABI = require("../contracts/ConfigurableRightsPool.json");
 const WETHABI = require("../contracts/WETH.json");
+const ERC20ABI = require("../contracts/ERC20.json");
 
-export enum IContract {
-  ConfigurableRightsPool = "ConfigurableRightsPool",
-  WETH = "WETH",
+export enum ContractNames {
+  ConfigurableRightsPool = "ConfigurableRightsPool"
+  , WETH = "WETH"
+  , PRIMETOKEN = "PRIMETOKEN"
+  , USDC = "USDC"
+  ,
 }
 
 interface INetworkContractAddresses {
-  [network: string]: Map<IContract, string>;
+  [network: string]: Map<ContractNames, string>;
 }
 
 @autoinject
 export class ContractsService {
 
-  private static ABIs = new Map<IContract, any>(
+  private static ABIs = new Map<ContractNames, any>(
     [
-      [IContract.ConfigurableRightsPool, ConfigurableRightsPoolABI.abi],
-      [IContract.WETH, WETHABI.abi],
+      [ContractNames.ConfigurableRightsPool, ConfigurableRightsPoolABI.abi]
+      , [ContractNames.WETH, WETHABI.abi]
+      , [ContractNames.PRIMETOKEN, ERC20ABI.abi]
+      , [ContractNames.USDC, ERC20ABI.abi]
+      ,
     ],
   );
 
-  private static Contracts = new Map<IContract, Contract>([
-    [IContract.ConfigurableRightsPool, null],
-    [IContract.WETH, null],
+  private static Contracts = new Map<ContractNames, Contract>([
+    [ContractNames.ConfigurableRightsPool, null]
+    , [ContractNames.WETH, null]
+    , [ContractNames.PRIMETOKEN, null]
+    , [ContractNames.USDC, null]
+    ,
   ]);
 
   // private static readOnlyProvider = EthereumService.readOnlyProvider;
@@ -96,7 +105,7 @@ export class ContractsService {
     this.initializingContractsResolver();
   }
 
-  public async getContractFor(contractName: IContract): Promise<any> {
+  public async getContractFor(contractName: ContractNames): Promise<any> {
     await this.assertContracts();
     return ContractsService.Contracts.get(contractName);
   }

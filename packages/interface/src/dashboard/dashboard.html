@@ -13,16 +13,40 @@
         <div class="farmers">
           <div class="heading">Farmers</div>
           <div class="class">Wrap ETH to WETH to provide liquidity!</div>
-          <wethwrapper></wethwrapper>
           <div if.to-view="connected">
-            <button click.delegate="handleDeposit()">Deposit</button>
-            <button click.delegate="handleWithdraw()">Withdraw</button>
+
+            <div class="class">
+              <div class="class">
+                <div class="class">ETH &RightArrow; WETH</div>
+                <div class="class">
+                  <div class="class">
+                    <numeric-input id="ethWethAmount" value.two-way="ethWethAmount | ethwei" placeholder="0.0">
+                    </numeric-input>
+                  </div>
+                  <button click.delegate="handleDeposit()">Wrap</button>
+                </div>
+              </div>
+
+              <div class="class">
+                <div class="class">WETH &RightArrow; ETH</div>
+                <div class="class">
+                  <div class="class">
+                    <label><input type="checkbox" checked.bind="maxWeth" change.delegate="setMaxWeth()">Max</label>
+                    <numeric-input id="wethEthAmount" value.two-way="wethEthAmount | ethwei">
+                    </numeric-input>
+                  </div>
+                  <button click.delegate="handleWithdraw()">Unwrap</button>
+                </div>
+              </div>
+            </div>
+
           </div>
           <div class="class">Want to put your PRIME to use? Contribute liquidity to the Prime Pool to earn more PRIME
             tokens.</div>
           <div class="class">Adding liquidity will exchange your PRIME or WETH (wrapped ETH) into liquidity provider
             tokens called BPRIME.</div>
-          <div>Removing liquidity will exchange your liquidity provider tokens into PRIME and WETH, claiming any accrued
+          <div>Removing liquidity will exchange your liquidity provider tokens into PRIME and WETH, claiming any
+            accrued
             rewards.</div>
           <div class="poolStatus">
             <div class="liquidity">

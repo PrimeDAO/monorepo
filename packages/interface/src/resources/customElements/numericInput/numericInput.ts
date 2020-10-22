@@ -42,6 +42,13 @@ export class NumericInput {
   constructor(private numberService: NumberService) {
   }
 
+  private valueChanged(newValue: number | string, _prevValue: number | string): void {
+    /**
+     * TODO: validate that this is a valid value, like for preventing pasting nonsense into the field
+     */
+    this._innerValue = newValue?.toString();
+  }
+
   public attached(): void {
     this.element.addEventListener("keydown", (e) => { this.keydown(e); });
     /**
@@ -80,7 +87,7 @@ export class NumericInput {
       return true;
     } else {
       /**
-       * ecimals are allowed, is a decimal, and there is not already a decimal
+       * decimals are allowed, is a decimal, and there is not already a decimal
        */
       if ((this.decimal && (e.keyCode === 190) &&
         (!currentValue || !currentValue.length || (currentValue.indexOf(".") === -1)))) {

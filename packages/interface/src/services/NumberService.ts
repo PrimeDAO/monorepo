@@ -85,7 +85,7 @@ export class NumberService {
    * default number of decimmals is basically unlimited
    * @param value
    */
-  public stringIsNumber(value?: string, decimalPlaces = 1000): boolean {
+  public stringIsNumber(value?: string | number, decimalPlaces = 1000): boolean {
 
     if (typeof value === "number") { return true; }
 
