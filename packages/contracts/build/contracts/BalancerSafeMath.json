@@ -9714,8 +9714,9 @@
     "version": "0.6.12+commit.27d51765.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.3.0",
-  "updatedAt": "2020-10-21T10:57:31.050Z",
+  "schemaVersion": "3.2.4",
+  "updatedAt": "2020-10-22T14:06:09.041Z",
+  "networkType": "ethereum",
   "devdoc": {
     "author": "Balancer Labs",
     "details": "badd and bsub are basically identical to OpenZeppelin SafeMath; mul/div have extra checks",
