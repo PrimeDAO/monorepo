@@ -15,7 +15,7 @@ To run unit tests
 npm run test
 ```
 
-To deploy DAO to rinkeby:
+### Deploy DAO to rinkeby:
 
 prepare env vars
 ```
@@ -32,4 +32,18 @@ npm run deploy:dapp:rinkeby
 deploy dao to rinkeby
 ```
 npm run deploy:dao:rinkeby
+```
+
+### Deploy DAO to kovan:
+
+prepare env vars
+```
+export NETWORK=`kovan`
+export PROVIDER=`your-infura-provider`
+export KEY=`your-private-key`
+```
+
+deploy dapp to rinkeby
+```
+npm run deploy:dapp:kovan
 ```

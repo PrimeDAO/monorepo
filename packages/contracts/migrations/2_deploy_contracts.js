@@ -4,18 +4,39 @@ const CRPFactory = artifacts.require('CRPFactory');
 const BFactory = artifacts.require('BFactory');
 const BalancerSafeMath = artifacts.require('BalancerSafeMath');
 const BalancerSafeMathMock = artifacts.require('BalancerSafeMathMock');
-const ConfigurableRightsPool = artifacts.require('ConfigurableRightsPool')
-const ERC20Mock = artifacts.require('ERC20Mock');
-const WETH = artifacts.require('WETH');
 const BalancerProxy = artifacts.require('BalancerProxy');
 const PrimeToken = artifacts.require('PrimeToken');
 const PriceOracle = artifacts.require('PriceOracle');
+
+const StakingRewards = artifacts.require('StakingRewards');
 
 const contracts = require('../contractAddresses.json');
 const fs = require("fs");
 
 module.exports = async function (deployer, network) {
-    if (network === 'rinkeby') {
+    const { toWei } = web3.utils
+
+    const primeSupply = toWei('90000000');
+
+    if (network === 'kovan') {
+
+        await deployer.deploy(PrimeToken, primeSupply, primeSupply, deployer.networks.kovan.from);
+        await deployer.deploy(StakingRewards);
+        await deployer.deploy(PriceOracle);
+        await deployer.deploy(BalancerProxy);
+
+        contracts.kovan.PrimeToken = PrimeToken.address;
+        contracts.kovan.StakingRewards = StakingRewards.address;
+        contracts.kovan.PriceOracle = PriceOracle.address;
+        contracts.kovan.BalancerProxy = BalancerProxy.address;
+
+        // overwrite contranctAddresses.json
+        fs.writeFile('./contractAddresses.json', JSON.stringify(contracts), (err) => {
+           if (err) throw err;
+         });
+
+    }
+    else if (network === 'rinkeby') {
         // deploy balancer configurable rights pool
         await deployer.deploy(RightsManager);
         await deployer.deploy(SmartPoolManager);
@@ -32,81 +53,17 @@ module.exports = async function (deployer, network) {
         await deployer.deploy(CRPFactory);
 
         // overwrite contrancts object
-        contracts.rinkeby.RightsManager = await RightsManager.address
-        contracts.rinkeby.SmartPoolManager = await SmartPoolManager.address
-        contracts.rinkeby.BFactory = await BFactory.address
-        contracts.rinkeby.BalancerSafeMath = await BalancerSafeMath.address
-        contracts.rinkeby.BalancerSafeMathMock = await BalancerSafeMathMock.address
-        contracts.rinkeby.BalancerProxy = await BalancerProxy.address
-        contracts.rinkeby.CRPFactory = await CRPFactory.address
-        contracts.rinkeby.PriceOracle = await PriceOracle.address
+        contracts.rinkeby.RightsManager = RightsManager.address;
+        contracts.rinkeby.SmartPoolManager = SmartPoolManager.address;
+        contracts.rinkeby.BFactory = BFactory.address;
+        contracts.rinkeby.BalancerSafeMath = BalancerSafeMath.address;
+        contracts.rinkeby.BalancerSafeMathMock = BalancerSafeMathMock.address;
+        contracts.rinkeby.BalancerProxy = BalancerProxy.address;
+        contracts.rinkeby.CRPFactory = CRPFactory.address;
+        contracts.rinkeby.PriceOracle = PriceOracle.address;
 
-        const { toWei } = web3.utils
-        const MAX = web3.utils.toTwosComplement(-1)
-
-        // TODO: add gnosis safe setup
-        const prime = await deployer.deploy(PrimeToken, toWei('21000000'), toWei('90000000'), deployer.networks.rinkeby.from);
-        const dai = await deployer.deploy(ERC20Mock, 'DAI Stablecoin', 'DAI', 18);
-        const weth = await deployer.deploy(WETH);
-
-        await weth.deposit({ value: toWei('3') });
-
-        const tokenAddresses = [prime.address, dai.address, weth.address];
-
-        const swapFee = 10 ** 15;
-        const startWeights = [toWei('12'), toWei('1.5'), toWei('1.5')];
-        const startBalances = [toWei('500000'), toWei('10000'), toWei('3')];
-        const SYMBOL = 'BPOOL';
-        const NAME = 'Prime Balancer Pool Token';
-
-        const permissions = {
-              canPauseSwapping: true,
-              canChangeSwapFee: true,
-              canChangeWeights: true,
-              canAddRemoveTokens: true,
-              canWhitelistLPs: false,
-        };
-
-        const poolParams = {
-              poolTokenSymbol: SYMBOL,
-              poolTokenName: NAME,
-              constituentTokens: tokenAddresses,
-              tokenBalances: startBalances,
-              tokenWeights: startWeights,
-              swapFee: swapFee,
-        };
-
-        await console.log("   Creating 'Balancer' pool")
-        await console.log("   --------------------")
-
-        const crpFactory = await CRPFactory.deployed();
-        const bfactory = await BFactory.deployed();
-
-        POOL = await crpFactory.newCrp.call(
-                bfactory.address,
-                poolParams,
-                permissions,
-        );
-
-        await crpFactory.newCrp(
-                bfactory.address,
-                poolParams,
-                permissions,
-        );
-
-        const pool = await ConfigurableRightsPool.at(POOL);
-
-        await dai.approve(POOL, MAX);
-        await weth.approve(POOL, MAX);
-        await prime.approve(POOL, MAX);
-
-        await pool.createPool(toWei('1000'));
-
-        contracts.rinkeby.BalancerProxy = await pool.address
-        contracts.rinkeby.CRPFactory = await pool.bPool()
-
-        await console.log('> ConfigurableRightsPool address: ' + (pool.address).toString())
-        await console.log('> Balancer Pool address:    ' + (await pool.bPool()).toString())
+        await deployer.deploy(PrimeToken, primeSupply, primeSupply, deployer.networks.kovan.from);
+        await deployer.deploy(StakingRewards);
 
         // overwrite contranctAddresses.json
         fs.writeFile('./contractAddresses.json', JSON.stringify(contracts), (err) => {
