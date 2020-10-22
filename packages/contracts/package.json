@@ -6,9 +6,11 @@
   "scripts": {
     "test": "truffle test",
     "lint": "solhint 'contracts/**/*.sol' && npx eslint test/*.js",
-    "deploy:dao:rinkeby": "npx run scripts/migrate.js --network rinkeby",
-    "deploy:dapp:rinkeby": "truffle migrate --network rinkeby --reset",
-    "deploy:dapp:kovan": "truffle migrate --network kovan --reset",
+    "deploy:dao:rinkeby": "npx run scripts/migrateDAO.js --network rinkeby",
+    "deploy:contracts:kovan": "truffle migrate --network kovan --reset",
+    "create:pool:kovan": "npx truffle exec scripts/setupPool.js --network kovan",
+    "innit:staking:kovan": "npx truffle exec scripts/setupRewards.js --network kovan",
+    "deploy:dao:kovan": "npx run scripts/migrateDAO.js --network kovan",
     "coverage": "truffle run coverage"
   },
   "author": "",

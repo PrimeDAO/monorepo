@@ -2,12 +2,12 @@ const DAOstackMigration = require('@daostack/migration');
 const specs = require('./primeDAO.json');
 const contracts = require('../contractAddresses.json');
 
-const migrate = async () => {
+const migrateDAO = async () => {
 
-  specs.CustomSchemes[0].address = contracts.rinkeby.BalancerProxy;
-  specs.CustomSchemes[0].params = [contracts.rinkeby.ConfigurableRightsPool, contracts.rinkeby.BPool];
-  specs.CustomSchemes[1].params[2] = contracts.rinkeby.BalancerProxy;
-  specs.CustomSchemes[2].params[5] = contracts.rinkeby.PriceOracle;
+  specs.CustomSchemes[0].address = contracts.kovan.BalancerProxy;
+  specs.CustomSchemes[0].params = [contracts.kovan.ConfigurableRightsPool, contracts.kovan.BPool];
+  specs.CustomSchemes[1].params[2] = contracts.kovan.BalancerProxy;
+  specs.CustomSchemes[2].params[5] = contracts.kovan.PriceOracle;
   specs.CustomSchemes[2].params[6] = "0x0000000000000000000000000000000000000000";
 
   const options = {
@@ -21,7 +21,7 @@ const migrate = async () => {
     force: true,
     restart: true,
     params: {
-      rinkeby: specs,
+      kovan: specs,
     },
   };
 
@@ -29,4 +29,4 @@ const migrate = async () => {
   console.log('+ Deployed DAO at ' + result.dao['0.0.1-rc.44'].Avatar);
 };
 
-migrate();
+migrateDAO();

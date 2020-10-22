@@ -1,6 +1,6 @@
 {
   "orgName": "primeDAO",
-  "tokenName": "PrimeDAO Token",
+  "tokenName": "PrimeDAO Useless Token",
   "tokenSymbol": "PDAO",
   "ContributionReward": [{ "voteParams": 0 }],
   "SchemeRegistrar": [{ "voteRegisterParams": 0, "voteRemoveParams": 0 }],
@@ -21,7 +21,7 @@
       "isUniversal": false,
       "params": ["GenesisProtocolAddress", { "voteParams": 0 }, ""],
       "permissions": "0x00000010",
-      "alias": "GenericSchemeBalancer",
+      "alias": "BalancerPoolManager",
       "fromArc": true
     },
     {
@@ -29,11 +29,11 @@
        "schemeName":"LockingToken4Reputation",
        "isUniversal":false,
        "params":[
-         100,
+         10000,
          0,
-         3000,
-         3000,
-         6000
+         1603413137,
+         1603413137,
+         1604188137
        ],
        "permissions":"0x00000010",
        "alias":"LockingToken4Reputation",
@@ -60,5 +60,15 @@
   "unregisterOwner": true,
   "useUController": false,
   "useDaoCreator": true,
-  "founders": [{ "address": "0x64947E10E6EacEb8C4cB8cF3EeF306344C4F4ED0", "tokens": 100, "reputation": 50 }]
+  "founders": [
+    { "address": "0x6d327055D5791a93545432906aFa229accf0B762", 
+      "tokens": 0, 
+      "reputation": 100 },
+    { "address": "0x1bf4e7D549fD7Bf9c6BA3Be8BD2b9Af62F086220", 
+      "tokens": 0, 
+      "reputation": 100 },
+    { "address": "0xA7e48a6f4d19a60b6FA72fD15b247915FB0aEa6a", 
+      "tokens": 0, 
+      "reputation": 100 }
+  ]
 }
