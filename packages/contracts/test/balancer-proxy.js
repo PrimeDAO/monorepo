@@ -361,7 +361,15 @@ contract('BalancerProxy', (accounts) => {
             });
             context('» updateWeight', async () => {
                 it('updates weight', async () => {
-                    await setup.data.proxy.updateWeight(setup.balancer.pool.address, newWeight, { from: setup.organization.avatar.address });
+                    // await setup.data.proxy.updateWeight(setup.balancer.pool.address, newWeight, { from: setup.organization.avatar.address });
+                    const calldata = helpers.encodeUpdateWeight(setup.tokens.erc20s[0].address, newWeight);
+                    const _tx = await setup.primeDAO.poolManager.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                    const proposalId = helpers.getNewProposalId(_tx);
+                    const tx = await  setup.primeDAO.poolManager.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                    // store data
+                    setup.data.tx = tx;
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'UpdateWeight');
+                    expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountOut);
                 });
                 // check balances 
             });
