@@ -310,18 +310,20 @@ contract('BalancerProxy', (accounts) => {
                 });
             });
             context('» updateWeight', async () => {
+                before('!! deploy and initialize proxy', async () => {
+                    setup.data.proxy = await BalancerProxy.new();
+                    await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+                });
                 it('updates weight', async () => {
-                    time.increase(time.duration.weeks(1));
                     const calldata = helpers.encodeUpdateWeight(setup.tokens.erc20s[0].address, newWeight);
                     const _tx = await setup.primeDAO.poolManager.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                     const proposalId = helpers.getNewProposalId(_tx);
-                    const tx = await  setup.primeDAO.poolManager.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                    const tx = await setup.primeDAO.poolManager.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                     // store data
                     setup.data.tx = tx;
                     await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'UpdateWeight');
                     expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountOut);
                 });
-                // check balances
             });
         });
     });
@@ -365,7 +367,7 @@ contract('BalancerProxy', (accounts) => {
                     const calldata = helpers.encodeUpdateWeightsGradually(newWeights, startBLock, endBlock);
                     const _tx = await setup.primeDAO.poolManager.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                     const proposalId = helpers.getNewProposalId(_tx);
-                    const tx = await  setup.primeDAO.poolManager.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                    const tx = await setup.primeDAO.poolManager.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                     //store data
                     setup.data.tx = tx;
 
