@@ -31,9 +31,9 @@
        "params":[
          10000,
          0,
-         1603413137,
-         1603413137,
-         1604188137
+         1606089137,
+         1606089137,
+         1607188137
        ],
        "permissions":"0x00000010",
        "alias":"LockingToken4Reputation",
@@ -43,14 +43,14 @@
   "VotingMachinesParams": [
     {
       "activationTime": 0,
-      "boostedVotePeriodLimit": 604800,
+      "boostedVotePeriodLimit": 172800,
       "daoBountyConst": 10,
       "minimumDaoBounty": 100,
       "preBoostedVotePeriodLimit": 86400,
       "proposingRepReward": 0,
-      "queuedVotePeriodLimit": 5184000,
+      "queuedVotePeriodLimit": 604800,
       "queuedVoteRequiredPercentage": 50,
-      "quietEndingPeriod": 345600,
+      "quietEndingPeriod": 172800,
       "thresholdConst": 1500,
       "voteOnBehalf": "0x0000000000000000000000000000000000000000",
       "votersReputationLossRatio": 0
@@ -61,7 +61,7 @@
   "useUController": false,
   "useDaoCreator": true,
   "founders": [
-    { "address": "0x6d327055D5791a93545432906aFa229accf0B762", 
+    { "address": "0xad0B69596627D77b6b1ad8746eAC586c9CfA437c", 
       "tokens": 0, 
       "reputation": 100 },
     { "address": "0x1bf4e7D549fD7Bf9c6BA3Be8BD2b9Af62F086220", 
