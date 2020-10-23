@@ -1,8 +1,8 @@
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject, containerless, customElement } from "aurelia-framework";
 import { DisposableCollection } from "services/DisposableCollection";
-import { formatEther } from "ethers/lib/utils";
 import { EthereumService } from "services/EthereumService";
+import { BigNumber } from "ethers";
 
 @autoinject
 @containerless
@@ -10,7 +10,7 @@ import { EthereumService } from "services/EthereumService";
 export class EthBalance {
   // @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
 
-  private balance: string = null;
+  private balance: BigNumber = null;
   private subscriptions = new DisposableCollection();
   private checking = false;
   private account: string;
@@ -59,7 +59,7 @@ export class EthBalance {
         this.checking = true;
         if (this.account) {
           const provider = EthereumService.readOnlyProvider;
-          this.balance = formatEther(await provider.getBalance(this.account));
+          this.balance = await provider.getBalance(this.account);
         } else {
           this.balance = null;
         }

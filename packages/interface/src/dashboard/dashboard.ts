@@ -67,8 +67,8 @@ export class Dashboard {
           this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
           this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
           // this.usdcToken = await this.contractsService.getContractFor(ContractNames.USDC);
-          this.liquidityBalance = (await this.bPool.getBalance(this.weth.address))
-            .add(await this.bPool.getBalance(this.primeToken));
+          // this.liquidityBalance = (await this.bPool.getBalance(this.weth.address))
+          //   .add(await this.bPool.getBalance(this.primeToken));
           this.connected = true;
           // TODO: fully revert the connection
         } catch (ex) {
@@ -94,14 +94,15 @@ export class Dashboard {
   }
 
   private maxWeth = false;
-  private ethWethAmount: BigNumber | string = BigNumber.from(0);
-  private wethEthAmount: BigNumber | string = BigNumber.from(0);
+  private ethWethAmount: BigNumber | string;
+  private wethEthAmount: BigNumber | string;
+  private defaultWethEthAmount: BigNumber | string;
 
   private async setMaxWeth() {
     if (this.maxWeth) {
-      this.wethEthAmount = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
+      this.defaultWethEthAmount = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
     } else {
-      this.wethEthAmount = "0.0";
+      this.defaultWethEthAmount = "";
     }
   }
 

@@ -4,17 +4,34 @@ import {
   bindingMode,
   computedFrom,
 } from "aurelia-framework";
+import { BigNumber } from "ethers";
+import { formatEther, parseEther } from "ethers/lib/utils";
 import { NumberService } from "services/numberService";
 
 @autoinject
 export class NumericInput {
 
-  @bindable({ defaultBindingMode: bindingMode.toView }) public decimal = true;
+  @bindable({ defaultBindingMode: bindingMode.oneTime }) public decimal = true;
   @bindable({ defaultBindingMode: bindingMode.toView }) public css?: string;
-  @bindable({ defaultBindingMode: bindingMode.toView }) public title = "";
-  @bindable({ defaultBindingMode: bindingMode.toView }) public id?: string;
-  @bindable({ defaultBindingMode: bindingMode.twoWay }) public value: number | string;
-  @bindable public placeholder = "";
+  @bindable({ defaultBindingMode: bindingMode.oneTime }) public title = "";
+  @bindable({ defaultBindingMode: bindingMode.oneTime }) public id?: string;
+  /**
+   * set this to initialize the value to display in the input.
+   * If isWei then should be in Wei and will be converted to ETH for the user.
+   */
+  @bindable({ defaultBindingMode: bindingMode.toView }) public defaultvalue?: BigNumber | number | string = "";
+  /**
+   * this value starts out as equal to defaultValue and is updated as the user types.
+   * If isWei then value is set to a BigNumber.  If the input is not value, then set to `undefined`.
+   * Else value us set to  whatever string the user types.
+   * If nothing is entered, then value is set to `undefined`.
+   */
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) public value: string | BigNumber;
+  /**
+   * if true then value is converted from wei to eth for editing
+   */
+  @bindable({ defaultBindingMode: bindingMode.oneTime }) public isWei?: boolean = true;
+  // TODO: make this work properly when typing over it @bindable public placeholder = "";
 
   private element: HTMLInputElement;
 
@@ -27,43 +44,71 @@ export class NumericInput {
 
   private set innerValue(newValue: string) {
     this._innerValue = newValue;
-    const value = this.innerValue;
     /**
      * update value from input control
      */
-    if ((value === null) || (typeof value === "undefined") || (value.trim() === "")) {
+    if ((newValue === null) || (typeof newValue === "undefined") || (newValue.trim() === "")) {
       this.value = undefined;
-      // else this.numberService.fromString would return 0
     } else {
-      this.value = this.numberService.fromString(value);
+      // assuming here that the input element will always give us a string
+      try {
+        this.value = this.isWei ? parseEther(newValue) : newValue;
+      } catch {
+        this.value = undefined;
+      }
     }
   }
 
   constructor(private numberService: NumberService) {
   }
 
-  private valueChanged(newValue: number | string, _prevValue: number | string): void {
+  private defaultvalueChanged(newValue: BigNumber | number | string, prevValue: BigNumber | number | string): void {
     /**
      * TODO: validate that this is a valid value, like for preventing pasting nonsense into the field
      */
-    this._innerValue = newValue?.toString();
+    if (newValue?.toString() !== prevValue?.toString()) {
+
+      this.hydrateFromDefaultValue();
+
+      // let newString = newValue;
+
+      // if (newString) {
+      //   if (this.isWei) {
+      //     newString = formatEther(newString.toString());
+      //   }
+      //   if ((typeof newValue === "string") && (!newValue || (newValue as string).match(/.*\.$/))) {
+      //     newString = newValue;
+      //     // numberService.toString would return '' for anything that ends in a '.'
+      //   } else {
+      //     newString = this.numberService.toString(newValue);
+      //   }
+      // }
+      // this._innerValue = newString;
+    }
+  }
+
+  private hydrateFromDefaultValue(): void {
+    if (this.defaultvalue === undefined) {
+      this.defaultvalue = "";
+    }
+    try {
+      if (this.isWei) {
+        if (this.defaultvalue !== "") {
+          this.innerValue = formatEther(this.defaultvalue.toString());
+        } else {
+          this.innerValue = "";
+        }
+      } else {
+        this.innerValue = this.defaultvalue.toString();
+      }
+    } catch {
+      this.innerValue = "NaN";
+    }
   }
 
   public attached(): void {
     this.element.addEventListener("keydown", (e) => { this.keydown(e); });
-    /**
-     * new value coming from the outside,
-     * update input control from newValue
-     */
-    let newString: string;
-    const value = this.value;
-    if ((typeof value === "string") && (value as string).match(/.*\.$/)) {
-      newString = value;
-      // numberService.toString would return '' for anything that ends in a '.'
-    } else {
-      newString = this.numberService.toString(value);
-    }
-    this.innerValue = newString;
+    this.hydrateFromDefaultValue();
   }
 
   public detached(): void {

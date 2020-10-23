@@ -1,8 +1,8 @@
 ﻿import { autoinject } from "aurelia-framework";
-import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
+import { BigNumber } from "ethers";
 /**
- * Convert between Wei (as BigNumber) in viewmodel to eth (as string) in view.
+ * Convert between Wei (as BigNumber) in viewmodel and eth (as string) in view.
  * Note that even if the viewmodel supplies a number, modified values are saved back
  * to the viewmodel as BigNumber.
  */
@@ -10,7 +10,7 @@ import { formatEther, parseEther } from "ethers/lib/utils";
 export class EthweiValueConverter {
 
   /**
-   * ETH string to Wei BigNumber <==  NOTE you always end up with BigNumber in your model
+   * ETH string from HTML input ==> BigNumber for the model
    *
    * When the string cannot be converted to a number, this will return the original string.
    * This helps the user see the original mistake.  Validation will need to make sure that the
@@ -26,7 +26,7 @@ export class EthweiValueConverter {
   }
 
   /**
-   *  Wei BigNumber|string to ETH string
+   *  Wei BigNumber|string from model ==> ETH string in HTML input
    * @param weiValue
    */
   public toView(weiValue: BigNumber|string): string {
