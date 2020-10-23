@@ -4,3 +4,4 @@
 /.coverage_artifacts
 /coverage/
 /migrations/coverage
+.env

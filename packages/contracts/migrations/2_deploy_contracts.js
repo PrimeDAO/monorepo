@@ -14,9 +14,7 @@ const contracts = require('../contractAddresses.json');
 const fs = require("fs");
 
 module.exports = async function (deployer, network) {
-    const { toWei } = web3.utils
-
-    const primeSupply = toWei('90000000');
+    const { toWei } = web3.utils;
 
     if (network === 'kovan') {
 

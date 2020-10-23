@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const DAOstackMigration = require('@daostack/migration');
 const specs = require('./primeDAO.json');
 const contracts = require('../contractAddresses.json');

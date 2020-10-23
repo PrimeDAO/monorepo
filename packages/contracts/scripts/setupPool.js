@@ -1,7 +1,7 @@
 const CRPFactory = artifacts.require("CRPFactory");
 const ConfigurableRightsPool = artifacts.require("ConfigurableRightsPool");
 const PrimeToken = artifacts.require('PrimeToken');
-const USDC = artifacts.require('IERC20');
+const WETH = artifacts.require('WETH');
 
 const contracts = require('../contractAddresses.json');
 
@@ -12,11 +12,13 @@ module.exports = async function(callback) {
 	const MAX = web3.utils.toTwosComplement(-1);
 
 	// pool params
-	const usdcAmount = (BigInt(40000 * 1000000)).toString();
-	const swapFee = toWei('0.01') ;
-	const tokenAddresses = [contracts.kovan.PrimeToken, contracts.kovan.USDC];
+	const primeAmount = toWei('50000');
+	const wethAmount = toWei('30');
+
+	const swapFee = toWei('0.01');
+	const tokenAddresses = [contracts.kovan.PrimeToken, contracts.kovan.WETH];
 	const startWeights = [toWei('32'), toWei('8')];
-	const startBalances = [toWei('500000'), usdcAmount];
+	const startBalances = [primeAmount, wethAmount];
 	const SYMBOL = 'BPOOL';
 	const NAME = 'Prime Balancer Pool Token';
 	const bPrimeAmount = toWei('10000');
@@ -39,7 +41,7 @@ module.exports = async function(callback) {
 	};
 
 	const prime = await PrimeToken.at(contracts.kovan.PrimeToken);
-	const usdc = await USDC.at(contracts.kovan.USDC);
+	const weth = await WETH.at(contracts.kovan.WETH);
 
 	const crpFactory = await CRPFactory.at(contracts.kovan.CRPFactory);
 
@@ -63,7 +65,7 @@ module.exports = async function(callback) {
 
 	await console.log("***   Approving tokens for public swapping");
 
-	await usdc.approve(POOL, MAX);
+	await weth.approve(POOL, MAX);
 	await prime.approve(POOL, MAX);
 
 	await console.log("***   Success");
@@ -73,6 +75,11 @@ module.exports = async function(callback) {
 	await pool.createPool(bPrimeAmount);
 
 	await console.log("***   Success");
+
+	await console.log("***   Configurable Rights Pool address:");
+	await console.log(pool.address);
+	await console.log("***   Balancer Pool address:");
+	await console.log(await pool.bPool());
 
 	contracts.kovan.ConfigurableRightsPool = pool.address;
 	contracts.kovan.BPool = await pool.bPool();
