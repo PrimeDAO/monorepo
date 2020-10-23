@@ -17,6 +17,10 @@ module.exports = async function (deployer, network) {
     const { toWei } = web3.utils
 
     const primeSupply = toWei('90000000');
+    const primeMultisig = "0x478967d3286D380B3f6cf3253719F647c8092854";
+
+    await deployer.deploy(PrimeToken, primeSupply, primeSupply, primeMultisig);
+
 
     if (network === 'kovan') {
 
