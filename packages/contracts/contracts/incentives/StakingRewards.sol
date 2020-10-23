@@ -84,13 +84,13 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
 
         rewardToken  = IERC20(_rewardToken);
         stakingToken = IERC20(_stakingToken);
-        rewardDistribution = msg.sender;
         initreward = _initreward;
         starttime = _starttime;
         DURATION = (_duration * 24 hours);
+
+        rewardDistribution = msg.sender;
     }
 
-    // uint256 public constant DURATION = 7 days;
     uint256 public DURATION;
 
     uint256 public initreward;

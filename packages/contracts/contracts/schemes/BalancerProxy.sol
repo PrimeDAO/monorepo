@@ -109,7 +109,7 @@ contract BalancerProxy {
     /**
       * @dev                     Sets the new weights that are going to be gradually ipdated.
       * @param token             Address of a token
-      * @param newWeight         Start block for the update
+      * @param newWeight         New weight
       */
     function updateWeight(address token, uint newWeight) external protected {
         _updateWeight(token, newWeight);
@@ -204,7 +204,7 @@ contract BalancerProxy {
 
     function _updateWeightsGradually(
         uint[] memory _newWeights,
-        uint _startBlock, 
+        uint _startBlock,
         uint _endBlock
     )
     internal
