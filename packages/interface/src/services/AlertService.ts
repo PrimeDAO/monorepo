@@ -27,16 +27,17 @@ export class AlertService {
   }
 
   private handleException(config: EventConfigException | any) {
+    let ex: any;
     let message: string;
     if (!(config instanceof EventConfigException)) {
-      const ex = config as any;
-      message = `${ex.message ? ex.message : ex}`;
+      // then config is the exception itself
+      ex = config as any;
     } else {
-      config = config as EventConfigException;
+      ex = config.exception;
       message = config.message;
     }
 
-    this.dialogService.alert(message);
+    this.dialogService.alert(`${message ? `${message}: ` : ""}${ex.reason ?? ex.message ?? ex}`);
   }
 
   private handleFailure(config: EventConfig | string) {

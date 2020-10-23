@@ -7,7 +7,6 @@ import { concatMap } from "rxjs/operators";
 import { AureliaHelperService } from "services/AureliaHelperService";
 import { DisposableCollection } from "services/DisposableCollection";
 import "./banner.scss";
-import { TransactionReceipt } from "services/TransactionsService";
 import { Utils } from "services/utils";
 
 @containerless
@@ -129,13 +128,17 @@ export class Banner {
       return;
     }
 
+    let ex: any;
+    let message: string;
     if (!(config instanceof EventConfigException)) {
       // then config is the exception itself
-      const ex = config as any;
-      config = { message: `${ex.reason ?? ex.message ?? ex}` } as any;
+      ex = config as any;
+    } else {
+      ex = config.exception;
+      message = config.message;
     }
 
-    this.queueEventConfig({ message: config.message, type: EventMessageType.Exception });
+    this.queueEventConfig({ message: `${message ? `${message}: ` : ""}${ex.reason ?? ex.message ?? ex}`, type: EventMessageType.Exception });
   }
 
   private handleFailure(config: EventConfig | string): void {

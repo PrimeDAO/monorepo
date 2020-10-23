@@ -6,6 +6,7 @@ import { EventAggregator } from "aurelia-event-aggregator";
 import TransactionsService from "services/TransactionsService";
 import { Address, EthereumService } from "services/EthereumService";
 import { BigNumber } from "ethers";
+import { EventConfigException } from "services/GeneralEvents";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -59,15 +60,20 @@ export class Dashboard {
 
     this.eventAggregator.subscribe("Network.Changed.Account", async (account: Address) => {
       if (account) {
-        this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
-        this.bPool = await this.contractsService.getContractFor(ContractNames.BPOOL);
-        // this.bPoolAddress = await crPool.bPool();
-        this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
-        this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
-        this.usdcToken = await this.contractsService.getContractFor(ContractNames.USDC);
-        this.liquidityBalance = await this.bPool.getBalance(account);
+        try {
+          this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
+          this.bPool = await this.contractsService.getContractFor(ContractNames.BPOOL);
+          // this.bPoolAddress = await crPool.bPool();
+          this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
+          this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
+          this.usdcToken = await this.contractsService.getContractFor(ContractNames.USDC);
+          this.liquidityBalance = (await this.bPool.getBalance(this.weth.address))
+            .add(await this.bPool.getBalance(this.usdcToken));
+          this.connected = true;
+        } catch (ex) {
+          this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
+        }
 
-        this.connected = true;
       } else {
         this.connected = false;
       }
