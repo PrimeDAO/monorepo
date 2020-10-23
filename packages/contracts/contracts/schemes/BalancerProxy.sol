@@ -17,6 +17,7 @@ contract BalancerProxy {
     string constant ADD_TOKEN                = "BalancerProxy: addToken failed";
     string constant REMOVE_TOKEN             = "BalancerProxy: removeToken failed";
     string constant UPDATE_WEIGHTS_GRADUALLY = "BalancerProxy: updateWeightsGradually failed";
+    string constant UPDATE_WEIGHT            = "BalancerProxy: updateWeight failed";
     string constant ERROR_APPROVAL           = "BalancerProxy: ERC20 approval failed";
     string constant JOIN_POOL                = "BalancerProxy: JoinPool failed";
     string constant EXIT_POOL                = "BalancerProxy: ExitPool failed";
@@ -198,17 +199,11 @@ contract BalancerProxy {
             avatar,
             0
         );
-        require(success, ERROR_SET_SWAP_FEE);
+        require(success, UPDATE_WEIGHT);
         emit UpdateWeight(_token, _newWeight);
     }
 
-    function _updateWeightsGradually(
-        uint[] memory _newWeights,
-        uint _startBlock,
-        uint _endBlock
-    )
-    internal
-    {
+    function _updateWeightsGradually(uint[] memory _newWeights, uint _startBlock, uint _endBlock) internal {
         bool             success;
         Controller controller = Controller(avatar.owner());
 
