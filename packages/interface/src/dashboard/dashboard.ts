@@ -44,7 +44,7 @@ export class Dashboard {
   private crPool: any;
   private bPool: any;
   private primeToken: any;
-  private usdcToken: any;
+  // private usdcToken: any;
   private connected = false;
   private onOff=false;
   private liquidityBalance: BigNumber;
@@ -66,10 +66,11 @@ export class Dashboard {
           // this.bPoolAddress = await crPool.bPool();
           this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
           this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
-          this.usdcToken = await this.contractsService.getContractFor(ContractNames.USDC);
+          // this.usdcToken = await this.contractsService.getContractFor(ContractNames.USDC);
           this.liquidityBalance = (await this.bPool.getBalance(this.weth.address))
-            .add(await this.bPool.getBalance(this.usdcToken));
+            .add(await this.bPool.getBalance(this.primeToken));
           this.connected = true;
+          // TODO: fully revert the connection
         } catch (ex) {
           this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
         }
