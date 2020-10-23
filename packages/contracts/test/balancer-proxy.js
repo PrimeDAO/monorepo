@@ -36,12 +36,15 @@ contract('BalancerProxy', (accounts) => {
     let swapFee;
     let blockNumber;
     let newWeights;
+    let newWeight;
     let startBLock;
     let endBlock;
     let poolAmountOut;
     let poolAmountIn;
     let maxAmountsIn;
     let minAmountsOut;
+    let badAmountsIn;
+    let badAmountsOut;
 
     before('!! deploy setup', async () => {
         setup = await deploy(accounts);
@@ -236,7 +239,7 @@ contract('BalancerProxy', (accounts) => {
                         const _tx = await setup.primeDAO.poolManager.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                         const proposalId = helpers.getNewProposalId(_tx);
                         const tx = await  setup.primeDAO.poolManager.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
-  
+
                         setup.data.tx = tx;
                         await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'ApplyAddToken');
                     });
@@ -259,7 +262,7 @@ contract('BalancerProxy', (accounts) => {
                                 const _tx = await setup.primeDAO.poolManager.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                                 const proposalId = helpers.getNewProposalId(_tx);
                                 const tx = await  setup.primeDAO.poolManager.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
-    
+
                                 setup.data.tx = tx;
                                 await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'RemoveToken');
                             });
@@ -286,6 +289,29 @@ contract('BalancerProxy', (accounts) => {
                 startBLock = blockNumber.toNumber()+100;
                 endBlock = startBLock + 250;
             });
+            context('» proxy is not initialized', () => {
+                before('!! deploy proxy', async () => {
+                    setup.data.proxy = await BalancerProxy.new();
+                });
+                it('it reverts', async () => {
+                    await expectRevert(
+                        setup.data.proxy.updateWeightsGradually(newWeights, startBLock, endBlock),
+                        'BalancerProxy: proxy not initialized'
+                    );
+                });
+            });
+            context('» not called by avatar', () => {
+                before('!! deploy and initialize proxy', async () => {
+                    setup.data.proxy = await BalancerProxy.new();
+                    await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+                });
+                it('it reverts', async () => {
+                    await expectRevert(
+                        setup.data.proxy.updateWeightsGradually(newWeights, startBLock, endBlock, { from: accounts[1] }),
+                        'BalancerProxy: protected operation'
+                    );
+                });
+            });
             context('» call updateWeightsGradually', () => {
                 before('!! deploy and initialize proxy', async () => {
                     setup.data.proxy = await BalancerProxy.new();
@@ -300,6 +326,86 @@ contract('BalancerProxy', (accounts) => {
                     setup.data.tx = tx;
 
                     await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'UpdateWeightsGradually');
+                });
+            });
+        });
+    });
+    context('# updateWeight', async () => {
+        context('» generics', () => {
+            before('!! deploy setup', async () => {
+                setup = await deploy(accounts);
+                newWeight = toWei('2');
+            });
+            context('» proxy is not initialized', () => {
+                before('!! deploy proxy', async () => {
+                    setup.data.proxy = await BalancerProxy.new();
+                });
+                it('it reverts', async () => {
+                    await expectRevert(
+                        setup.data.proxy.updateWeight(setup.balancer.pool.address, newWeight),
+                        'BalancerProxy: proxy not initialized'
+                    );
+                });
+            });
+            context('» not called by avatar', () => {
+                before('!! deploy and initialize proxy', async () => {
+                    setup.data.proxy = await BalancerProxy.new();
+                    await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+                });
+                it('it reverts', async () => {
+                    await expectRevert(
+                        setup.data.proxy.updateWeight(setup.balancer.pool.address, newWeight, { from: accounts[1]} ),
+                        'BalancerProxy: protected operation'
+                    );
+                });
+            });
+            context.skip('» updateWeight', async () => {
+
+            });
+        });
+    });
+    context('# joinPool => exitPool: token require statement checks', () => {
+        context(' generics', () => {
+            before('!! deploy setup', async () => {
+                setup = await deploy(accounts);
+                poolAmountOut = toWei('500');
+                poolAmountIn = toWei('250');
+                maxAmountsIn = [toWei('7000'), toWei('3000'), toWei('3000')];
+                minAmountsOut = [toWei('2000'), toWei('1000'), toWei('1000')];
+                badAmountsIn = [toWei('7000'), toWei('3000')];
+                badAmountsOut = [toWei('2000'), toWei('1000')];
+            });
+            context('» joinPool: not enough tokens', () => {
+                before('!! deploy and initialize proxy, transfer tokens', async () => {
+                    setup.data.proxy = await BalancerProxy.new();
+                    await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+                    await setup.tokens.primeToken.transfer(setup.organization.avatar.address, maxAmountsIn[0]);
+                    await setup.tokens.erc20s[0].transfer(setup.organization.avatar.address, maxAmountsIn[1]);
+                    await setup.tokens.erc20s[1].transfer(setup.organization.avatar.address, maxAmountsIn[2]);
+                });
+                it('reverts', async () => {
+                    await expectRevert(
+                        setup.data.proxy.joinPool(poolAmountOut, badAmountsIn, { from: setup.organization.avatar.address }),
+                        "BalancerProxy: token amounts array length doesn't match"
+                    );
+                });
+            });
+            context('» exitPool: not enough tokens', () => {
+                before('!! joinpool', async () => {
+                    const calldata = helpers.encodeJoinPool(poolAmountOut, maxAmountsIn);
+                    const _tx = await setup.primeDAO.poolManager.proposeCall(calldata, 0, constants.ZERO_BYTES32);
+                    const proposalId = helpers.getNewProposalId(_tx);
+                    const tx = await  setup.primeDAO.poolManager.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
+                    // store data
+                    setup.data.tx = tx;
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'JoinPool');
+                    expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountOut);
+                });
+                it('reverts', async () => {
+                    await expectRevert(
+                        setup.data.proxy.exitPool(poolAmountIn, badAmountsOut, { from: setup.organization.avatar.address }),
+                        "BalancerProxy: token amounts array length doesn't match"
+                    );
                 });
             });
         });
