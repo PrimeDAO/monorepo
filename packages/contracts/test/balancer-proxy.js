@@ -334,7 +334,7 @@ contract('BalancerProxy', (accounts) => {
         context('» generics', () => {
             before('!! deploy setup', async () => {
                 setup = await deploy(accounts);
-                newWeight = toWei('2');
+                newWeight = toWei('3');
             });
             context('» proxy is not initialized', () => {
                 before('!! deploy proxy', async () => {
@@ -354,13 +354,16 @@ contract('BalancerProxy', (accounts) => {
                 });
                 it('it reverts', async () => {
                     await expectRevert(
-                        setup.data.proxy.updateWeight(setup.balancer.pool.address, newWeight, { from: accounts[1]} ),
+                        setup.data.proxy.updateWeight(setup.balancer.pool.address, newWeight, { from: accounts[1] }),
                         'BalancerProxy: protected operation'
                     );
                 });
             });
-            context.skip('» updateWeight', async () => {
-
+            context('» updateWeight', async () => {
+                it('updates weight', async () => {
+                    await setup.data.proxy.updateWeight(setup.balancer.pool.address, newWeight, { from: setup.organization.avatar.address });
+                });
+                // check balances 
             });
         });
     });
