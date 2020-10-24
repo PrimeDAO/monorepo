@@ -103,14 +103,6 @@ export class Dashboard {
     this.defaultWethEthAmount = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
   }
 
-  // private async setMaxWeth() {
-  //   if (this.maxWeth) {
-  //     this.getDefaultWethEthAmount();
-  //   } else {
-  //     this.defaultWethEthAmount = "";
-  //   }
-  // }
-
   private async handleDeposit() {
     await this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
     this.getDefaultWethEthAmount();
