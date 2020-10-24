@@ -1,6 +1,7 @@
 import { EventAggregator } from "aurelia-event-aggregator";
 import { EventConfigException } from "services/GeneralEvents";
 import "./styles/styles.scss";
+
 export class App {
   constructor (private eventAggregator: EventAggregator) { }
 

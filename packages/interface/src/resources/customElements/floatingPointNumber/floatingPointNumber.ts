@@ -2,8 +2,10 @@ import {
   autoinject,
   bindable,
   bindingMode,
+  computedFrom,
 } from "aurelia-framework";
 import { NumberService } from "services/numberService";
+import tippy from "tippy.js";
 
 @autoinject
 export class FloatingPointNumber {
@@ -19,7 +21,7 @@ export class FloatingPointNumber {
    */
   @bindable({ defaultBindingMode: bindingMode.toView }) public exponentialAt: number | [number, number] = [-4, 20];
   @bindable({ defaultBindingMode: bindingMode.toView }) public value: number | string;
-  // @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
+  @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
 
   private text: string;
   private textElement: HTMLElement;
@@ -74,30 +76,28 @@ export class FloatingPointNumber {
 
     this.text = text;
 
-    // this.setTooltip();
+    this.setTooltip();
   }
 
-  // public attached(): void {
-  //   this.setTooltip();
-  // }
+  public attached(): void {
+    this.setTooltip();
+  }
 
   // public detached(): void {
-  //   ($(this.textElement) as any).tooltip("dispose");
+  //   tippy(this.textElement, "dispose");
   // }
 
-  // TODO: implement tooltip
+  @computedFrom("_value")
+  private get tooltip():string {
+    return this._value.toString(10);
+  }
 
-  // private setTooltip() {
-  //   if (this.textElement && this.text) {
-  //     ($(this.textElement) as any).tooltip("dispose");
-  //     ($(this.textElement) as any).tooltip(
-  //       {
-  //         placement: this.placement,
-  //         title: this._value.toString(10),
-  //         toggle: "tooltip",
-  //         trigger: "hover",
-  //       },
-  //     );
-  //   }
-  // }
+  private setTooltip() {
+    if (this.textElement && this.text) {
+      // tippy(this.textElement, "dispose");
+      tippy(this.textElement, {
+        appendTo: () => document.body, // because is "interactive" and otherwise messes with the layout on hover
+      });
+    }
+  }
 }

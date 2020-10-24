@@ -9,8 +9,9 @@
           ? ' confirming' : '')">
           <div class="phase">${txPhase}</div><i class="spinner fas fa-circle-notch fa-spin"></i>
         </div>
-        <etherscanlink else address.to-view="accountAddress" text.to-view="accountAddress | smallHexString">
-        </etherscanlink>
+        <etherscanlink else
+          address.to-view="accountAddress"
+          text.to-view="accountAddress | smallHexString"></etherscanlink>
       </div>
     </div>
     <div else class="connectButton" click.delegate="onConnect()">Lock a Wallet</div>

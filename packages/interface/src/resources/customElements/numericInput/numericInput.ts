@@ -13,7 +13,6 @@ export class NumericInput {
 
   @bindable({ defaultBindingMode: bindingMode.oneTime }) public decimal = true;
   @bindable({ defaultBindingMode: bindingMode.toView }) public css?: string;
-  @bindable({ defaultBindingMode: bindingMode.oneTime }) public title = "";
   @bindable({ defaultBindingMode: bindingMode.oneTime }) public id?: string;
   /**
    * set this to initialize the value to display in the input.
@@ -31,7 +30,7 @@ export class NumericInput {
    * if true then value is converted from wei to eth for editing
    */
   @bindable({ defaultBindingMode: bindingMode.oneTime }) public isWei?: boolean = true;
-  // TODO: make this work properly when typing over it @bindable public placeholder = "";
+  @bindable public placeholder = "";
 
   private element: HTMLInputElement;
 

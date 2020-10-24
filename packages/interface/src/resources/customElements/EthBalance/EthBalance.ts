@@ -1,5 +1,5 @@
 import { EventAggregator } from "aurelia-event-aggregator";
-import { autoinject, containerless, customElement } from "aurelia-framework";
+import { autoinject, containerless, customElement, bindable, bindingMode } from "aurelia-framework";
 import { DisposableCollection } from "services/DisposableCollection";
 import { EthereumService } from "services/EthereumService";
 import { BigNumber } from "ethers";
@@ -8,7 +8,7 @@ import { BigNumber } from "ethers";
 @containerless
 @customElement("ethbalance")
 export class EthBalance {
-  // @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
+  @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
 
   private balance: BigNumber = null;
   private subscriptions = new DisposableCollection();

@@ -17,23 +17,24 @@
 
             <div class="class">
               <div class="class">
-                <div class="class">ETH &RightArrow; WETH</div>
                 <div class="class">
-                  <div class="class">
-                    <numeric-input id="ethWethAmount" value.two-way="ethWethAmount">
-                    </numeric-input>
-                  </div>
-                  <button click.delegate="handleDeposit()">Wrap</button>
+                  <label for="ethWethAmount">ETH &RightArrow; WETH</label>
+                  <numeric-input id="ethWethAmount"
+                    value.two-way="ethWethAmount"
+                    placeholder="0.0"></numeric-input>
                 </div>
+                <button click.delegate="handleDeposit()">Wrap</button>
               </div>
 
               <div class="class">
-                <div class="class">WETH &RightArrow; ETH</div>
                 <div class="class">
+                  <label><input type="checkbox" checked.bind="maxWeth" change.delegate="setMaxWeth()">Max</label>
                   <div class="class">
-                    <label><input type="checkbox" checked.bind="maxWeth" change.delegate="setMaxWeth()">Max</label>
-                    <numeric-input id="wethEthAmount" defaultvalue.to-view="defaultWethEthAmount" value.two-way="wethEthAmount">
-                    </numeric-input>
+                    <label for="wethEthAmount">WETH &RightArrow; ETH</label>
+                    <numeric-input id="wethEthAmount"
+                      defaultvalue.to-view="defaultWethEthAmount"
+                      value.two-way="wethEthAmount"
+                      placeholder="0.0"></numeric-input>
                   </div>
                   <button click.delegate="handleWithdraw()">Unwrap</button>
                 </div>
