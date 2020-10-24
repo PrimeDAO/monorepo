@@ -69,6 +69,7 @@ export class Dashboard {
           // this.usdcToken = await this.contractsService.getContractFor(ContractNames.USDC);
           // this.liquidityBalance = (await this.bPool.getBalance(this.weth.address))
           //   .add(await this.bPool.getBalance(this.primeToken));
+          await this.getDefaultWethEthAmount();
           this.connected = true;
           // TODO: fully revert the connection
         } catch (ex) {
@@ -98,19 +99,25 @@ export class Dashboard {
   private wethEthAmount: BigNumber | string;
   private defaultWethEthAmount: BigNumber | string;
 
-  private async setMaxWeth() {
-    if (this.maxWeth) {
-      this.defaultWethEthAmount = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
-    } else {
-      this.defaultWethEthAmount = "";
-    }
+  private async getDefaultWethEthAmount(): Promise<void> {
+    this.defaultWethEthAmount = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
   }
 
-  private handleDeposit() {
-    this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
+  // private async setMaxWeth() {
+  //   if (this.maxWeth) {
+  //     this.getDefaultWethEthAmount();
+  //   } else {
+  //     this.defaultWethEthAmount = "";
+  //   }
+  // }
+
+  private async handleDeposit() {
+    await this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
+    this.getDefaultWethEthAmount();
   }
 
   private async handleWithdraw() {
-    this.transactionsService.send(() => this.weth.withdraw(this.wethEthAmount));
+    await this.transactionsService.send(() => this.weth.withdraw(this.wethEthAmount));
+    this.getDefaultWethEthAmount();
   }
 }

@@ -23,20 +23,20 @@
                     value.two-way="ethWethAmount"
                     placeholder="0.0"></numeric-input>
                 </div>
-                <button click.delegate="handleDeposit()">Wrap</button>
+                <button disabled.to-view="!ethWethAmount || ethWethAmount.eq(0)" click.delegate="handleDeposit()">Wrap</button>
               </div>
 
               <div class="class">
                 <div class="class">
-                  <label><input type="checkbox" checked.bind="maxWeth" change.delegate="setMaxWeth()">Max</label>
+                  <label if.to-view="defaultWethEthAmount.gt(0)"><input type="checkbox" checked.bind="maxWeth">Max</label>
                   <div class="class">
                     <label for="wethEthAmount">WETH &RightArrow; ETH</label>
                     <numeric-input id="wethEthAmount"
-                      defaultvalue.to-view="defaultWethEthAmount"
+                      defaultvalue.to-view="maxWeth ? defaultWethEthAmount : undefined"
                       value.two-way="wethEthAmount"
                       placeholder="0.0"></numeric-input>
                   </div>
-                  <button click.delegate="handleWithdraw()">Unwrap</button>
+                  <button disabled.to-view="!wethEthAmount || wethEthAmount.eq(0)" click.delegate="handleWithdraw()">Unwrap</button>
                 </div>
               </div>
             </div>
