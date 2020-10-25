@@ -85,9 +85,7 @@ export class Dashboard {
           this.poolshare = (await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress))
             .div(await this.crPool.totalSupply());
 
-          this.currentAPY = await this.stakingRewards.rewardPerTokenStored();
-
-          this.primeFarmed = await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress);
+          await this.getStakingAmounts();
 
           await this.getDefaultWethEthAmount();
 
@@ -124,6 +122,11 @@ export class Dashboard {
     this.defaultWethEthAmount = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
   }
 
+  private async getStakingAmounts() {
+    this.currentAPY = await this.stakingRewards.rewardPerTokenStored();
+    this.primeFarmed = await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress);
+  }
+
   private async handleDeposit() {
     await this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
     this.getDefaultWethEthAmount();
@@ -132,5 +135,22 @@ export class Dashboard {
   private async handleWithdraw() {
     await this.transactionsService.send(() => this.weth.withdraw(this.wethEthAmount));
     this.getDefaultWethEthAmount();
+  }
+
+  private stakeAmount: BigNumber | string;
+
+  private async handleStakeBPrime() {
+    await this.transactionsService.send(() => this.stakingRewards.stake(this.stakeAmount));
+    this.getStakingAmounts();
+  }
+
+  private async handleHarvestYield() {
+    await this.transactionsService.send(() => this.stakingRewards.getReward());
+    this.getStakingAmounts();
+  }
+
+  private async handleHarvestWithdraw() {
+    await this.transactionsService.send(() => this.stakingRewards.exit());
+    this.getStakingAmounts();
   }
 }
