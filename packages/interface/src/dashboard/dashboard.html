@@ -55,7 +55,7 @@
               <div class="label">Liquidity</div>
               <div class="value">
                 <!-- TODO: get dollars and convert to millions or whatever -->
-                <floating-point-number class="balance" value.to-view="liquidityBalance | ethwei" precision="8"
+                $<floating-point-number class="balance" value.to-view="liquidityBalance | ethwei" precision="8"
                   placement.to-view="top"></floating-point-number>
               </div>
 
@@ -64,7 +64,7 @@
               <div class="label">Volume (24hr)</div>
               <div class="value">
                 <!-- TODO: get dollars and convert to millions or whatever -->
-                <floating-point-number class="volume" value.to-view="volume | ethwei" precision="8"
+                $<floating-point-number class="volume" value.to-view="volume | ethwei" precision="8"
                   placement.to-view="top"></floating-point-number>
               </div>
             </div>
@@ -83,21 +83,25 @@
               </div>
             </div>
             <div class="visitBalancer">Visit the Prime Liquidity Pool on Balancer for more pool information</div>
-            <div class="addLiquidity">Add Liquidity</div>
-            <div class="removeLiquidity">Remove Liquidity</div>
+
+            <div class="liquidityButtons" if.to-view="connected">
+              <button class="addLiquidity">Add Liquidity</button>
+              <button class="removeLiquidity">Remove Liquidity</button>
+            </div>
             <div class="class">Stake your BPRIME tokens to the Prime Liquidity Pool to earn more PRIME tokens.</div>
             <div class="currentAPY">
               <div class="label">Current APY ${currentAPY}%</div>
               <div class="value"></div>
             </div>
             <div class="primeFarmed">You've farmed ${primeFarmed} PRIME!</div>
-            <div class="stakeBPrime">Stake BPRIME tokens</div>
-            <div class="harvestYield">Harvest Yield</div>
+            <div class="stakingButtons" if.to-view="connected">
+              <button class="stakeBPrime">Stake BPRIME tokens</button>
+              <button class="harvestYield">Harvest Yield</button>
+              <button class="harvestYield">Harvest and Withdraw</button>
+            </div>
           </div>
         </div>
-        <div class="governors">
-          <div class="heading">Governors</div>
-        </div>
+      </div>
     </modalscreen>
   </div>
 </template>
