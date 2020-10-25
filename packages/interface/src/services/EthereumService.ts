@@ -15,7 +15,7 @@ interface IEIP1193 {
   on(eventName: "disconnect", handler: (error: { code: number; message: string }) => void);
 }
 
-export type AllowedNetworks = "mainnet" | "kovan";
+export type AllowedNetworks = "mainnet" | "kovan" | "rinkeby";
 
 export enum Networks {
   Mainnet = "mainnet",
@@ -96,7 +96,7 @@ export class EthereumService {
 
   private chainNameById = new Map<number, AllowedNetworks>([
     [1, Networks.Mainnet],
-    // [4, Networks.Rinkeby],
+    [4, Networks.Rinkeby],
     [42, Networks.Kovan],
   ]);
 
@@ -150,13 +150,14 @@ export class EthereumService {
   }
 
   /**
+   * signer or address
+   */
+  private defaultAccount: Signer | Address;
+
+  /**
    * provided by ethers given provider from Web3Modal
    */
   public walletProvider: Web3Provider;
-  /**
-   * signer or address
-   */
-  public defaultAccount: Signer | Address;
   public defaultAccountAddress: Address;
 
   public async connect(network = Networks.Mainnet): Promise<void> {
@@ -199,7 +200,7 @@ export class EthereumService {
         this.fireAccountsChangedHandler(accounts?.[0]);
       });
 
-      // since we are limited to a single network, I don't think this can every happen
+      // since we are limited to a single network, I don't think this can ever happen
       // this.web3ModalProvider.on("chainChanged", (chainId: number) => {
       //   const chainName = this.chainNameById.get(chainId);
       //   if (chainName !== EthereumService.targetedNetwork) {

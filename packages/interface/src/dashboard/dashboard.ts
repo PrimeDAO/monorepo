@@ -1,4 +1,4 @@
-import { autoinject, computedFrom } from "aurelia-framework";
+import { autoinject } from "aurelia-framework";
 import { ContractNames } from "services/ContractsService";
 import { ContractsService } from "services/ContractsService";
 import "./dashboard.scss";
@@ -43,11 +43,17 @@ export class Dashboard {
   private weth: any;
   private crPool: any;
   private bPool: any;
+  private stakingRewards: any;
   private primeToken: any;
   // private usdcToken: any;
   private connected = false;
   private onOff=false;
   private liquidityBalance: BigNumber;
+  private volume: BigNumber;
+  private swapfee: string;
+  private poolshare: BigNumber;
+  private currentAPY: BigNumber;
+  private primeFarmed: BigNumber;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -63,13 +69,28 @@ export class Dashboard {
         try {
           this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
           this.bPool = await this.contractsService.getContractFor(ContractNames.BPOOL);
+          this.stakingRewards = await this.contractsService.getContractFor(ContractNames.STAKINGREWARDS);
           // this.bPoolAddress = await crPool.bPool();
           this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
           this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
-          // this.usdcToken = await this.contractsService.getContractFor(ContractNames.USDC);
-          // this.liquidityBalance = (await this.bPool.getBalance(this.weth.address))
+
+          this.liquidityBalance = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))
+            .add(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
+
+          // this.volume = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))
           //   .add(await this.bPool.getBalance(this.primeToken));
+
+          this.swapfee = await this.bPool.getSwapFee();
+
+          this.poolshare = (await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress))
+            .div(await this.crPool.totalSupply());
+
+          this.currentAPY = await this.stakingRewards.rewardPerTokenStored();
+
+          this.primeFarmed = await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress);
+
           await this.getDefaultWethEthAmount();
+
           this.connected = true;
           // TODO: fully revert the connection
         } catch (ex) {

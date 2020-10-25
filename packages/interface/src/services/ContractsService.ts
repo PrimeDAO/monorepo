@@ -7,14 +7,16 @@ const ContractAddresses = require("../contracts/contractAddresses.json") as INet
 const ConfigurableRightsPoolABI = require("../contracts/ConfigurableRightsPool.json");
 const WETHABI = require("../contracts/WETH.json");
 const BPOOL = require("../contracts/BPool.json");
+const STAKINGREWARDS = require("../contracts/StakingRewards.json");
 const ERC20ABI = require("../contracts/ERC20.json");
 
 export enum ContractNames {
   ConfigurableRightsPool = "ConfigurableRightsPool"
   , BPOOL = "BPool"
   , WETH = "WETH"
-  , PRIMETOKEN = "PRIMETOKEN"
+  , PRIMETOKEN = "PrimeToken"
   , USDC = "USDC"
+  , STAKINGREWARDS = "StakingRewards"
   ,
 }
 
@@ -29,6 +31,7 @@ export class ContractsService {
     [
       [ContractNames.ConfigurableRightsPool, ConfigurableRightsPoolABI.abi]
       , [ContractNames.BPOOL, BPOOL.abi]
+      , [ContractNames.STAKINGREWARDS, STAKINGREWARDS.abi]
       , [ContractNames.WETH, WETHABI.abi]
       , [ContractNames.PRIMETOKEN, ERC20ABI.abi]
       , [ContractNames.USDC, ERC20ABI.abi]
@@ -39,6 +42,7 @@ export class ContractsService {
   private static Contracts = new Map<ContractNames, Contract>([
     [ContractNames.ConfigurableRightsPool, null]
     , [ContractNames.BPOOL, null]
+    , [ContractNames.STAKINGREWARDS, null]
     , [ContractNames.WETH, null]
     , [ContractNames.PRIMETOKEN, null]
     , [ContractNames.USDC, null]
@@ -91,6 +95,7 @@ export class ContractsService {
     const account = this.accountAddress;
     const networkInfo = this.networkInfo;
 
+    // TODO: check whether `new ethers.Contract` really needs `account`, so we can use these countracts before there is a locked account
     if (networkInfo.provider && account) {
       ContractsService.Contracts.forEach((_value, key) => {
         if (Signer.isSigner(account)) {
@@ -112,5 +117,11 @@ export class ContractsService {
   public async getContractFor(contractName: ContractNames): Promise<any> {
     await this.assertContracts();
     return ContractsService.Contracts.get(contractName);
+  }
+
+  public getContractAddress(contractName: ContractNames): Address {
+    return ContractAddresses[this.networkInfo.chainName][contractName];
+    // const contract = ContractsService.Contracts.get(contractName);
+    // return contract.address || await contract.signer.getAddress();
   }
 }
