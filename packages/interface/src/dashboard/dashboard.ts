@@ -7,6 +7,8 @@ import TransactionsService from "services/TransactionsService";
 import { Address, EthereumService } from "services/EthereumService";
 import { BigNumber } from "ethers";
 import { EventConfigException } from "services/GeneralEvents";
+import { DialogService } from "services/DialogService";
+import { Liquidity } from "resources/dialogs/liquidity/liquidity";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -59,7 +61,8 @@ export class Dashboard {
     private eventAggregator: EventAggregator,
     private contractsService: ContractsService,
     private ethereumService: EthereumService,
-    private transactionsService: TransactionsService) {
+    private transactionsService: TransactionsService,
+    private dialogService: DialogService) {
   }
 
   protected async attached(): Promise<void> {
@@ -132,6 +135,9 @@ export class Dashboard {
     this.primeFarmed = await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress);
   }
 
+  /**
+   * TODO: call getDefaultWethEthAmount and getStakingAmounts after tx has been mined
+   */
   private async handleDeposit() {
     await this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
     this.getDefaultWethEthAmount();
@@ -157,5 +163,10 @@ export class Dashboard {
   private async handleHarvestWithdraw() {
     await this.transactionsService.send(() => this.stakingRewards.exit());
     this.getStakingAmounts();
+  }
+
+  private handleAddLiquidity() {
+    return this.dialogService.open(Liquidity, { }, { keyboard: true });
+    // DialogOpenPromise<DialogCancellableOpenResult>
   }
 }

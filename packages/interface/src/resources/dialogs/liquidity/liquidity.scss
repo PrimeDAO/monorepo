@@ -1,0 +1,21 @@
+ux-dialog.dialog.liquidity {
+  > ux-dialog-header {
+    display: flex;
+
+    .title {
+      flex-grow: 2;
+    }
+
+    .close {
+      flex-shrink: 2;
+      cursor: pointer;
+      border: none;
+      font-size: 18px;
+      padding: 0;
+    }
+  }
+
+  ux-dialog-body {
+    display: grid;
+  }
+}

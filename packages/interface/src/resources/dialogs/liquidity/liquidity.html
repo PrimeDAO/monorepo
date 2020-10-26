@@ -1,0 +1,24 @@
+<template>
+  <ux-dialog class="dialog liquidity">
+    <ux-dialog-header>
+      <div class="title">${ model.falsy ? "Add" : "Remove" } Liquidity</div>
+      <div class="close"><button type="button" aria-label="Close" click.trigger="controller.ok()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </ux-dialog-header>
+    <ux-dialog-body>
+      <div class="tabs">
+        <div class="multi">Multi Assets</div>
+        <div class="single">Single Asset</div>
+      </div>
+      <div class="panels">
+        <div class="overview">POOL OVERVIEW</div>
+        <div class="form"></div>
+      </div>
+    </ux-dialog-body>
+    <ux-dialog-footer>
+      <button click.delegate="handleSubmit()">${ model.falsy ? "Add" : "Remove" } Liquidity</button>
+    </ux-dialog-footer>
+  </ux-dialog>
+</template>
