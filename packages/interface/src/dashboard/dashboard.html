@@ -54,18 +54,10 @@
               <div class="label">Liquidity</div>
               <div class="value">
                 <!-- TODO: get dollars and convert to millions or whatever -->
-                $<floating-point-number class="balance" value.to-view="liquidityBalance | ethwei" precision="8"
+                $<floating-point-number class="balance" value.to-view="liquidityBalance | ethwei" precision="10"
                   placement.to-view="top"></floating-point-number>
               </div>
 
-            </div>
-            <div class="volume">
-              <div class="label">Volume (24hr)</div>
-              <div class="value">
-                <!-- TODO: get dollars and convert to millions or whatever -->
-                $<floating-point-number class="volume" value.to-view="volume | ethwei" precision="8"
-                  placement.to-view="top"></floating-point-number>
-              </div>
             </div>
             <div class="swapfee">
               <div class="label">Swap fee</div>
@@ -76,10 +68,11 @@
             </div>
             <div class="poolshare">
               <div class="label">My pool share</div>
-              <div class="value">
+              <div class="value" if.to-view="connected">
                 <floating-point-number class="share" value.to-view="poolshare | ethwei" precision="4"
                   placement.to-view="top"></floating-point-number>%
               </div>
+              <div else>--</div>
             </div>
             <div class="visitBalancer">Visit the Prime Liquidity Pool on Balancer for more pool information</div>
 
@@ -89,10 +82,16 @@
             </div>
             <div class="class">Stake your BPRIME tokens to the Prime Liquidity Pool to earn more PRIME tokens.</div>
             <div class="currentAPY">
-              <div class="label">Current APY ${currentAPY}%</div>
-              <div class="value"></div>
+              <div class="label">Current APY</div>
+              <div class="value">
+                <floating-point-number class="share" value.to-view="currentAPY | ethwei" precision="4"
+                  placement.to-view="top"></floating-point-number>%
+              </div>
             </div>
-            <div class="primeFarmed">You've farmed ${primeFarmed} PRIME!</div>
+            <div class="primeFarmed">You've farmed <floating-point-number if.to-view="connected" class="share" value.to-view="primeFarmed | ethwei" precision="8"
+                placement.to-view="top"></floating-point-number>
+              <div else>--</div> PRIME!
+            </div>
             <div class="stakingButtons" if.to-view="connected">
               <button class="stakeBPrime">Stake BPRIME tokens</button>
               <button class="harvestYield">Harvest Yield</button>

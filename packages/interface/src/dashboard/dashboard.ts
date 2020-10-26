@@ -51,7 +51,6 @@ export class Dashboard {
   private connected = false;
   private onOff=false;
   private liquidityBalance: BigNumber;
-  private volume: BigNumber;
   private swapfee: string;
   private poolshare: BigNumber;
   private currentAPY: BigNumber;
@@ -84,7 +83,7 @@ export class Dashboard {
       this.onOff = false;
     });
 
-    this.initialize();
+    return this.initialize();
   }
 
   private maxWeth = false;
@@ -104,19 +103,16 @@ export class Dashboard {
       this.liquidityBalance = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))
         .add(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
 
-      // this.volume = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))
-      //   .add(await this.bPool.getBalance(this.primeToken));
-
       this.swapfee = await this.bPool.getSwapFee();
+
+      await this.getStakingAmounts();
+
+      await this.getDefaultWethEthAmount();
 
       if (account) {
 
         this.poolshare = (await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress))
           .div(await this.crPool.totalSupply());
-
-        await this.getStakingAmounts();
-
-        await this.getDefaultWethEthAmount();
 
         this.connected = true;
       // TODO: fully revert the connection
@@ -127,12 +123,13 @@ export class Dashboard {
   }
 
   private async getDefaultWethEthAmount(): Promise<void> {
-    this.defaultWethEthAmount = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
+    this.defaultWethEthAmount = this.connected ? (await this.weth.balanceOf(this.ethereumService.defaultAccountAddress)) : undefined;
   }
 
   private async getStakingAmounts() {
     this.currentAPY = await this.stakingRewards.rewardPerTokenStored();
-    this.primeFarmed = await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress);
+    this.primeFarmed = this.connected ?
+      (await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress)) : undefined;
   }
 
   /**
