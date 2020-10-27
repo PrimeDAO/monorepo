@@ -157,7 +157,7 @@ const balancer = async (setup) => {
   // deploy proxy
   const proxy = await BalancerProxy.new();
   // initialize proxy
-  await proxy.initialize(setup.organization.avatar.address, pool.address, await pool.bPool()); 
+  await proxy.initialize(setup.organization.avatar.address, pool.address, await pool.bPool());
 
   return { pool, proxy };
 };
