@@ -284,7 +284,8 @@ contract('BalancerProxy', (accounts) => {
         context('» generics', () => {
             before('!! deploy setup', async () => {
                 setup = await deploy(accounts);
-                newWeight = toWei('3');
+                newWeight = toWei('1.5');
+                token = setup.tokens.erc20s[1];
             });
             context('» proxy is not initialized', () => {
                 before('!! deploy proxy', async () => {
@@ -313,16 +314,18 @@ contract('BalancerProxy', (accounts) => {
                 before('!! deploy and initialize proxy', async () => {
                     setup.data.proxy = await BalancerProxy.new();
                     await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
+
+                    // transfer tokens to avatar 
+                    await token.transfer(setup.organization.avatar.address, toWei('10000'));
                 });
                 it('updates weight', async () => {
-                    const calldata = helpers.encodeUpdateWeight(setup.tokens.erc20s[0].address, newWeight);
+                    const calldata = helpers.encodeUpdateWeight(token.address, newWeight);
                     const _tx = await setup.primeDAO.poolManager.proposeCall(calldata, 0, constants.ZERO_BYTES32);
                     const proposalId = helpers.getNewProposalId(_tx);
                     const tx = await setup.primeDAO.poolManager.voting.absoluteVote.vote(proposalId, 1, 0, constants.ZERO_ADDRESS);
                     // store data
                     setup.data.tx = tx;
                     await expectEvent.inTransaction(setup.data.tx.tx, setup.balancer.proxy, 'UpdateWeight');
-                    expect((await setup.balancer.pool.balanceOf(setup.organization.avatar.address)).toString()).to.equal(poolAmountOut);
                 });
             });
         });

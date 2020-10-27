@@ -108,7 +108,7 @@ contract BalancerProxy {
     }
 
     /**
-      * @dev                     Sets the new weights that are going to be gradually ipdated.
+      * @dev                     Sets the new weight for the single token
       * @param token             Address of a token
       * @param newWeight         New weight
       */
@@ -117,7 +117,7 @@ contract BalancerProxy {
     }
 
     /**
-      * @dev                      Sets the new weights that are going to be gradually ipdated.
+      * @dev                      Sets the new weights that are going to be gradually updated
       * @param newWeights         New weights
       * @param startBlock         Start block for the update
       * @param endBlock           End block for the update
@@ -189,6 +189,8 @@ contract BalancerProxy {
         bool             success;
         Controller controller = Controller(avatar.owner());
 
+        // approve maximum amount of tokens
+        _approve(_token, uint256(-1));
         (success, ) = controller.genericCall(
             address(crpool),
             abi.encodeWithSelector(
@@ -199,6 +201,9 @@ contract BalancerProxy {
             avatar,
             0
         );
+        // reset allowance
+        _approve(_token, 0);
+
         require(success, UPDATE_WEIGHT);
         emit UpdateWeight(_token, _newWeight);
     }
