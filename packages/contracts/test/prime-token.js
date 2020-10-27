@@ -191,4 +191,50 @@ contract('PrimeToken', (accounts) => {
             });
         });
     });
+    context('vesting: edgecases - timestamp < _cliff', () => {
+        context('» timestamp < _cliff', async () => {
+            it('it should create a vesting contract', async () => {
+                owner = accounts[0];
+                beneficiary = accounts[1];
+                start = await time.latest();
+                let tx = await setup.vesting.factory.create(owner, beneficiary, start, 152000, setup.vesting.params.duration, setup.vesting.params.revocable);
+                setup.data.tx = tx;
+                await expectEvent.inTransaction(setup.data.tx.tx, setup.vesting.factory, 'VestingCreated');
+                vestingAddress = setup.data.tx.logs[0].args.vestingContractAddress;
+                tokenVestAmount = toWei('100000');
+                await setup.tokens.primeToken.transfer(vestingAddress, tokenVestAmount);
+                expect((await setup.tokens.primeToken.balanceOf(vestingAddress)).toString()).to.equal(tokenVestAmount.toString());
+            });
+            it('reverts', async () => {
+                console.log((await time.latest()).toString());
+                console.log(start.toNumber() + 152000); //cliff 
+                await expectRevert(
+                    vestingContract.release(setup.tokens.primeToken.address, {from: beneficiary}),
+                    "TokenVesting: no tokens are due"
+                );
+            });
+        });
+    });
+    context('vesting: edgecases - block.timestamp >= _start.add(_duration) || _revoked[address(token)]', () => {
+        context('» block.timestamp >= _start.add(_duration) || _revoked[address(token)]', async () => {
+            it('it should create a vesting contract', async () => {
+                owner = accounts[0];
+                beneficiary = accounts[1];
+                start = await time.latest();
+                let tx = await setup.vesting.factory.create(owner, beneficiary, start, 100000, setup.vesting.params.duration, setup.vesting.params.revocable);
+                setup.data.tx = tx;
+                await expectEvent.inTransaction(setup.data.tx.tx, setup.vesting.factory, 'VestingCreated');
+                vestingAddress = setup.data.tx.logs[0].args.vestingContractAddress;
+                tokenVestAmount = toWei('100000');
+                await setup.tokens.primeToken.transfer(vestingAddress, tokenVestAmount);
+                expect((await setup.tokens.primeToken.balanceOf(vestingAddress)).toString()).to.equal(tokenVestAmount.toString());
+            });
+            it('reverts', async () => {
+                await expectRevert(
+                    vestingContract.release(setup.tokens.primeToken.address, {from: beneficiary}),
+                    "TokenVesting: no tokens are due"
+                );
+            });
+        });
+    });
 });
