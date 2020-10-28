@@ -148,11 +148,10 @@ contract('PrimeToken', (accounts) => {
             it('it should release succesfully', async () => {
                 // check half time passed
                 await time.increase(setup.vesting.params.duration/2);
-                halfVested = toWei('50000');
                 let tx = await vestingContract.release(setup.tokens.primeToken.address, {from: beneficiary});
                 setup.data.tx = tx;
                 await expectEvent.inTransaction(setup.data.tx.tx, vestingContract, 'TokensReleased');
-                expect((await setup.tokens.primeToken.balanceOf(beneficiary)).toString()).to.equal(halfVested.toString());
+                expect((await setup.tokens.primeToken.balanceOf(beneficiary)).toString()).to.equal((setup.data.tx.logs[0].args.amount).toString());
             });
             it('returns vesting params: released', async () => {
                 expect((await vestingContract.released(setup.tokens.primeToken.address)).toString()).to.equal((await setup.tokens.primeToken.balanceOf(beneficiary)).toString());
@@ -174,7 +173,7 @@ contract('PrimeToken', (accounts) => {
     context('vesting: non-revokable', () => {
         context('» parameters are valid: non-revokable contract', async () => {
             it('it should create a non-revokable vesting contract', async () => {
-                owner = accounts[1];
+                owner = accounts[0];
                 beneficiary = accounts[2];
                 start = await time.latest();
                 let tx = await setup.vesting.factory.create(owner, beneficiary, start, setup.vesting.params.cliffDuration, setup.vesting.params.duration, false);
@@ -195,7 +194,7 @@ contract('PrimeToken', (accounts) => {
         context('» timestamp < _cliff', async () => {
             it('it should create a vesting contract', async () => {
                 owner = accounts[0];
-                beneficiary = accounts[1];
+                beneficiary = accounts[3];
                 start = await time.latest();
                 let tx = await setup.vesting.factory.create(owner, beneficiary, start, 152000, setup.vesting.params.duration, setup.vesting.params.revocable);
                 setup.data.tx = tx;
@@ -206,8 +205,6 @@ contract('PrimeToken', (accounts) => {
                 expect((await setup.tokens.primeToken.balanceOf(vestingAddress)).toString()).to.equal(tokenVestAmount.toString());
             });
             it('reverts', async () => {
-                console.log((await time.latest()).toString());
-                console.log(start.toNumber() + 152000); //cliff 
                 await expectRevert(
                     vestingContract.release(setup.tokens.primeToken.address, {from: beneficiary}),
                     "TokenVesting: no tokens are due"
@@ -219,7 +216,7 @@ contract('PrimeToken', (accounts) => {
         context('» block.timestamp >= _start.add(_duration) || _revoked[address(token)]', async () => {
             it('it should create a vesting contract', async () => {
                 owner = accounts[0];
-                beneficiary = accounts[1];
+                beneficiary = accounts[4];
                 start = await time.latest();
                 let tx = await setup.vesting.factory.create(owner, beneficiary, start, 100000, setup.vesting.params.duration, setup.vesting.params.revocable);
                 setup.data.tx = tx;
