@@ -45,6 +45,8 @@ module.exports = async function(callback) {
 
 	const crpFactory = await CRPFactory.at(contracts.kovan.CRPFactory);
 
+	// step 1
+
 	await console.log("***   Deploying a PRIME Configurable Rights Pool");
 
 	POOL = await crpFactory.newCrp.call(
@@ -83,6 +85,15 @@ module.exports = async function(callback) {
 
 	contracts.kovan.ConfigurableRightsPool = pool.address;
 	contracts.kovan.BPool = await pool.bPool();
+
+	// step 2 should be called after the DAO is deployed
+
+	// await console.log("***   Moving pool ownership to DAO");
+
+	// const pool = await ConfigurableRightsPool.at(contracts.kovan.ConfigurableRightsPool);
+ 	//await pool.setController(contracts.kovan.Avatar);
+
+	// await console.log("***   Success");
 
 	// Commented out because currently it rewrites
 	// contractAddresses to an empty file 
