@@ -2,7 +2,7 @@ const shell = require('shelljs');
 
 
 module.exports = {
-  skipFiles: ['test/Import.sol', 'test/ERC20Mock', 'interfaces/IBPool.sol', 'IConfiguarableRightsPool.sol'],
+  skipFiles: ['utils/test/Import.sol', 'utils/test/ERC20Mock', 'interfaces/IBPool.sol', 'IConfiguarableRightsPool.sol'],
   providerOptions: {
     allowUnlimitedContractSize: true,
     default_balance_ether: 0x1fffffffffffff,
