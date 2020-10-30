@@ -15,23 +15,17 @@ module.exports = async function(callback) {
 	const prime = await PrimeToken.at(contracts.kovan.PrimeToken);
 	const staking = await StakingRewards.at(contracts.kovan.StakingRewards);
 
-	await console.log("***   Initializing StakingRewards");
+    try {
 
-	await staking.initialize(prime.address, contracts.kovan.ConfigurableRightsPool, yieldReward, yieldStarTime, yieldDuration);
-	
-	await console.log("***   Success");
+		await console.log("***   Initializing StakingRewards");
+		await staking.initialize(prime.address, contracts.kovan.ConfigurableRightsPool, yieldReward, yieldStarTime, yieldDuration);
+		await console.log("***   Success");
 
-	// Additional steps commented out because of the weird transfer error
-	// and the fact that in the actual flow we are going to send funds
-	// from the multisig
-	// ¯\_(ツ)_/¯ 
+    } catch(error) {
 
-	// await console.log("***   Transfering PRIME to StakingRewards contract and calling notifyRewardAmount");
+        await console.log(error);
 
-	// await prime.trasfer(staking.address, yieldReward);
-	// await console.log("***   Success: trasfer");
-	// await staking.notifyRewardAmount(yieldReward);  
-	// await console.log("***   Success: notifyRewardAmount");
+    }
 
     callback();
 }

@@ -45,63 +45,56 @@ module.exports = async function(callback) {
 
 	const crpFactory = await CRPFactory.at(contracts.kovan.CRPFactory);
 
-	// step 1
+    try {
 
-	await console.log("***   Deploying a PRIME Configurable Rights Pool");
+		await console.log("***   Deploying a PRIME Configurable Rights Pool");
 
-	POOL = await crpFactory.newCrp.call(
-	        contracts.kovan.BFactory,
-	        poolParams,
-	        permissions,
-	);
+		POOL = await crpFactory.newCrp.call(
+		        contracts.kovan.BFactory,
+		        poolParams,
+		        permissions,
+		);
 
-	await crpFactory.newCrp(
-	        contracts.kovan.BFactory,
-	        poolParams,
-	        permissions,
-	);
+		await crpFactory.newCrp(
+		        contracts.kovan.BFactory,
+		        poolParams,
+		        permissions,
+		);
 
-	await console.log("***   Success ");
+		await console.log("***   Success ");
 
-	const pool = await ConfigurableRightsPool.at(POOL);
+		const pool = await ConfigurableRightsPool.at(POOL);
 
-	await console.log("***   Approving tokens for public swapping");
+		await console.log("***   Approving tokens for public swapping");
 
-	await weth.approve(POOL, MAX);
-	await prime.approve(POOL, MAX);
+		await weth.approve(POOL, MAX);
+		await prime.approve(POOL, MAX);
 
-	await console.log("***   Success");
+		await console.log("***   Success");
 
-	await console.log("***   Consuming the collateral; mint and xfer N BPTs to caller ");
+		await console.log("***   Consuming the collateral; mint and xfer N BPTs to caller ");
 
-	await pool.createPool(bPrimeAmount);
+		await pool.createPool(bPrimeAmount);
 
-	await console.log("***   Success");
+		await console.log("***   Success");
 
-	await console.log("***   Configurable Rights Pool address:");
-	await console.log(pool.address);
-	await console.log("***   Balancer Pool address:");
-	await console.log(await pool.bPool());
+		await console.log("***   Configurable Rights Pool address:");
+		await console.log(pool.address);
+		await console.log("***   Balancer Pool address:");
+		await console.log(await pool.bPool());
 
-	contracts.kovan.ConfigurableRightsPool = pool.address;
-	contracts.kovan.BPool = await pool.bPool();
+		contracts.kovan.ConfigurableRightsPool = pool.address;
+		contracts.kovan.BPool = await pool.bPool();
 
-	// step 2 should be called after the DAO is deployed
+		fs.writeFileSync('./contractAddresses.json', JSON.stringify(contracts), (err) => {
+		   if (err) throw err;
+		});
 
-	// await console.log("***   Moving pool ownership to DAO");
+    } catch(error) {
 
-	// const pool = await ConfigurableRightsPool.at(contracts.kovan.ConfigurableRightsPool);
- 	//await pool.setController(contracts.kovan.Avatar);
+        await console.log(error);
 
-	// await console.log("***   Success");
-
-	// Commented out because currently it rewrites
-	// contractAddresses to an empty file 
-	// ¯\_(ツ)_/¯ 
-
-    // fs.writeFile('./contractAddresses.json', JSON.stringify(contracts), (err) => {
-    //    if (err) throw err;
-    // });
+    }
 
     callback();
 }

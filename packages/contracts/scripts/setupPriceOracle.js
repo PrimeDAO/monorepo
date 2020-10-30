@@ -14,11 +14,17 @@ module.exports = async function(callback) {
 	const prime = contracts.kovan.PrimeToken;
 	const oracle = await PriceOracle.at(contracts.kovan.PriceOracle);
 
-	await console.log("***   Setting token price");
+    try {
 
-	await oracle.setTokenPrice(prime, numerator, denominator);
-	
-	await console.log("***   Success");
+		await console.log("***   Setting token price");
+		await oracle.setTokenPrice(prime, numerator, denominator);
+		await console.log("***   Success");
+
+    } catch(error) {
+
+        await console.log(error);
+
+    }
 
     callback();
 }
