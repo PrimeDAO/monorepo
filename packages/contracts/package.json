@@ -8,8 +8,9 @@
     "lint": "solhint 'contracts/**/*.sol' && npx eslint test/*.js",
     "deploy:dao:rinkeby": "npx run scripts/migrateDAO.js --network rinkeby",
     "deploy:contracts:kovan": "truffle migrate --network kovan --reset",
-    "create:pool:kovan": "npx truffle exec scripts/setupPool.js --network kovan",
-    "innit:staking:kovan": "npx truffle exec scripts/setupRewards.js --network kovan",
+    "setup:pool:kovan": "npx truffle exec scripts/setupPool.js --network kovan",
+    "setup:staking:kovan": "npx truffle exec scripts/setupRewards.js --network kovan",
+    "setup:oracle:kovan": "npx truffle exec scripts/setupPriceOracle.js --network kovan",
     "deploy:dao:kovan": "npx run scripts/migrateDAO.js --network kovan",
     "coverage": "truffle run coverage"
   },
