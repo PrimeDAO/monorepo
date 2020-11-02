@@ -1,6 +1,6 @@
 const ConfigurableRightsPool = artifacts.require("ConfigurableRightsPool");
 
-const contracts = require('../contractAddresses.json');
+const contracts = require('../../contractAddresses.json');
 const fs = require("fs");
 
 module.exports = async function(callback) {
