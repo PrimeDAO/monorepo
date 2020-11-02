@@ -173,8 +173,6 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         uint256 reward = earned(msg.sender);
         if (reward > 0) {
             rewards[msg.sender] = 0;
-            // uint256 scalingFactor = YAM(address(yam)).yamsScalingFactor();
-            // uint256 trueReward = reward.mul(scalingFactor).div(10**18);
             rewardToken.safeTransfer(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);
         }
