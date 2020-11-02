@@ -3,7 +3,7 @@ const ConfigurableRightsPool = artifacts.require("ConfigurableRightsPool");
 const PrimeToken = artifacts.require('PrimeToken');
 const WETH = artifacts.require('WETH');
 
-const contracts = require('../contractAddresses.json');
+const contracts = require('../../contractAddresses.json');
 
 const fs = require("fs");
 
@@ -45,52 +45,56 @@ module.exports = async function(callback) {
 
 	const crpFactory = await CRPFactory.at(contracts.kovan.CRPFactory);
 
-	await console.log("***   Deploying a PRIME Configurable Rights Pool");
+    try {
 
-	POOL = await crpFactory.newCrp.call(
-	        contracts.kovan.BFactory,
-	        poolParams,
-	        permissions,
-	);
+		await console.log("***   Deploying a PRIME Configurable Rights Pool");
 
-	await crpFactory.newCrp(
-	        contracts.kovan.BFactory,
-	        poolParams,
-	        permissions,
-	);
+		POOL = await crpFactory.newCrp.call(
+		        contracts.kovan.BFactory,
+		        poolParams,
+		        permissions,
+		);
 
-	await console.log("***   Success ");
+		await crpFactory.newCrp(
+		        contracts.kovan.BFactory,
+		        poolParams,
+		        permissions,
+		);
 
-	const pool = await ConfigurableRightsPool.at(POOL);
+		await console.log("***   Success ");
 
-	await console.log("***   Approving tokens for public swapping");
+		const pool = await ConfigurableRightsPool.at(POOL);
 
-	await weth.approve(POOL, MAX);
-	await prime.approve(POOL, MAX);
+		await console.log("***   Approving tokens for public swapping");
 
-	await console.log("***   Success");
+		await weth.approve(POOL, MAX);
+		await prime.approve(POOL, MAX);
 
-	await console.log("***   Consuming the collateral; mint and xfer N BPTs to caller ");
+		await console.log("***   Success");
 
-	await pool.createPool(bPrimeAmount);
+		await console.log("***   Consuming the collateral; mint and xfer N BPTs to caller ");
 
-	await console.log("***   Success");
+		await pool.createPool(bPrimeAmount);
 
-	await console.log("***   Configurable Rights Pool address:");
-	await console.log(pool.address);
-	await console.log("***   Balancer Pool address:");
-	await console.log(await pool.bPool());
+		await console.log("***   Success");
 
-	contracts.kovan.ConfigurableRightsPool = pool.address;
-	contracts.kovan.BPool = await pool.bPool();
+		await console.log("***   Configurable Rights Pool address:");
+		await console.log(pool.address);
+		await console.log("***   Balancer Pool address:");
+		await console.log(await pool.bPool());
 
-	// Commented out because currently it rewrites
-	// contractAddresses to an empty file 
-	// ¯\_(ツ)_/¯ 
+		contracts.kovan.ConfigurableRightsPool = pool.address;
+		contracts.kovan.BPool = await pool.bPool();
 
-    // fs.writeFile('./contractAddresses.json', JSON.stringify(contracts), (err) => {
-    //    if (err) throw err;
-    // });
+		fs.writeFileSync('./contractAddresses.json', JSON.stringify(contracts), (err) => {
+		   if (err) throw err;
+		});
+
+    } catch(error) {
+
+        await console.log(error);
+
+    }
 
     callback();
 }

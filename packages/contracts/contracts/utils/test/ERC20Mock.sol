@@ -12,6 +12,6 @@ contract ERC20Mock is ERC20 {
         name = _name;
         symbol = _symbol;
         decimals = _decimals;
-        _mint(msg.sender, uint256(10000000000000000000000));
+        _mint(msg.sender, uint256(20000000000000000000000));
     }
 }

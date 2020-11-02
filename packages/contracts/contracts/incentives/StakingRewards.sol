@@ -84,13 +84,13 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
 
         rewardToken  = IERC20(_rewardToken);
         stakingToken = IERC20(_stakingToken);
-        rewardDistribution = msg.sender;
         initreward = _initreward;
         starttime = _starttime;
         DURATION = (_duration * 24 hours);
+
+        rewardDistribution = msg.sender;
     }
 
-    // uint256 public constant DURATION = 7 days;
     uint256 public DURATION;
 
     uint256 public initreward;
@@ -173,8 +173,6 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         uint256 reward = earned(msg.sender);
         if (reward > 0) {
             rewards[msg.sender] = 0;
-            // uint256 scalingFactor = YAM(address(yam)).yamsScalingFactor();
-            // uint256 trueReward = reward.mul(scalingFactor).div(10**18);
             rewardToken.safeTransfer(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);
         }

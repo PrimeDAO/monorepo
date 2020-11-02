@@ -17,6 +17,7 @@ contract BalancerProxy {
     string constant ADD_TOKEN                = "BalancerProxy: addToken failed";
     string constant REMOVE_TOKEN             = "BalancerProxy: removeToken failed";
     string constant UPDATE_WEIGHTS_GRADUALLY = "BalancerProxy: updateWeightsGradually failed";
+    string constant UPDATE_WEIGHT            = "BalancerProxy: updateWeight failed";
     string constant ERROR_APPROVAL           = "BalancerProxy: ERC20 approval failed";
     string constant JOIN_POOL                = "BalancerProxy: JoinPool failed";
     string constant EXIT_POOL                = "BalancerProxy: ExitPool failed";
@@ -107,16 +108,16 @@ contract BalancerProxy {
     }
 
     /**
-      * @dev                     Sets the new weights that are going to be gradually ipdated.
+      * @dev                     Sets the new weight for the single token
       * @param token             Address of a token
-      * @param newWeight         Start block for the update
+      * @param newWeight         New weight
       */
     function updateWeight(address token, uint newWeight) external protected {
         _updateWeight(token, newWeight);
     }
 
     /**
-      * @dev                      Sets the new weights that are going to be gradually ipdated.
+      * @dev                      Sets the new weights that are going to be gradually updated
       * @param newWeights         New weights
       * @param startBlock         Start block for the update
       * @param endBlock           End block for the update
@@ -188,6 +189,8 @@ contract BalancerProxy {
         bool             success;
         Controller controller = Controller(avatar.owner());
 
+        // approve maximum amount of tokens
+        _approve(_token, uint256(-1));
         (success, ) = controller.genericCall(
             address(crpool),
             abi.encodeWithSelector(
@@ -198,17 +201,14 @@ contract BalancerProxy {
             avatar,
             0
         );
-        require(success, ERROR_SET_SWAP_FEE);
+        // reset allowance
+        _approve(_token, 0);
+
+        require(success, UPDATE_WEIGHT);
         emit UpdateWeight(_token, _newWeight);
     }
 
-    function _updateWeightsGradually(
-        uint[] memory _newWeights,
-        uint _startBlock, 
-        uint _endBlock
-    )
-    internal
-    {
+    function _updateWeightsGradually(uint[] memory _newWeights, uint _startBlock, uint _endBlock) internal {
         bool             success;
         Controller controller = Controller(avatar.owner());
 

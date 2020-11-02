@@ -49,6 +49,11 @@ contract('StakingRewards', (accounts) => {
                 await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
             });
         });
+        context('» deploying account is owner', () => {
+            it('returns correct owner', async () => {
+                expect(accounts[0]).to.equal(await setup.incentives.stakingRewards.owner());
+            });
+        });
         context('» reward token parameter is not valid', () => {
             before('!! deploy contract', async () => {
                 setup.data.incentives = await StakingRewards.new();
@@ -430,6 +435,14 @@ contract('StakingRewards', (accounts) => {
                     );
                 });
             });
+            context('» reverts when caller != rewardDistribution', async () => {
+                it('reverts', async () => {
+                    await expectRevert(
+                        setup.incentives.stakingRewards.notifyRewardAmount(rewardAmount, { from: accounts[1] }),
+                        'Caller is not reward distribution'
+                    );
+                });
+            });
             context('» updates reward', async () => {
                 it('updates', async () => {
                     await setup.balancer.pool.approve(setup.incentives.stakingRewards.address, stakeAmount, { from: accounts[1] });
@@ -439,6 +452,83 @@ contract('StakingRewards', (accounts) => {
                     let tx = await setup.incentives.stakingRewards.notifyRewardAmount(rewardAmount);
                     setup.data.tx = tx;
                     await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.stakingRewards, 'RewardAdded');
+                });
+            });
+            context('updates reward : block.timestamp < periodFinish', async () => {
+                before('!! setup', async () => {
+                    await setup.balancer.pool.approve(setup.incentives.stakingRewards.address, stakeAmount, { from: accounts[1] });
+                    await setup.tokens.primeToken.transfer(setup.incentives.stakingRewards.address, rewardAmount);
+                    await setup.tokens.primeToken.approve(accounts[1], rewardAmount);
+                });
+                it('updates', async () => {
+                    let halfReward = toWei('10');
+                    let rewardBefore = await setup.incentives.stakingRewards.rewardRate();
+                    let tx = await setup.incentives.stakingRewards.notifyRewardAmount(halfReward);
+                    setup.data.tx = tx;
+                    await expectEvent.inTransaction(setup.data.tx.tx, setup.incentives.stakingRewards, 'RewardAdded');
+                    expect(rewardBefore).to.not.equal(await setup.incentives.stakingRewards.rewardRate());
+                });
+            });
+        });
+    });
+    context('# setRewardDistribution', () => {
+        context('» generics', () => {
+            before('!! deploy setup & initialize contract', async () => {
+                setup = await deploy(accounts);
+                await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
+            });
+            context('» only deployer can change variable', async () => {
+                it(' owner can change setRewardDistribution', async () => {
+                    await setup.incentives.stakingRewards.setRewardDistribution(accounts[1], {from: accounts[0]});
+                });
+                it('reverts on call from other account', async () => {
+                    await expectRevert(
+                        setup.incentives.stakingRewards.setRewardDistribution(accounts[2], {from: accounts[2]}),
+                        'Ownable: caller is not the owner'
+                    );
+                });
+            });
+        });
+    });
+    context('# checkstart modifier', () => {
+        context('» generics', () => {
+            before('!! deploy setup & initialize contract', async () => {
+                let _badStart = ((await time.latest()).toNumber()) + 100000;
+                setup = await deploy(accounts);
+                await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _badStart, _durationDays);
+            });
+            context('» block.timestamp >= starttime: stake', async () => {
+                before('!! fund accounts', async () => {
+                    await setup.balancer.pool.transfer(accounts[1], stakeAmount);
+                    await setup.balancer.pool.approve(setup.incentives.stakingRewards.address, stakeAmount, { from: accounts[1] });
+                    expect((await setup.balancer.pool.balanceOf(setup.incentives.stakingRewards.address)).toString()).to.equal(toWei('0'));
+                    expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal(stakeAmount);
+                });
+                it('reverts', async () => {
+                    await expectRevert(
+                        setup.incentives.stakingRewards.stake(stakeAmount, { from: accounts[1] }),
+                        'StakingRewards: not start'
+                    );
+                });
+            });
+            context('» block.timestamp >= starttime: withdraw', async () => {
+                before('!! fund accounts and stake', async () => {
+                    await setup.balancer.pool.transfer(accounts[1], stakeAmount);
+                    await setup.balancer.pool.approve(setup.incentives.stakingRewards.address, stakeAmount, { from: accounts[1] });
+                });
+                it('reverts', async () => {
+                    await expectRevert(
+                        setup.incentives.stakingRewards.withdraw(stakeAmount, { from: accounts[1] }),
+                        'StakingRewards: not start'
+                    );
+                });
+            });
+            context('» block.timestamp >= starttime: exit', async () => {
+                it('reverts', async () => {
+                    await expectRevert(
+                        setup.incentives.stakingRewards.exit({ from: accounts[1] }),
+                        'StakingRewards: not start'
+                    );
                 });
             });
         });
