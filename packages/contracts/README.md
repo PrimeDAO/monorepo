@@ -9,50 +9,33 @@ truffle compile
 ```
 
 
-To run unit tests
+To run tests
 
 ```
 npm run test
 ```
 
-### Deploy DAO to rinkeby:
+To run coverage
 
-prepare env vars
 ```
-export NETWORK=`rinkeby`
-export PROVIDER=`your-infura-provider`
-export KEY=`your-private-key`
+npm run coverage
 ```
 
-deploy dapp to rinkeby
+### Deploy DAO to kovan
+
+prepare `.env` file and add your config variables, it should look as follows:
 ```
-npm run deploy:dapp:rinkeby
+NETWORK=kovan
+PROVIDER=https://kovan.infura.io/v3/your-infura-provider-key
+KEY=your-private-key
 ```
 
-deploy dao to rinkeby
+deploy external contracts to dao
 ```
-npm run deploy:dao:rinkeby
-```
-
-### Deploy DAO to kovan:
-
-prepare env vars
-```
-export NETWORK=`kovan`
-export PROVIDER=`your-infura-provider`
-export KEY=`your-private-key`
+npm run deploy:contracts:kovan
 ```
 
-deploy dapp to rinkeby
-```
-npm run deploy:dapp:kovan
-```
-
-### Setup deployed contracts on kovan:
-set up price oracle
-```
-npm run setup:oracle:kovan
-```
+### Setup deployed contracts on kovan
 
 create configurable rights pool
 ```
@@ -72,4 +55,9 @@ npm run setup:staking:innit:kovan
 notify reward amount in staking contract
 ```
 npm run setup:staking:confirm:kovan
+```
+
+set up price oracle
+```
+npm run setup:oracle:kovan
 ```
