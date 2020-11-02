@@ -1,14 +1,9 @@
 <template>
   <floating-point-number
-    class="balance"
+    class="tokenbalance"
     if.to-view="balance !== null"
-    value.bind="balance | ethwei"
+    value.to-view="balance | ethwei"
     precision="6"
-    placement.to-view="placement"
-    trailing-zeroes.to-view="trailingZeroes"
-  ></floating-point-number>
-  <span
-    else
-    class="balance"
-  >N/A</span>
+    placement.to-view="placement"></floating-point-number>
+  <span else class="tokenbalance">N/A</span>
 </template>

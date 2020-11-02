@@ -1,5 +1,6 @@
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject, containerless, customElement, computedFrom } from "aurelia-framework";
+import { ContractNames, ContractsService } from "services/ContractsService";
 import { DisposableCollection } from "services/DisposableCollection";
 import { Address, EthereumService, Networks } from "services/EthereumService";
 import { EventConfigTransaction } from "services/GeneralEvents";
@@ -21,9 +22,12 @@ export class ConnectButton {
   private accountAddress: Address = null;
   private txPhase = Phase.None;
   private txReceipt: TransactionReceipt;
+  private primeAddress: Address;
+  private wethAddress: Address;
 
   constructor(
     private ethereumService: EthereumService,
+    private contractsService: ContractsService,
     private eventAggregator: EventAggregator,
   ) {
     this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account", async (account: Address) => {
@@ -53,6 +57,8 @@ export class ConnectButton {
     }));
 
     this.accountAddress = this.ethereumService.defaultAccountAddress || null;
+    this.primeAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
+    this.wethAddress = this.contractsService.getContractAddress(ContractNames.WETH);
   }
 
   public dispose(): void {
