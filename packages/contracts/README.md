@@ -47,3 +47,29 @@ deploy dapp to rinkeby
 ```
 npm run deploy:dapp:kovan
 ```
+
+### Setup deployed contracts on kovan:
+set up price oracle
+```
+npm run setup:oracle:kovan
+```
+
+create configurable rights pool
+```
+npm run setup:pool:create:kovan
+```
+
+transfer ownership of crpool to dao
+```
+npm run setup:pool:transfer:kovan
+```
+
+initialize staking rewards contract  
+```
+npm run setup:staking:innit:kovan
+```
+
+notify reward amount in staking contract
+```
+npm run setup:staking:confirm:kovan
+```
