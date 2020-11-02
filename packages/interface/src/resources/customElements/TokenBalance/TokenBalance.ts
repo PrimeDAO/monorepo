@@ -1,119 +1,88 @@
-// import { EventAggregator } from "aurelia-event-aggregator";
-// import { autoinject, bindable, bindingMode, containerless, customElement } from "aurelia-framework";
-// import { BigNumber } from "ethers";
-// import { DisposableCollection } from "services/DisposableCollection";
-// import { Address } from "services/EthereumService";
-// import { TokenService } from "../../../services/TokenService";
+import { EventAggregator } from "aurelia-event-aggregator";
+import { autoinject, containerless, customElement, bindable, bindingMode } from "aurelia-framework";
+import { DisposableCollection } from "services/DisposableCollection";
+import { Address, EthereumService } from "services/EthereumService";
+import { BigNumber } from "ethers";
+import { Contract, ethers } from "ethers";
+import { ContractNames, ContractsService } from "services/ContractsService";
 
-// @autoinject
-// @containerless
-// @customElement("tokenbalance")
-// export class TokenBalance {
+@autoinject
+@containerless
+@customElement("tokenbalance")
+export class TokenBalance {
+  @bindable({ defaultBindingMode: bindingMode.toView }) public tokenAddress: Address;
+  @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
 
-//   @bindable({ defaultBindingMode: bindingMode.toView }) public token: Address;
-//   @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
-//   @bindable({ defaultBindingMode: bindingMode.twoWay }) public balance: BigNumber = null;
-//   @bindable({ defaultBindingMode: bindingMode.toView }) public trailingZeroes?: number | string = 2;
-//   @bindable({ defaultBindingMode: bindingMode.oneTime })
-//   public balanceChanged?: () => void;
+  private balance: BigNumber = null;
+  private subscriptions = new DisposableCollection();
+  private checking = false;
+  private account: string;
+  private contract: Contract;
+  erc20Abi: any;
 
-//   private event: EventFetcher<TransferEventResult>;
-//   private subscriptions = new DisposableCollection();
-//   private tokenWrapper: Erc20Wrapper;
-//   private checking: boolean = false;
-//   private account: Address;
-//   private initialized = false;
+  constructor(
+    private eventAggregator: EventAggregator,
+    private ethereumService: EthereumService,
+    private contractsService: ContractsService) {
+  }
 
-//   constructor(
-//     private web3: Web3Service,
-//     private tokenService: TokenService,
-//     private eventAggregator: EventAggregator
-//   ) {
-//   }
+  public attached(): void {
+    this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account",
+      (account: string) => {
+        this.account = account;
+        this.getBalance();
+      }));
+    this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Id",
+      () => { this.initialize(); }));
+    this.erc20Abi = this.contractsService.getContractAbi(ContractNames.IERC20);
+    this.initialize();
+  }
 
-//   public attached() {
+  private async initialize(): Promise<void> {
+    this.stop();
+    this.account = await this.ethereumService.defaultAccountAddress;
 
-//     this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account",
-//       (account: Address) => {
-//         this.account = account;
-//         if (!this.tokenWrapper) {
-//           this.initialize();
-//         } else {
-//           this.getBalance();
-//         }
-//       }));
-//     this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Id",
-//       () => { this.initialize(); }));
-//     this.initialize();
-//   }
+    this.contract = new ethers.Contract(
+      this.tokenAddress,
+      this.erc20Abi,
+      EthereumService.readOnlyProvider);
 
-//   private async initialize() {
-//     this.stop();
-//     this.account = this.web3.defaultAccount;
-//     if (this.account && this.token) {
 
-//       this.tokenWrapper = await this.tokenService.getErc20Token(this.token);
+    /**
+     * this is supposed to fire whenever a new block is created
+     * TODO: use a single app-wide poll on blocks.  Same for ethBalance.
+     */
+    EthereumService.readOnlyProvider.on("block", () => this.getBalance());
+    this.getBalance();
+  }
 
-//       if (this.tokenWrapper) {
-//         // note we're not handling Mint here, assuming it is not important
-//         this.event = this.tokenWrapper.Transfer({}, { fromBlock: "latest" },
-//           (error: Error, event: DecodedLogEntryEvent<TransferEventResult>): void => {
-//             if (!error) {
-//               // events on this contract may relate to other accounts than the current one
-//               if ((event.args.from === this.account) || (event.args.to === this.account)) {
-//                 this.getBalance();
-//               }
-//             }
-//           });
+  private stop(): void {
+    EthereumService.readOnlyProvider.off("block", () => this.getBalance());
+  }
 
-//         this.getBalance();
-//       }
-//     }
+  private detached(): void {
+    if (this.subscriptions) {
+      this.subscriptions.dispose();
+    }
 
-//     if (!this.event) {
-//       this.balance = null;
-//     }
-//   }
+    this.stop();
+  }
 
-//   private detached(): void {
-
-//     if (this.subscriptions) {
-//       this.subscriptions.dispose();
-//     }
-
-//     this.stop();
-//   }
-
-//   private tokenChanged() {
-//     this.initialize();
-//   }
-
-//   private stop(): void {
-//     if (this.event) {
-//       this.event.stopWatching();
-//       this.event = null;
-//     }
-//   }
-
-//   private async getBalance() {
-//     if (!this.checking) {
-//       try {
-//         this.checking = true;
-//         if (this.account) {
-//           const oldBalance = this.balance;
-//           this.balance = await this.tokenService.getUserErc20TokenBalance(this.tokenWrapper);
-//           if (this.balanceChanged &&
-//             ((typeof oldBalance === "undefined") || !this.balance.eq(oldBalance))) {
-//             this.balanceChanged();
-//           }
-//         } else {
-//           this.balance = null;
-//         }
-//         // tslint:disable-next-line:no-empty
-//       } catch (ex) {
-//       } finally {
-//         this.checking = false;
-//       }
-//     }
-//   }
-// }
+  private async getBalance() {
+    if (!this.checking) {
+      try {
+        this.checking = true;
+        if (this.account) {
+          this.balance = await this.contract.balanceOf(this.account);
+        } else {
+          this.balance = null;
+        }
+        // tslint:disable-next-line:no-empty
+        // eslint-disable-next-line no-empty
+      } catch (ex) {
+      } finally {
+        this.checking = false;
+      }
+    }
+  }
+}

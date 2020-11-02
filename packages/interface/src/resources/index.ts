@@ -6,6 +6,7 @@ export function configure(config: FrameworkConfiguration): void {
     PLATFORM.moduleName("./customElements/banner/banner"),
     PLATFORM.moduleName("./customElements/EtherscanLink/EtherscanLink"),
     PLATFORM.moduleName("./customElements/EthBalance/EthBalance"),
+    PLATFORM.moduleName("./customElements/TokenBalance/TokenBalance"),
     PLATFORM.moduleName("./customElements/UsersAddress/UsersAddress"),
     PLATFORM.moduleName("./customElements/copyToClipboardButton/copyToClipboardButton"),
     PLATFORM.moduleName("./customElements/numericInput/numericInput"),

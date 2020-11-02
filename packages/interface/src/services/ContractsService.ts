@@ -18,6 +18,7 @@ export enum ContractNames {
   , USDC = "USDC"
   , STAKINGREWARDS = "StakingRewards"
   , PrimeDAO = "Avatar"
+  , IERC20 = "IERC20"
   ,
 }
 
@@ -36,6 +37,7 @@ export class ContractsService {
       , [ContractNames.WETH, WETHABI.abi]
       , [ContractNames.PRIMETOKEN, ERC20ABI.abi]
       , [ContractNames.USDC, ERC20ABI.abi]
+      , [ContractNames.IERC20, ERC20ABI.abi]
       ,
     ],
   );
@@ -131,7 +133,7 @@ export class ContractsService {
       } else {
         contract = new ethers.Contract(
           ContractAddresses[EthereumService.targetedNetwork][contractName],
-          ContractsService.ABIs.get(contractName),
+          this.getContractAbi(contractName),
           signerOrProvider);
       }
       ContractsService.Contracts.set(contractName, contract);
@@ -142,6 +144,10 @@ export class ContractsService {
   public async getContractFor(contractName: ContractNames): Promise<any> {
     await this.assertContracts();
     return ContractsService.Contracts.get(contractName);
+  }
+
+  public getContractAbi(contractName: ContractNames): Address {
+    return ContractsService.ABIs.get(contractName);
   }
 
   public getContractAddress(contractName: ContractNames): Address {

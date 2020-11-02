@@ -2,6 +2,12 @@
   <div class="connectButtonContainer ${accountAddress ? 'connected' : ''}">
     <div if.bind="accountAddress">
       <div class="ethBalanceContainer">
+        <tokenbalance token-address.to-view="primeAddress"></tokenbalance> PRIME
+      </div>
+      <div class="ethBalanceContainer">
+        <tokenbalance token-address.to-view="wethAddress"></tokenbalance> WETH
+      </div>
+      <div class="ethBalanceContainer">
         <ethbalance></ethbalance> ETH
       </div>
       <div class="connectButton">

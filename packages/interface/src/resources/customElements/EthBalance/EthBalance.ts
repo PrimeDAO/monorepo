@@ -37,12 +37,12 @@ export class EthBalance {
     /**
      * this is supposed to fire whenever a new block is created
      */
-    EthereumService.readOnlyProvider.on("block", this.getBalance);
+    EthereumService.readOnlyProvider.on("block", () => this.getBalance());
     this.getBalance();
   }
 
   private stop(): void {
-    EthereumService.readOnlyProvider.off("block", this.getBalance);
+    EthereumService.readOnlyProvider.off("block", () => this.getBalance());
   }
 
   private detached(): void {
