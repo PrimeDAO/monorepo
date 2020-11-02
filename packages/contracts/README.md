@@ -30,7 +30,7 @@ PROVIDER=https://kovan.infura.io/v3/your-infura-provider-key
 KEY=your-private-key
 ```
 
-deploy external contracts to dao
+deploy external contracts
 ```
 npm run deploy:contracts:kovan
 ```
