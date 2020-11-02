@@ -21,6 +21,8 @@ export class PriceService {
     return axios.get(`${this.baseUrl}getTokenInfo/${address}?apiKey=${process.env.ETHPLORER_ID}`)
       .then(
         (response) => {
+          // TODO:  peggedToEth eems to do little in kovan (with WETH anyway)
+          // and I'm not sure its needed on mainnet.  Confirm.
           return response.data.price ? response.data.price.rate :
             (peggedToEth ? this.getEthPrice(address) : "0");
         },
@@ -29,6 +31,7 @@ export class PriceService {
         this.consoleLogService.handleFailure(
           new EventConfigFailure(`PriceService: ${error.response?.data?.error.message ?? "Error fetching token price"}: ${address}`));
         // throw new Error(`${error.response?.data?.error.message ?? "Error fetching token price"}`);
+        // TODO:  restore the exception?
         return "0";
       });
   }
