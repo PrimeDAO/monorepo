@@ -1,6 +1,6 @@
 const StakingRewards = artifacts.require('StakingRewards');
 
-const contracts = require('../contractAddresses.json');
+const contracts = require('../../contractAddresses.json');
 
 module.exports = async function(callback) {
 

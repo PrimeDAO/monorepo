@@ -3,7 +3,7 @@ const ConfigurableRightsPool = artifacts.require("ConfigurableRightsPool");
 const PrimeToken = artifacts.require('PrimeToken');
 const WETH = artifacts.require('WETH');
 
-const contracts = require('../contractAddresses.json');
+const contracts = require('../../contractAddresses.json');
 
 const fs = require("fs");
 

@@ -2,7 +2,7 @@ const PrimeToken = artifacts.require('PrimeToken');
 const PriceOracle = artifacts.require('PriceOracle');
 
 
-const contracts = require('../contractAddresses.json');
+const contracts = require('../../contractAddresses.json');
 
 
 module.exports = async function(callback) {
