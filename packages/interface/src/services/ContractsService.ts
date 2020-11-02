@@ -2,7 +2,6 @@ import { Contract, ethers, Signer } from "ethers";
 import { Address, EthereumService, IChainEventInfo } from "services/EthereumService";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
-import { sign } from "crypto";
 
 const ContractAddresses = require("../contracts/contractAddresses.json") as INetworkContractAddresses;
 const ConfigurableRightsPoolABI = require("../contracts/ConfigurableRightsPool.json");
@@ -18,6 +17,7 @@ export enum ContractNames {
   , PRIMETOKEN = "PrimeToken"
   , USDC = "USDC"
   , STAKINGREWARDS = "StakingRewards"
+  , PrimeDAO = "Avatar"
   ,
 }
 
@@ -100,7 +100,7 @@ export class ContractsService {
   }
 
   public initializeContracts(): void {
-    if (!ContractAddresses) {
+    if (!ContractAddresses || !ContractAddresses[EthereumService.targetedNetwork]) {
       throw new Error("initializeContracts: ContractAddresses not set");
     }
 
