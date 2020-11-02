@@ -28,6 +28,7 @@
     "aurelia-bootstrapper": "^2.3.3",
     "aurelia-dialog": "^2.0.0",
     "aurelia-event-aggregator": "^1.0.3",
+    "axios": "^0.21.0",
     "ethers": "^5.0.14",
     "moment-timezone": "^0.5.31",
     "numeral": "^2.0.6",

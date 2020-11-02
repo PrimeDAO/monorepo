@@ -47,7 +47,7 @@ export class ConsoleLogService {
     }
   }
 
-  private handleException(config: EventConfigException | any) {
+  public handleException(config: EventConfigException | any): void {
     let message;
     let ex;
     if (!(config instanceof EventConfigException)) {
@@ -62,11 +62,11 @@ export class ConsoleLogService {
     this.logger.error(`${message}${ex.stack ? `\n${ex.stack}` : ""}`);
   }
 
-  private handleFailure(config: EventConfig | string) {
+  public handleFailure(config: EventConfig | string): void {
     this.logger.error(this.getMessage(config));
   }
 
-  private handleWarning(config: EventConfig | string) {
+  public handleWarning(config: EventConfig | string): void {
     this.logger.warn(this.getMessage(config));
   }
 

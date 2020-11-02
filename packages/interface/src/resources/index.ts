@@ -21,5 +21,6 @@ export function configure(config: FrameworkConfiguration): void {
     PLATFORM.moduleName("./valueConverters/secondsDays"),
     PLATFORM.moduleName("./valueConverters/smallHexString"),
     PLATFORM.moduleName("./dialogs/alert/alert"),
+    // PLATFORM.moduleName("./bindingBehaviors/asyncBinding"),
   ]);
 }

@@ -9,6 +9,7 @@ import { BigNumber } from "ethers";
 import { EventConfigException } from "services/GeneralEvents";
 import { DialogService } from "services/DialogService";
 import { Liquidity } from "resources/dialogs/liquidity/liquidity";
+import { PriceService } from "services/PriceService";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -61,7 +62,8 @@ export class Dashboard {
     private contractsService: ContractsService,
     private ethereumService: EthereumService,
     private transactionsService: TransactionsService,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+    private priceService: PriceService) {
   }
 
   protected async attached(): Promise<void> {
@@ -90,6 +92,8 @@ export class Dashboard {
   private ethWethAmount: BigNumber | string;
   private wethEthAmount: BigNumber | string;
   private defaultWethEthAmount: BigNumber | string;
+  private priceWeth: BigNumber;
+  private pricePrimeToken: BigNumber;
 
   private async initialize(account?: Address) {
     try {
@@ -100,8 +104,23 @@ export class Dashboard {
       this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
       this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
 
-      this.liquidityBalance = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))
-        .add(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
+      try {
+
+        this.priceWeth = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.WETH), true));
+        this.pricePrimeToken = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
+
+        const priceWethLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))
+          .mul(this.priceWeth);
+
+        const pricePrimeTokenLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)))
+          .mul(this.pricePrimeToken);
+
+        this.liquidityBalance = priceWethLiquidity.add(pricePrimeTokenLiquidity);
+      } catch (ex) {
+        this.eventAggregator.publish("handleException",
+          new EventConfigException("Unable to fetch a token price", ex));
+        this.liquidityBalance = undefined;
+      }
 
       this.swapfee = await this.bPool.getSwapFee();
 
@@ -123,11 +142,13 @@ export class Dashboard {
   }
 
   private async getDefaultWethEthAmount(): Promise<void> {
+    // TODO: get this amount when the user clicks the button?
     this.defaultWethEthAmount = this.connected ? (await this.weth.balanceOf(this.ethereumService.defaultAccountAddress)) : undefined;
   }
 
   private async getStakingAmounts() {
     this.currentAPY = await this.stakingRewards.rewardPerTokenStored();
+    // TODO: check for presence of account, the case when the user disconnects/unlocks while connected
     this.primeFarmed = this.connected ?
       (await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress)) : undefined;
   }
