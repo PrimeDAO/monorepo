@@ -16,6 +16,24 @@ html {
       border: $section-border;
       background-color: transparent;
       border-radius: $section-border-radius;
+      color: $color-white;
+      outline: none;
+
+      &::placeholder {
+        color: $color-white;
+      }
+      &:focus::placeholder {
+        color: transparent;
+      }
+    }
+
+    a {
+      color: $color-white;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .title {
@@ -85,52 +103,6 @@ html {
       &.bottom {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
-      }
-    }
-  }
-
-  ux-dialog.dialog {
-    background-color: $global-background-color;
-    color: $color-white;
-    font-family: Aeonik;
-
-    > ux-dialog-header {
-      display: flex;
-      padding-right: 8px;
-
-      .close {
-        flex-shrink: 2;
-        cursor: pointer;
-        border: none;
-        padding: 0;
-        padding-left: 10px;
-
-        button {
-          font-size: 28px;
-          background-color: transparent;
-          color: $color-white;
-          border: none;
-          outline: none;
-        }
-      }
-    }
-
-    ux-dialog-body {
-      .section {
-        .heading {
-          font-weight: bold;
-        }
-      }
-    }
-
-    ux-dialog-footer {
-      .button1,
-      .button2,
-      .button3 {
-        &:hover {
-          background-color: $color-black;
-          color: $color-white;
-        }
       }
     }
   }

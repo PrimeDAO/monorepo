@@ -1,0 +1,55 @@
+@import "styles/colors.scss";
+
+.liquidityContainer {
+  display: flex;
+  flex-direction: column;
+
+  .firstRow {
+    display: flex;
+    justify-content: space-evenly;
+
+    .firstColumn {
+      .heading {
+        .title {
+          flex-grow: 2;
+        }
+      }
+
+      .body {
+      }
+    }
+
+    .rightColumn {
+      display: flex;
+      flex-direction: column;
+      .table {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        //grid-template-rows: 33% 33% 33%;
+        column-gap: 16px;
+      }
+
+      .bPrimeAmount {
+        display: flex;
+        .label {
+          flex-grow: 2;
+        }
+        .amount {
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  .secondRow {
+    text-align: center;
+
+    button {
+      width: 100%;
+    }
+
+    .back i {
+      margin-right: 4px;
+    }
+  }
+}

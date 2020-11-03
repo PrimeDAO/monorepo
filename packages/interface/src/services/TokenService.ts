@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
-import { BigNumber } from "ethers";
-import { formatEther } from "ethers/lib/utils";
+import { BigNumber, Contract, ethers } from "ethers";
+// import { formatEther } from "ethers/lib/utils";
 import { ContractNames, ContractsService } from "services/ContractsService";
 import { Address, EthereumService } from "services/EthereumService";
 
@@ -16,66 +16,53 @@ export interface IErc20Token {
 @autoinject
 export class TokenService {
 
+  private erc20Abi: any;
+
   constructor(
     private ethereumService: EthereumService,
-    private contractsService: ContractsService) {}
-
-
-  private async getErc20TokenBalance(
-    token: IErc20Token,
-    accountAddress: Address,
-    inEth = false): Promise<BigNumber> {
-
-    let amount = await token.balanceOf(accountAddress);
-    if (inEth) {
-      amount = BigNumber.from(formatEther(amount));
-    }
-    return amount;
+    contractsService: ContractsService) {
+    this.erc20Abi = contractsService.getContractAbi(ContractNames.IERC20);
   }
 
-  public async getUserTokenBalance(
-    tokenName: ContractNames,
-    inEth = false): Promise<BigNumber> {
+  // private async _getBalance(
+  //   token: IErc20Token,
+  //   accountAddress: Address,
+  //   inEth = false): Promise<BigNumber> {
 
-    const userAddress = this.ethereumService.defaultAccountAddress;
+  //   let amount = await token.balanceOf(accountAddress);
+  //   if (inEth) {
+  //     amount = BigNumber.from(formatEther(amount));
+  //   }
+  //   return amount;
+  // }
 
-    return this.getTokenBalance(tokenName, userAddress, inEth);
-  }
+  // public async getUserBalance(
+  //   tokenName: ContractNames,
+  //   inEth = false): Promise<BigNumber> {
 
-  public async getTokenBalance(
-    tokenName: ContractNames,
-    accountAddress: Address,
-    inEth = false): Promise<BigNumber> {
+  //   const userAddress = this.ethereumService.defaultAccountAddress;
 
-    const token = await this.getErc20Token(tokenName);
+  //   return this.getTokenBalance(tokenName, userAddress, inEth);
+  // }
 
-    if (!token) {
-      return null;
-    }
+  // public async getTokenBalance(
+  //   tokenName: ContractNames,
+  //   accountAddress: Address,
+  //   inEth = false): Promise<BigNumber> {
 
-    return this.getErc20TokenBalance(token, accountAddress, inEth);
-  }
+  //   const token = await this.getTokenContract(tokenName);
 
-  public async getTokenAllowance(
-    tokenName: ContractNames,
-    accountAddress: Address,
-    spender: Address,
-    inEth = false): Promise<BigNumber> {
+  //   if (!token) {
+  //     return null;
+  //   }
 
-    const token = await this.getErc20Token(tokenName);
+  //   return this._getBalance(token, accountAddress, inEth);
+  // }
 
-    if (!token) {
-      return null;
-    }
-
-    let amount = await token.allowance(accountAddress, spender);
-    if (inEth) {
-      amount = BigNumber.from(formatEther(amount));
-    }
-    return amount;
-  }
-
-  private getErc20Token(tokenName: ContractNames): Promise<IErc20Token> {
-    return this.contractsService.getContractFor(tokenName);
+  public getTokenContract(tokenAddress: Address): Contract & IErc20Token {
+    return new ethers.Contract(
+      tokenAddress,
+      this.erc20Abi,
+      this.ethereumService.readOnlyProvider) as unknown as Contract & IErc20Token;
   }
 }

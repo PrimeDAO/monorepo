@@ -1,143 +1,52 @@
 @import "styles/colors.scss";
-
-.dashboardWrapper {
-  display: flex;
-  flex-direction: column;
+.dashboardContainer {
   height: 100%;
+  display: flex;
+  padding-top: 30px;
+  padding-left: 80px;
+  padding-right: 80px;
+  padding-bottom: 40px;
+  box-sizing: border-box;
 
-  .header {
-    text-align: right;
-    display: flex;
-    // justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid $color-white;
-
-    .logo {
-      width: 96px;
-      background-color: $color-white;
-      height: 100%;
-      text-align: center;
-    }
-
-    .networkfeedback {
-      color: rgb(109, 168, 255);
-      .testnet {
-        color: $color-red;
-      }
-    }
-
-    .connectButton {
-      flex-grow: 2;
-      padding-right: 20px;
-      padding-top: 12px;
-      padding-bottom: 12px;
-
-      .connectButtonContainer {
-        background-color: rgb(33, 36, 41);
-        border-color: transparent;
-        z-index: 1000;
-
-        .connectButton {
-          color: rgb(109, 168, 255);
-          background-color: rgb(33, 36, 41);
-          border: 1px solid rgba(21, 61, 111, 0.44);
-          cursor: pointer;
-          font-weight: 500;
-
-          &:hover,
-          &:focus {
-            color: rgb(83, 153, 255);
-          }
-        }
-
-        &.connected {
-          background-color: rgb(64, 68, 79);
-          border-color: rgba(21, 61, 111, 0.44);
-
-          .connectButton {
-            color: white;
-            border-color: transparent;
-
-            .pending {
-              i {
-                color: rgb(109, 168, 255);
-              }
-              &.confirming {
-                cursor: pointer;
-                .phase:hover {
-                  text-decoration: underline;
-                }
-              }
-            }
-
-            .etherscanlink a {
-              color: white;
-              text-decoration: none;
-
-              &:hover,
-              &:focus {
-                color: white;
-              }
-
-              &:hover {
-                text-decoration: underline;
-              }
-            }
-          }
-        }
-      }
-    }
+  .button1,
+  .button2,
+  .button3 {
+    display: inline-block;
+    margin: auto;
   }
 
-  .content {
-    height: 100%;
-    display: flex;
-    padding-top: 30px;
-    padding-left: 80px;
-    padding-right: 80px;
-    padding-bottom: 40px;
-    box-sizing: border-box;
+  .prepare,
+  .contribute,
+  .learnmore {
+    margin-right: 16px;
+  }
 
-    .button1,
-    .button2,
-    .button3 {
+  .prepare,
+  .contribute,
+  .learnmore,
+  .farming {
+    text-align: left;
+    flex-basis: 25%;
+
+    .inputGroup {
       display: inline-block;
-      margin: auto;
-    }
-
-    .prepare,
-    .contribute,
-    .learnmore {
-      margin-right: 16px;
-    }
-
-    .prepare,
-    .contribute,
-    .learnmore,
-    .farming {
-      text-align: left;
-      flex-basis: 25%;
-
-      .inputGroup {
-        display: inline-block;
-        label {
-          display: block;
-        }
-      }
-      .inputButtonGroup {
+      label {
         display: block;
       }
     }
-    .learnmore {
-      img {
-        width: 265px;
-      }
+    .inputButtonGroup {
+      display: block;
     }
-    .prepare {
+  }
+  .learnmore {
+    img {
+      width: 265px;
     }
-    .contribute {
-    }
-    .farming {
-    }
+  }
+  .prepare {
+  }
+  .contribute {
+  }
+  .farming {
   }
 }

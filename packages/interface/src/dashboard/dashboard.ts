@@ -7,9 +7,8 @@ import TransactionsService from "services/TransactionsService";
 import { Address, EthereumService } from "services/EthereumService";
 import { BigNumber } from "ethers";
 import { EventConfigException } from "services/GeneralEvents";
-import { DialogService } from "services/DialogService";
-import { Liquidity } from "resources/dialogs/liquidity/liquidity";
 import { PriceService } from "services/PriceService";
+import { Router } from "aurelia-router";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -50,7 +49,6 @@ export class Dashboard {
   private primeToken: any;
   // private usdcToken: any;
   private connected = false;
-  private onOff=false;
   private liquidityBalance: BigNumber;
   private swapfee: string;
   private poolshare: BigNumber;
@@ -62,8 +60,8 @@ export class Dashboard {
     private contractsService: ContractsService,
     private ethereumService: EthereumService,
     private transactionsService: TransactionsService,
-    private dialogService: DialogService,
-    private priceService: PriceService) {
+    private priceService: PriceService,
+    private router: Router) {
   }
 
   protected async attached(): Promise<void> {
@@ -71,18 +69,6 @@ export class Dashboard {
     this.eventAggregator.subscribe("Network.Changed.Account", async (account: Address) => {
       await this.initialize(account);
       this.connected = !!account;
-    });
-
-    this.eventAggregator.subscribe("transaction.sent", async () => {
-      this.onOff = true;
-    });
-
-    this.eventAggregator.subscribe("transaction.confirmed", async () => {
-      this.onOff = false;
-    });
-
-    this.eventAggregator.subscribe("transaction.failed", async () => {
-      this.onOff = false;
     });
 
     return this.initialize();
@@ -153,38 +139,62 @@ export class Dashboard {
       (await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress)) : undefined;
   }
 
+  private ensureConnected(): boolean {
+    if (!this.connected) {
+      // TODO: make this await until we're either connected or not?
+      this.ethereumService.connect();
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
   /**
    * TODO: call getDefaultWethEthAmount and getStakingAmounts after tx has been mined
    */
   private async handleDeposit() {
-    await this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
-    this.getDefaultWethEthAmount();
+    // TODO: make sure they have enough to transfer
+    if (this.ensureConnected()) {
+      await this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
+      this.getDefaultWethEthAmount();
+    }
   }
 
   private async handleWithdraw() {
-    await this.transactionsService.send(() => this.weth.withdraw(this.wethEthAmount));
-    this.getDefaultWethEthAmount();
+    // TODO: make sure they have enough to transfer
+    if (this.ensureConnected()) {
+      await this.transactionsService.send(() => this.weth.withdraw(this.wethEthAmount));
+      this.getDefaultWethEthAmount();
+    }
   }
 
   private stakeAmount: BigNumber | string;
 
   private async handleStakeBPrime() {
-    await this.transactionsService.send(() => this.stakingRewards.stake(this.stakeAmount));
-    this.getStakingAmounts();
+    if (this.ensureConnected()) {
+      await this.transactionsService.send(() => this.stakingRewards.stake(this.stakeAmount));
+      this.getStakingAmounts();
+    }
   }
 
   private async handleHarvestYield() {
-    await this.transactionsService.send(() => this.stakingRewards.getReward());
-    this.getStakingAmounts();
+    if (this.ensureConnected()) {
+      await this.transactionsService.send(() => this.stakingRewards.getReward());
+      this.getStakingAmounts();
+    }
   }
 
   private async handleHarvestWithdraw() {
-    await this.transactionsService.send(() => this.stakingRewards.exit());
-    this.getStakingAmounts();
+    if (this.ensureConnected()) {
+      await this.transactionsService.send(() => this.stakingRewards.exit());
+      this.getStakingAmounts();
+    }
   }
 
   private handleAddLiquidity(remove = false) {
-    return this.dialogService.open(Liquidity, { remove }, { keyboard: true });
+    this.router.navigateToRoute("liquidity", { remove });
+    // return this.dialogService.open(Liquidity, { remove }, { keyboard: true });
     // DialogOpenPromise<DialogCancellableOpenResult>
   }
 }
