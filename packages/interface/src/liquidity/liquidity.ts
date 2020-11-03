@@ -1,14 +1,12 @@
-import { DialogController } from "aurelia-dialog";
-import { autoinject } from "aurelia-framework";
+import { autoinject, customElement } from "aurelia-framework";
 import "./liquidity.scss";
 
+@customElement("liquidity")
 @autoinject
 export class Liquidity {
 
   private model: ILiquidityModel;
   private okButton: HTMLElement;
-
-  constructor(private controller: DialogController) { }
 
   public activate(model: ILiquidityModel): void {
     this.model = model;
@@ -20,7 +18,7 @@ export class Liquidity {
   // }
 
   private handleSubmit(): void {
-    this.controller.ok();
+    // this.controller.ok();
   }
 }
 

@@ -1,0 +1,42 @@
+<template>
+  <div class="animated-page au-animate liquidityContainer">
+    <div class="firstRow">
+      <div class="leftColumn">
+        <div class="heading">
+          <div class="heading2 title">${ model.falsy ? "Add" : "Remove" } Liquidity</div>
+        </div>
+        <div class="section">
+          <div class="heading">POOL OVERVIEW</div>
+          <div class="body">
+            <div>0x10dd....d9b4</div>
+            <div>My share: 0%</div>
+            <div>Swap fee: 2%</div>
+            <div>98% WETH 2% YFV</div>
+          </div>
+        </div>
+      </div>
+      <div class="rightColumn">
+        <div class="table">
+          <div>Asset</div>
+          <div>Wallet Balance</div>
+          <div>Deposit</div>
+          <div>WETH</div>
+          <div>0 Max</div>
+          <div>Input</div>
+          <div>PRIME</div>
+          <div>0 Max</div>
+          <div>Input</div>
+        </div>
+        <div class="bPrimeAmount">
+          <div class="label">bPRIME Amount</div>
+          <div class="amount">0 bPRIME</div>
+        </div>
+      </div>
+    </div>
+    <div class="secondRow">
+      <button class="button1" click.delegate="handleSubmit()">${ model.falsy ? "Add" : "Remove" } Liquidity</button>
+      <div class="back">
+        <a route-href="route: dashboard"><i class="fas fa-arrow-left"></i> Back</a></div>
+    </div>
+  </div>
+</template>

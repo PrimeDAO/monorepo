@@ -3,8 +3,7 @@ import { autoinject, containerless, customElement, bindable, bindingMode } from 
 import { DisposableCollection } from "services/DisposableCollection";
 import { Address, EthereumService } from "services/EthereumService";
 import { BigNumber } from "ethers";
-import { Contract, ethers } from "ethers";
-import { ContractNames, ContractsService } from "services/ContractsService";
+import { IErc20Token, TokenService } from "services/TokenService";
 
 @autoinject
 @containerless
@@ -17,13 +16,12 @@ export class TokenBalance {
   private subscriptions = new DisposableCollection();
   private checking = false;
   private account: string;
-  private contract: Contract;
-  erc20Abi: any;
+  private contract: IErc20Token;
 
   constructor(
     private eventAggregator: EventAggregator,
     private ethereumService: EthereumService,
-    private contractsService: ContractsService) {
+    private tokenService: TokenService) {
   }
 
   public attached(): void {
@@ -36,17 +34,13 @@ export class TokenBalance {
       () => { this.initialize(); }));
     this.subscriptions.push(this.eventAggregator.subscribe("Network.NewBlock",
       () => this.getBalance()));
-    this.erc20Abi = this.contractsService.getContractAbi(ContractNames.IERC20);
     this.initialize();
   }
 
   private async initialize(): Promise<void> {
     this.account = this.ethereumService.defaultAccountAddress;
 
-    this.contract = new ethers.Contract(
-      this.tokenAddress,
-      this.erc20Abi,
-      this.ethereumService.readOnlyProvider);
+    this.contract = this.tokenService.getTokenContract(this.tokenAddress);
     this.getBalance();
   }
 
