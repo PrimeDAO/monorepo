@@ -1,16 +1,138 @@
 @import "./animations";
 @import "./dialogs";
-@import "tippy.js/dist/tippy.css"; // TODO: user CDNs?
+@import "tippy.js/dist/tippy.css"; // TODO: use CDN?
 
 html {
   height: 100%;
 
   body {
     margin: 0;
-    background-color: rgb(44, 47, 54);
-    color: $color-ds-white;
-    font-family: Arial, Helvetica, sans-serif;
+    background-color: $global-background-color;
+    color: $color-white;
+    font-family: Aeonik;
     height: 100%;
+
+    input {
+      border: $section-border;
+      background-color: transparent;
+      border-radius: $section-border-radius;
+    }
+
+    .title {
+      font-size: 42px;
+      font-family: "Cera Pro";
+      line-height: 48px;
+    }
+    .heading1 {
+      font-size: 32px;
+      font-family: "Cera Pro";
+      line-height: 48px;
+      white-space: nowrap;
+    }
+    .heading2 {
+      font-size: 32px;
+      font-family: "Cera Pro";
+      line-height: 48px;
+      white-space: nowrap;
+    }
+
+    .button1,
+    .button2,
+    .button3 {
+      border-radius: $global-button-radius;
+      padding: 2px 12px;
+      font-size: 14px;
+      line-height: 26px;
+      color: $color-white;
+      letter-spacing: 0.7px;
+      border: none;
+      outline: none;
+
+      &:hover {
+        background-color: $color-black;
+        color: $color-white;
+      }
+    }
+
+    .button1 {
+      background-color: $button1-color;
+    }
+    .button2 {
+      background-color: $button2-color;
+    }
+    .button3 {
+      background-color: $button3-color;
+    }
+
+    .section {
+      border: $section-border;
+      background-color: $section-background-color;
+      border-radius: $section-border-radius;
+      font-size: 12px;
+      letter-spacing: 0.6px;
+      line-height: 15px;
+      padding: 24px;
+
+      &.top {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom: none;
+      }
+      &.middle {
+        border-radius: 0;
+        border-bottom: none;
+      }
+      &.bottom {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+    }
+  }
+
+  ux-dialog.dialog {
+    background-color: $global-background-color;
+    color: $color-white;
+    font-family: Aeonik;
+
+    > ux-dialog-header {
+      display: flex;
+      padding-right: 8px;
+
+      .close {
+        flex-shrink: 2;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        padding-left: 10px;
+
+        button {
+          font-size: 28px;
+          background-color: transparent;
+          color: $color-white;
+          border: none;
+          outline: none;
+        }
+      }
+    }
+
+    ux-dialog-body {
+      .section {
+        .heading {
+          font-weight: bold;
+        }
+      }
+    }
+
+    ux-dialog-footer {
+      .button1,
+      .button2,
+      .button3 {
+        &:hover {
+          background-color: $color-black;
+          color: $color-white;
+        }
+      }
+    }
   }
 }
 
@@ -29,9 +151,9 @@ etherscanlink {
 
 .copy-to-clip-button,
 .copy-to-clip-button:focus {
-  color: $color-ds-white;
+  color: $color-white;
 }
 
 .copy-to-clip-button:hover {
-  color: $color-ds-grey-3;
+  color: $color-grey-3;
 }

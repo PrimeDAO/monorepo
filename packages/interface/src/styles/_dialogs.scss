@@ -1,8 +1,8 @@
 @import "./colors";
 
 .dialog {
-  color: $color-ds-white;
-  background-color: $color-ds-black;
+  color: $color-white;
+  background-color: $color-black;
 }
 
 // .dialog ux-dialog-header {
@@ -35,7 +35,7 @@
 // .dialog .body etherscanlink a:hover,
 // .dialog .body .copy-to-clip-button,
 // .dialog .body .copy-to-clip-button:hover {
-//   color: $color-ds-darkblue;
+//   color: $color-darkblue;
 // }
 
 // ux-dialog {
@@ -50,7 +50,7 @@
 // ux-dialog.connections,
 // ux-dialog.alert {
 //   border-top-width: 0.5rem !important;
-//   border-top-color: $color-ds-black !important;
+//   border-top-color: $color-black !important;
 //   max-width: 53rem;
 //   min-width: 10rem;
 // }
@@ -71,7 +71,7 @@
 // ux-dialog.connections .disclaimer .checks label {
 //   padding-left: 1.75rem;
 //   font-weight: 500;
-//   color: $color-ds-black-2;
+//   color: $color-black-2;
 // }
 
 // ux-dialog.connections .disclaimer .title {
@@ -94,7 +94,7 @@
 
 // ux-dialog.connections .disclaimer .checks input[type="checkbox"]:checked + .checkbox-decorator .check,
 // label.checkbox-inline input[type="checkbox"]:checked + .checkbox-decorator .check {
-//   color: $color-ds-green;
+//   color: $color-green;
 // }
 
 // ux-dialog.connections .disclaimer .checks .checkbox-decorator {
@@ -106,11 +106,11 @@
 // }
 
 // ux-dialog.connections .disclaimer hr {
-//   border-color: $color-ds-black;
+//   border-color: $color-black;
 // }
 
 // ux-dialog-overlay.active {
-//   background-color: $color-ds-black;
+//   background-color: $color-black;
 //   opacity: 0.5 !important;
 // }
 
