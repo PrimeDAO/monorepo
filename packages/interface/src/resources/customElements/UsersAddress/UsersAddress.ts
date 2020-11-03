@@ -22,6 +22,6 @@ export class UsersAddress {
   }
 
   private async initialize() {
-    this.usersAddress = await this.ethereumService.defaultAccountAddress;
+    this.usersAddress = this.ethereumService.defaultAccountAddress;
   }
 }

@@ -71,7 +71,7 @@ export class ConnectButton {
 
   private gotoTx() {
     if (this.txReceipt) {
-      let targetedNetwork = EthereumService.targetedNetwork as string;
+      let targetedNetwork = this.ethereumService.targetedNetwork as string;
       if (targetedNetwork === Networks.Mainnet) {
         targetedNetwork = "";
       } else {

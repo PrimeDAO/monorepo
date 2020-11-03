@@ -34,38 +34,26 @@ export class TokenBalance {
       }));
     this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Id",
       () => { this.initialize(); }));
+    this.subscriptions.push(this.eventAggregator.subscribe("Network.NewBlock",
+      () => this.getBalance()));
     this.erc20Abi = this.contractsService.getContractAbi(ContractNames.IERC20);
     this.initialize();
   }
 
   private async initialize(): Promise<void> {
-    this.stop();
-    this.account = await this.ethereumService.defaultAccountAddress;
+    this.account = this.ethereumService.defaultAccountAddress;
 
     this.contract = new ethers.Contract(
       this.tokenAddress,
       this.erc20Abi,
-      EthereumService.readOnlyProvider);
-
-
-    /**
-     * this is supposed to fire whenever a new block is created
-     * TODO: use a single app-wide poll on blocks.  Same for ethBalance.
-     */
-    EthereumService.readOnlyProvider.on("block", () => this.getBalance());
+      this.ethereumService.readOnlyProvider);
     this.getBalance();
-  }
-
-  private stop(): void {
-    EthereumService.readOnlyProvider.off("block", () => this.getBalance());
   }
 
   private detached(): void {
     if (this.subscriptions) {
       this.subscriptions.dispose();
     }
-
-    this.stop();
   }
 
   private async getBalance() {

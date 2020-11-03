@@ -52,7 +52,7 @@ export class ContractsService {
     ,
   ]);
 
-  // private static readOnlyProvider = EthereumService.readOnlyProvider;
+  // private static readOnlyProvider = this.ethereumService.readOnlyProvider;
   private initializingContracts: Promise<void>;
   private initializingContractsResolver: () => void;
   private networkInfo: IChainEventInfo;
@@ -102,7 +102,7 @@ export class ContractsService {
   }
 
   public initializeContracts(): void {
-    if (!ContractAddresses || !ContractAddresses[EthereumService.targetedNetwork]) {
+    if (!ContractAddresses || !ContractAddresses[this.ethereumService.targetedNetwork]) {
       throw new Error("initializeContracts: ContractAddresses not set");
     }
 
@@ -122,7 +122,7 @@ export class ContractsService {
     if (this.accountAddress) {
       signerOrProvider = Signer.isSigner(this.accountAddress) ? this.accountAddress : networkInfo.provider.getSigner(this.accountAddress);
     } else {
-      signerOrProvider = EthereumService.readOnlyProvider;
+      signerOrProvider = this.ethereumService.readOnlyProvider;
     }
 
     ContractsService.Contracts.forEach((_contract, contractName) => {
@@ -132,7 +132,7 @@ export class ContractsService {
         contract = ContractsService.Contracts.get(contractName).connect(signerOrProvider);
       } else {
         contract = new ethers.Contract(
-          ContractAddresses[EthereumService.targetedNetwork][contractName],
+          ContractAddresses[this.ethereumService.targetedNetwork][contractName],
           this.getContractAbi(contractName),
           signerOrProvider);
       }
@@ -151,7 +151,7 @@ export class ContractsService {
   }
 
   public getContractAddress(contractName: ContractNames): Address {
-    return ContractAddresses[EthereumService.targetedNetwork][contractName];
+    return ContractAddresses[this.ethereumService.targetedNetwork][contractName];
     // const contract = ContractsService.Contracts.get(contractName);
     // return contract.address || await contract.signer.getAddress();
   }
