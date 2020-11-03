@@ -183,8 +183,8 @@ export class Dashboard {
     this.getStakingAmounts();
   }
 
-  private handleAddLiquidity() {
-    return this.dialogService.open(Liquidity, { }, { keyboard: true });
+  private handleAddLiquidity(remove = false) {
+    return this.dialogService.open(Liquidity, { remove }, { keyboard: true });
     // DialogOpenPromise<DialogCancellableOpenResult>
   }
 }
