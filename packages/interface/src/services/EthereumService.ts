@@ -31,7 +31,6 @@ export interface IChainEventInfo {
 
 @autoinject
 export class EthereumService {
-
   constructor(private eventAggregator: EventAggregator) { }
 
   private static ProviderEndpoints = {
@@ -54,6 +53,7 @@ export class EthereumService {
         // },
       },
     },
+    // TODO: test with walletconnect
     walletconnect: {
       package: WalletConnectProvider, // required
       options: {
@@ -66,13 +66,15 @@ export class EthereumService {
     },
   };
 
-  public static targetedNetwork: AllowedNetworks;
+  public targetedNetwork: AllowedNetworks;
   /**
    * provided by ethers
    */
-  public static readOnlyProvider: BaseProvider;
+  public readOnlyProvider: BaseProvider;
 
-  public static initialize(network: AllowedNetworks): void {
+  private blockSubscribed: boolean;
+
+  public initialize(network: AllowedNetworks): void {
 
     if (!network) {
       throw new Error("Ethereum.initialize: `network` must be specified");
@@ -86,6 +88,13 @@ export class EthereumService {
     }
 
     this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[this.targetedNetwork]);
+
+    if (!this.blockSubscribed) {
+      this.readOnlyProvider.on("block", () => {
+        this.eventAggregator.publish("Network.NewBlock");
+        this.blockSubscribed = true;
+      });
+    }
   }
 
   private web3Modal: Web3Modal;
@@ -176,8 +185,8 @@ export class EthereumService {
       const walletProvider = new ethers.providers.Web3Provider(web3ModalProvider);
       const chainId = await this.getChainId(walletProvider);
       const chainName = this.chainNameById.get(chainId);
-      if (chainName !== EthereumService.targetedNetwork) {
-        this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Please connect to ${EthereumService.targetedNetwork}`));
+      if (chainName !== this.targetedNetwork) {
+        this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Please connect to ${this.targetedNetwork}`));
         return;
       }
       /**
@@ -203,8 +212,8 @@ export class EthereumService {
       // since we are limited to a single network, I don't think this can ever happen
       // this.web3ModalProvider.on("chainChanged", (chainId: number) => {
       //   const chainName = this.chainNameById.get(chainId);
-      //   if (chainName !== EthereumService.targetedNetwork) {
-      //     this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Please connect to ${EthereumService.targetedNetwork}`));
+      //   if (chainName !== this.ethereumService.targetedNetwork) {
+      //     this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Please connect to ${this.ethereumService.targetedNetwork}`));
       //     return;
       //   }
       //   else {

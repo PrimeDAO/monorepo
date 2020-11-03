@@ -28,29 +28,20 @@ export class EthBalance {
       }));
     this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Id",
       () => { this.initialize(); }));
+    this.subscriptions.push(this.eventAggregator.subscribe("Network.NewBlock",
+      () => this.getBalance()));
     this.initialize();
   }
 
   private async initialize(): Promise<void> {
-    this.stop();
-    this.account = await this.ethereumService.defaultAccountAddress;
-    /**
-     * this is supposed to fire whenever a new block is created
-     */
-    EthereumService.readOnlyProvider.on("block", () => this.getBalance());
+    this.account = this.ethereumService.defaultAccountAddress;
     this.getBalance();
-  }
-
-  private stop(): void {
-    EthereumService.readOnlyProvider.off("block", () => this.getBalance());
   }
 
   private detached(): void {
     if (this.subscriptions) {
       this.subscriptions.dispose();
     }
-
-    this.stop();
   }
 
   private async getBalance() {
@@ -58,7 +49,7 @@ export class EthBalance {
       try {
         this.checking = true;
         if (this.account) {
-          const provider = EthereumService.readOnlyProvider;
+          const provider = this.ethereumService.readOnlyProvider;
           this.balance = await provider.getBalance(this.account);
         } else {
           this.balance = null;

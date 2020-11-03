@@ -12,9 +12,10 @@ export class PriceService {
   constructor(
     private consoleLogService: ConsoleLogService,
     private contractService: ContractsService,
+    private ethereumService: EthereumService,
   ) {
-    this.baseUrl = `https://${(EthereumService.targetedNetwork !== Networks.Mainnet) ?
-      `${EthereumService.targetedNetwork}-` : ""}api.ethplorer.io/`;
+    this.baseUrl = `https://${(this.ethereumService.targetedNetwork !== Networks.Mainnet) ?
+      `${this.ethereumService.targetedNetwork}-` : ""}api.ethplorer.io/`;
   }
 
   public getTokenPrice(address: Address, peggedToEth = false): Promise<string> {

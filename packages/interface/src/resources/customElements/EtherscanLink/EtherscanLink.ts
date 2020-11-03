@@ -5,18 +5,13 @@ import "./EtherscanLink.scss";
 @autoinject
 @customElement("etherscanlink")
 export class EtherscanLink {
-
   @bindable({ defaultBindingMode: bindingMode.oneTime }) public address: string;
-
   @bindable({ defaultBindingMode: bindingMode.oneTime }) public text?: string;
-
   @bindable({ defaultBindingMode: bindingMode.oneTime }) public type: string;
-
   /**
    * set add classes on the text
    */
   @bindable({ defaultBindingMode: bindingMode.oneTime }) public css: string;
-
   /**
    * bootstrap config for a tooltip
    */
@@ -30,7 +25,7 @@ export class EtherscanLink {
 
   @computedFrom("address")
   private get networkExplorerUri(): string {
-    let targetedNetwork = EthereumService.targetedNetwork as string;
+    let targetedNetwork = this.ethereumService.targetedNetwork as string;
     if (targetedNetwork === Networks.Mainnet) {
       targetedNetwork = "";
     } else {
@@ -48,6 +43,8 @@ export class EtherscanLink {
       return `http://${targetedNetwork}etherscan.io/${this.type === "tx" ? "tx" : "address"}/${this.address}`;
     }
   }
+
+  constructor(private ethereumService: EthereumService) {}
 
   public attached(): void {
     if (this.type === "tx") {
