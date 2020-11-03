@@ -33,9 +33,9 @@
 
   button.close {
     flex-shrink: 2;
-    color: $color-ds-white;
+    color: $color-white;
     cursor: pointer;
-    background-color: $color-ds-red;
+    background-color: $color-red;
     border: none;
     font-size: 18px;
     padding: 0;
@@ -43,37 +43,37 @@
 }
 
 .banner.warning .body {
-  color: $color-ds-darkblue;
-  background-color: $color-ds-yellow;
+  color: $color-darkblue;
+  background-color: $color-yellow;
 }
 
 .banner.failure .body {
-  color: $color-ds-white;
-  background-color: $color-ds-red;
+  color: $color-white;
+  background-color: $color-red;
 }
 
 .banner.info .body {
-  color: $color-ds-white;
-  background-color: $color-ds-darkblue;
+  color: $color-white;
+  background-color: $color-darkblue;
 }
 
 .banner.info .body a {
   margin-left: 0.5rem;
-  color: $color-ds-yellow;
+  color: $color-yellow;
   text-transform: uppercase;
 }
 
 .banner.info .body .copy-to-clip-button {
   margin-left: 0.5rem;
-  color: $color-ds-yellow;
+  color: $color-yellow;
 }
 
 .banner.info button.close {
-  background-color: $color-ds-darkblue;
+  background-color: $color-darkblue;
 }
 
 .banner button.close span {
-  color: $color-ds-white;
+  color: $color-white;
 }
 
 .banner.au-enter-active {
