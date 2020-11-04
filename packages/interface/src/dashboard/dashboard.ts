@@ -8,6 +8,7 @@ import { Address, EthereumService } from "services/EthereumService";
 import { BigNumber } from "ethers";
 import { EventConfigException } from "services/GeneralEvents";
 import { PriceService } from "services/PriceService";
+import { AureliaHelperService } from "services/AureliaHelperService";
 import { Router } from "aurelia-router";
 
 // const goto = (where: string) => {
@@ -50,7 +51,7 @@ export class Dashboard {
   // private usdcToken: any;
   private connected = false;
   private liquidityBalance: BigNumber;
-  private swapfee: string;
+  private swapfee: BigNumber;
   private poolshare: BigNumber;
   private currentAPY: BigNumber;
   private primeFarmed: BigNumber;
@@ -61,7 +62,8 @@ export class Dashboard {
     private ethereumService: EthereumService,
     private transactionsService: TransactionsService,
     private priceService: PriceService,
-    private router: Router) {
+    private router: Router,
+    private aureliaHelperService: AureliaHelperService) {
   }
 
   protected async attached(): Promise<void> {
@@ -86,7 +88,6 @@ export class Dashboard {
       this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
       this.bPool = await this.contractsService.getContractFor(ContractNames.BPOOL);
       this.stakingRewards = await this.contractsService.getContractFor(ContractNames.STAKINGREWARDS);
-      // this.bPoolAddress = await crPool.bPool();
       this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
       this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
 
@@ -192,9 +193,17 @@ export class Dashboard {
     }
   }
 
+  private liquidityModel = {};
+
   private handleAddLiquidity(remove = false) {
-    this.router.navigateToRoute("liquidity", { remove });
-    // return this.dialogService.open(Liquidity, { remove }, { keyboard: true });
-    // DialogOpenPromise<DialogCancellableOpenResult>
+    Object.assign(this,
+      {
+        remove,
+        bPoolAddress: this.contractsService.getContractAddress(ContractNames.BPOOL),
+      });
+
+    const theRoute = this.router.routes.find(x => x.name === "liquidity");
+    theRoute.settings.state = this;
+    this.router.navigateToRoute("liquidity");
   }
 }

@@ -1,54 +1,89 @@
 @import "styles/colors.scss";
 
 .liquidityContainer {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "header header"
+    "leftColumn rightColumn"
+    "secondRow secondRow"
+    "thirdRow thirdRow";
 
-  .firstRow {
-    display: flex;
-    justify-content: space-evenly;
+  .header {
+    grid-area: header;
+    margin-bottom: 20px;
+  }
 
-    .firstColumn {
-      .heading {
-        .title {
-          flex-grow: 2;
-        }
+  .leftColumn {
+    grid-area: leftColumn;
+  }
+
+  .rightColumn {
+    grid-area: rightColumn;
+    .table {
+      display: grid;
+      margin-bottom: 16px;
+      grid-template-columns: auto auto auto;
+      grid-template-rows: auto;
+
+      .cell {
+        border-bottom: $section-border;
+        padding: 6px;
       }
 
-      .body {
+      .cell:nth-child(-n + 3) {
+        border-top: $section-border;
+        font-weight: 500;
+      }
+
+      .cell:nth-child(3n + 1) {
+        border-left: $section-border;
+      }
+
+      .cell:nth-child(3n) {
+        border-right: $section-border;
+      }
+
+      .cell:first-child {
+        border-top-left-radius: $section-border-radius;
+      }
+
+      .cell:last-child {
+        border-bottom-right-radius: $section-border-radius;
+      }
+
+      .cell:nth-child(3) {
+        border-top-right-radius: $section-border-radius;
+      }
+      .cell:nth-last-child(3) {
+        border-bottom-left-radius: $section-border-radius;
       }
     }
 
-    .rightColumn {
+    .bPrimeAmount {
       display: flex;
-      flex-direction: column;
-      .table {
-        display: grid;
-        grid-template-columns: auto auto auto;
-        //grid-template-rows: 33% 33% 33%;
-        column-gap: 16px;
+      .label {
+        flex-grow: 2;
       }
-
-      .bPrimeAmount {
-        display: flex;
-        .label {
-          flex-grow: 2;
-        }
-        .amount {
-          text-align: right;
-        }
+      .amount {
+        text-align: right;
       }
     }
   }
 
   .secondRow {
+    grid-area: secondRow;
     text-align: center;
 
     button {
       width: 100%;
     }
+  }
 
-    .back img {
+  .thirdRow {
+    grid-area: thirdRow;
+    &.back img {
       margin-right: 6px;
       width: 16px;
       position: relative;
