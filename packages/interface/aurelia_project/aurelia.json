@@ -21,7 +21,7 @@
     }
   },
   "platform": {
-    "hmr": false,
+    "hmr": true,
     "open": false,
     "port": 3300,
     "host": "localhost",
