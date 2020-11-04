@@ -1,5 +1,5 @@
 import { EventAggregator } from "aurelia-event-aggregator";
-import { autoinject, containerless, customElement, computedFrom } from "aurelia-framework";
+import { autoinject, containerless, customElement } from "aurelia-framework";
 import { ContractNames, ContractsService } from "services/ContractsService";
 import { DisposableCollection } from "services/DisposableCollection";
 import { Address, EthereumService, Networks } from "services/EthereumService";
