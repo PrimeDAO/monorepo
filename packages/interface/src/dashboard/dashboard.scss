@@ -28,16 +28,21 @@
     text-align: left;
     flex-basis: 25%;
 
-    .inputGroup {
-      display: inline-block;
-      label {
-        display: block;
-      }
-    }
     .inputButtonGroup {
       display: block;
+      .inputGroup {
+        display: inline-block;
+        label {
+          display: block;
+        }
+        input {
+          width: 90px;
+          margin-right: 6px;
+        }
+      }
     }
   }
+
   .learnmore {
     img {
       width: 265px;
