@@ -14,6 +14,15 @@ export class AureliaHelperService {
   }
 
   /**
+ * Make property bindable
+ * @param object
+ * @param propertyName
+ */
+  // public makePropertyObservable(object: unknown, propertyName: string): void {
+  //   this.bindingEngine.propertyObserver(object, propertyName);
+  // }
+
+  /**
    * Create an observable property and subscribe to changes
    * @param object
    * @param propertyName
