@@ -39,7 +39,7 @@ export class App {
 
     config.title = "interface.PrimeDAO.eth";
     config.options.pushState = true;
-    config.options.root = "/";
+    config.options.root = "./";
     /**
      * first set the landing page.
      * it is possible to be connected but have the wrong chain.
