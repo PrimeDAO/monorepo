@@ -8,7 +8,6 @@ import { Address, EthereumService } from "services/EthereumService";
 import { BigNumber } from "ethers";
 import { EventConfigException } from "services/GeneralEvents";
 import { PriceService } from "services/PriceService";
-import { AureliaHelperService } from "services/AureliaHelperService";
 import { Router } from "aurelia-router";
 
 // const goto = (where: string) => {
@@ -55,6 +54,9 @@ export class Dashboard {
   private poolshare: BigNumber;
   private currentAPY: BigNumber;
   private primeFarmed: BigNumber;
+  private userPrimeBalance: BigNumber;
+  private userWethBalance: BigNumber;
+  private defaultWethEthAmount: BigNumber;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -62,8 +64,7 @@ export class Dashboard {
     private ethereumService: EthereumService,
     private transactionsService: TransactionsService,
     private priceService: PriceService,
-    private router: Router,
-    private aureliaHelperService: AureliaHelperService) {
+    private router: Router) {
   }
 
   protected async attached(): Promise<void> {
@@ -76,10 +77,8 @@ export class Dashboard {
     return this.initialize();
   }
 
-  private maxWeth = false;
   private ethWethAmount: BigNumber | string;
   private wethEthAmount: BigNumber | string;
-  private defaultWethEthAmount: BigNumber | string;
   private priceWeth: BigNumber;
   private pricePrimeToken: BigNumber;
 
@@ -113,10 +112,13 @@ export class Dashboard {
 
       await this.getStakingAmounts();
 
-      await this.getDefaultWethEthAmount();
-
       if (account) {
 
+        await this.getUserBalances();
+
+        /**
+         * this is bPrime
+         */
         this.poolshare = (await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress))
           .div(await this.crPool.totalSupply());
 
@@ -128,9 +130,14 @@ export class Dashboard {
     }
   }
 
-  private async getDefaultWethEthAmount(): Promise<void> {
-    // TODO: get this amount when the user clicks the button?
-    this.defaultWethEthAmount = this.connected ? (await this.weth.balanceOf(this.ethereumService.defaultAccountAddress)) : undefined;
+  private async getUserBalances(): Promise<void> {
+    if (this.ethereumService.defaultAccountAddress) {
+      this.userWethBalance = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
+      this.userPrimeBalance = await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress);
+    } else {
+      this.userWethBalance = undefined;
+      this.userPrimeBalance = undefined;
+    }
   }
 
   private async getStakingAmounts() {
@@ -152,13 +159,13 @@ export class Dashboard {
   }
 
   /**
-   * TODO: call getDefaultWethEthAmount and getStakingAmounts after tx has been mined
+   * TODO: call getUserBalances and getStakingAmounts after tx has been mined
    */
   private async handleDeposit() {
     // TODO: make sure they have enough to transfer
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
-      this.getDefaultWethEthAmount();
+      this.getUserBalances();
     }
   }
 
@@ -166,11 +173,11 @@ export class Dashboard {
     // TODO: make sure they have enough to transfer
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.weth.withdraw(this.wethEthAmount));
-      this.getDefaultWethEthAmount();
+      this.getUserBalances();
     }
   }
 
-  private stakeAmount: BigNumber | string;
+  private stakeAmount: BigNumber;
 
   private async handleStakeBPrime() {
     if (this.ensureConnected()) {
@@ -205,5 +212,9 @@ export class Dashboard {
     const theRoute = this.router.routes.find(x => x.name === "liquidity");
     theRoute.settings.state = this;
     this.router.navigateToRoute("liquidity");
+  }
+
+  private handleGetMax() {
+    this.defaultWethEthAmount = this.userWethBalance;
   }
 }

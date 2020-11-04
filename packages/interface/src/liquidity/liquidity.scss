@@ -30,11 +30,16 @@
       .cell {
         border-bottom: $section-border;
         padding: 6px;
+
+        input {
+          width: 90px;
+          text-align: right;
+        }
       }
 
       .cell:nth-child(-n + 3) {
         border-top: $section-border;
-        font-weight: 500;
+        font-weight: bold;
       }
 
       .cell:nth-child(3n + 1) {

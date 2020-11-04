@@ -9,13 +9,14 @@
         <div>${model.poolAddress}</div>
         <label>My share:</label>
         <div class="value" if.to-view="model.connected">
-          <floating-point-number class="share" value.to-view="poolshare | ethwei" precision="4"
+          <floating-point-number class="share" value.to-view="model.poolshare | ethwei" precision="4"
             placement.to-view="top"></floating-point-number>%
         </div>
         <div else>--</div>
         <label>Swap fee:</label>
-        <div class="value">${model.swapfee | ethwei}</div>
-        <div>80% WETH 20% PRIME</div>
+        <div class="value" if.to-view="model.swapfee">${model.swapfee | ethwei}</div>
+        <div else>--</div>
+        <div>80% PRIME 20% WETH</div>
       </div>
     </div>
     <div class="rightColumn">
@@ -23,12 +24,36 @@
         <div class="cell">Asset</div>
         <div class="cell">Wallet Balance</div>
         <div class="cell">Deposit</div>
-        <div class="cell">WETH</div>
-        <div class="cell">0 Max</div>
-        <div class="cell">Input</div>
         <div class="cell">PRIME</div>
-        <div class="cell">0 Max</div>
-        <div class="cell">Input</div>
+        <div class="cell">
+          <div if.to-view="model.connected">
+            <floating-point-number class="share" value.to-view="model.userPrimeBalance | ethwei" precision="4"
+              placement.to-view="top"></floating-point-number>
+          </div>
+          <div else>--</div>
+        </div>
+        <div class="cell">
+          <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4" click.delegate="handleGetMaxPrime()">Max</button></label>
+          <numeric-input id="wethAmount"
+            defaultvalue.to-view="defaultWethBalance"
+            value.two-way="userWethAmount"
+            placeholder="0.0"></numeric-input>
+        </div>
+        <div class="cell">WETH</div>
+        <div class="cell">
+          <div if.to-view="model.connected">
+            <floating-point-number class="share" value.to-view="model.userWethBalance | ethwei" precision="4"
+              placement.to-view="top"></floating-point-number>
+          </div>
+          <div else>--</div>
+        </div>
+        <div class="cell">
+          <label if.to-view="model.userWethBalance.gt(0)"><button class="button4" click.delegate="handleGetMaxWeth()">Max</button></label>
+          <numeric-input id="primeAmount"
+            defaultvalue.to-view="defaultPrimeBalance"
+            value.two-way="userPrimeAmount"
+            placeholder="0.0"></numeric-input>
+        </div>
       </div>
       <div class="bPrimeAmount">
         <div class="label">bPRIME Amount</div>

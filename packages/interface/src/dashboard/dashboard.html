@@ -27,11 +27,11 @@
             <div class="inputGroup">
               <label for="wethEthAmount">WETH &RightArrow; ETH</label>
               <numeric-input id="wethEthAmount"
-                defaultvalue.to-view="maxWeth ? defaultWethEthAmount : undefined"
+                defaultvalue.to-view="defaultWethEthAmount"
                 value.two-way="wethEthAmount"
                 placeholder="0.0"></numeric-input>
             </div>
-            <label if.to-view="defaultWethEthAmount.gt(0)"><input type="checkbox" checked.bind="maxWeth">Max</label>
+            <label if.to-view="userWethBalance.gt(0)"><button class="button4" click.delegate="handleGetMax()">Max</button></label>
             <button class="button2" disabled.to-view="!wethEthAmount || wethEthAmount.eq(0)" click.delegate="handleWithdraw()">Unwrap</button>
           </div>
         </div>

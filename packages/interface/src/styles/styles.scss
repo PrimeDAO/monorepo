@@ -56,30 +56,39 @@ html {
 
     .button1,
     .button2,
-    .button3 {
+    .button3,
+    .button4 {
       border-radius: $global-button-radius;
-      padding: 2px 12px;
+      padding: 0 10px;
       font-size: 14px;
       line-height: 26px;
       color: $color-white;
       letter-spacing: 0.7px;
-      border: none;
+      border: 2px solid $color-white;
       outline: none;
 
       &:hover {
         background-color: $color-black;
+        border-color: $color-black;
         color: $color-white;
       }
     }
 
     .button1 {
       background-color: $button1-color;
+      border-color: $button1-color;
     }
     .button2 {
       background-color: $button2-color;
+      border-color: $button2-color;
     }
     .button3 {
       background-color: $button3-color;
+      border-color: $button3-color;
+    }
+    .button4 {
+      background-color: transparent;
+      border: 2px solid $color-green;
     }
 
     .section {
