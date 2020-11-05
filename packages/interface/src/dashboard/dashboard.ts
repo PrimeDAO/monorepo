@@ -57,6 +57,7 @@ export class Dashboard {
   private primeFarmed: BigNumber;
   private userPrimeBalance: BigNumber;
   private userWethBalance: BigNumber;
+  private userBPrimeBalance: BigNumber;
   private defaultWethEthAmount: BigNumber;
 
   constructor(
@@ -135,9 +136,11 @@ export class Dashboard {
     if (this.ethereumService.defaultAccountAddress) {
       this.userWethBalance = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
       this.userPrimeBalance = await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress);
+      this.userBPrimeBalance = await this.bPool.balanceOf(this.ethereumService.defaultAccountAddress);
     } else {
       this.userWethBalance = undefined;
       this.userPrimeBalance = undefined;
+      this.userBPrimeBalance = undefined;
     }
   }
 
@@ -213,9 +216,7 @@ export class Dashboard {
   //   }
   // }
 
-  private liquidityModel = {};
-
-  private handleAddLiquidity(remove = false) {
+  private handleLiquidity(remove = false) {
     Object.assign(this,
       {
         remove,
@@ -225,6 +226,29 @@ export class Dashboard {
     const theRoute = this.router.routes.find(x => x.name === "liquidity");
     theRoute.settings.state = this;
     this.router.navigateToRoute("liquidity");
+  }
+
+  private handleStaking(harvest = false) {
+    Object.assign(this,
+      {
+        harvest,
+      });
+
+    const theRoute = this.router.routes.find(x => x.name === "staking");
+    theRoute.settings.state = this;
+    this.router.navigateToRoute("staking");
+  }
+
+  // private async stake(amount: BigNumber): Promise<void> {
+  //   if (this.ensureConnected()) {
+  //     await this.transactionsService.send(() => this.stakingRewards.stake(amount));
+  //   }
+  // }
+
+  private async handleStakingExit(): Promise<void> {
+    if (this.ensureConnected()) {
+      await this.transactionsService.send(() => this.stakingRewards.exit());
+    }
   }
 
   private handleGetMax() {
