@@ -6,7 +6,7 @@ import { EventAggregator } from "aurelia-event-aggregator";
 import TransactionsService from "services/TransactionsService";
 import { Address, EthereumService } from "services/EthereumService";
 import { BigNumber } from "ethers";
-import { EventConfigException } from "services/GeneralEvents";
+import { EventConfigException, EventConfigFailure } from "services/GeneralEvents";
 import { PriceService } from "services/PriceService";
 import { Router } from "aurelia-router";
 
@@ -57,6 +57,7 @@ export class Dashboard {
   private primeFarmed: BigNumber;
   private userPrimeBalance: BigNumber;
   private userWethBalance: BigNumber;
+  private userEthBalance: BigNumber;
   private userBPrimeBalance: BigNumber;
   private defaultWethEthAmount: BigNumber;
   private poolTokenWeights: Map<string, number>;
@@ -79,8 +80,8 @@ export class Dashboard {
     return this.initialize();
   }
 
-  private ethWethAmount: BigNumber | string;
-  private wethEthAmount: BigNumber | string;
+  private ethWethAmount: BigNumber;
+  private wethEthAmount: BigNumber;
   private priceWeth: BigNumber;
   private pricePrimeToken: BigNumber;
 
@@ -126,10 +127,13 @@ export class Dashboard {
 
   private async getUserBalances(): Promise<void> {
     if (this.ethereumService.defaultAccountAddress) {
+      const provider = this.ethereumService.readOnlyProvider;
+      this.userEthBalance = await provider.getBalance(this.ethereumService.defaultAccountAddress);
       this.userWethBalance = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
       this.userPrimeBalance = await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress);
       this.userBPrimeBalance = await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress);
     } else {
+      this.userEthBalance = undefined;
       this.userWethBalance = undefined;
       this.userPrimeBalance = undefined;
       this.userBPrimeBalance = undefined;
@@ -173,24 +177,27 @@ export class Dashboard {
     }
   }
 
-  /**
-   * TODO: call getUserBalances and getStakingAmounts after tx has been mined
-   */
   private async handleDeposit() {
-    // TODO: make sure they have enough to transfer
     if (this.ensureConnected()) {
-      await this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
-      // TODO:  should happen after mining
-      this.getUserBalances();
+      if (this.ethWethAmount.gt(this.userEthBalance)) {
+        this.eventAggregator.publish("handleValidationError", new EventConfigFailure("You don't have enough ETH to wrap the amount you requested"));
+      } else {
+        await this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
+        // TODO:  should happen after mining
+        this.getUserBalances();
+      }
     }
   }
 
   private async handleWithdraw() {
-    // TODO: make sure they have enough to transfer
     if (this.ensureConnected()) {
-      await this.transactionsService.send(() => this.weth.withdraw(this.wethEthAmount));
-      // TODO:  should happen after mining
-      this.getUserBalances();
+      if (this.wethEthAmount.gt(this.userWethBalance)) {
+        this.eventAggregator.publish("handleValidationError", new EventConfigFailure("You don't have enough WETH to unwrap the amount you requested"));
+      } else {
+        await this.transactionsService.send(() => this.weth.withdraw(this.wethEthAmount));
+        // TODO:  should happen after mining
+        this.getUserBalances();
+      }
     }
   }
 
@@ -244,24 +251,28 @@ export class Dashboard {
   //   }
   // }
 
-  // private async stake(amount: BigNumber): Promise<void> {
-  //   if (this.ensureConnected()) {
-  //     await this.transactionsService.send(() => this.stakingRewards.stake(amount));
-  //     // TODO:  should happen after mining
-  //      this.getStakingAmounts();
-  //   }
-  // }
+  private async stakingStake(amount: BigNumber): Promise<void> {
+    if (this.ensureConnected()) {
+      if (amount.gt(this.userBPrimeBalance)) {
+        this.eventAggregator.publish("handleValidationError", new EventConfigFailure("You don't have enough BPRIME to stake the amount you requested"));
+      } else {
+        await this.transactionsService.send(() => this.stakingRewards.stake(amount));
+        // TODO:  should happen after mining
+        this.getStakingAmounts();
+      }
+    }
+  }
 
-  // private async harvest(amount: BigNumber): Promise<void> {
-  //   if (this.ensureConnected()) {
-  //     await this.transactionsService.send(() => this.stakingRewards.harvest(amount));
-  //     // TODO:  should happen after mining
-  //      this.getStakingAmounts();
-  //   }
-  // }
+  private async stakingHarvest(): Promise<void> {
+    if (this.ensureConnected()) {
+      await this.transactionsService.send(() => this.stakingRewards.getReward());
+      // TODO:  should happen after mining
+      this.getStakingAmounts();
+    }
+  }
 
 
-  private async handleStakingExit(): Promise<void> {
+  private async stakingExit(): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.stakingRewards.exit());
     }

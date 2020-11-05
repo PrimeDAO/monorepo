@@ -21,6 +21,7 @@ export class Banner {
   private subscriptions: DisposableCollection = new DisposableCollection();
   private queue: Subject<IBannerConfig>;
   private timeoutId: any;
+  private stdTimeout = 6000;
   // private etherScanTooltipConfig = {
   //   placement: "bottom",
   //   title: "Click to go to etherscan.io transaction information page",
@@ -37,6 +38,8 @@ export class Banner {
       .subscribe("handleException", (config: EventConfigException | any) => this.handleException(config)));
     this.subscriptions.push(eventAggregator
       .subscribe("handleFailure", (config: EventConfig | string) => this.handleFailure(config)));
+    this.subscriptions.push(eventAggregator
+      .subscribe("handleValidationError", (config: EventConfig | string) => this.handleValidationError(config)));
     this.subscriptions.push(eventAggregator
       .subscribe("handleInfo", (config: EventConfig | string) => this.handleInfo(config)));
     this.subscriptions.push(eventAggregator
@@ -156,6 +159,23 @@ export class Banner {
     this.queueEventConfig(bannerConfig);
   }
 
+  private handleValidationError(config: EventConfig | string): void {
+
+    if ((config as any).originatingUiElement) {
+      return;
+    }
+
+    const bannerConfig = {
+      message: (typeof config === "string")
+        ? config as string : config.message,
+      type: EventMessageType.Warning,
+      timer: this.stdTimeout,
+    };
+
+    this.queueEventConfig(bannerConfig);
+  }
+
+
   private handleInfo(config: EventConfig | string): void {
 
     if ((config as any).originatingUiElement) {
@@ -166,7 +186,7 @@ export class Banner {
       message: (typeof config === "string")
         ? config as string : config.message,
       type: EventMessageType.Info,
-      timer: 10000,
+      timer: this.stdTimeout,
     };
 
     this.queueEventConfig(bannerConfig);
