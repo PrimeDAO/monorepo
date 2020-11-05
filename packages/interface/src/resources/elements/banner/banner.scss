@@ -39,12 +39,13 @@
     border: none;
     font-size: 18px;
     padding: 0;
+    outline: none;
   }
 }
 
 .banner.warning .body {
   color: $color-darkblue;
-  background-color: $color-yellow;
+  background-color: $color-orange;
 }
 
 .banner.failure .body {
@@ -74,6 +75,14 @@
 
 .banner button.close span {
   color: $color-white;
+}
+
+.banner.warning button.close {
+  background-color: $color-orange;
+}
+
+.banner.warning button.close span {
+  color: $color-darkblue;
 }
 
 .banner.au-enter-active {

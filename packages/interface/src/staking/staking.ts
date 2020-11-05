@@ -1,8 +1,7 @@
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject, customElement, singleton } from "aurelia-framework";
 import { BigNumber } from "ethers";
-// import { AureliaHelperService } from "services/AureliaHelperService";
-import { Address } from "services/EthereumService";
+import { EventConfigFailure } from "services/GeneralEvents";
 import "./staking.scss";
 
 @singleton(false)
@@ -11,7 +10,7 @@ import "./staking.scss";
 export class Staking {
 
   private model: IStakingModel;
-  private bPrimeAmount: Address;
+  private bPrimeAmount: BigNumber;
   private defaultBPrimeAmount: BigNumber;
 
   constructor(
@@ -22,11 +21,7 @@ export class Staking {
   }
 
   private handleSubmit(): void {
-    // if (this.model.remove) {
-
-    // } else {
-
-    // }
+    this.model.stakingStake(this.bPrimeAmount);
   }
 
   private handleGetMaxBPrime() {
@@ -36,6 +31,6 @@ export class Staking {
 
 interface IStakingModel {
   connected: boolean;
-  harvest: boolean; // if falsy then stake
   userBPrimeBalance: BigNumber
+  stakingStake(amount: BigNumber): Promise<void>;
 }

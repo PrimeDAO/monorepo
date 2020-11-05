@@ -81,8 +81,8 @@
       </div>
       <div class="section bottom section4">
         <div class="liquidityButtons">
-          <button class="button1 addLiquidity" click.delegate="handleLiquidity()">Add Liquidity</button>
-          <button class="button2 removeLiquidity" click.delegate="handleLiquidity(true)">Remove Liquidity</button>
+          <button class="button1 addLiquidity" click.delegate="gotoLiquidity()">Add Liquidity</button>
+          <button class="button2 removeLiquidity" click.delegate="gotoLiquidity(true)">Remove Liquidity</button>
         </div>
       </div>
     </div>
@@ -110,9 +110,9 @@
       </div>
       <div class="section bottom section3">
         <div class="stakingButtons">
-          <button class="button1 stakeBPrime" click.delegate="handleStaking()">Stake BPRIME tokens</button>
-          <button class="button2 harvestYield" click.delegate="handleStaking(true)">Harvest Yield</button>
-          <button class="button3 harvestAndWithdraw" click.delegate="handleStakingExit()"">Harvest and Withdraw</button>
+          <button class="button1 stakeBPrime" click.delegate="gotoStaking()">Stake BPRIME tokens</button>
+          <button class="button2 harvestYield" click.delegate="stakingHarvest()">Harvest Yield</button>
+          <button class="button3 harvestAndWithdraw" click.delegate="stakingExit()">Harvest and Withdraw</button>
         </div>
       </div>
     </div>
