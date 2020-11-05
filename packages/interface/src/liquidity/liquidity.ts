@@ -1,10 +1,11 @@
 import { EventAggregator } from "aurelia-event-aggregator";
-import { autoinject, customElement } from "aurelia-framework";
+import { autoinject, customElement, singleton } from "aurelia-framework";
 import { BigNumber } from "ethers";
 // import { AureliaHelperService } from "services/AureliaHelperService";
 import { Address } from "services/EthereumService";
 import "./liquidity.scss";
 
+@singleton(false)
 @customElement("liquidity")
 @autoinject
 export class Liquidity {
@@ -23,6 +24,11 @@ export class Liquidity {
   }
 
   private handleSubmit(): void {
+    // if (this.model.remove) {
+
+    // } else {
+
+    // }
   }
 
   private handleGetMaxWeth() {

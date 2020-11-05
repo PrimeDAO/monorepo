@@ -48,6 +48,7 @@
 
       .cell:nth-child(3n) {
         border-right: $section-border;
+        text-align: right;
       }
 
       .cell:first-child {

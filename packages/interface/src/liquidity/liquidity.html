@@ -1,7 +1,7 @@
 <template>
   <div class="animated-page au-animate liquidityContainer">
     <div class="header">
-      <div class="heading2 title">${ model.falsy ? "Add" : "Remove" } Liquidity</div>
+      <div class="heading2 title">${ model.remove ? "Remove" : "Add" } Liquidity</div>
     </div>
     <div class="leftColumn section">
       <div class="heading">POOL OVERVIEW</div>
@@ -61,7 +61,7 @@
       </div>
     </div>
     <div class="secondRow">
-      <button class="button1" click.delegate="handleSubmit()">${ model.falsy ? "Add" : "Remove" } Liquidity</button>
+      <button class="button1" click.delegate="handleSubmit()">${ model.remove ? "Remove" : "Add" } Liquidity</button>
     </div>
     <div class="thirdRow back">
       <a route-href="route: dashboard"><img src="/back.svg"></img> Back</a>

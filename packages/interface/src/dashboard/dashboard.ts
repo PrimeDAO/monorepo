@@ -1,4 +1,4 @@
-import { autoinject } from "aurelia-framework";
+import { autoinject, singleton } from "aurelia-framework";
 import { ContractNames } from "services/ContractsService";
 import { ContractsService } from "services/ContractsService";
 import "./dashboard.scss";
@@ -40,6 +40,7 @@ import { Router } from "aurelia-router";
 //   );
 // };
 
+@singleton(false)
 @autoinject
 export class Dashboard {
   private weth: any;
@@ -199,6 +200,18 @@ export class Dashboard {
       this.getStakingAmounts();
     }
   }
+
+  // private async addLiquidity(poolAmountOut, maxAmountsIn): Promise<void> {
+  //   if (this.ensureConnected()) {
+  //     await this.transactionsService.send(() => this.crPool.joinPool(uint poolAmountOut, uint[] calldata maxAmountsIn));
+  //   }
+  // }
+
+  // private async removeLiquidity(): Promise<void> {
+  //   if (this.ensureConnected()) {
+  //     await this.transactionsService.send(() => this.crPool.exitPool(uint poolAmountIn, uint[] calldata minAmountsOut));
+  //   }
+  // }
 
   private liquidityModel = {};
 
