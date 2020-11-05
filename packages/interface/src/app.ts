@@ -5,10 +5,13 @@ import { Router, RouterConfiguration } from "aurelia-router";
 import { PLATFORM } from "aurelia-pal";
 import "./styles/styles.scss";
 import "./app.scss";
+import { ConsoleLogService } from "services/ConsoleLogService";
 
 @autoinject
 export class App {
-  constructor (private eventAggregator: EventAggregator) { }
+  constructor (
+    private eventAggregator: EventAggregator,
+    private consoleLogService: ConsoleLogService) { }
 
   private router: Router;
   private onOff = false;
@@ -39,7 +42,11 @@ export class App {
 
     config.title = "interface.PrimeDAO.eth";
     config.options.pushState = true;
-    config.options.root = "./";
+    const isIpfs = (window as any).IS_IPFS;
+    if (isIpfs) {
+      this.consoleLogService.handleMessage(`Routing for IPFS: ${window.location.pathname}`);
+    }
+    config.options.root = window.location.pathname; // to account for IPFS
     /**
      * first set the landing page.
      * it is possible to be connected but have the wrong chain.

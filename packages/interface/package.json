@@ -22,7 +22,7 @@
     "fetchContracts": "node scripts/fetchContracts.js"
   },
   "dependencies": {
-    "@toruslabs/torus-embed": "^1.8.5",
+    "@toruslabs/torus-embed": "^1.8.6",
     "@walletconnect/web3-provider": "^1.2.2",
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.3.3",
@@ -55,6 +55,7 @@
     "dotenv": "^8.2.0",
     "duplicate-package-checker-webpack-plugin": "^3.0.0",
     "eslint": "^7.10.0",
+    "eslint-plugin-rxjs": "^2.1.2",
     "expose-loader": "^1.0.0",
     "file-loader": "^6.1.0",
     "fs-extra": "^9.0.1",

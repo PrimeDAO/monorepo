@@ -70,7 +70,7 @@ export class ConsoleLogService {
     this.logger.warn(this.getMessage(config));
   }
 
-  private handleMessage(config: EventConfig | string) {
+  public handleMessage(config: EventConfig | string): void {
     if (typeof config === "string") {
       this.logger.info(this.getMessage(config));
     } else {

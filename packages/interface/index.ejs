@@ -27,26 +27,26 @@
       const { pathname, hostname, protocol } = window.location
 
       // redirect to https on non-localhost
-      if (protocol === 'http:' && hostname !== 'localhost') {
+      if (protocol === 'http:' && hostname !== 'localhost' && hostname.indexOf('ipfs.localhost') === -1) {
         window.location.protocol = 'https'
         return
       }
 
-      const ipfsMatch = /.*\/Qm\w{44}/.exec(pathname)
-      changeBaseHref(ipfsMatch)
-
-      window.IS_IPFS = !!ipfsMatch || hostname.endsWith('.eth.link')
-
-      function changeBaseHref(match) {
-        if (match && match.length > 0) {
-          let baseHref = match[0]
-          if (!baseHref.endsWith('/')) baseHref += '/'
-
-          const base = document.querySelector('base')
-          base.href = baseHref
-        }
-      }
-
+      //      const ipfsMatch = /.*\/Qm\w{44}/.exec(pathname)
+      //      changeBaseHref(ipfsMatch)
+      //
+      //      window.IS_IPFS = !!ipfsMatch || hostname.endsWith('.eth.link')
+      //
+      //      function changeBaseHref(match) {
+      //        if (match && match.length > 0) {
+      //          let baseHref = match[0]
+      //          if (!baseHref.endsWith('/')) baseHref += '/'
+      //
+      //          const base = document.querySelector('base')
+      //          base.href = baseHref
+      //        }
+      //      }
+      //
     })();
   </script>
   <!-- imported CSS are concatenated and added automatically -->
