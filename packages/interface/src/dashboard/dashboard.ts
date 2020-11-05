@@ -136,7 +136,7 @@ export class Dashboard {
     if (this.ethereumService.defaultAccountAddress) {
       this.userWethBalance = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
       this.userPrimeBalance = await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress);
-      this.userBPrimeBalance = await this.bPool.balanceOf(this.ethereumService.defaultAccountAddress);
+      this.userBPrimeBalance = await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress);
     } else {
       this.userWethBalance = undefined;
       this.userPrimeBalance = undefined;
