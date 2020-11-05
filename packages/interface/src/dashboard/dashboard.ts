@@ -119,7 +119,7 @@ export class Dashboard {
         await this.getUserBalances();
 
         /**
-         * this is bPrime
+         * this is BPRIME
          */
         this.poolshare = (await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress))
           .div(await this.crPool.totalSupply());
