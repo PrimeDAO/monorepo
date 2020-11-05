@@ -53,8 +53,12 @@
       <div class="section middle section2">
         <div class="value">
           <!-- TODO: get dollars and convert to millions or whatever -->
-          $<floating-point-number class="balance" value.to-view="liquidityBalance | ethwei" precision="10"
-            placement.to-view="top"></floating-point-number>
+          $<formatted-number
+            class="balance"
+            value.to-view="liquidityBalance | ethwei"
+            format="0.00a"
+            placement.to-view="top">
+          </formatted-number>
         </div>
         <div class="label">Liquidity</div>
       </div>
@@ -89,15 +93,19 @@
       </div>
       <div class="section middle section2">
         <div class="currentAPY">
-          <div class="label">Current APY</div>
           <div class="value">
             <floating-point-number class="share" value.to-view="currentAPY | ethwei" precision="4"
               placement.to-view="top"></floating-point-number>%
           </div>
+          <div class="label">Current APY</div>
         </div>
-        <div class="primeFarmed">You've farmed <floating-point-number if.to-view="connected" class="share" value.to-view="primeFarmed | ethwei" precision="8"
-            placement.to-view="top"></floating-point-number>
-          <div else>--</div> PRIME!
+        <div class="primeFarmed">
+          <div class="value">
+            <floating-point-number if.to-view="connected" class="share" value.to-view="primeFarmed | ethwei" precision="8"
+              placement.to-view="top"></floating-point-number>
+            <span else>--</span> PRIME
+          </div>
+          <div class="label">PRIME Farmed</div>
         </div>
       </div>
       <div class="section bottom section3">

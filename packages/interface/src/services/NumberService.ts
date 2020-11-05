@@ -97,6 +97,31 @@ export class NumberService {
     return regex.test(value);
   }
 
+  // /**
+  //    * >= 1,000,000,000,000 => "T"
+  //    * >= 1,000,000,000     => "B"
+  //    * >= 1,000,000         => "M"
+  //    * >= 1,000             => "K"
+  //    * @param num
+  //    */
+  // public magnitudeLabel(num: number | string): string {
+  //   if ((num === undefined) || (num === null) || Number.isNaN(num)) {
+  //     return "";
+  //   }
+
+  //   if (typeof num === "string") {
+  //     num = this.fromString(num);
+  //   }
+
+  //   if (num > 1000) {
+  //     return "";
+  //   }
+
+  //   return (num >= 1000000000000) ? "T" :
+  //     (num >= 1000000000) ? "B" :
+  //       (num >= 1000000) ? "M" : "K";
+  // }
+
   private getNumberRegexString(decimalPlaces = 0) {
     return (decimalPlaces !== 0) ?
       // tslint:disable-next-line: max-line-length
