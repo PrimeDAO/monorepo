@@ -22,6 +22,7 @@ export class FloatingPointNumber {
   @bindable({ defaultBindingMode: bindingMode.toView }) public exponentialAt: number | [number, number] = [-4, 20];
   @bindable({ defaultBindingMode: bindingMode.toView }) public value: number | string;
   @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
+  @bindable({ defaultBindingMode: bindingMode.toView }) public defaultText = "--";
 
   private text: string;
   private textElement: HTMLElement;
@@ -32,7 +33,7 @@ export class FloatingPointNumber {
 
   public valueChanged(): void {
     if ((this.value === undefined) || (this.value === null)) {
-      this.text = "";
+      this.text = this.defaultText;
       return;
     }
 
@@ -74,7 +75,7 @@ export class FloatingPointNumber {
       }
     }
 
-    this.text = text;
+    this.text = text ?? this.defaultText;
 
     this.setTooltip();
   }

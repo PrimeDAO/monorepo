@@ -49,4 +49,5 @@ interface ILiquidityModel {
   userBPrimeBalance: BigNumber;
   userPrimeBalance: BigNumber;
   userWethBalance: BigNumber;
+  poolTokenWeights: Map<string, number>;
 }

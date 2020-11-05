@@ -59,6 +59,7 @@ export class Dashboard {
   private userWethBalance: BigNumber;
   private userBPrimeBalance: BigNumber;
   private defaultWethEthAmount: BigNumber;
+  private poolTokenWeights: Map<string, number>;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -73,7 +74,6 @@ export class Dashboard {
 
     this.eventAggregator.subscribe("Network.Changed.Account", async (account: Address) => {
       await this.initialize(account);
-      this.connected = !!account;
     });
 
     return this.initialize();
@@ -91,32 +91,21 @@ export class Dashboard {
       this.stakingRewards = await this.contractsService.getContractFor(ContractNames.STAKINGREWARDS);
       this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
       this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
-
-      try {
-
-        this.priceWeth = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.WETH), true));
-        this.pricePrimeToken = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
-
-        const priceWethLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))
-          .mul(this.priceWeth);
-
-        const pricePrimeTokenLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)))
-          .mul(this.pricePrimeToken);
-
-        this.liquidityBalance = priceWethLiquidity.add(pricePrimeTokenLiquidity);
-      } catch (ex) {
-        this.eventAggregator.publish("handleException",
-          new EventConfigException("Unable to fetch a token price", ex));
-        this.liquidityBalance = undefined;
-      }
-
       this.swapfee = await this.bPool.getSwapFee();
+      this.getLiquidity();
+      const weights = new Map();
+      weights.set("PRIME",
+        await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
+      weights.set("WETH",
+        await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.WETH)));
 
-      await this.getStakingAmounts();
+      this.poolTokenWeights = weights;
+
+      this.getStakingAmounts();
 
       if (account) {
 
-        await this.getUserBalances();
+        this.getUserBalances();
 
         /**
          * this is BPRIME
@@ -126,9 +115,12 @@ export class Dashboard {
 
         this.connected = true;
       // TODO: fully revert the connection
+      } else {
+        this.connected = false;
       }
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
+      this.connected = false;
     }
   }
 
@@ -146,9 +138,28 @@ export class Dashboard {
 
   private async getStakingAmounts() {
     this.currentAPY = await this.stakingRewards.rewardPerTokenStored();
-    // TODO: check for presence of account, the case when the user disconnects/unlocks while connected
-    this.primeFarmed = this.connected ?
+    this.primeFarmed = this.ethereumService.defaultAccountAddress ?
       (await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress)) : undefined;
+  }
+
+  private async getLiquidity() {
+    try {
+
+      this.priceWeth = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.WETH), true));
+      this.pricePrimeToken = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
+
+      // const priceWethLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))
+      //   .mul(this.priceWeth);
+
+      // const pricePrimeTokenLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)))
+      //   .mul(this.pricePrimeToken);
+
+      this.liquidityBalance = BigNumber.from("10000000000000000000000"); // priceWethLiquidity.add(pricePrimeTokenLiquidity);
+    } catch (ex) {
+      this.eventAggregator.publish("handleException",
+        new EventConfigException("Unable to fetch a token price", ex));
+      this.liquidityBalance = undefined;
+    }
   }
 
   private ensureConnected(): boolean {
@@ -169,6 +180,7 @@ export class Dashboard {
     // TODO: make sure they have enough to transfer
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.weth.deposit({ value: this.ethWethAmount }));
+      // TODO:  should happen after mining
       this.getUserBalances();
     }
   }
@@ -177,46 +189,22 @@ export class Dashboard {
     // TODO: make sure they have enough to transfer
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.weth.withdraw(this.wethEthAmount));
+      // TODO:  should happen after mining
       this.getUserBalances();
     }
   }
 
   private stakeAmount: BigNumber;
 
-  private async handleStakeBPrime() {
-    if (this.ensureConnected()) {
-      await this.transactionsService.send(() => this.stakingRewards.stake(this.stakeAmount));
-      this.getStakingAmounts();
-    }
-  }
-
-  private async handleHarvestYield() {
-    if (this.ensureConnected()) {
-      await this.transactionsService.send(() => this.stakingRewards.getReward());
-      this.getStakingAmounts();
-    }
-  }
-
   private async handleHarvestWithdraw() {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.stakingRewards.exit());
+      // TODO:  should happen after mining
       this.getStakingAmounts();
     }
   }
 
-  // private async addLiquidity(poolAmountOut, maxAmountsIn): Promise<void> {
-  //   if (this.ensureConnected()) {
-  //     await this.transactionsService.send(() => this.crPool.joinPool(uint poolAmountOut, uint[] calldata maxAmountsIn));
-  //   }
-  // }
-
-  // private async removeLiquidity(): Promise<void> {
-  //   if (this.ensureConnected()) {
-  //     await this.transactionsService.send(() => this.crPool.exitPool(uint poolAmountIn, uint[] calldata minAmountsOut));
-  //   }
-  // }
-
-  private handleLiquidity(remove = false) {
+  private gotoLiquidity(remove = false) {
     Object.assign(this,
       {
         remove,
@@ -228,7 +216,7 @@ export class Dashboard {
     this.router.navigateToRoute("liquidity");
   }
 
-  private handleStaking(harvest = false) {
+  private gotoStaking(harvest = false) {
     Object.assign(this,
       {
         harvest,
@@ -239,11 +227,39 @@ export class Dashboard {
     this.router.navigateToRoute("staking");
   }
 
+
+  // private async addLiquidity(poolAmountOut, maxAmountsIn): Promise<void> {
+  //   if (this.ensureConnected()) {
+  //     await this.transactionsService.send(() => this.crPool.joinPool(uint poolAmountOut, uint[] calldata maxAmountsIn));
+  //     // TODO:  should happen after mining
+  //      this.getLiquidity();
+  //   }
+  // }
+
+  // private async removeLiquidity(): Promise<void> {
+  //   if (this.ensureConnected()) {
+  //     await this.transactionsService.send(() => this.crPool.exitPool(uint poolAmountIn, uint[] calldata minAmountsOut));
+  //      // TODO:  should happen after mining
+  //      this.getLiquidity();
+  //   }
+  // }
+
   // private async stake(amount: BigNumber): Promise<void> {
   //   if (this.ensureConnected()) {
   //     await this.transactionsService.send(() => this.stakingRewards.stake(amount));
+  //     // TODO:  should happen after mining
+  //      this.getStakingAmounts();
   //   }
   // }
+
+  // private async harvest(amount: BigNumber): Promise<void> {
+  //   if (this.ensureConnected()) {
+  //     await this.transactionsService.send(() => this.stakingRewards.harvest(amount));
+  //     // TODO:  should happen after mining
+  //      this.getStakingAmounts();
+  //   }
+  // }
+
 
   private async handleStakingExit(): Promise<void> {
     if (this.ensureConnected()) {

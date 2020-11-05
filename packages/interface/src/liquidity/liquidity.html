@@ -16,7 +16,11 @@
         <label>Swap fee:</label>
         <div class="value" if.to-view="model.swapfee">${model.swapfee | ethwei}</div>
         <div else>--</div>
-        <div>80% PRIME 20% WETH</div>
+        <div>
+          <ul>
+            <li repeat.for="[name, weight] of model.poolTokenWeights">${weight.mul(100) | ethwei}% ${name}</li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="rightColumn">
