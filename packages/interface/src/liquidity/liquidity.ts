@@ -46,6 +46,7 @@ interface ILiquidityModel {
   poolshare: BigNumber;
   remove: boolean; // if falsy then add
   swapfee: BigNumber;
-  userPrimeBalance: BigNumber
-  userWethBalance: BigNumber
+  userBPrimeBalance: BigNumber;
+  userPrimeBalance: BigNumber;
+  userWethBalance: BigNumber;
 }

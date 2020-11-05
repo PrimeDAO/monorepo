@@ -66,6 +66,14 @@ export class App {
         // 'address' will be present in the object passed to the 'activate' method of the viewmodel
         route: ["liquidity"],
         title: "Liquidity",
+      }
+      , {
+        moduleId: PLATFORM.moduleName("./staking/staking"),
+        name: "staking",
+        nav: false,
+        // 'address' will be present in the object passed to the 'activate' method of the viewmodel
+        route: ["staking"],
+        title: "Staking",
       },
     ]);
 

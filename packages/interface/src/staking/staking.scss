@@ -1,0 +1,27 @@
+@import "styles/colors.scss";
+
+.stakingContainer {
+  .header {
+    grid-area: header;
+    margin-bottom: 20px;
+  }
+
+  .secondRow {
+    grid-area: secondRow;
+    text-align: center;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .thirdRow {
+    grid-area: thirdRow;
+    &.back img {
+      margin-right: 6px;
+      width: 16px;
+      position: relative;
+      top: 2px;
+    }
+  }
+}
