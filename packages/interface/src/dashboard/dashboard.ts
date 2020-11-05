@@ -148,13 +148,13 @@ export class Dashboard {
       this.priceWeth = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.WETH), true));
       this.pricePrimeToken = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
 
-      // const priceWethLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))
-      //   .mul(this.priceWeth);
+      const priceWethLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))
+        .mul(this.priceWeth);
 
-      // const pricePrimeTokenLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)))
-      //   .mul(this.pricePrimeToken);
+      const pricePrimeTokenLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)))
+        .mul(this.pricePrimeToken);
 
-      this.liquidityBalance = BigNumber.from("10000000000000000000000"); // priceWethLiquidity.add(pricePrimeTokenLiquidity);
+      this.liquidityBalance = priceWethLiquidity.add(pricePrimeTokenLiquidity);
     } catch (ex) {
       this.eventAggregator.publish("handleException",
         new EventConfigException("Unable to fetch a token price", ex));
