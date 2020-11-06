@@ -69,13 +69,25 @@ export class ContractsService {
       }
     });
 
-    this.eventAggregator.subscribe("Network.Changed.Connected", (info: IChainEventInfo): void => {
-      if ((this.networkInfo?.chainId !== info.chainId) ||
-        (this.networkInfo?.chainName !== info.chainName) ||
-        (this.networkInfo?.provider !== info.provider)) {
+    const networkChange = (info) => {
+      if ((this.networkInfo?.chainId !== info?.chainId) ||
+        (this.networkInfo?.chainName !== info?.chainName) ||
+        (this.networkInfo?.provider !== info?.provider)) {
         this.networkInfo = info;
         this.initializeContracts();
       }
+    };
+
+    this.eventAggregator.subscribe("Network.Changed.Disconnect", (): void => {
+      networkChange(null);
+    });
+
+    this.eventAggregator.subscribe("Network.Changed.Connected", (info: IChainEventInfo): void => {
+      networkChange(info);
+    });
+
+    this.eventAggregator.subscribe("Network.Changed.Id", (info: IChainEventInfo): void => {
+      networkChange(info);
     });
   }
 

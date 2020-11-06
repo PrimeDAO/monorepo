@@ -42,11 +42,11 @@ export class App {
 
     config.title = "interface.PrimeDAO.eth";
     config.options.pushState = true;
-    const isIpfs = (window as any).IS_IPFS;
-    if (isIpfs) {
-      this.consoleLogService.handleMessage(`Routing for IPFS: ${window.location.pathname}`);
-    }
-    config.options.root = window.location.pathname; // to account for IPFS
+    // const isIpfs = (window as any).IS_IPFS;
+    // if (isIpfs) {
+    //   this.consoleLogService.handleMessage(`Routing for IPFS: ${window.location.pathname}`);
+    // }
+    config.options.root = "/"; // window.location.pathname; // to account for IPFS
     /**
      * first set the landing page.
      * it is possible to be connected but have the wrong chain.

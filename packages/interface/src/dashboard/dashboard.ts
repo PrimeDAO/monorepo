@@ -59,6 +59,7 @@ export class Dashboard {
   private userWethBalance: BigNumber;
   private userEthBalance: BigNumber;
   private userBPrimeBalance: BigNumber;
+  private bPrimeStaked: BigNumber;
   private defaultWethEthAmount: BigNumber;
   private poolTokenWeights: Map<string, number>;
 
@@ -74,9 +75,8 @@ export class Dashboard {
   protected async attached(): Promise<void> {
 
     this.eventAggregator.subscribe("Network.Changed.Account", async (account: Address) => {
-      await this.initialize(account);
+      this.initialize(account);
     });
-
     return this.initialize();
   }
 
@@ -93,7 +93,6 @@ export class Dashboard {
       this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
       this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
       this.swapfee = await this.bPool.getSwapFee();
-      this.getLiquidity();
       const weights = new Map();
       weights.set("PRIME",
         await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
@@ -103,24 +102,14 @@ export class Dashboard {
       this.poolTokenWeights = weights;
 
       this.getStakingAmounts();
+      this.getLiquidityAmounts();
+      this.getUserBalances();
 
-      if (account) {
-
-        this.getUserBalances();
-
-        /**
-         * this is BPRIME
-         */
-        this.poolshare = (await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress))
-          .div(await this.crPool.totalSupply());
-
-        this.connected = true;
-      // TODO: fully revert the connection
-      } else {
-        this.connected = false;
-      }
+      // TODO: fully revert the connection when no account
+      this.connected = !!account;
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
+      // TODO: fully revert the connection when no account
       this.connected = false;
     }
   }
@@ -130,25 +119,42 @@ export class Dashboard {
       const provider = this.ethereumService.readOnlyProvider;
       this.userEthBalance = await provider.getBalance(this.ethereumService.defaultAccountAddress);
       this.userWethBalance = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
-      this.userPrimeBalance = await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress);
-      this.userBPrimeBalance = await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress);
+
     } else {
-      this.userEthBalance = undefined;
+      this.userEthBalance =
       this.userWethBalance = undefined;
-      this.userPrimeBalance = undefined;
-      this.userBPrimeBalance = undefined;
     }
   }
 
   private async getStakingAmounts() {
+
     this.currentAPY = await this.stakingRewards.rewardPerTokenStored();
-    this.primeFarmed = this.ethereumService.defaultAccountAddress ?
-      (await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress)) : undefined;
+
+    if (this.ethereumService.defaultAccountAddress) {
+      this.primeFarmed = await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress);
+      this.userBPrimeBalance = await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress);
+      /**
+     * this is BPRIME
+     */
+      this.poolshare = (await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress))
+        .div(await this.crPool.totalSupply());
+
+      this.bPrimeStaked = await this.stakingRewards.balanceOf(this.ethereumService.defaultAccountAddress);
+    } else {
+      this.bPrimeStaked =
+      this.userBPrimeBalance =
+      this.poolshare =
+      this.primeFarmed = undefined;
+    }
   }
 
-  private async getLiquidity() {
+  private async getLiquidityAmounts() {
+    if (this.ethereumService.defaultAccountAddress) {
+      this.userPrimeBalance = await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress);
+    } else {
+      this.userPrimeBalance = undefined;
+    }
     try {
-
       this.priceWeth = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.WETH), true));
       this.pricePrimeToken = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
 
@@ -274,7 +280,11 @@ export class Dashboard {
 
   private async stakingExit(): Promise<void> {
     if (this.ensureConnected()) {
-      await this.transactionsService.send(() => this.stakingRewards.exit());
+      if (this.bPrimeStaked.isZero()) {
+        this.eventAggregator.publish("handleValidationError", new EventConfigFailure("You have not staked any BPRIME, so there is nothing to exit"));
+      } else {
+        await this.transactionsService.send(() => this.stakingRewards.exit());
+      }
     }
   }
 
