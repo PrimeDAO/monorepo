@@ -60,9 +60,10 @@ export class FormattedNumber {
   private setTooltip() {
     if (this.textElement && this.text) {
       // tippy(this.textElement, "dispose");
-      tippy(this.textElement, {
+      const instance = tippy(this.textElement, {
         appendTo: () => document.body, // because is "interactive" and otherwise messes with the layout on hover
       });
+      instance.setContent(this.text);
     }
   }
 }
