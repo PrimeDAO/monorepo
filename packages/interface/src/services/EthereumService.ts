@@ -177,6 +177,7 @@ export class EthereumService {
         providerOptions: EthereumService.providerOptions, // required
         theme: "dark",
       });
+      this.web3Modal?.clearCachedProvider(); // just in case
     }
 
     const web3ModalProvider = await this.web3Modal.connect();

@@ -193,6 +193,7 @@ export class Banner {
   }
 
   private queueEventConfig(config: IBannerConfig): void {
+    // TODO: enable these to stack vertically
     this.queue.next(config);
   }
 }
