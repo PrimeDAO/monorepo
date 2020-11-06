@@ -2,7 +2,9 @@
 .dashboardContainer {
   height: 100%;
   display: flex;
-  padding-top: 30px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding-top: 70px;
   padding-left: 80px;
   padding-right: 80px;
   padding-bottom: 40px;
@@ -15,18 +17,19 @@
     margin: auto;
   }
 
-  .prepare,
-  .contribute,
-  .learnmore {
-    margin-right: 16px;
-  }
+  // .prepare,
+  // .contribute,
+  // .learnmore {
+  //   margin-right: 16px;
+  // }
 
   .prepare,
   .contribute,
   .learnmore,
   .farming {
     text-align: left;
-    flex-basis: 25%;
+    max-width: min-content;
+    margin-bottom: 25px;
 
     .inputButtonGroup {
       display: block;
@@ -44,6 +47,13 @@
   }
 
   .learnmore {
+    border-top: 4px solid $color-lightblue;
+    padding-top: 30px;
+
+    > div {
+      margin-bottom: 16px;
+    }
+
     img {
       width: 265px;
     }

@@ -12,29 +12,40 @@
     border-radius: 0.75rem;
   }
 
-  .ethBalanceContainer {
-    display: inline-block;
-    white-space: nowrap;
+  .connectedButtons {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .ethBalanceContainer {
+      display: inline-block;
+      white-space: nowrap;
+    }
   }
 
   &.connected {
     padding-left: 14px;
-    .connectButton {
-      cursor: default;
-      border: 0;
-      .pending {
-        .phase {
-          display: inline-block;
-          margin-right: 6px;
+
+    .connectedButtons {
+      .connectButton {
+        cursor: default;
+        text-align: center;
+        border: 0;
+
+        .pending {
+          .phase {
+            display: inline-block;
+            margin-right: 6px;
+          }
+        }
+
+        .etherscanlink .text {
+          margin-right: 0.25rem;
         }
       }
-
-      .etherscanlink .text {
-        margin-right: 0.25rem;
+      .ethBalanceContainer {
+        margin-right: 0.5rem;
       }
-    }
-    .ethBalanceContainer {
-      margin-right: 0.5rem;
     }
   }
 }

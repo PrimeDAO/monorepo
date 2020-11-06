@@ -37,20 +37,20 @@ html {
     }
 
     .title {
-      font-size: 42px;
+      font-size: 34px;
       font-family: "Cera Pro";
-      line-height: 48px;
+      margin-bottom: 20px;
     }
     .heading1 {
-      font-size: 32px;
+      font-size: 24px;
       font-family: "Cera Pro";
-      line-height: 48px;
+      margin-bottom: 8px;
       white-space: nowrap;
+      position: relative; // for triangle z-index to work
     }
     .heading2 {
-      font-size: 32px;
+      font-size: 24px;
       font-family: "Cera Pro";
-      line-height: 48px;
       white-space: nowrap;
     }
 
@@ -77,18 +77,26 @@ html {
     .button1 {
       background-color: $button1-color;
       border-color: $button1-color;
+      white-space: nowrap;
+      outline: none;
     }
     .button2 {
       background-color: $button2-color;
       border-color: $button2-color;
+      white-space: nowrap;
+      outline: none;
     }
     .button3 {
       background-color: $button3-color;
       border-color: $button3-color;
+      white-space: nowrap;
+      outline: none;
     }
     .button4 {
       background-color: transparent;
+      white-space: nowrap;
       border: 2px solid $color-green;
+      outline: none;
     }
 
     .section {
@@ -104,14 +112,35 @@ html {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         border-bottom: none;
+        padding-top: 60px;
+
+        > div {
+          margin-bottom: 16px;
+        }
+
+        .triangle {
+          position: absolute;
+          transform: translateY(-21px);
+
+          img {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 0 38px 38px;
+            border-color: transparent transparent $triangle-color transparent;
+            display: inline-block;
+          }
+        }
       }
       &.middle {
         border-radius: 0;
         border-bottom: none;
+        text-align: center;
       }
       &.bottom {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+        text-align: center;
       }
     }
   }
