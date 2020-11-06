@@ -7,7 +7,6 @@
   .appHeader {
     text-align: right;
     display: flex;
-    // justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid $color-white;
 
@@ -15,11 +14,16 @@
       width: 96px;
       background-color: $color-white;
       height: 100%;
-      text-align: center;
+      margin-right: 10px;
+      // just for vertical alignment of the logo
+      display: flex;
+      justify-content: center;
     }
 
     .networkfeedback {
       color: rgb(109, 168, 255);
+      margin-right: 10px;
+      text-align: left;
       .testnet {
         color: $color-red;
       }
