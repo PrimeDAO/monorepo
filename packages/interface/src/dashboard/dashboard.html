@@ -99,6 +99,14 @@
           </div>
           <div class="label">Current APY</div>
         </div>
+        <div class="bprimeStaked">
+          <div class="value">
+            <floating-point-number if.to-view="connected" class="share" value.to-view="bPrimeStaked | ethwei" precision="8"
+              placement.to-view="top"></floating-point-number>
+            <span else>--</span> BPRIME
+          </div>
+          <div class="label">BPRIME Staked</div>
+        </div>
         <div class="primeFarmed">
           <div class="value">
             <floating-point-number if.to-view="connected" class="share" value.to-view="primeFarmed | ethwei" precision="8"

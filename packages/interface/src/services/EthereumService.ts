@@ -133,11 +133,10 @@ export class EthereumService {
     console.info(`account changed: ${account}`);
     this.eventAggregator.publish("Network.Changed.Account", account);
   }
-  // since we are limited to a single network, I don't think this can every happen
-  // private fireChainChangedHandler(info: IChainEventInfo) {
-  //   console.info(`chain changed: ${info.chainId}`);
-  //   this.eventAggregator.publish("Network.Changed.Id", info);
-  // }
+  private fireChainChangedHandler(info: IChainEventInfo) {
+    console.info(`chain changed: ${info.chainId}`);
+    this.eventAggregator.publish("Network.Changed.Id", info);
+  }
   private fireConnectHandler(info: IChainEventInfo) {
     console.info(`connected: ${info.chainName}`);
     this.eventAggregator.publish("Network.Changed.Connected", info);
@@ -183,6 +182,7 @@ export class EthereumService {
     const web3ModalProvider = await this.web3Modal.connect();
     if (web3ModalProvider) {
       const walletProvider = new ethers.providers.Web3Provider(web3ModalProvider);
+      (walletProvider as any).provider.autoRefreshOnNetworkChange = false; // mainly for metamask
       const chainId = await this.getChainId(walletProvider);
       const chainName = this.chainNameById.get(chainId);
       if (chainName !== this.targetedNetwork) {
@@ -209,24 +209,32 @@ export class EthereumService {
         this.fireAccountsChangedHandler(accounts?.[0]);
       });
 
-      // since we are limited to a single network, I don't think this can ever happen
-      // this.web3ModalProvider.on("chainChanged", (chainId: number) => {
-      //   const chainName = this.chainNameById.get(chainId);
-      //   if (chainName !== this.ethereumService.targetedNetwork) {
-      //     this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Please connect to ${this.ethereumService.targetedNetwork}`));
-      //     return;
-      //   }
-      //   else {
-      //     this.fireChainChangedHandler({ chainId, chainName, provider: this.walletProvider });
-      //   }
-      // });
+      this.web3ModalProvider.on("chainChanged", (chainId: number) => {
+        const chainName = this.chainNameById.get(chainId);
+        if (chainName !== this.targetedNetwork) {
+          this.disconnect({ code: -1, message: "wrong network" });
+          this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Please connect to ${this.targetedNetwork}`));
+          return;
+        }
+        else {
+          this.fireChainChangedHandler({ chainId, chainName, provider: this.walletProvider });
+        }
+      });
 
       this.web3ModalProvider.on("disconnect", (error: { code: number; message: string }) => {
-        this.web3ModalProvider = undefined;
-        this.walletProvider = undefined;
-        this.fireDisconnectHandler(error);
+        this.disconnect(error);
       });
     }
+  }
+
+  private async disconnect(error) {
+    this.web3Modal?.clearCachedProvider(); // so web3Modal will let the user reconnect
+    this.defaultAccount = undefined;
+    this.defaultAccountAddress = undefined;
+    this.fireAccountsChangedHandler(null);
+    this.web3ModalProvider = undefined;
+    this.walletProvider = undefined;
+    this.fireDisconnectHandler(error);
   }
 }
 
