@@ -23,18 +23,16 @@
           </div>
           <button class="button1" disabled.to-view="!ethWethAmount || ethWethAmount.eq(0)" click.delegate="handleDeposit()">Wrap</button>
         </div>
-        <div class="class">
-          <div class="inputButtonGroup">
-            <div class="inputGroup">
-              <label for="wethEthAmount">WETH &RightArrow; ETH</label>
-              <numeric-input id="wethEthAmount"
-                defaultvalue.to-view="defaultWethEthAmount"
-                value.two-way="wethEthAmount"
-                placeholder="0.0"></numeric-input>
-            </div>
-            <label if.to-view="userWethBalance.gt(0)"><button class="button4" click.delegate="handleGetMax()">Max</button></label>
-            <button class="button2" disabled.to-view="!wethEthAmount || wethEthAmount.eq(0)" click.delegate="handleWithdraw()">Unwrap</button>
+        <div class="inputButtonGroup">
+          <div class="inputGroup">
+            <label for="wethEthAmount">WETH &RightArrow; ETH</label>
+            <numeric-input id="wethEthAmount"
+              defaultvalue.to-view="defaultWethEthAmount"
+              value.two-way="wethEthAmount"
+              placeholder="0.0"></numeric-input>
           </div>
+          <label if.to-view="userWethBalance.gt(0)"><button class="button4" click.delegate="handleGetMax()">Max</button></label>
+          <button class="button2" disabled.to-view="!wethEthAmount || wethEthAmount.eq(0)" click.delegate="handleWithdraw()">Unwrap</button>
         </div>
       </div>
     </div>

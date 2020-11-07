@@ -73,8 +73,8 @@ export class Dashboard {
   }
 
   protected async attached(): Promise<void> {
-
     this.eventAggregator.subscribe("Network.Changed.Account", async (account: Address) => {
+      this.connected = false; // force reconnect
       this.initialize(account);
     });
     return this.initialize();
@@ -86,31 +86,33 @@ export class Dashboard {
   private pricePrimeToken: BigNumber;
 
   private async initialize(account?: Address) {
-    try {
-      this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
-      this.bPool = await this.contractsService.getContractFor(ContractNames.BPOOL);
-      this.stakingRewards = await this.contractsService.getContractFor(ContractNames.STAKINGREWARDS);
-      this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
-      this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
-      this.swapfee = await this.bPool.getSwapFee();
-      const weights = new Map();
-      weights.set("PRIME",
-        await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
-      weights.set("WETH",
-        await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.WETH)));
+    if (!this.connected) {
+      try {
+        this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
+        this.bPool = await this.contractsService.getContractFor(ContractNames.BPOOL);
+        this.stakingRewards = await this.contractsService.getContractFor(ContractNames.STAKINGREWARDS);
+        this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
+        this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
+        this.swapfee = await this.bPool.getSwapFee();
+        const weights = new Map();
+        weights.set("PRIME",
+          await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
+        weights.set("WETH",
+          await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.WETH)));
 
-      this.poolTokenWeights = weights;
+        this.poolTokenWeights = weights;
 
-      this.getStakingAmounts();
-      this.getLiquidityAmounts();
-      this.getUserBalances();
+        this.getStakingAmounts();
+        this.getLiquidityAmounts();
+        this.getUserBalances();
 
-      // TODO: fully revert the connection when no account
-      this.connected = !!account;
-    } catch (ex) {
-      this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
-      // TODO: fully revert the connection when no account
-      this.connected = false;
+        // TODO: fully revert the connection when no account
+        this.connected = !!account;
+      } catch (ex) {
+        this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
+        // TODO: fully revert the connection when no account
+        this.connected = false;
+      }
     }
   }
 

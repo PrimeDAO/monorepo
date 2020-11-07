@@ -32,6 +32,7 @@
     margin-bottom: 25px;
 
     .inputButtonGroup {
+      text-align: left;
       display: block;
       .inputGroup {
         display: inline-block;
@@ -39,7 +40,6 @@
           display: block;
         }
         input {
-          width: 90px;
           margin-right: 6px;
         }
       }
