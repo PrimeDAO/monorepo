@@ -204,32 +204,41 @@ export class EthereumService {
       this.fireConnectHandler({ chainId, chainName, provider: this.walletProvider });
       this.fireAccountsChangedHandler(this.defaultAccountAddress);
 
-      this.web3ModalProvider.on("accountsChanged", async (accounts: Array<Address>) => {
-        this.defaultAccount = await this.getCurrentAccountFromProvider(this.walletProvider);
-        this.defaultAccountAddress = await this.getDefaultAccountAddress();
-        this.fireAccountsChangedHandler(accounts?.[0]);
-      });
+      this.web3ModalProvider.on("accountsChanged", this.handleAccountsChanged);
 
-      this.web3ModalProvider.on("chainChanged", (chainId: number) => {
-        const chainName = this.chainNameById.get(chainId);
-        if (chainName !== this.targetedNetwork) {
-          this.disconnect({ code: -1, message: "wrong network" });
-          this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Please connect to ${this.targetedNetwork}`));
-          return;
-        }
-        else {
-          this.fireChainChangedHandler({ chainId, chainName, provider: this.walletProvider });
-        }
-      });
+      this.web3ModalProvider.on("chainChanged", this.handleChainChanged);
 
-      this.web3ModalProvider.on("disconnect", (error: { code: number; message: string }) => {
-        this.disconnect(error);
-      });
+      this.web3ModalProvider.on("disconnect", this.handleDisconnect);
     }
+  }
+
+  private handleAccountsChanged = async (accounts: Array<Address>) => {
+    this.defaultAccount = await this.getCurrentAccountFromProvider(this.walletProvider);
+    this.defaultAccountAddress = await this.getDefaultAccountAddress();
+    this.fireAccountsChangedHandler(accounts?.[0]);
+  }
+
+  private handleChainChanged = (chainId: number) => {
+    const chainName = this.chainNameById.get(chainId);
+    if (chainName !== this.targetedNetwork) {
+      this.disconnect({ code: -1, message: "wrong network" });
+      this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Please connect to ${this.targetedNetwork}`));
+      return;
+    }
+    else {
+      this.fireChainChangedHandler({ chainId, chainName, provider: this.walletProvider });
+    }
+  }
+
+  private handleDisconnect = (error: { code: number; message: string }) => {
+    this.disconnect(error);
   }
 
   private async disconnect(error) {
     this.web3Modal?.clearCachedProvider(); // so web3Modal will let the user reconnect
+    this.web3ModalProvider?.off("accountsChanged", this.handleAccountsChanged);
+    this.web3ModalProvider?.off("chainChanged", this.handleChainChanged);
+    this.web3ModalProvider?.off("disconnect", this.handleDisconnect);
     this.defaultAccount = undefined;
     this.defaultAccountAddress = undefined;
     this.fireAccountsChangedHandler(null);

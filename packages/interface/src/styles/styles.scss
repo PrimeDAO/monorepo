@@ -14,13 +14,14 @@ html {
 
     input {
       border: $section-border;
-      background-color: transparent;
+      width: 70px;
+      background-color: $color-white;
+      color: $color-black;
       border-radius: $section-border-radius;
-      color: $color-white;
       outline: none;
 
       &::placeholder {
-        color: $color-white;
+        color: $color-black;
       }
       &:focus::placeholder {
         color: transparent;
@@ -59,11 +60,9 @@ html {
     .button3,
     .button4 {
       border-radius: $global-button-radius;
-      padding: 0 10px;
-      font-size: 14px;
-      line-height: 26px;
+      padding: 3px 13px;
+      font-size: 12px;
       color: $color-white;
-      letter-spacing: 0.7px;
       border: 2px solid $color-white;
       outline: none;
 

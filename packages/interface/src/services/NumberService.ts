@@ -34,19 +34,12 @@ export class NumberService {
     exponentialAt: number | [number, number] = [-7, 20],
     roundUp = false): string | null | undefined {
 
-    // // this helps to display the erroneus value in the GUI
-    // if (typeof value === "string") {
-    //   return value as any;
-    // }
-
     if ((value === null) || (value === undefined)) {
       return value as any;
     }
 
-    const isNum = typeof value === "number";
-
-    if (isNum && Number.isNaN(value as number)) {
-      return null;
+    if ((value.toString().trim() === "") || Number.isNaN(Number(value))) {
+      return undefined;
     }
 
     const bnClone = BN.clone({ EXPONENTIAL_AT: exponentialAt });
