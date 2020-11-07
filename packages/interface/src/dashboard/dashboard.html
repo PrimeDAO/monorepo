@@ -64,15 +64,15 @@
         </div>
         <div class="label">Liquidity</div>
       </div>
-      <div class="section middle section3">
-        <div class="swapfee">
+      <div class="section middle doubleSection">
+        <div class="swapfee left">
           <div class="value">
             <floating-point-number class="fee" value.to-view="swapfee | ethwei" precision="4"
               placement.to-view="top"></floating-point-number>%
           </div>
           <div class="label">Swap fee</div>
         </div>
-        <div class="poolshare">
+        <div class="poolshare right">
           <div class="value" if.to-view="connected">
             <floating-point-number class="share" value.to-view="poolshare | ethwei" precision="4"
               placement.to-view="top"></floating-point-number>%
@@ -81,7 +81,7 @@
           <div class="label">My pool share</div>
         </div>
       </div>
-      <div class="section bottom section4">
+      <div class="section bottom">
         <div class="liquidityButtons">
           <button class="button1 addLiquidity" click.delegate="gotoLiquidity()">Add Liquidity</button>
           <button class="button2 removeLiquidity" click.delegate="gotoLiquidity(true)">Remove Liquidity</button>
@@ -102,24 +102,26 @@
           </div>
           <div class="label">Current APY</div>
         </div>
-        <div class="bprimeStaked">
-          <div class="value">
-            <floating-point-number if.to-view="connected" class="share" value.to-view="bPrimeStaked | ethwei" precision="8"
-              placement.to-view="top"></floating-point-number>
-            <span else>--</span> BPRIME
-          </div>
-          <div class="label">BPRIME Staked</div>
-        </div>
-        <div class="primeFarmed">
+      </div>
+      <div class="section middle doubleSection">
+        <div class="primeFarmed left">
           <div class="value">
             <floating-point-number if.to-view="connected" class="share" value.to-view="primeFarmed | ethwei" precision="8"
               placement.to-view="top"></floating-point-number>
-            <span else>--</span> PRIME
+            <span else>--</span>
           </div>
           <div class="label">PRIME Farmed</div>
         </div>
+        <div class="bprimeStaked right">
+          <div class="value">
+            <floating-point-number if.to-view="connected" class="share" value.to-view="bPrimeStaked | ethwei" precision="8"
+              placement.to-view="top"></floating-point-number>
+            <span else>--</span>
+          </div>
+          <div class="label">BPRIME Staked</div>
+        </div>
       </div>
-      <div class="section bottom section3">
+      <div class="section bottom">
         <div class="stakingButtons">
           <button class="button1 stakeBPrime" click.delegate="gotoStaking()">Stake BPRIME tokens</button>
           <button class="button2 harvestYield" click.delegate="stakingHarvest()">Harvest Yield</button>

@@ -136,6 +136,28 @@ html {
         border-radius: 0;
         border-bottom: none;
         text-align: center;
+
+        &.doubleSection {
+          display: flex;
+          padding: 0;
+
+          .left,
+          .right {
+            padding-top: 24px;
+            padding-bottom: 24px;
+          }
+
+          .left {
+            padding-left: 0;
+            padding-right: 0;
+            flex-basis: 50%;
+            border-right: $section-border;
+          }
+
+          .right {
+            flex-basis: 50%;
+          }
+        }
       }
       &.bottom {
         border-top-left-radius: 0;
