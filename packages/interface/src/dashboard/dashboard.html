@@ -21,7 +21,7 @@
               value.two-way="ethWethAmount"
               placeholder="0.0"></numeric-input>
           </div>
-          <button class="button1" disabled.to-view="!ethWethAmount || ethWethAmount.eq(0)" click.delegate="handleDeposit()">Wrap</button>
+          <button class="button1 small" disabled.to-view="!ethWethAmount || ethWethAmount.eq(0)" click.delegate="handleDeposit()">Wrap</button>
         </div>
         <div class="inputButtonGroup">
           <div class="inputGroup">
@@ -31,8 +31,8 @@
               value.two-way="wethEthAmount"
               placeholder="0.0"></numeric-input>
           </div>
-          <label if.to-view="userWethBalance.gt(0)"><button class="button4" click.delegate="handleGetMax()">Max</button></label>
-          <button class="button2" disabled.to-view="!wethEthAmount || wethEthAmount.eq(0)" click.delegate="handleWithdraw()">Unwrap</button>
+          <label if.to-view="userWethBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMax()">Max</button></label>
+          <button class="button2 small" disabled.to-view="!wethEthAmount || wethEthAmount.eq(0)" click.delegate="handleWithdraw()">Unwrap</button>
         </div>
       </div>
     </div>
@@ -52,7 +52,6 @@
       </div>
       <div class="section middle">
         <div class="value">
-          <!-- TODO: get dollars and convert to millions or whatever -->
           $<formatted-number
             class="balance"
             value.to-view="liquidityBalance | ethwei"
@@ -81,8 +80,8 @@
       </div>
       <div class="section bottom">
         <div class="liquidityButtons">
-          <button class="button1 addLiquidity" click.delegate="gotoLiquidity()">Add Liquidity</button>
-          <button class="button2 removeLiquidity" click.delegate="gotoLiquidity(true)">Remove Liquidity</button>
+          <div><button class="button1 addLiquidity" click.delegate="gotoLiquidity()">Add Liquidity</button></div>
+          <div><button class="button2 removeLiquidity" click.delegate="gotoLiquidity(true)">Remove Liquidity</button></div>
         </div>
       </div>
     </div>
@@ -121,9 +120,9 @@
       </div>
       <div class="section bottom">
         <div class="stakingButtons">
-          <button class="button1 stakeBPrime" click.delegate="gotoStaking()">Stake BPRIME tokens</button>
-          <button class="button2 harvestYield" click.delegate="stakingHarvest()">Harvest Yield</button>
-          <button class="button3 harvestAndWithdraw" click.delegate="stakingExit()">Harvest and Withdraw</button>
+          <div><button class="button1 stakeBPrime" click.delegate="gotoStaking()">Stake BPRIME tokens</button></div>
+          <div><button class="button2 harvestYield" click.delegate="stakingHarvest()">Harvest Yield</button></div>
+          <div><button class="button3 harvestAndWithdraw" click.delegate="stakingExit()">Harvest and Withdraw</button></div>
         </div>
       </div>
     </div>

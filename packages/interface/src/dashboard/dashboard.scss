@@ -17,12 +17,6 @@
     margin: auto;
   }
 
-  // .prepare,
-  // .contribute,
-  // .learnmore {
-  //   margin-right: 16px;
-  // }
-
   .prepare,
   .contribute,
   .learnmore,
@@ -30,6 +24,7 @@
     text-align: left;
     max-width: min-content;
     margin-bottom: 25px;
+    min-width: 270px;
 
     .inputButtonGroup {
       text-align: left;
@@ -43,6 +38,13 @@
           margin-right: 6px;
         }
       }
+    }
+
+    .section.middle .value {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      font-family: "Cera Pro";
     }
   }
 
@@ -59,9 +61,41 @@
     }
   }
   .prepare {
+    .inputButtonGroup {
+      label {
+        margin-bottom: 4px;
+      }
+    }
+    .inputButtonGroup:first-of-type {
+      margin-bottom: 16px;
+    }
   }
   .contribute {
+    .liquidityButtons {
+      display: flex;
+      flex-direction: column;
+
+      button {
+        width: 150px;
+      }
+
+      > div:first-of-type {
+        margin-bottom: 12px;
+      }
+    }
   }
   .farming {
+    .stakingButtons {
+      display: flex;
+      flex-direction: column;
+
+      button {
+        width: 180px;
+      }
+
+      > div:not(:last-child) {
+        margin-bottom: 12px;
+      }
+    }
   }
 }
