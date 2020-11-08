@@ -15,12 +15,21 @@ export class Liquidity {
   private wethAmount: Address;
   private defaultPrimeAmount: BigNumber;
   private defaultWethAmount: BigNumber;
+  private primeWeight: BigNumber;
+  private wethWeight: BigNumber;
 
   constructor(
     private eventAggregator: EventAggregator) {}
 
   public activate(_model: unknown, routeConfig: { settings: { state: ILiquidityModel }}): void {
     this.model = routeConfig.settings.state;
+    /**
+     * hack alert: until we have something more dynamic...
+     */
+    if (this?.model?.poolTokenWeights) {
+      this.primeWeight = this.model.poolTokenWeights.get("PRIME");
+      this.wethWeight = this.model.poolTokenWeights.get("WETH");
+    }
   }
 
   private handleSubmit(): void {
@@ -49,5 +58,5 @@ interface ILiquidityModel {
   userBPrimeBalance: BigNumber;
   userPrimeBalance: BigNumber;
   userWethBalance: BigNumber;
-  poolTokenWeights: Map<string, number>;
+  poolTokenWeights: Map<string, BigNumber>;
 }
