@@ -24,17 +24,18 @@
           <div class="value" if.to-view="model.swapfee">${model.swapfee | ethwei}</div>
           <div else class="value">--</div>
         </div>
-        <div class="assets">
-          <div><img src="/PD_APP_ICON_PD_01.svg" />${primeWeight | ethwei}% PRIME</div>
+        <div class="assets" with.bind="this.model.poolTokenWeights">
+          <div><img src=" /PD_APP_ICON_PD_01.svg" />${primeWeight | ethwei}% PRIME
+          </div>
           <div><img src="/PD_APP_ICON_ETH_01.svg" />${wethWeight | ethwei}% WETH</div>
         </div>
       </div>
     </div>
     <div class="rightColumn sectionStyles">
       <div class="table">
-        <div class="cell heading3">Asset</div>
-        <div class="cell heading3">Wallet Balance</div>
-        <div class="cell heading3">Deposit</div>
+        <div class="cell heading heading3">Asset</div>
+        <div class="cell heading heading3">Wallet Balance</div>
+        <div class="cell heading heading3">Deposit</div>
         <div class="cell"><img src="/PD_APP_ICON_PD_01.svg" />PRIME</div>
         <div class="cell">
           <div if.to-view="model.connected">
@@ -60,7 +61,7 @@
           <div else>--</div>
         </div>
         <div class="cell">
-          <label if.to-view="model.userWethBalance.gt(0)"><button class="button4" click.delegate="handleGetMaxWeth()">Max</button></label>
+          <label if.to-view="model.userWethBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxWeth()">Max</button></label>
           <numeric-input id="primeAmount"
             defaultvalue.to-view="defaultPrimeBalance"
             value.two-way="userPrimeAmount"
@@ -69,7 +70,7 @@
         </div>
       </div>
       <div class="bPrimeAmount section">
-        <div class="label">BPRIME Amount</div>
+        <div class="label">My BPRIME Amount</div>
         <div class="amount">
           <div if.to-view="model.connected" class="value">
             <floating-point-number class="share" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
