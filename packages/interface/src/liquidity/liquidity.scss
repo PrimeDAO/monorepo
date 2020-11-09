@@ -86,6 +86,19 @@
         }
       }
 
+      // 2nd column
+      .cell:nth-child(3n + 2) {
+        text-align: center;
+      }
+
+      // 2nd column not including the header
+      .cell:nth-child(3n - 1) {
+        :not(.heading) {
+          position: relative;
+          top: 1px;
+        }
+      }
+
       .cell:nth-child(3n) {
         border-right: $section-border;
         text-align: right;
