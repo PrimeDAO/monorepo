@@ -9,7 +9,7 @@
     "deploy:contracts:kovan": "truffle migrate --network kovan --reset",
     "deploy:dao:kovan": "npx run scripts/kovan/migrateDAO.js --network kovan",
     "setup:oracle:kovan": "npx truffle exec scripts/kovan/setupPriceOracle.js --network kovan",
-    "setup:pool:create:kovan": "npx truffle exec scripts/kovan/setupPool.js --network kovan",
+    "setup:pool:create:kovan": "npx truffle exec scripts/kovan/createPool.js --network kovan",
     "setup:pool:transfer:kovan": "npx truffle exec scripts/kovan/transferPool.js --network kovan",
     "setup:staking:innit:kovan": "npx truffle exec scripts/kovan/setupRewards.js --network kovan",
     "setup:staking:confirm:kovan": "npx truffle exec scripts/kovan/notifyRewards.js --network kovan",

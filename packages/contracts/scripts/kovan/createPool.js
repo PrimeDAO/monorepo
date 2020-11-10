@@ -4,6 +4,7 @@ const PrimeToken = artifacts.require('PrimeToken');
 const WETH = artifacts.require('WETH');
 
 const contracts = require('../../contractAddresses.json');
+const config = require('../../config.json');
 
 const fs = require("fs");
 
@@ -12,16 +13,15 @@ module.exports = async function(callback) {
 	const MAX = web3.utils.toTwosComplement(-1);
 
 	// pool params
-	const primeAmount = toWei('50000');
-	const wethAmount = toWei('30');
+	const primeAmount = toWei(config.crPool.PRIMEAmount);
+	const wethAmount = toWei(config.crPool.WETHAmount);
 
-	const swapFee = toWei('0.01');
+	const swapFee = toWei(config.crPool.swapFee);
 	const tokenAddresses = [contracts.kovan.PrimeToken, contracts.kovan.WETH];
-	const startWeights = [toWei('32'), toWei('8')];
-	const startBalances = [primeAmount, wethAmount];
-	const SYMBOL = 'BPOOL';
-	const NAME = 'Prime Balancer Pool Token';
-	const bPrimeAmount = toWei('10000');
+	const startWeights = [toWei(config.crPool.PRIMEWeight), toWei(config.crPool.WETHWeight)];
+	const startBalances = [toWei(primeAmount), toWei(wethAmount)];
+	const SYMBOL = config.crPool.lpTokenSymbol;
+	const NAME = config.crPool.lpTokenName;
 
 	const permissions = {
 	      canPauseSwapping: true,
@@ -65,26 +65,12 @@ module.exports = async function(callback) {
 
 		const pool = await ConfigurableRightsPool.at(POOL);
 
-		await console.log("***   Approving tokens for public swapping");
-
-		await weth.approve(POOL, MAX);
-		await prime.approve(POOL, MAX);
-
-		await console.log("***   Success");
-
-		await console.log("***   Consuming the collateral; mint and xfer N BPTs to caller ");
-
-		await pool.createPool(bPrimeAmount);
-
 		await console.log("***   Success");
 
 		await console.log("***   Configurable Rights Pool address:");
 		await console.log(pool.address);
-		await console.log("***   Balancer Pool address:");
-		await console.log(await pool.bPool());
 
 		contracts.kovan.ConfigurableRightsPool = pool.address;
-		contracts.kovan.BPool = await pool.bPool();
 
 		fs.writeFileSync('./contractAddresses.json', JSON.stringify(contracts), (err) => {
 		   if (err) throw err;
