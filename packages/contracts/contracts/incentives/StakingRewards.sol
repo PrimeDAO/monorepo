@@ -88,7 +88,12 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         starttime = _starttime;
         DURATION = (_duration * 24 hours);
 
+        /* check contract is properly funded */
+        require(_initreward == rewardToken.balanceOf(address(this)),   "StakingRewards: wrong reward amount supplied");
+
         rewardDistribution = msg.sender;
+
+        notifyRewardAmount(_initreward);
     }
 
     uint256 public DURATION;
@@ -183,21 +188,21 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         _;
     }
 
-   function notifyRewardAmount(uint256 reward) external protected onlyRewardDistribution updateReward(address(0)) {
-        if (block.timestamp >= periodFinish) {
-            rewardRate = reward.div(DURATION);
-        } else {
-            uint256 remaining = periodFinish.sub(block.timestamp);
-            uint256 leftover = remaining.mul(rewardRate);
-            rewardRate = reward.add(leftover).div(DURATION);
-        }
+   function notifyRewardAmount(uint256 reward) internal onlyRewardDistribution updateReward(address(0)) {
+        rewardRate = reward.div(DURATION);
 
         // Ensure the provided reward amount is not more than the balance in the contract.
         // This keeps the reward rate in the right range, preventing overflows due to
         // very high values of rewardRate in the earned and rewardsPerToken functions;
         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
         uint balance = rewardToken.balanceOf(address(this));
-        require(rewardRate <= balance.div(DURATION), "StakingRewards: Provided reward too high");
+
+        /*
+        below require statement can be removed as function of this require statement will never arise due to 
+        (i) function being called on intialization and
+        (ii) need for _initreward == rewardToken.balanceOf(address(this))
+        */
+        // require(rewardRate <= balance.div(DURATION), "StakingRewards: Provided reward too high");
 
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(DURATION);
