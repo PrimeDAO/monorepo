@@ -61,7 +61,14 @@ export class Dashboard {
   private userBPrimeBalance: BigNumber;
   private bPrimeStaked: BigNumber;
   private defaultWethEthAmount: BigNumber;
-  private poolTokenWeights: Map<string, BigNumber>;
+  private poolTokenWeights: Map<Address, BigNumber>;
+  // token balances in bPool
+  private bPoolBalances: Map<Address, BigNumber>;
+  // user token balances
+  private userTokenBalances: Map<Address, BigNumber>;
+  private primeTokenAddress: Address;
+  private wethTokenAddress: Address;
+  private poolTokenAddresses: Array<Address>;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -72,12 +79,12 @@ export class Dashboard {
     private router: Router) {
   }
 
-  protected async attached(): Promise<void> {
+  protected attached(): void {
     this.eventAggregator.subscribe("Network.Changed.Account", async (account: Address) => {
       this.connected = false; // force reconnect
       this.initialize(account);
     });
-    return this.initialize();
+    this.initialize();
   }
 
   private ethWethAmount: BigNumber;
@@ -85,9 +92,19 @@ export class Dashboard {
   private priceWeth: BigNumber;
   private pricePrimeToken: BigNumber;
 
-  private async initialize(account?: Address) {
+  private async initialize(account?: Address): Promise<void> {
     if (!this.connected) {
       try {
+        // timeout to allow styles to load on startup to modalscreen sizes correctly
+        setTimeout(() => this.eventAggregator.publish("dashboard.loading", true), 100);
+
+        this.primeTokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
+        this.wethTokenAddress = this.contractsService.getContractAddress(ContractNames.WETH);
+        this.poolTokenAddresses = [
+          this.primeTokenAddress,
+          this.wethTokenAddress,
+        ];
+
         this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
         this.bPool = await this.contractsService.getContractFor(ContractNames.BPOOL);
         this.stakingRewards = await this.contractsService.getContractFor(ContractNames.STAKINGREWARDS);
@@ -102,16 +119,19 @@ export class Dashboard {
 
         this.poolTokenWeights = weights;
 
-        this.getStakingAmounts();
-        this.getLiquidityAmounts();
-        this.getUserBalances();
+        await this.getStakingAmounts();
+        await this.getLiquidityAmounts();
+        await this.getUserBalances();
 
         // TODO: fully revert the connection when no account
         this.connected = !!account;
+
+        this.eventAggregator.publish("dashboard.loading", false);
       } catch (ex) {
         this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
         // TODO: fully revert the connection when no account
         this.connected = false;
+        this.eventAggregator.publish("dashboard.loading", false);
       }
     }
   }
@@ -121,14 +141,21 @@ export class Dashboard {
       const provider = this.ethereumService.readOnlyProvider;
       this.userEthBalance = await provider.getBalance(this.ethereumService.defaultAccountAddress);
       this.userWethBalance = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
+      this.userPrimeBalance = await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress);
 
+      const userTokenBalances = new Map();
+      userTokenBalances.set(this.primeTokenAddress, this.userPrimeBalance);
+      userTokenBalances.set(this.wethTokenAddress, this.userWethBalance);
+      this.userTokenBalances = userTokenBalances;
     } else {
       this.userEthBalance =
-      this.userWethBalance = undefined;
+      this.userPrimeBalance =
+      this.userWethBalance =
+      this.userTokenBalances = undefined;
     }
   }
 
-  private async getStakingAmounts() {
+  private async getStakingAmounts(): Promise<void> {
 
     this.currentAPY = await this.stakingRewards.rewardPerTokenStored();
 
@@ -150,12 +177,7 @@ export class Dashboard {
     }
   }
 
-  private async getLiquidityAmounts() {
-    if (this.ethereumService.defaultAccountAddress) {
-      this.userPrimeBalance = await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress);
-    } else {
-      this.userPrimeBalance = undefined;
-    }
+  private async getLiquidityAmounts(): Promise<void> {
     try {
       this.priceWeth = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.WETH), true));
       this.pricePrimeToken = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
@@ -167,6 +189,11 @@ export class Dashboard {
         .mul(this.pricePrimeToken);
 
       this.liquidityBalance = priceWethLiquidity.add(pricePrimeTokenLiquidity);
+
+      const bPoolBalances = new Map();
+      bPoolBalances.set(this.primeTokenAddress, await this.bPool.balanceOf(this.primeTokenAddress));
+      bPoolBalances.set(this.wethTokenAddress, await this.bPool.balanceOf(this.wethTokenAddress));
+      this.bPoolBalances = bPoolBalances;
     } catch (ex) {
       this.eventAggregator.publish("handleException",
         new EventConfigException("Unable to fetch a token price", ex));
@@ -220,42 +247,53 @@ export class Dashboard {
   }
 
   private gotoLiquidity(remove = false) {
-    Object.assign(this,
-      {
-        remove,
-        bPoolAddress: this.contractsService.getContractAddress(ContractNames.BPOOL),
-      });
+    if (this.ensureConnected()) {
+      Object.assign(this,
+        {
+          remove,
+          bPoolAddress: this.contractsService.getContractAddress(ContractNames.BPOOL),
+        });
 
-    const theRoute = this.router.routes.find(x => x.name === "liquidity");
-    theRoute.settings.state = this;
-    this.router.navigateToRoute("liquidity");
+      const theRoute = this.router.routes.find(x => x.name === "liquidity");
+      theRoute.settings.state = this;
+      this.router.navigateToRoute("liquidity");
+    }
   }
 
   private gotoStaking(harvest = false) {
-    Object.assign(this,
-      {
-        harvest,
-      });
+    if (this.ensureConnected()) {
+      Object.assign(this,
+        {
+          harvest,
+        });
 
-    const theRoute = this.router.routes.find(x => x.name === "staking");
-    theRoute.settings.state = this;
-    this.router.navigateToRoute("staking");
+      const theRoute = this.router.routes.find(x => x.name === "staking");
+      theRoute.settings.state = this;
+      this.router.navigateToRoute("staking");
+    }
   }
 
+  private async liquidityJoinswapExternAmountIn(minPoolAmountOut, tokenAmountIn): Promise<void> {
+    if (this.ensureConnected()) {
+      await this.transactionsService.send(() => this.crPool.joinswapExternAmountIn(minPoolAmountOut, tokenAmountIn));
+      // TODO:  should happen after mining
+      this.getLiquidityAmounts();
+    }
+  }
 
-  // private async addLiquidity(poolAmountOut, maxAmountsIn): Promise<void> {
+  private async liquidityJoinPool(poolAmountOut, maxAmountsIn): Promise<void> {
+    if (this.ensureConnected()) {
+      await this.transactionsService.send(() => this.crPool.joinPool(poolAmountOut, maxAmountsIn));
+      // TODO:  should happen after mining
+      this.getLiquidityAmounts();
+    }
+  }
+
+  // private async removeLiquidity(poolAmountIn, minAmountsOut): Promise<void> {
   //   if (this.ensureConnected()) {
-  //     await this.transactionsService.send(() => this.crPool.joinPool(uint poolAmountOut, uint[] calldata maxAmountsIn));
+  //     await this.transactionsService.send(() => this.crPool.exitPool(poolAmountIn, minAmountsOut));
   //     // TODO:  should happen after mining
-  //      this.getLiquidity();
-  //   }
-  // }
-
-  // private async removeLiquidity(): Promise<void> {
-  //   if (this.ensureConnected()) {
-  //     await this.transactionsService.send(() => this.crPool.exitPool(uint poolAmountIn, uint[] calldata minAmountsOut));
-  //      // TODO:  should happen after mining
-  //      this.getLiquidity();
+  //     this.getLiquidityAmounts();
   //   }
   // }
 

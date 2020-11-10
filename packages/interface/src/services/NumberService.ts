@@ -1,6 +1,11 @@
 ﻿import BN from "bignumber.js"; // buried in other packages
 import * as numeral from "numeral";
 
+// export enum RoundingType {
+//   Bankers = 1,
+//   HalfUp = 2
+// }
+
 export class NumberService {
   /**
    * Note this will round up when needed and last displayed digit is .5 or higher.
@@ -89,6 +94,35 @@ export class NumberService {
     const regex = new RegExp(this.getNumberRegexString(decimalPlaces));
     return regex.test(value);
   }
+
+  // public round(value: number, decimals: number, type: RoundingType): number {
+  //   return type === RoundingType.Bankers ? this.roundBankers(value, decimals) : this.roundHalfUp(value, decimals);
+  // }
+
+  // public roundHalfUp(value: number, decimals: number): number {
+  //   return ((value !== null) && (value !== undefined)) ? this._halfUpRound(value, decimals) : value;
+  // }
+
+  // public roundBankers(value: number, decimals: number): number {
+  //   return ((value !== null) && (value !== undefined)) ? this._bankersRound(value, decimals) : value;
+  // }
+
+  // private _bankersRound(num: number, decimals: number) {
+  //   const d = decimals || 0;
+  //   const m = Math.pow(10, d);
+  //   const n = +(d ? num * m : num).toFixed(8); // Avoid rounding errors
+  //   const i = Math.floor(n);
+  //   const f = n - i;
+  //   const e = 1e-8; // Allow for rounding errors in f
+  //   const r = (f > 0.5 - e && f < 0.5 + e) ? ((i % 2 === 0) ? i : i + 1) : Math.round(n);
+  //   return d ? r / m : r;
+  // }
+
+  // // up if .5 or higher, otherwise down
+  // private _halfUpRound(num: number, decimals: number) {
+  //   const pow = Math.pow(10, (decimals) ? Math.abs(decimals) : 0);
+  //   return Math.round(num * pow) / pow;
+  // }
 
   // /**
   //    * >= 1,000,000,000,000 => "T"

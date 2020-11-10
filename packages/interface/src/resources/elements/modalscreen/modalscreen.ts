@@ -9,6 +9,8 @@ import { bindable, bindingMode, containerless, customElement } from "aurelia-fra
 export class ModalScreen {
 
   @bindable({ defaultBindingMode: bindingMode.toView }) public onOff: boolean;
+  @bindable({ defaultBindingMode: bindingMode.toView }) public message: string;
+
   private container: HTMLElement;
   private mask: HTMLElement;
 

@@ -46,9 +46,9 @@
         </div>
         <div class="cell">
           <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxPrime()">Max</button></label>
-          <numeric-input id="wethAmount"
-            defaultvalue.to-view="defaultWethBalance"
-            value.two-way="userWethAmount"
+          <numeric-input id="primeAmount"
+            defaultvalue.to-view="defaultPrimeBalance"
+            value.two-way="primeAmount"
             placeholder="0.0"
             css="clearInput"></numeric-input>
         </div>
@@ -62,9 +62,9 @@
         </div>
         <div class="cell">
           <label if.to-view="model.userWethBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxWeth()">Max</button></label>
-          <numeric-input id="primeAmount"
-            defaultvalue.to-view="defaultPrimeBalance"
-            value.two-way="userPrimeAmount"
+          <numeric-input id="wethAmount"
+            defaultvalue.to-view="defaultWethBalance"
+            value.two-way="wethAmount"
             placeholder="0.0"
             css="clearInput"></numeric-input>
         </div>
