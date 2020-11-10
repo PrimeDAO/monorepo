@@ -34,6 +34,10 @@ contract('StakingRewards', (accounts) => {
     let setup;
     let stakeAmount;
     let halfStake;
+    let quarterStake
+    let irregularStake;
+    let irregularStake2;
+    let tinyStake;
     let rewardAmount;
     let _initreward = (BigInt(925 * 100 * 1000000000000000000)).toString(); // "92500000000000003145728"
     let _starttime = 1600560000; // 2020-09-20 00:00:00 (UTC +00:00)
@@ -310,7 +314,7 @@ contract('StakingRewards', (accounts) => {
                     );
                 });
             });
-            context(' cannot exit with 0', async () => {
+            context('» cannot exit with 0', async () => {
                 before('!! fund & initialize contract', async () => {
                     await setup.tokens.primeToken.transfer(setup.incentives.stakingRewards.address, _initreward);
                     await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
@@ -442,7 +446,7 @@ contract('StakingRewards', (accounts) => {
                 await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
             });
             context('» only deployer can change variable', async () => {
-                it(' owner can change setRewardDistribution', async () => {
+                it('owner can change setRewardDistribution', async () => {
                     await setup.incentives.stakingRewards.setRewardDistribution(accounts[1], {from: accounts[0]});
                 });
                 it('reverts on call from other account', async () => {
