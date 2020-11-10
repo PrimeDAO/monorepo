@@ -220,7 +220,7 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         stakingToken.safeTransfer(msg.sender, _amount);
     }
 
-    function _notifyRewardAmount(uint256 reward) internal onlyRewardDistribution updateReward(address(0)) {
+    function _notifyRewardAmount(uint256 reward) internal onlyInitializer updateReward(address(0)) {
         rewardRate = reward.div(DURATION);
 
          // Ensure the provided reward amount is not more than the balance in the contract.
@@ -239,5 +239,5 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(DURATION);
         emit RewardAdded(reward);
-     }
+    }
 }
