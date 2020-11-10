@@ -221,7 +221,7 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
     }
 
     function _notifyRewardAmount(uint256 reward) internal onlyRewardDistribution updateReward(address(0)) {
-         rewardRate = reward.div(DURATION);
+        rewardRate = reward.div(DURATION);
 
          // Ensure the provided reward amount is not more than the balance in the contract.
          // This keeps the reward rate in the right range, preventing overflows due to
@@ -236,8 +236,8 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
          */
          // require(rewardRate <= balance.div(DURATION), "StakingRewards: Provided reward too high");
 
-         lastUpdateTime = block.timestamp;
-         periodFinish = block.timestamp.add(DURATION);
-         emit RewardAdded(reward);
+        lastUpdateTime = block.timestamp;
+        periodFinish = block.timestamp.add(DURATION);
+        emit RewardAdded(reward);
      }
 }
