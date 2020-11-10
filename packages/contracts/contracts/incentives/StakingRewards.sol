@@ -149,7 +149,7 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
 
     /* stake visibility is public as overriding LPTokenWrapper's stake() function */
     /* added nonReentrant modifier as calling _stake(): calls token contract */
-     function stake(uint256 amount) public nonReentrant updateReward(msg.sender) /*checkhalve*/ protected checkStart {
+     function stake(uint256 amount) public nonReentrant updateReward(msg.sender) protected checkStart {
         require(amount > 0, "StakingRewards: cannot stake 0");
         _stake(amount);
         emit Staked(msg.sender, amount);
@@ -169,7 +169,7 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
     }
 
     /* added nonReentrant modifier as calling token contract */
-    function getReward() public nonReentrant updateReward(msg.sender) /*checkhalve*/ protected checkStart {
+    function getReward() public nonReentrant updateReward(msg.sender) protected checkStart {
         uint256 reward = earned(msg.sender);
         if (reward > 0) {
             rewards[msg.sender] = 0;
@@ -229,7 +229,7 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         return _totalSupply;
     }
 
-    function balanceOf(address account) /*protected*/ public view returns (uint256) {
+    function balanceOf(address account) public view returns (uint256) {
         return _balances[account];
     }
 
