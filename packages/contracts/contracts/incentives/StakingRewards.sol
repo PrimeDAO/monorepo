@@ -93,7 +93,7 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
 
         rewardDistribution = msg.sender;
 
-        notifyRewardAmount(_initreward);
+        _notifyRewardAmount(_initreward);
     }
 
     uint256 public DURATION;
@@ -188,27 +188,6 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         _;
     }
 
-   function notifyRewardAmount(uint256 reward) internal onlyRewardDistribution updateReward(address(0)) {
-        rewardRate = reward.div(DURATION);
-
-        // Ensure the provided reward amount is not more than the balance in the contract.
-        // This keeps the reward rate in the right range, preventing overflows due to
-        // very high values of rewardRate in the earned and rewardsPerToken functions;
-        // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
-        uint balance = rewardToken.balanceOf(address(this));
-
-        /*
-        below require statement can be removed as function of this require statement will never arise due to 
-        (i) function being called on intialization and
-        (ii) need for _initreward == rewardToken.balanceOf(address(this))
-        */
-        // require(rewardRate <= balance.div(DURATION), "StakingRewards: Provided reward too high");
-
-        lastUpdateTime = block.timestamp;
-        periodFinish = block.timestamp.add(DURATION);
-        emit RewardAdded(reward);
-    }
-
     // This function allows governance to take unsupported tokens out of the
     // contract, since this one exists longer than the other pools.
     // This is in an effort to make someone whole, should they seriously
@@ -240,4 +219,25 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         _balances[msg.sender] = _balances[msg.sender].sub(_amount);
         stakingToken.safeTransfer(msg.sender, _amount);
     }
+
+    function _notifyRewardAmount(uint256 reward) internal onlyRewardDistribution updateReward(address(0)) {
+         rewardRate = reward.div(DURATION);
+
+         // Ensure the provided reward amount is not more than the balance in the contract.
+         // This keeps the reward rate in the right range, preventing overflows due to
+         // very high values of rewardRate in the earned and rewardsPerToken functions;
+         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
+         // uint balance = rewardToken.balanceOf(address(this));
+
+         /*
+         below require statement can be removed as function of this require statement will never arise due to
+         (i) function being called on intialization and
+         (ii) need for _initreward == rewardToken.balanceOf(address(this))
+         */
+         // require(rewardRate <= balance.div(DURATION), "StakingRewards: Provided reward too high");
+
+         lastUpdateTime = block.timestamp;
+         periodFinish = block.timestamp.add(DURATION);
+         emit RewardAdded(reward);
+     }
 }
