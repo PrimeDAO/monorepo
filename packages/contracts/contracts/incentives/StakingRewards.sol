@@ -126,7 +126,7 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
     }
 
     function rewardPerToken() public view returns (uint256) {
-        if (totalSupply() == 0) {
+        if (_totalSupply == 0) {
             return rewardPerTokenStored;
         }
         return
@@ -135,13 +135,13 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
                     .sub(lastUpdateTime)
                     .mul(rewardRate)
                     .mul(1e18)
-                    .div(totalSupply())
+                    .div(_totalSupply)
             );
     }
 
     function earned(address account) public view returns (uint256) {
         return
-            balanceOf(account)
+            _balances[account]
                 .mul(rewardPerToken().sub(userRewardPerTokenPaid[account]))
                 .div(1e18)
                 .add(rewards[account]);
@@ -164,7 +164,7 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
 
     /* added nonReentrant modifier as calling withdraw() and getReward(): these call token contract */
     function exit() external {
-        withdraw(balanceOf(msg.sender));
+        withdraw(_balances[msg.sender]);
         getReward();
     }
 
@@ -182,7 +182,6 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         require(block.timestamp >= starttime,"StakingRewards: not start");
         _;
     }
-
 
    function notifyRewardAmount(uint256 reward) external protected onlyRewardDistribution updateReward(address(0)) {
         if (block.timestamp >= periodFinish) {
@@ -223,14 +222,6 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
 
         // transfer to
         _token.safeTransfer(to, amount);
-    }
-
-    function totalSupply() public view returns (uint256) {
-        return _totalSupply;
-    }
-
-    function balanceOf(address account) public view returns (uint256) {
-        return _balances[account];
     }
 
     function _stake(uint256 _amount) private {
