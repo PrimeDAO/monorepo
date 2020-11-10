@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="rightColumn sectionStyles">
-      <div class="table">
+      <div class="table sectionStyles">
         <div class="cell heading heading3">Asset</div>
         <div class="cell heading heading3">Wallet Balance</div>
         <div class="cell heading heading3">Deposit</div>
@@ -81,7 +81,7 @@
       </div>
     </div>
     <div class="secondRow">
-      <button class="button1" click.delegate="handleSubmit()">${ model.remove ? "Remove" : "Add" } Liquidity</button>
+      <button class="button1" click.delegate="handleSubmit()">${ model.remove ? (isMultiAsset() ? "Remove All" : "Remove" ) : "Add" } Liquidity</button>
     </div>
     <div class="thirdRow back">
       <a route-href="route: dashboard"><img src="/back.svg"></img> Back</a>

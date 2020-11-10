@@ -5,13 +5,13 @@
   margin: auto;
   max-width: 600px;
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto auto;
   grid-template-rows: auto;
   grid-template-areas:
-    "header header"
-    "leftColumn rightColumn"
-    "secondRow secondRow"
-    "thirdRow thirdRow";
+    "header header header"
+    "leftColumn . rightColumn"
+    "secondRow secondRow secondRow"
+    "thirdRow thirdRow thirdRow";
 
   .header {
     grid-area: header;
@@ -53,6 +53,7 @@
   .rightColumn {
     grid-area: rightColumn;
     margin-bottom: 20px;
+    background-color: transparent;
     .table {
       display: grid;
       margin-bottom: 16px;

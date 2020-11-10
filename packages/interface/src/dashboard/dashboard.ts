@@ -289,13 +289,21 @@ export class Dashboard {
     }
   }
 
-  // private async removeLiquidity(poolAmountIn, minAmountsOut): Promise<void> {
-  //   if (this.ensureConnected()) {
-  //     await this.transactionsService.send(() => this.crPool.exitPool(poolAmountIn, minAmountsOut));
-  //     // TODO:  should happen after mining
-  //     this.getLiquidityAmounts();
-  //   }
-  // }
+  private async liquidityExit(poolAmountIn, minAmountsOut): Promise<void> {
+    if (this.ensureConnected()) {
+      await this.transactionsService.send(() => this.crPool.exitPool(poolAmountIn, minAmountsOut));
+      // TODO:  should happen after mining
+      this.getLiquidityAmounts();
+    }
+  }
+
+  private async liquidityExitExitswapPoolAmountIn(poolAmountIn, minTokenAmountOut): Promise<void> {
+    if (this.ensureConnected()) {
+      await this.transactionsService.send(() => this.crPool.exitswapPoolAmountIn(poolAmountIn, minTokenAmountOut));
+      // TODO:  should happen after mining
+      this.getLiquidityAmounts();
+    }
+  }
 
   private async stakingStake(amount: BigNumber): Promise<void> {
     if (this.ensureConnected()) {
