@@ -141,10 +141,18 @@ contract('StakingRewards', (accounts) => {
                 it('users rewards are proportinal to their stake', async () => {
                     let earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[1]));
                     let earned2 = BigInt(await setup.incentives.stakingRewards.earned(accounts[2]));
+                    let earned3 = BigInt(await setup.incentives.stakingRewards.earned(accounts[3]));
+                    let earned5 = BigInt(await setup.incentives.stakingRewards.earned(accounts[5])); //76
+
                     let halfReward = earned/BigInt(2);
-                    expect((halfReward)).to.equal(earned2);
+                    let quarterReward = earned/BigInt(4);
+                    let irregReward = (earned/BigInt(100) * BigInt(76));
+
+                    expect(halfReward).to.equal(earned2);
+                    expect(quarterReward).to.equal(earned3);
+                    expect(irregReward).to.equal(earned5);
                 });
-                it('users 1 - 6 can withdraw their PRIME rewards whilst keeping tokens staked', async () => {
+                it('users 1 - 6 can claim their PRIME rewards whilst keeping tokens staked', async () => {
                     let earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[1]));
                     await setup.incentives.stakingRewards.getReward( { from: accounts[1] } );
                     let balance = BigInt(await setup.tokens.primeToken.balanceOf(accounts[1]));
