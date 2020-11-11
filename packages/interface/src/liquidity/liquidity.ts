@@ -24,7 +24,7 @@ export class Liquidity {
   private poolTokens: any;
   private _primeAmount: BigNumber;
   private _wethAmount: BigNumber;
-
+  private bPrimeAmount: BigNumber;
 
   constructor(
     private eventAggregator: EventAggregator) {}
@@ -159,27 +159,27 @@ export class Liquidity {
     return true;
   }
 
-  // private async getRemoveTokenAmountOut(
-  //   poolAmountIn: BigNumber,
-  //   tokenAddress: Address): Promise<BigNumberJs> {
+  private async getRemoveTokenAmountOut(
+    poolAmountIn: BigNumber,
+    tokenAddress: Address): Promise<BigNumberJs> {
 
-  //   if (!parseFloat(poolAmountIn?.toString())) return new BigNumberJs(0);
+    if (!parseFloat(poolAmountIn?.toString())) return new BigNumberJs(0);
 
-  //   const tokenBalanceOut = toBigNumberJs(this.model.bPoolBalances.get(tokenAddress));
-  //   const tokenWeightOut = bnum(tokenOut.denormWeight).times("1e18");
-  //   const poolSupply = toBigNumberJs(await this.model.bPool.totalSupply());
-  //   const totalWeight = await this.model.bPool.getTotalDenormalizedWeight();
-  //   const swapFee = bnum(toBigNumberJs(this.model.swapfee)).times("1e18");
+    const tokenBalanceOut = toBigNumberJs(this.model.bPoolBalances.get(tokenAddress));
+    const tokenWeightOut = await this.model.bPool.getDenormalizedWeight(tokenAddress);
+    const poolSupply = toBigNumberJs(await this.model.bPool.totalSupply());
+    const totalWeight = await this.model.bPool.getTotalDenormalizedWeight();
+    const swapFee = bnum(toBigNumberJs(this.model.swapfee)).times("1e18");
 
-  //   return calcSingleOutGivenPoolIn(
-  //     tokenBalanceOut,
-  //     tokenWeightOut,
-  //     poolSupply,
-  //     totalWeight,
-  //     toBigNumberJs(poolAmountIn),
-  //     swapFee,
-  //   );
-  // }
+    return calcSingleOutGivenPoolIn(
+      tokenBalanceOut,
+      tokenWeightOut,
+      poolSupply,
+      totalWeight,
+      toBigNumberJs(poolAmountIn),
+      swapFee,
+    );
+  }
 
   private async handleSubmit(): Promise<void> {
 
@@ -188,54 +188,41 @@ export class Liquidity {
     }
 
     if (this.model.remove) {
-      // if (this.isMultiAsset) {
-      //   await this.model.liquidityExit(
-      //     poolAmountIn,
-      //     this.model.poolTokenAddresses.map(() => "0"),
-      //     // FIXME Code below leads to withdrawal issues
-      //     // minAmountsOut: this.pool.tokensList.map(tokenAddress => {
-      //     //   const token = this.pool.tokens.find(
-      //     //     token => token.checksum === tokenAddress
-      //     //   );
-      //     //   return denormalizeBalance(
-      //     //     this.getTokenAmountOut(token),
-      //     //     token.decimals
-      //     //   )
-      //     //     .times(1 - BALANCE_BUFFER)
-      //     //     .integerValue(BigNumber.ROUND_UP)
-      //     //     .toString();
-      //     // })
-      //   );
-      // } else {
-      //   const poolAmountIn = this.activeSingleTokenAmount();
-      //   const tokenAddress = this.activeSingleTokenAddress();
-      //   const minTokenAmountOut = (await this.getRemoveTokenAmountOut(poolAmountIn, tokenAddress))
-      //     .times(1 - BALANCE_BUFFER)
-      //     .integerValue(BigNumberJs.ROUND_UP)
-      //     .toString();
-      //   this.model.liquidityExitExitswapPoolAmountIn(
-      //     poolAmountIn,
-      //     minTokenAmountOut,
-      //   );
-      // }
+      if (this.isMultiAsset) {
+        await this.model.liquidityExit(
+          this.bPrimeAmount,
+          this.model.poolTokenAddresses.map(() => "0"),
+        );
+      } else {
+        const poolAmountIn = this.activeSingleTokenAmount();
+        const tokenAddress = this.activeSingleTokenAddress();
+        const minTokenAmountOut = (await this.getRemoveTokenAmountOut(poolAmountIn, tokenAddress))
+          .times(1 - BALANCE_BUFFER)
+          .integerValue(BigNumberJs.ROUND_UP)
+          .toString();
+        this.model.liquidityExitExitswapPoolAmountIn(
+          poolAmountIn,
+          minTokenAmountOut,
+        );
+      }
     } else { // Add Liquidity
       if (this.isMultiAsset()) {
       // computed by amountChanged
         const poolAmountOut = this.poolTokens;
         const maxAmountsIn =
-        this.model.poolTokenAddresses.map(tokenAddress => {
-          // this.amounts computed by amountChanged
-          const inputAmountIn = toBigNumberJs(this.amounts[tokenAddress])
-            .div(1 - BALANCE_BUFFER)
-            .integerValue(BigNumberJs.ROUND_UP);
-          /**
-               * pool is crPool
-               * balance of the token held by the crPool
-               */
-          const balanceAmountIn = toBigNumberJs(this.model.userTokenBalances[tokenAddress]);
-          const tokenAmountIn = BigNumberJs.min(inputAmountIn, balanceAmountIn);
-          return tokenAmountIn.toString();
-        });
+          this.model.poolTokenAddresses.map(tokenAddress => {
+            // this.amounts computed by amountChanged
+            const inputAmountIn = toBigNumberJs(this.amounts[tokenAddress])
+              .div(1 - BALANCE_BUFFER)
+              .integerValue(BigNumberJs.ROUND_UP);
+            /**
+           * pool is crPool
+           * balance of the token held by the crPool
+           */
+            const balanceAmountIn = toBigNumberJs(this.model.userTokenBalances[tokenAddress]);
+            const tokenAmountIn = BigNumberJs.min(inputAmountIn, balanceAmountIn);
+            return tokenAmountIn.toString();
+          });
 
         this.model.liquidityJoinPool(poolAmountOut, maxAmountsIn);
 
