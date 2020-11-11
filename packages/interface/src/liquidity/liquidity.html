@@ -72,7 +72,7 @@
       </div>
       <div class="bPrimeAmount section">
         <div class="label">BPRIME Amount</div>
-        <div if.to-view="isSingleAsset" class="amount">
+        <div if.to-view="!model.remove || isSingleAsset" class="amount">
           <div if.to-view="model.connected" class="value">
             <floating-point-number class="share" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
               placement.to-view="top"></floating-point-number>
