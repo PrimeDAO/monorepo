@@ -38,15 +38,9 @@ contract('StakingRewards', (accounts) => {
     let irregularStake;
     let irregularStake2;
     let tinyStake;
-    let rewardAmount;
     let _initreward = (BigInt(925 * 100 * 1000000000000000000)).toString(); // "92500000000000003145728"
     let _starttime = 1600560000; // 2020-09-20 00:00:00 (UTC +00:00)
     let _durationDays = 7;
-    let initTime;
-    let _badReward;
-
-    let oneWeekReward;
-    let twoWeekReward;
 
     before('!! deploy setup', async () => {
         setup = await deploy(accounts);
@@ -216,7 +210,31 @@ contract('StakingRewards', (accounts) => {
                 before('!! fastforward', async () => {
                     await time.increase(time.duration.weeks(1));
                 });
-                it('users 7 - 9 exit with correct bPrime balances', async () => {
+                it('users exit with correct bPrime balances', async () => {
+                    await setup.incentives.stakingRewards.exit( {from: accounts[1]} );
+                    let bPrimeBalance1 = (await setup.balancer.pool.balanceOf(accounts[1])).toString();
+                    expect(bPrimeBalance1).to.equal(stakeAmount);
+
+                    await setup.incentives.stakingRewards.exit( {from: accounts[2]} );
+                    let bPrimeBalance2 = (await setup.balancer.pool.balanceOf(accounts[2])).toString();
+                    expect(bPrimeBalance2).to.equal(halfStake);
+
+                    await setup.incentives.stakingRewards.exit( {from: accounts[3]} );
+                    let bPrimeBalance3 = (await setup.balancer.pool.balanceOf(accounts[3])).toString();
+                    expect(bPrimeBalance3).to.equal(quarterStake);
+
+                    await setup.incentives.stakingRewards.exit( {from: accounts[4]} );
+                    let bPrimeBalance4 = (await setup.balancer.pool.balanceOf(accounts[4])).toString();
+                    expect(bPrimeBalance4).to.equal(irregularStake);
+
+                    await setup.incentives.stakingRewards.exit( {from: accounts[5]} );
+                    let bPrimeBalance5 = (await setup.balancer.pool.balanceOf(accounts[5])).toString();
+                    expect(bPrimeBalance5).to.equal(irregularStake2);
+
+                    await setup.incentives.stakingRewards.exit( {from: accounts[6]} );
+                    let bPrimeBalance6 = (await setup.balancer.pool.balanceOf(accounts[6])).toString();
+                    expect(bPrimeBalance6).to.equal(tinyStake);
+
                     await setup.incentives.stakingRewards.exit( {from: accounts[7]} );
                     let bPrimeBalance7 = (await setup.balancer.pool.balanceOf(accounts[7])).toString();
                     expect(bPrimeBalance7).to.equal(stakeAmount);
@@ -229,11 +247,16 @@ contract('StakingRewards', (accounts) => {
                     let bPrimeBalance9 = (await setup.balancer.pool.balanceOf(accounts[9])).toString();
                     expect(bPrimeBalance9).to.equal(quarterStake);
                 });
-                it('Contract bPRIME balance is correct', async () => {
-                    expect((await setup.balancer.pool.balanceOf(setup.incentives.stakingRewards.address)).toString()).to.equal(toWei('293')); // 468 - 175
+                it('Contract bPRIME balance == 0', async () => {
+                    expect((await setup.balancer.pool.balanceOf(setup.incentives.stakingRewards.address)).toString()).to.equal('0'); // all stake removed
                 });
                 it('reduction in stakingRewards prime balance == total reward payout amount', async () => {
                     let remainingPrimeBalance = BigInt(await setup.tokens.primeToken.balanceOf(setup.incentives.stakingRewards.address));
+
+                    /*
+                    * Remaining token balance is ~190000 which considering we're using an 18 decimal token is fractional 
+                    */
+                    // console.log((remainingPrimeBalance).toString());
 
                     let bal1 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[1]));
                     let bal2 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[2]));
