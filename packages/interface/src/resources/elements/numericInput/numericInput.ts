@@ -61,11 +61,11 @@ export class NumericInput {
   constructor(private numberService: NumberService) {
   }
 
-  private defaultvalueChanged(newValue: BigNumber | number | string, prevValue: BigNumber | number | string): void {
+  private defaultvalueChanged(newValue: BigNumber | number | string, _prevValue: BigNumber | number | string): void {
     /**
      * TODO: validate that this is a valid value, like for preventing pasting nonsense into the field
      */
-    if (newValue?.toString() !== prevValue?.toString()) {
+    if (newValue?.toString() !== this.value?.toString()) {
 
       this.hydrateFromDefaultValue();
 

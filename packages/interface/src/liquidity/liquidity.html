@@ -48,7 +48,7 @@
         <div class="cell">
           <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxPrime()">Max</button></label>
           <numeric-input id="primeAmount"
-            defaultvalue.to-view="defaultPrimeBalance"
+            defaultvalue.to-view="defaultPrimeAmount"
             value.two-way="primeAmount"
             placeholder="0.0"
             css="clearInput"></numeric-input>
@@ -64,7 +64,7 @@
         <div class="cell">
           <label if.to-view="model.userWethBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxWeth()">Max</button></label>
           <numeric-input id="wethAmount"
-            defaultvalue.to-view="defaultWethBalance"
+            defaultvalue.to-view="defaultWethAmount"
             value.two-way="wethAmount"
             placeholder="0.0"
             css="clearInput"></numeric-input>
@@ -72,17 +72,25 @@
       </div>
       <div class="bPrimeAmount section">
         <div class="label">BPRIME Amount</div>
-        <div class="amount">
+        <div if.to-view="isSingleAsset" class="amount">
           <div if.to-view="model.connected" class="value">
             <floating-point-number class="share" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
               placement.to-view="top"></floating-point-number>
           </div>
-          <div else class="label">--</div> BPRIME
+          <div else class="label">--</div>
+        </div>
+        <div else>
+          <label if.to-view="model.userBPrimeBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxBPrime()">Max</button></label>
+          <numeric-input id="bPrimeAmount"
+            defaultvalue.to-view="defaultBPrimeAmount"
+            value.two-way="bPrimeAmount"
+            placeholder="0.0"
+            css="clearInput"></numeric-input>
         </div>
       </div>
     </div>
     <div class="secondRow">
-      <button class="button1" click.delegate="handleSubmit()">${ model.remove ? (isMultiAsset() ? "Remove All" : "Remove" ) : "Add" } Liquidity</button>
+      <button class="button1" click.delegate="handleSubmit()">${ model.remove ? (isSingleAsset ? "Remove": "Remove All" ) : "Add" } Liquidity</button>
     </div>
     <div class="thirdRow back">
       <a route-href="route: dashboard"><img src="/back.svg"></img> Back</a>

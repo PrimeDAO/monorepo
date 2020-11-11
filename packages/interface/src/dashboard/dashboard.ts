@@ -297,9 +297,9 @@ export class Dashboard {
     }
   }
 
-  private async liquidityExitExitswapPoolAmountIn(poolAmountIn, minTokenAmountOut): Promise<void> {
+  private async liquidityExitswapPoolAmountIn(tokenOutAddress, poolAmountIn, minTokenAmountOut): Promise<void> {
     if (this.ensureConnected()) {
-      await this.transactionsService.send(() => this.crPool.exitswapPoolAmountIn(poolAmountIn, minTokenAmountOut));
+      await this.transactionsService.send(() => this.crPool.exitswapPoolAmountIn(tokenOutAddress, poolAmountIn, minTokenAmountOut));
       // TODO:  should happen after mining
       this.getLiquidityAmounts();
     }

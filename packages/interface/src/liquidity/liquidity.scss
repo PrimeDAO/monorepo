@@ -133,6 +133,9 @@
     .bPrimeAmount {
       display: flex;
       padding: 11px 20px;
+      align-items: center;
+      height: 20px;
+
       .label {
         flex-grow: 2;
       }
@@ -144,6 +147,10 @@
         .label {
           display: inline-block;
         }
+      }
+      input {
+        width: 90px;
+        text-align: right;
       }
     }
   }

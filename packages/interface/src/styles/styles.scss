@@ -135,6 +135,10 @@ html {
       letter-spacing: 0.6px;
       line-height: 15px;
       background-color: $section-background-color;
+
+      input {
+        font-size: 12px;
+      }
     }
 
     .section {
