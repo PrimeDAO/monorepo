@@ -22,7 +22,7 @@
     margin-bottom: 20px;
     text-align: center;
 
-    > div {
+    > div:not(:last-child) {
       margin-bottom: 16px;
     }
 
