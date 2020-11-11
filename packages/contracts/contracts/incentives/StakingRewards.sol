@@ -227,14 +227,8 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
          // This keeps the reward rate in the right range, preventing overflows due to
          // very high values of rewardRate in the earned and rewardsPerToken functions;
          // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
-         // uint balance = rewardToken.balanceOf(address(this));
-
-         /*
-         below require statement can be removed as function of this require statement will never arise due to
-         (i) function being called on intialization and
-         (ii) need for _initreward == rewardToken.balanceOf(address(this))
-         */
-         // require(rewardRate <= balance.div(DURATION), "StakingRewards: Provided reward too high");
+        uint balance = rewardToken.balanceOf(address(this));
+        require(rewardRate <= balance.div(DURATION), "StakingRewards: Provided reward too high");
 
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(DURATION);
