@@ -116,6 +116,20 @@ html {
       outline: none;
     }
 
+    .triangle {
+      position: absolute;
+      transform: translateY(-21px);
+
+      img {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 0 38px 38px;
+        border-color: transparent transparent $triangle-color transparent;
+        display: inline-block;
+      }
+    }
+
     .sectionStyles {
       font-size: 12px;
       letter-spacing: 0.6px;
@@ -139,20 +153,6 @@ html {
 
         > div {
           margin-bottom: 16px;
-        }
-
-        .triangle {
-          position: absolute;
-          transform: translateY(-21px);
-
-          img {
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 0 38px 38px;
-            border-color: transparent transparent $triangle-color transparent;
-            display: inline-block;
-          }
         }
       }
       &.middle {

@@ -16,6 +16,14 @@
   .header {
     grid-area: header;
     margin-bottom: 20px;
+
+    .triangle {
+      transform: translateY(-13px);
+    }
+
+    .title {
+      position: relative; // for triangle z-index to work
+    }
   }
 
   .leftColumn {

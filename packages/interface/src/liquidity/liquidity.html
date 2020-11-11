@@ -1,6 +1,7 @@
 <template>
   <div class="animated-page au-animate liquidityContainer">
     <div class="header">
+      <span class="triangle"><img /></span>
       <div class="heading2 title">${ model.remove ? "Remove" : "Add" } Liquidity</div>
     </div>
     <div class="leftColumn section">
@@ -70,7 +71,7 @@
         </div>
       </div>
       <div class="bPrimeAmount section">
-        <div class="label">My BPRIME Amount</div>
+        <div class="label">BPRIME Amount</div>
         <div class="amount">
           <div if.to-view="model.connected" class="value">
             <floating-point-number class="share" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
