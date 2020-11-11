@@ -56,7 +56,7 @@ contract('StakingRewards', (accounts) => {
             await setup.tokens.primeToken.transfer(setup.incentives.stakingRewards.address, _initreward);
             await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
         });
-        context('# happypath: stake => getReward => withdraw', async () => {
+        context('# happypath: stake => getReward => exit', async () => {
             before('!! deploy setup', async () => {
                 setup = await deploy(accounts);
                 stakeAmount = toWei('100');
@@ -208,6 +208,44 @@ contract('StakingRewards', (accounts) => {
                     let bal6 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[6]));
 
                     let payout = BigInt(bal1 + bal2 + bal3 + bal4 + bal5 + bal6);
+                    let expectedPayout = (BigInt(_initreward) - BigInt(remainingPrimeBalance));
+                    expect(expectedPayout).to.equal(await BigInt(payout));
+                });
+            });
+            context('» exit', () => {
+                before('!! fastforward', async () => {
+                    await time.increase(time.duration.weeks(1));
+                });
+                it('users 7 - 9 exit with correct bPrime balances', async () => {
+                    await setup.incentives.stakingRewards.exit( {from: accounts[7]} );
+                    let bPrimeBalance7 = (await setup.balancer.pool.balanceOf(accounts[7])).toString();
+                    expect(bPrimeBalance7).to.equal(stakeAmount);
+
+                    await setup.incentives.stakingRewards.exit( {from: accounts[8]} );
+                    let bPrimeBalance8 = (await setup.balancer.pool.balanceOf(accounts[8])).toString();
+                    expect(bPrimeBalance8).to.equal(halfStake);
+
+                    await setup.incentives.stakingRewards.exit( {from: accounts[9]} );
+                    let bPrimeBalance9 = (await setup.balancer.pool.balanceOf(accounts[9])).toString();
+                    expect(bPrimeBalance9).to.equal(quarterStake);
+                });
+                it('Contract bPRIME balance is correct', async () => {
+                    expect((await setup.balancer.pool.balanceOf(setup.incentives.stakingRewards.address)).toString()).to.equal(toWei('293')); // 468 - 175
+                });
+                it('reduction in stakingRewards prime balance == total reward payout amount', async () => {
+                    let remainingPrimeBalance = BigInt(await setup.tokens.primeToken.balanceOf(setup.incentives.stakingRewards.address));
+
+                    let bal1 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[1]));
+                    let bal2 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[2]));
+                    let bal3 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[3]));
+                    let bal4 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[4]));
+                    let bal5 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[5]));
+                    let bal6 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[6]));
+                    let bal7 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[7]));
+                    let bal8 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[8]));
+                    let bal9 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[9]));
+
+                    let payout = BigInt(bal1 + bal2 + bal3 + bal4 + bal5 + bal6 + bal7 + bal8 + bal9);
                     let expectedPayout = (BigInt(_initreward) - BigInt(remainingPrimeBalance));
                     expect(expectedPayout).to.equal(await BigInt(payout));
                 });
