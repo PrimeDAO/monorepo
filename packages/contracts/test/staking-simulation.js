@@ -138,9 +138,14 @@ contract('StakingRewards', (accounts) => {
                         expect(earned).to.equal(BigInt(0));
                     }
                 });
+                it('users rewards are proportinal to their stake', async () => {
+                    let earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[1]));
+                    let earned2 = BigInt(await setup.incentives.stakingRewards.earned(accounts[2]));
+                    let halfReward = earned/BigInt(2);
+                    expect((halfReward)).to.equal(earned2);
+                });
                 it('users 1 - 6 can withdraw their PRIME rewards whilst keeping tokens staked', async () => {
                     let earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[1]));
-                    // oneWeekReward = earned;
                     await setup.incentives.stakingRewards.getReward( { from: accounts[1] } );
                     let balance = BigInt(await setup.tokens.primeToken.balanceOf(accounts[1]));
                     expect(earned).to.equal(balance);
