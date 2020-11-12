@@ -9,7 +9,6 @@ import { BigNumber } from "ethers";
 import { EventConfigException, EventConfigFailure } from "services/GeneralEvents";
 import { PriceService } from "services/PriceService";
 import { Router } from "aurelia-router";
-import { getContractAddress } from "ethers/lib/utils";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -72,6 +71,7 @@ export class Dashboard {
   private poolTokenAddresses: Array<Address>;
   private poolTotalSupply: BigNumber;
   private poolTotalDenormWeight: BigNumber;
+  private poolTokenAllowances: Map<Address, BigNumber>;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -203,6 +203,10 @@ export class Dashboard {
 
       this.poolTotalDenormWeight = await this.bPool.getTotalDenormalizedWeight();
 
+      if (this.ethereumService.defaultAccountAddress) {
+        this.getTokenAllowances();
+      }
+
     } catch (ex) {
       this.eventAggregator.publish("handleException",
         new EventConfigException("Unable to fetch a token price", ex));
@@ -210,6 +214,16 @@ export class Dashboard {
     }
   }
 
+  private async getTokenAllowances(): Promise<void> {
+    const allowances = new Map();
+    await allowances.set(this.primeTokenAddress, await this.primeToken.allowance(
+      this.ethereumService.defaultAccountAddress,
+      this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool)));
+    await allowances.set(this.wethTokenAddress, await this.weth.allowance(
+      this.ethereumService.defaultAccountAddress,
+      this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool)));
+    this.poolTokenAllowances = allowances;
+  }
   private ensureConnected(): boolean {
     if (!this.connected) {
       // TODO: make this await until we're either connected or not?
@@ -282,9 +296,12 @@ export class Dashboard {
     }
   }
 
-  private async liquidityJoinswapExternAmountIn(minPoolAmountOut, tokenAmountIn): Promise<void> {
+  private async liquidityJoinswapExternAmountIn(tokenIn, tokenAmountIn, minPoolAmountOut): Promise<void> {
     if (this.ensureConnected()) {
-      await this.transactionsService.send(() => this.crPool.joinswapExternAmountIn(minPoolAmountOut, tokenAmountIn));
+      await this.transactionsService.send(() => this.crPool.joinswapExternAmountIn(
+        tokenIn,
+        tokenAmountIn,
+        minPoolAmountOut));
       // TODO:  should happen after mining
       this.getLiquidityAmounts();
     }
@@ -311,6 +328,17 @@ export class Dashboard {
       await this.transactionsService.send(() => this.crPool.exitswapPoolAmountIn(tokenOutAddress, poolAmountIn, minTokenAmountOut));
       // TODO:  should happen after mining
       this.getLiquidityAmounts();
+    }
+  }
+
+  private async liquiditySetTokenAllowance(tokenAddress: Address, amount: BigNumber): Promise<void> {
+    if (this.ensureConnected()) {
+      const tokenContract = tokenAddress === this.primeTokenAddress ? this.primeToken : this.weth;
+      await this.transactionsService.send(() => tokenContract.approve(
+        this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool),
+        amount));
+      // TODO:  should happen after mining
+      this.getTokenAllowances();
     }
   }
 

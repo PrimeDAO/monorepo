@@ -40,7 +40,7 @@
         <div class="cell heading heading3">Deposit</div>
         <div class="cell"><input type="checkbox" checked.bind="primeSelected" /></div>
         <div class="cell"><img src="/PD_APP_ICON_PD_01.svg" />PRIME
-          <button if.to-view="primeAmountValid" class="unlock button4 small" click.delegate="unlock(model.primeTokenAddress)">Unlock</button>
+          <button if.to-view="primeAmountValid && !primeHasSufficientAllowance" class="unlock button4 small" click.delegate="unlock(model.primeTokenAddress)">Unlock</button>
         </div>
         <div class="cell">
           <div if.to-view="model.connected">
@@ -71,7 +71,7 @@
         </div>
         <div class="cell"><input type="checkbox" checked.bind="wethSelected" /></div>
         <div class="cell"><img src="/PD_APP_ICON_ETH_01.svg" />WETH
-          <button if.to-view="wethAmountValid" class="unlock button4 small" click.delegate="unlock(model.primeTokenAddress)">Unlock</button>
+          <button if.to-view="wethAmountValid && !wethHasSufficientAllowance" class="unlock button4 small" click.delegate="unlock(model.wethTokenAddress)">Unlock</button>
         </div>
         <div class="cell">
           <div if.to-view="!model.remove">
@@ -106,9 +106,9 @@
         <div if.to-view="!model.remove" class="amount">
           <div if.to-view="model.connected" class="value">
             <formatted-number
-              value.to-view="model.userBPrimeBalance | ethwei"
+              value.to-view="bPrimeAmount | ethwei"
               format="0.00a"
-              placement.to-view="top">
+              placement.to-view="top"> BPRIME
             </formatted-number>
           </div>
           <div else class="label">--</div>
