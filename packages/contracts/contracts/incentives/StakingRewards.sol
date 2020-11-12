@@ -206,6 +206,14 @@ contract StakingRewards is Ownable, ReentrancyGuard {
         _token.safeTransfer(to, amount);
     }
 
+    function totalSupply() public view returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) public view returns (uint256) {
+        return _balances[account];
+    }
+
     function _stake(uint256 _amount) private {
         _totalSupply = _totalSupply.add(_amount);
         _balances[msg.sender] = _balances[msg.sender].add(_amount);
