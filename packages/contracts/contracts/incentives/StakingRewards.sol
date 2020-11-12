@@ -229,13 +229,6 @@ contract StakingRewards is Ownable, ReentrancyGuard {
     function _notifyRewardAmount(uint256 reward) internal updateReward(address(0)) {
         rewardRate = reward.div(DURATION);
 
-         // Ensure the provided reward amount is not more than the balance in the contract.
-         // This keeps the reward rate in the right range, preventing overflows due to
-         // very high values of rewardRate in the earned and rewardsPerToken functions;
-         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
-        uint balance = rewardToken.balanceOf(address(this));
-        require(rewardRate <= balance.div(DURATION), "StakingRewards: Provided reward too high");
-
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(DURATION);
         emit RewardAdded(reward);
