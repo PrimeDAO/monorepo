@@ -92,8 +92,6 @@ contract StakingRewards is Ownable, ReentrancyGuard {
         /* check contract is properly funded */
         require(_initreward == rewardToken.balanceOf(address(this)),   "StakingRewards: wrong reward amount supplied");
 
-        // rewardDistribution = msg.sender;
-
         _notifyRewardAmount(_initreward);
     }
 
@@ -228,11 +226,7 @@ contract StakingRewards is Ownable, ReentrancyGuard {
          // This keeps the reward rate in the right range, preventing overflows due to
          // very high values of rewardRate in the earned and rewardsPerToken functions;
          // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
-         
-         /* this can in theory be removed */
-        // uint balance = rewardToken.balanceOf(address(this));
-        // require(rewardRate <= balance.div(DURATION), "StakingRewards: Provided reward too high");
-
+        
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(DURATION);
         emit RewardAdded(reward);

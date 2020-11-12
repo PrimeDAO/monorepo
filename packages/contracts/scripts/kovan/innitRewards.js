@@ -1,4 +1,3 @@
-const PrimeToken = artifacts.require('PrimeToken');
 const StakingRewards = artifacts.require('StakingRewards');
 
 
@@ -13,13 +12,12 @@ module.exports = async function(callback) {
     const yieldStarTime = config.yieldRewards.startTime;
     const yieldDuration = config.yieldRewards.duration; 
 
-	const prime = await PrimeToken.at(contracts.kovan.PrimeToken);
 	const staking = await StakingRewards.at(contracts.kovan.StakingRewards);
 
     try {
 
 		await console.log("***   Initializing StakingRewards");
-		await staking.initialize(prime.address, contracts.kovan.ConfigurableRightsPool, yieldReward, yieldStarTime, yieldDuration);
+		await staking.initialize(contracts.kovan.PrimeToken, contracts.kovan.ConfigurableRightsPool, yieldReward, yieldStarTime, yieldDuration);
 		await console.log("***   Success");
 
     } catch(error) {
