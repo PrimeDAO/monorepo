@@ -34,7 +34,7 @@ contract('StakingRewards', (accounts) => {
     let setup;
     let stakeAmount;
     let halfStake;
-    let quarterStake
+    let quarterStake;
     let irregularStake;
     let irregularStake2;
     let tinyStake;
@@ -45,11 +45,7 @@ contract('StakingRewards', (accounts) => {
     before('!! deploy setup', async () => {
         setup = await deploy(accounts);
     });
-    context('multi-user simulation', async () => {
-        before('!! deploy & initialize contract', async () => {
-            await setup.tokens.primeToken.transfer(setup.incentives.stakingRewards.address, _initreward);
-            await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
-        });
+    context('multi-user simulation 1: one week DURATION', async () => {
         context('# happypath: stake => getReward => exit', async () => {
             before('!! deploy setup', async () => {
                 setup = await deploy(accounts);
@@ -116,68 +112,53 @@ contract('StakingRewards', (accounts) => {
                     expect((await setup.balancer.pool.balanceOf(accounts[9])).toString()).to.equal('0');
                 });
             });
-            context('» getReward', async () => {
-                it('users have earned different amounts of rewards', async () => {
-                    await time.increase(time.duration.weeks(1));
-
-                    let earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[1]));
-                    let earned2 = BigInt(await setup.incentives.stakingRewards.earned(accounts[2]));
-                    let earned3 = BigInt(await setup.incentives.stakingRewards.earned(accounts[3]));
-                    let earned5 = BigInt(await setup.incentives.stakingRewards.earned(accounts[5]));
-
-                    if(earned > earned2 && earned2 > earned3 && earned2 < earned5 && earned > earned5){
-                        /* do nothing & continue */
-                    } else {
-                        /* deliberate false condition to trigger failed test */
-                        expect(earned).to.equal(BigInt(0));
-                    }
-                });
+            context('» getReward: day 2', async () => {
                 it('users rewards are proportinal to their stake', async () => {
-                    let earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[1]));
-                    let earned2 = BigInt(await setup.incentives.stakingRewards.earned(accounts[2]));
-                    let earned3 = BigInt(await setup.incentives.stakingRewards.earned(accounts[3]));
-                    let earned5 = BigInt(await setup.incentives.stakingRewards.earned(accounts[5])); //76
+                    await time.increase(time.duration.days(2));
 
-                    let halfReward = earned/BigInt(2);
-                    let quarterReward = earned/BigInt(4);
-                    let irregReward = (earned/BigInt(100) * BigInt(76));
+                    let erned = BigInt(await setup.incentives.stakingRewards.earned(accounts[1]));
+                    let erned2 = BigInt(await setup.incentives.stakingRewards.earned(accounts[2]));
+                    let erned3 = BigInt(await setup.incentives.stakingRewards.earned(accounts[3]));
+                    let erned5 = BigInt(await setup.incentives.stakingRewards.earned(accounts[5])); //76
 
-                    expect(halfReward).to.equal(earned2);
-                    expect(quarterReward).to.equal(earned3);
-                    expect(irregReward).to.equal(earned5);
+                    let halfReward = erned/BigInt(2);
+                    let quarterReward = erned/BigInt(4);
+                    let irregReward = (erned/BigInt(100) * BigInt(76));
+
+                    expect(halfReward).to.equal(erned2);
+                    expect(quarterReward).to.equal(erned3);
+                    expect(irregReward).to.equal(erned5);
                 });
                 it('users 1 - 6 can claim their PRIME rewards whilst keeping tokens staked', async () => {
-                    let earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[1]));
+                    let earned = (await setup.incentives.stakingRewards.earned(accounts[1])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[1] } );
-                    let balance = BigInt(await setup.tokens.primeToken.balanceOf(accounts[1]));
+                    let balance = (await setup.tokens.primeToken.balanceOf(accounts[1])).toString();
                     expect(earned).to.equal(balance);
-                    expect((await setup.incentives.stakingRewards.earned(accounts[1])).toString()).to.equal('0');
 
-                    earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[2]));
+                    let earned2 = (await setup.incentives.stakingRewards.earned(accounts[2])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[2] } );
-                    balance = BigInt(await setup.tokens.primeToken.balanceOf(accounts[2]));
-                    expect(earned).to.equal(balance);
-                    expect((await setup.incentives.stakingRewards.earned(accounts[2])).toString()).to.equal('0');
+                    let balance2 = (await setup.tokens.primeToken.balanceOf(accounts[2])).toString();
+                    expect(earned2).to.equal(balance2);
 
-                    earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[3]));
+                    let earned3 = (await setup.incentives.stakingRewards.earned(accounts[3])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[3] } );
-                    balance = BigInt(await setup.tokens.primeToken.balanceOf(accounts[3]));
-                    expect(earned).to.equal(balance);
+                    let balance3 = (await setup.tokens.primeToken.balanceOf(accounts[3])).toString();
+                    expect(earned3).to.equal(balance3);
 
-                    earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[4]));
+                    let earned4 = (await setup.incentives.stakingRewards.earned(accounts[4])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[4] } );
-                    balance = BigInt(await setup.tokens.primeToken.balanceOf(accounts[4]));
-                    expect(earned).to.equal(balance);
+                    let balance4 = (await setup.tokens.primeToken.balanceOf(accounts[4])).toString();
+                    expect(earned4).to.equal(balance4);
 
-                    earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[5]));
+                    let earned5 = (await setup.incentives.stakingRewards.earned(accounts[5])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[5] } );
-                    balance = BigInt(await setup.tokens.primeToken.balanceOf(accounts[5]));
-                    expect(earned).to.equal(balance);
+                    let balance5 = (await setup.tokens.primeToken.balanceOf(accounts[5])).toString();
+                    expect(earned5).to.equal(balance5);
 
-                    earned = BigInt(await setup.incentives.stakingRewards.earned(accounts[6]));
+                    let earned6 = (await setup.incentives.stakingRewards.earned(accounts[6])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[6] } );
-                    balance = BigInt(await setup.tokens.primeToken.balanceOf(accounts[6]));
-                    expect(earned).to.equal(balance);
+                    let balance6 = (await setup.tokens.primeToken.balanceOf(accounts[6])).toString();
+                    expect(earned6).to.equal(balance6);
                 });
                 it('user and contract bPRIME balances are correct', async () => {
                     expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal('0');
@@ -202,15 +183,15 @@ contract('StakingRewards', (accounts) => {
                     let bal6 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[6]));
 
                     let payout = BigInt(bal1 + bal2 + bal3 + bal4 + bal5 + bal6);
-                    let expectedPayout = (BigInt(_initreward) - BigInt(remainingPrimeBalance));
-                    expect(expectedPayout).to.equal(await BigInt(payout));
+                    let expectedPayout = (BigInt(_initreward) - remainingPrimeBalance);
+                    expect((expectedPayout).toString()).to.equal((payout).toString());
                 });
             });
-            context('» exit', () => {
-                before('!! fastforward', async () => {
-                    await time.increase(time.duration.weeks(1));
-                });
+            context('» exit on day 7', () => {
                 it('users exit with correct bPrime balances', async () => {
+
+                    await time.increase(time.duration.days(5));
+
                     await setup.incentives.stakingRewards.exit( {from: accounts[1]} );
                     let bPrimeBalance1 = (await setup.balancer.pool.balanceOf(accounts[1])).toString();
                     expect(bPrimeBalance1).to.equal(stakeAmount);
@@ -250,13 +231,15 @@ contract('StakingRewards', (accounts) => {
                 it('Contract bPRIME balance == 0', async () => {
                     expect((await setup.balancer.pool.balanceOf(setup.incentives.stakingRewards.address)).toString()).to.equal('0'); // all stake removed
                 });
-                it('reduction in stakingRewards prime balance == total reward payout amount', async () => {
+                it('reduction in stakingRewards prime balance == ~total reward payout amount', async () => {
                     let remainingPrimeBalance = BigInt(await setup.tokens.primeToken.balanceOf(setup.incentives.stakingRewards.address));
 
                     /*
-                    * Remaining token balance is ~190000 which considering we're using an 18 decimal token is fractional
+                    * Remaining token balance is: ~190000 if everyone calls exit() on day 7 (which considering we're using an 18 decimal token is fractional)
+                    *                             ~13213979828042328659724 if everyone calls exit() on day 6
+                    *                             ~26428265542328043366944 if everyone calls exit() on day 5
                     */
-                    // console.log((remainingPrimeBalance).toString());
+                    // console.log(remainingPrimeBalance.toString());
 
                     let bal1 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[1]));
                     let bal2 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[2]));
@@ -269,8 +252,8 @@ contract('StakingRewards', (accounts) => {
                     let bal9 = BigInt(await setup.tokens.primeToken.balanceOf(accounts[9]));
 
                     let payout = BigInt(bal1 + bal2 + bal3 + bal4 + bal5 + bal6 + bal7 + bal8 + bal9);
-                    let expectedPayout = (BigInt(_initreward) - BigInt(remainingPrimeBalance));
-                    expect(BigInt(expectedPayout)).to.equal(BigInt(payout));
+                    let expectedPayout = (BigInt(_initreward) - remainingPrimeBalance);
+                    expect((expectedPayout).toString()).to.equal((payout).toString());
                 });
             });
         });
