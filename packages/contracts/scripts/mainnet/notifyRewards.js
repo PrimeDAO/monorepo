@@ -7,7 +7,7 @@ module.exports = async function(callback) {
 
     const yieldReward = toWei('500000');
 
-	const staking = await StakingRewards.at(contracts.kovan.StakingRewards);
+	const staking = await StakingRewards.at(contracts.mainnet.StakingRewards);
 
     try {
 
