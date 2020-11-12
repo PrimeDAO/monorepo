@@ -438,26 +438,6 @@ contract('StakingRewards', (accounts) => {
             });
         });
     });
-    context('# setRewardDistribution', () => {
-        context('» generics', () => {
-            before('!! deploy setup, fund & initialize contract', async () => {
-                setup = await deploy(accounts);
-                await setup.tokens.primeToken.transfer(setup.incentives.stakingRewards.address, _initreward);
-                await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
-            });
-            context('» only deployer can change variable', async () => {
-                it('owner can change setRewardDistribution', async () => {
-                    await setup.incentives.stakingRewards.setRewardDistribution(accounts[1], {from: accounts[0]});
-                });
-                it('reverts on call from other account', async () => {
-                    await expectRevert(
-                        setup.incentives.stakingRewards.setRewardDistribution(accounts[2], {from: accounts[2]}),
-                        'Ownable: caller is not the owner'
-                    );
-                });
-            });
-        });
-    });
     context('# checkstart modifier', () => {
         context('» generics', () => {
             before('!! deploy setup & initialize contract', async () => {

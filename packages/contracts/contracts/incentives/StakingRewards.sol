@@ -37,12 +37,13 @@ import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/utils/ReentrancyGuard.sol";
-import "../utils/interfaces/IRewardDistributionRecipient.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+
 
 pragma solidity >=0.5.13;
 
 
-contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
+contract StakingRewards is Ownable, ReentrancyGuard {
 
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
@@ -91,7 +92,7 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         /* check contract is properly funded */
         require(_initreward == rewardToken.balanceOf(address(this)),   "StakingRewards: wrong reward amount supplied");
 
-        rewardDistribution = msg.sender;
+        // rewardDistribution = msg.sender;
 
         _notifyRewardAmount(_initreward);
     }
@@ -220,7 +221,7 @@ contract StakingRewards is IRewardDistributionRecipient, ReentrancyGuard {
         stakingToken.safeTransfer(msg.sender, _amount);
     }
 
-    function _notifyRewardAmount(uint256 reward) internal onlyInitializer updateReward(address(0)) {
+    function _notifyRewardAmount(uint256 reward) internal updateReward(address(0)) {
         rewardRate = reward.div(DURATION);
 
          // Ensure the provided reward amount is not more than the balance in the contract.

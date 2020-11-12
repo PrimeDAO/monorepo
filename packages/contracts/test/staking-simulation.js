@@ -254,7 +254,7 @@ contract('StakingRewards', (accounts) => {
                     let remainingPrimeBalance = BigInt(await setup.tokens.primeToken.balanceOf(setup.incentives.stakingRewards.address));
 
                     /*
-                    * Remaining token balance is ~190000 which considering we're using an 18 decimal token is fractional 
+                    * Remaining token balance is ~190000 which considering we're using an 18 decimal token is fractional
                     */
                     // console.log((remainingPrimeBalance).toString());
 
@@ -270,7 +270,7 @@ contract('StakingRewards', (accounts) => {
 
                     let payout = BigInt(bal1 + bal2 + bal3 + bal4 + bal5 + bal6 + bal7 + bal8 + bal9);
                     let expectedPayout = (BigInt(_initreward) - BigInt(remainingPrimeBalance));
-                    expect(expectedPayout).to.equal(await BigInt(payout));
+                    expect(BigInt(expectedPayout)).to.equal(BigInt(payout));
                 });
             });
         });
