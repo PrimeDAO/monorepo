@@ -4,31 +4,39 @@
       <div class="heading2 title">${ model.remove ? "Remove" : "Add" } Liquidity</div>
     </div>
     <div class="leftColumn section">
-      <div class="heading">POOL OVERVIEW</div>
+      <div class="heading heading3">Pool Overview</div>
       <div class="body">
-        <div>${model.poolAddress}</div>
-        <label>My share:</label>
-        <div class="value" if.to-view="model.connected">
-          <floating-point-number class="share" value.to-view="model.poolshare | ethwei" precision="4"
-            placement.to-view="top"></floating-point-number>%
+        <div class="dataGroup">
+          <etherscanlink
+            address.to-view="model.bPoolAddress"
+            text.to-view="model.bPoolAddress | smallHexString"></etherscanlink>
         </div>
-        <div else>--</div>
-        <label>Swap fee:</label>
-        <div class="value" if.to-view="model.swapfee">${model.swapfee | ethwei}</div>
-        <div else>--</div>
-        <div>
-          <ul>
-            <li repeat.for="[name, weight] of model.poolTokenWeights">${weight.mul(100) | ethwei}% ${name}</li>
-          </ul>
+        <div class="dataGroup">
+          <label>My share:</label>
+          <div class="value" if.to-view="model.connected">
+            <floating-point-number class="share" value.to-view="model.poolshare | ethwei" precision="4"
+              placement.to-view="top"></floating-point-number>%
+          </div>
+          <div else class="value">--</div>
+        </div>
+        <div class="dataGroup">
+          <label>Swap fee:</label>
+          <div class="value" if.to-view="model.swapfee">${model.swapfee | ethwei}</div>
+          <div else class="value">--</div>
+        </div>
+        <div class="assets" with.bind="this.model.poolTokenWeights">
+          <div><img src=" /PD_APP_ICON_PD_01.svg" />${primeWeight | ethwei}% PRIME
+          </div>
+          <div><img src="/PD_APP_ICON_ETH_01.svg" />${wethWeight | ethwei}% WETH</div>
         </div>
       </div>
     </div>
-    <div class="rightColumn">
+    <div class="rightColumn sectionStyles">
       <div class="table">
-        <div class="cell">Asset</div>
-        <div class="cell">Wallet Balance</div>
-        <div class="cell">Deposit</div>
-        <div class="cell">PRIME</div>
+        <div class="cell heading heading3">Asset</div>
+        <div class="cell heading heading3">Wallet Balance</div>
+        <div class="cell heading heading3">Deposit</div>
+        <div class="cell"><img src="/PD_APP_ICON_PD_01.svg" />PRIME</div>
         <div class="cell">
           <div if.to-view="model.connected">
             <floating-point-number class="share" value.to-view="model.userPrimeBalance | ethwei" precision="4"
@@ -37,13 +45,14 @@
           <div else>--</div>
         </div>
         <div class="cell">
-          <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4" click.delegate="handleGetMaxPrime()">Max</button></label>
+          <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxPrime()">Max</button></label>
           <numeric-input id="wethAmount"
             defaultvalue.to-view="defaultWethBalance"
             value.two-way="userWethAmount"
-            placeholder="0.0"></numeric-input>
+            placeholder="0.0"
+            css="clearInput"></numeric-input>
         </div>
-        <div class="cell">WETH</div>
+        <div class="cell"><img src="/PD_APP_ICON_ETH_01.svg" />WETH</div>
         <div class="cell">
           <div if.to-view="model.connected">
             <floating-point-number class="share" value.to-view="model.userWethBalance | ethwei" precision="4"
@@ -52,21 +61,22 @@
           <div else>--</div>
         </div>
         <div class="cell">
-          <label if.to-view="model.userWethBalance.gt(0)"><button class="button4" click.delegate="handleGetMaxWeth()">Max</button></label>
+          <label if.to-view="model.userWethBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxWeth()">Max</button></label>
           <numeric-input id="primeAmount"
             defaultvalue.to-view="defaultPrimeBalance"
             value.two-way="userPrimeAmount"
-            placeholder="0.0"></numeric-input>
+            placeholder="0.0"
+            css="clearInput"></numeric-input>
         </div>
       </div>
-      <div class="bPrimeAmount">
-        <div class="label">BPRIME Amount</div>
+      <div class="bPrimeAmount section">
+        <div class="label">My BPRIME Amount</div>
         <div class="amount">
-          <div if.to-view="model.connected">
+          <div if.to-view="model.connected" class="value">
             <floating-point-number class="share" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
               placement.to-view="top"></floating-point-number>
           </div>
-          <div else>--</div> BPRIME
+          <div else class="label">--</div> BPRIME
         </div>
       </div>
     </div>
