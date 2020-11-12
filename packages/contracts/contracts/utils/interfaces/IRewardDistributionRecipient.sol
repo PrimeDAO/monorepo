@@ -10,6 +10,7 @@ contract IRewardDistributionRecipient is Ownable {
 
     function _notifyRewardAmount(uint256 reward) internal;
 
+    // previously `onlyRewardDistribution`
     modifier onlyInitializer() {
         require(_msgSender() == rewardDistribution, "Caller is not reward distribution");
         _;
