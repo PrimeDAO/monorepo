@@ -19,9 +19,14 @@ module.exports = async function(callback) {
 	const swapFee = toWei(config.crPool.swapFee);
 	const tokenAddresses = [contracts.kovan.PrimeToken, contracts.kovan.WETH];
 	const startWeights = [toWei(config.crPool.PRIMEWeight), toWei(config.crPool.WETHWeight)];
-	const startBalances = [toWei(primeAmount), toWei(wethAmount)];
+	const startBalances = [primeAmount, wethAmount];
 	const SYMBOL = config.crPool.lpTokenSymbol;
 	const NAME = config.crPool.lpTokenName;
+	const bPrimeAmount = toWei(config.crPool.lpTokenAmount);
+
+
+	const prime = await PrimeToken.at(contracts.kovan.PrimeToken);
+	const weth = await WETH.at(contracts.kovan.WETH);
 
 	const permissions = {
 	      canPauseSwapping: true,
@@ -39,9 +44,6 @@ module.exports = async function(callback) {
 	      tokenWeights: startWeights,
 	      swapFee: swapFee,
 	};
-
-	const prime = await PrimeToken.at(contracts.kovan.PrimeToken);
-	const weth = await WETH.at(contracts.kovan.WETH);
 
 	const crpFactory = await CRPFactory.at(contracts.kovan.CRPFactory);
 
@@ -65,12 +67,26 @@ module.exports = async function(callback) {
 
 		const pool = await ConfigurableRightsPool.at(POOL);
 
+		await console.log("***   Approving tokens for public swapping");
+
+		await weth.approve(POOL, MAX);
+		await prime.approve(POOL, MAX);
+
+		await console.log("***   Success");
+
+		await console.log("***   Consuming the collateral; mint and xfer N BPTs to caller ");
+
+		await pool.createPool(bPrimeAmount);
+
 		await console.log("***   Success");
 
 		await console.log("***   Configurable Rights Pool address:");
 		await console.log(pool.address);
+		await console.log("***   Balancer Pool address:");
+		await console.log(await pool.bPool());
 
 		contracts.kovan.ConfigurableRightsPool = pool.address;
+		contracts.kovan.BPool = await pool.bPool();
 
 		fs.writeFileSync('./contractAddresses.json', JSON.stringify(contracts), (err) => {
 		   if (err) throw err;

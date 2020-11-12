@@ -16,9 +16,9 @@ module.exports = async function(callback) {
 	const wethAmount = toWei(config.crPool.WETHAmount);
 
 	const swapFee = toWei(config.crPool.swapFee);
-	const tokenAddresses = [contracts.kovan.PrimeToken, contracts.kovan.WETH];
+	const tokenAddresses = [contracts.mainnet.PrimeToken, contracts.mainnet.WETH];
 	const startWeights = [toWei(config.crPool.PRIMEWeight), toWei(config.crPool.WETHWeight)];
-	const startBalances = [toWei(primeAmount), toWei(wethAmount)];
+	const startBalances = [primeAmount, wethAmount];
 	const SYMBOL = config.crPool.lpTokenSymbol;
 	const NAME = config.crPool.lpTokenName;
 	const bPrimeAmount = toWei(config.crPool.lpTokenAmount);
