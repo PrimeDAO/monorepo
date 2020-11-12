@@ -87,9 +87,8 @@ contract StakingRewards is Ownable, ReentrancyGuard {
         stakingToken = IERC20(_stakingToken);
         initreward = _initreward;
         starttime = _starttime;
-        DURATION = (_duration * 24 hours); //maybe this needs to be decided differently
+        DURATION = (_duration * 24 hours);
 
-        /* check contract is properly funded */
         require(_initreward == rewardToken.balanceOf(address(this)),   "StakingRewards: wrong reward amount supplied");
 
         _notifyRewardAmount(_initreward);
@@ -207,6 +206,14 @@ contract StakingRewards is Ownable, ReentrancyGuard {
         _token.safeTransfer(to, amount);
     }
 
+    function totalSupply() public view returns (uint256) {
+        return _totalSupply;
+    }
+
+    function balanceOf(address account) public view returns (uint256) {
+        return _balances[account];
+    }
+
     function _stake(uint256 _amount) private {
         _totalSupply = _totalSupply.add(_amount);
         _balances[msg.sender] = _balances[msg.sender].add(_amount);
@@ -222,11 +229,6 @@ contract StakingRewards is Ownable, ReentrancyGuard {
     function _notifyRewardAmount(uint256 reward) internal updateReward(address(0)) {
         rewardRate = reward.div(DURATION);
 
-         // Ensure the provided reward amount is not more than the balance in the contract.
-         // This keeps the reward rate in the right range, preventing overflows due to
-         // very high values of rewardRate in the earned and rewardsPerToken functions;
-         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
-        
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(DURATION);
         emit RewardAdded(reward);
