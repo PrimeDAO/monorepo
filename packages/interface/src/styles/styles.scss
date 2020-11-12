@@ -28,6 +28,15 @@ html {
       }
     }
 
+    .clearInput {
+      background-color: transparent;
+      color: $color-white;
+
+      &::placeholder {
+        color: $color-white;
+      }
+    }
+
     a {
       color: $color-white;
       text-decoration: none;
@@ -51,6 +60,11 @@ html {
     }
     .heading2 {
       font-size: 24px;
+      font-family: "Cera Pro";
+      white-space: nowrap;
+    }
+    .heading3 {
+      font-size: 16px;
       font-family: "Cera Pro";
       white-space: nowrap;
     }
@@ -102,13 +116,18 @@ html {
       outline: none;
     }
 
-    .section {
-      border: $section-border;
-      background-color: $section-background-color;
-      border-radius: $section-border-radius;
+    .sectionStyles {
       font-size: 12px;
       letter-spacing: 0.6px;
       line-height: 15px;
+      background-color: $section-background-color;
+    }
+
+    .section {
+      @extend .sectionStyles;
+
+      border: $section-border;
+      border-radius: $section-border-radius;
       padding: 18px 24px;
 
       &.top {

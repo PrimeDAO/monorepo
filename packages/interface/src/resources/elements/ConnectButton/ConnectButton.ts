@@ -68,6 +68,10 @@ export class ConnectButton {
   }
 
   private onConnect() {
+    /**
+     * TODO:  handle connecting from subpages like liquidity and staking
+     * where dashboard doesn't get properly updated
+     */
     this.ethereumService.connect();
   }
 

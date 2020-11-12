@@ -40,6 +40,7 @@ export class EthereumService {
     "kovan": `https://kovan.infura.io/v3/${process.env.INFURA_ID}`,
   }
   private static providerOptions = {
+    network: "",
     torus: {
       package: Torus, // required
       options: {
@@ -80,7 +81,7 @@ export class EthereumService {
       throw new Error("Ethereum.initialize: `network` must be specified");
     }
 
-    this.targetedNetwork = network;
+    this.targetedNetwork = EthereumService.providerOptions.network = network;
 
     const readonlyEndPoint = EthereumService.ProviderEndpoints[this.targetedNetwork];
     if (!readonlyEndPoint) {

@@ -61,7 +61,7 @@ export class Dashboard {
   private userBPrimeBalance: BigNumber;
   private bPrimeStaked: BigNumber;
   private defaultWethEthAmount: BigNumber;
-  private poolTokenWeights: Map<string, number>;
+  private poolTokenWeights: Map<string, BigNumber>;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -96,9 +96,9 @@ export class Dashboard {
         this.swapfee = await this.bPool.getSwapFee();
         const weights = new Map();
         weights.set("PRIME",
-          await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
+          (await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN))).mul(100));
         weights.set("WETH",
-          await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.WETH)));
+          (await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.WETH))).mul(100));
 
         this.poolTokenWeights = weights;
 
