@@ -7,13 +7,13 @@
     <div class="section form">
       <div>Earn PRIME rewards by staking BPRIME tokens!</div>
       <div class="balance">
-        You have <floating-point-number class="share" if.to-view="model.connected" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
+        You have <floating-point-number if.to-view="model.connected" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
           placement.to-view="top"></floating-point-number>
         <span else>--</span>
         BPRIME available to stake.
       </div>
       <div>
-        <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4" click.delegate="handleGetMaxBPrime()">Max</button></label>
+        <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxBPrime()">Max</button></label>
         <numeric-input id="bPrimeAmount"
           defaultvalue.to-view="defaultBPrimeAmount"
           value.two-way="bPrimeAmount"

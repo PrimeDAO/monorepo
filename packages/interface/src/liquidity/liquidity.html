@@ -15,15 +15,15 @@
         <div class="dataGroup">
           <label>My share:</label>
           <div class="value" if.to-view="model.connected">
-            <floating-point-number class="share" value.to-view="model.poolshare | ethwei" precision="4"
+            <floating-point-number value.to-view="model.poolshare | ethwei" precision="4"
               placement.to-view="top"></floating-point-number>%
           </div>
           <div else class="value">--</div>
         </div>
         <div class="dataGroup">
           <label>Swap fee:</label>
-          <div class="value" if.to-view="model.swapfee">${model.swapfee | ethwei}</div>
-          <div else class="value">--</div>
+          <floating-point-number value.to-view="model.swapfee | ethwei" precision="4"
+            placement.to-view="top"></floating-point-number>%
         </div>
         <div class="assets" with.bind="this.model.poolTokenWeights">
           <div><img src=" /PD_APP_ICON_PD_01.svg" />${primeWeight | ethwei}% PRIME
@@ -34,48 +34,82 @@
     </div>
     <div class="rightColumn sectionStyles">
       <div class="table sectionStyles">
+        <div class="cell heading heading3"></div>
         <div class="cell heading heading3">Asset</div>
         <div class="cell heading heading3">Wallet Balance</div>
         <div class="cell heading heading3">Deposit</div>
-        <div class="cell"><img src="/PD_APP_ICON_PD_01.svg" />PRIME</div>
+        <div class="cell"><input type="checkbox" checked.bind="primeSelected" /></div>
+        <div class="cell"><img src="/PD_APP_ICON_PD_01.svg" />PRIME
+          <button if.to-view="primeAmountValid" class="unlock button4 small" click.delegate="unlock(model.primeTokenAddress)">Unlock</button>
+        </div>
         <div class="cell">
           <div if.to-view="model.connected">
-            <floating-point-number class="share" value.to-view="model.userPrimeBalance | ethwei" precision="4"
-              placement.to-view="top"></floating-point-number>
+            <formatted-number
+              value.to-view="model.userPrimeBalance | ethwei"
+              format="0.00a"
+              placement.to-view="top">
+            </formatted-number>
           </div>
           <div else>--</div>
         </div>
-        <div class="cell">
-          <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxPrime()">Max</button></label>
-          <numeric-input id="primeAmount"
-            defaultvalue.to-view="defaultPrimeAmount"
-            value.two-way="primeAmount"
-            placeholder="0.0"
-            css="clearInput"></numeric-input>
+        <div class="cell" if.to-view="!model.remove">
+          <div show.to-view="primeSelected">
+            <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxPrime()">Max</button></label>
+            <numeric-input id="primeAmount"
+              defaultvalue.to-view="defaultPrimeAmount"
+              value.two-way="primeAmount"
+              placeholder="0.0"
+              css="clearInput"></numeric-input>
+          </div>
         </div>
-        <div class="cell"><img src="/PD_APP_ICON_ETH_01.svg" />WETH</div>
+        <div class="cell" else>
+          <formatted-number
+            value.to-view="primeAmount | ethwei"
+            format="0.00a"
+            placement.to-view="top">
+          </formatted-number>
+        </div>
+        <div class="cell"><input type="checkbox" checked.bind="wethSelected" /></div>
+        <div class="cell"><img src="/PD_APP_ICON_ETH_01.svg" />WETH
+          <button if.to-view="wethAmountValid" class="unlock button4 small" click.delegate="unlock(model.primeTokenAddress)">Unlock</button>
+        </div>
         <div class="cell">
-          <div if.to-view="model.connected">
-            <floating-point-number class="share" value.to-view="model.userWethBalance | ethwei" precision="4"
-              placement.to-view="top"></floating-point-number>
+          <div if.to-view="!model.remove">
+            <formatted-number
+              value.to-view="model.userWethBalance | ethwei"
+              format="0.00a"
+              placement.to-view="top">
+            </formatted-number>
           </div>
           <div else>--</div>
         </div>
-        <div class="cell">
-          <label if.to-view="model.userWethBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxWeth()">Max</button></label>
-          <numeric-input id="wethAmount"
-            defaultvalue.to-view="defaultWethAmount"
-            value.two-way="wethAmount"
-            placeholder="0.0"
-            css="clearInput"></numeric-input>
+        <div class="cell" if.to-view="!model.remove">
+          <div show.to-view="wethSelected">
+            <label if.to-view="model.userWethBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxWeth()">Max</button></label>
+            <numeric-input id="wethAmount"
+              defaultvalue.to-view="defaultWethAmount"
+              value.two-way="wethAmount"
+              placeholder="0.0"
+              css="clearInput"></numeric-input>
+          </div>
+        </div>
+        <div class="cell" else>
+          <formatted-number
+            value.to-view="wethAmount | ethwei"
+            format="0.00a"
+            placement.to-view="top">
+          </formatted-number>
         </div>
       </div>
       <div class="bPrimeAmount section">
         <div class="label">BPRIME Amount</div>
-        <div if.to-view="!model.remove || isSingleAsset" class="amount">
+        <div if.to-view="!model.remove" class="amount">
           <div if.to-view="model.connected" class="value">
-            <floating-point-number class="share" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
-              placement.to-view="top"></floating-point-number>
+            <formatted-number
+              value.to-view="model.userBPrimeBalance | ethwei"
+              format="0.00a"
+              placement.to-view="top">
+            </formatted-number>
           </div>
           <div else class="label">--</div>
         </div>

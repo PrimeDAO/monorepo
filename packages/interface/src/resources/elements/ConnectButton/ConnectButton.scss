@@ -1,3 +1,5 @@
+@import "styles/colors.scss";
+
 .connectButtonContainer {
   display: inline-block;
   padding-right: 1px;
@@ -27,6 +29,13 @@
     padding-left: 14px;
 
     .connectedButtons {
+      .separator {
+        display: inline-block;
+        margin-left: 8px;
+        position: relative;
+        bottom: 1px;
+        color: $button1-color;
+      }
       .connectButton {
         cursor: default;
         text-align: center;

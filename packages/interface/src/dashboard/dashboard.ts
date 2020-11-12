@@ -9,6 +9,7 @@ import { BigNumber } from "ethers";
 import { EventConfigException, EventConfigFailure } from "services/GeneralEvents";
 import { PriceService } from "services/PriceService";
 import { Router } from "aurelia-router";
+import { getContractAddress } from "ethers/lib/utils";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -63,12 +64,14 @@ export class Dashboard {
   private defaultWethEthAmount: BigNumber;
   private poolTokenWeights: Map<Address, BigNumber>;
   // token balances in bPool
-  private bPoolBalances: Map<Address, BigNumber>;
+  private poolBalances: Map<Address, BigNumber>;
   // user token balances
   private userTokenBalances: Map<Address, BigNumber>;
   private primeTokenAddress: Address;
   private wethTokenAddress: Address;
   private poolTokenAddresses: Array<Address>;
+  private poolTotalSupply: BigNumber;
+  private poolTotalDenormWeight: BigNumber;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -112,10 +115,10 @@ export class Dashboard {
         this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
         this.swapfee = await this.bPool.getSwapFee();
         const weights = new Map();
-        weights.set("PRIME",
-          (await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN))).mul(100));
-        weights.set("WETH",
-          (await this.bPool.getNormalizedWeight(this.contractsService.getContractAddress(ContractNames.WETH))).mul(100));
+        weights.set(this.primeTokenAddress,
+          (await this.bPool.getNormalizedWeight(this.primeTokenAddress)).mul(100));
+        weights.set(this.wethTokenAddress,
+          (await this.bPool.getNormalizedWeight(this.wethTokenAddress)).mul(100));
 
         this.poolTokenWeights = weights;
 
@@ -165,8 +168,7 @@ export class Dashboard {
       /**
      * this is BPRIME
      */
-      this.poolshare = (await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress))
-        .div(await this.crPool.totalSupply());
+      this.poolshare = this.userBPrimeBalance.div(await this.crPool.totalSupply());
 
       this.bPrimeStaked = await this.stakingRewards.balanceOf(this.ethereumService.defaultAccountAddress);
     } else {
@@ -190,10 +192,17 @@ export class Dashboard {
 
       this.liquidityBalance = priceWethLiquidity.add(pricePrimeTokenLiquidity);
 
-      const bPoolBalances = new Map();
-      bPoolBalances.set(this.primeTokenAddress, await this.bPool.balanceOf(this.primeTokenAddress));
-      bPoolBalances.set(this.wethTokenAddress, await this.bPool.balanceOf(this.wethTokenAddress));
-      this.bPoolBalances = bPoolBalances;
+      const poolBalances = new Map();
+      poolBalances.set(this.primeTokenAddress, await this.primeToken.balanceOf(this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool)));
+      poolBalances.set(this.wethTokenAddress, await this.weth.balanceOf(this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool)));
+      // poolBalances.set(this.primeTokenAddress, BigNumber.from("300000000000000000000000"));
+      // poolBalances.set(this.wethTokenAddress, BigNumber.from("80000000000000000000"));
+      this.poolBalances = poolBalances;
+
+      this.poolTotalSupply = await this.crPool.totalSupply();
+
+      this.poolTotalDenormWeight = await this.bPool.getTotalDenormalizedWeight();
+
     } catch (ex) {
       this.eventAggregator.publish("handleException",
         new EventConfigException("Unable to fetch a token price", ex));

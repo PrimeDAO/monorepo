@@ -1,10 +1,8 @@
 import { EventAggregator } from "aurelia-event-aggregator";
-import { autoinject, customElement, singleton } from "aurelia-framework";
+import { autoinject, customElement } from "aurelia-framework";
 import { BigNumber } from "ethers";
-import { EventConfigFailure } from "services/GeneralEvents";
 import "./staking.scss";
 
-@singleton(false)
 @customElement("liquidity")
 @autoinject
 export class Staking {

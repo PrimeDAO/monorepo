@@ -1,5 +1,5 @@
 import { EventAggregator } from "aurelia-event-aggregator";
-import { autoinject, customElement, singleton, computedFrom } from "aurelia-framework";
+import { autoinject, customElement, computedFrom } from "aurelia-framework";
 import { BigNumber } from "ethers";
 import { toBigNumberJs } from "services/BalancerPoolLiquidity/helpers/bignumber";
 import { calcPoolOutGivenSingleIn, calcSingleOutGivenPoolIn } from "services/BalancerPoolLiquidity/helpers/math";
@@ -10,7 +10,6 @@ import BigNumberJs from "services/BalancerPoolLiquidity/helpers/bignumber";
 
 const BALANCE_BUFFER = 0.01;
 
-@singleton(false)
 @customElement("liquidity")
 @autoinject
 export class Liquidity {
@@ -21,132 +20,193 @@ export class Liquidity {
   private defaultWethAmount: BigNumber | string;
   private primeWeight: BigNumber;
   private wethWeight: BigNumber;
-  private amounts = new Map<Address, BigNumber>();
+  private amounts = new Map<Address, string>();
   private poolTokens: any;
   private _primeAmount: BigNumber;
   private _wethAmount: BigNumber;
-  private bPrimeAmount: BigNumber;
+  private _bPrimeAmount: BigNumber;
+  private _primeSelected = false;
+  private _wethSelected = false;
 
   constructor(
     private eventAggregator: EventAggregator) {}
 
-  @computedFrom("wethAmount", "primeAmount")
-  private get activeSingleTokenAddress(): Address {
-    if (!this.isMultiAsset) {
-      return (this.wethAmount && !this.wethAmount.isZero()) ?
-        this.model.wethTokenAddress :
-        (this.primeAmount && !this.primeAmount.isZero()) ? this.model.primeTokenAddress : null;
-    } else {
-      return null;
+  private get primeSelected() {
+    return this._primeSelected;
+  }
+
+  private set primeSelected(newValue: boolean) {
+    this._primeSelected = newValue;
+    this.poolTokens = null;
+    this.amounts = new Map<Address, string>();
+    if (newValue){
+      this.defaultPrimeAmount = BigNumber.from(0);
+    }
+    if (this.wethSelected) {
+      setTimeout(() => this.amountChanged(
+        this.wethAmount,
+        this.model.wethTokenAddress), 100);
     }
   }
 
-  @computedFrom("wethAmount", "primeAmount")
-  private get activeSingleTokenAmount(): BigNumber {
-    if (!this.isMultiAsset) {
-      return (this.wethAmount && !this.wethAmount.isZero()) ?
-        this.wethAmount :
-        (this.primeAmount && !this.primeAmount.isZero()) ? this.primeAmount : null;
-    } else {
-      return null;
-    }
+  private get wethSelected() {
+    return this._wethSelected;
   }
 
+  private set wethSelected(newValue: boolean) {
+    this._wethSelected = newValue;
+    this.poolTokens = null;
+    this.amounts = new Map<Address, string>();
+    if (newValue) {
+      this.defaultWethAmount = BigNumber.from(0);
+    }
+    if (this.primeSelected) {
+      setTimeout(() => this.amountChanged(
+        this.primeAmount,
+        this.model.primeTokenAddress), 0);
+    }
+  }
   /**
    * true if two non-zero assets are entered
    */
-  @computedFrom("wethAmount", "primeAmount")
+  @computedFrom("wethSelected", "primeSelected")
   private get isMultiAsset(): boolean {
-    return (this.wethAmount && !this.wethAmount.isZero()) &&
-      (this.primeAmount && !this.primeAmount.isZero());
+    return this.wethSelected && this.primeSelected;
   }
 
   /**
    * true if exactly one non-zero asset is entered
    */
-  @computedFrom("wethAmount", "primeAmount")
+  @computedFrom("wethSelected", "primeSelected")
   private get isSingleAsset(): boolean {
-    return (this.wethAmount && !this.wethAmount.isZero() && (!this.primeAmount || this.primeAmount.isZero())) ||
-      (this.primeAmount && !this.primeAmount.isZero() && (!this.wethAmount || this.wethAmount.isZero()));
+    return this.wethSelected || this.primeSelected;
   }
 
+  @computedFrom("wethSelected", "primeSelected")
+  private get activeSingleTokenAddress(): Address {
+    if (this.isSingleAsset) {
+      return this.primeSelected ? this.model.primeTokenAddress : this.model.wethTokenAddress;
+    } else {
+      return null;
+    }
+  }
+
+  @computedFrom("wethSelected", "primeSelected")
+  private get activeSingleTokenAmount(): BigNumber {
+    if (this.isSingleAsset) {
+      return this.primeSelected ? this.primeAmount : this.wethAmount;
+    } else {
+      return null;
+    }
+  }
+
+  @computedFrom("_primeAmount")
   private get primeAmount(): BigNumber {
     return this._primeAmount;
   }
 
   private set primeAmount(newValue: BigNumber) {
     this._primeAmount = newValue;
-    this.amountChanged(
-      this.primeAmount,
-      this.model.primeTokenAddress,
-      this.primeWeight);
+    if (!this.defaultPrimeAmount || !this._primeAmount?.eq(this.defaultPrimeAmount)) { // to avoid cycles
+      this.amountChanged(
+        this.primeAmount,
+        this.model.primeTokenAddress);
+    }
   }
 
+  @computedFrom("_wethAmount")
   private get wethAmount(): BigNumber {
     return this._wethAmount;
   }
 
   private set wethAmount(newValue: BigNumber) {
     this._wethAmount = newValue;
-    this.amountChanged(
-      this.wethAmount,
-      this.model.wethTokenAddress,
-      this.wethWeight);
+    if (!this.defaultWethAmount || !this._wethAmount?.eq(this.defaultWethAmount)) { // to avoid cycles
+      this.amountChanged(
+        this.wethAmount,
+        this.model.wethTokenAddress);
+    }
   }
 
-  private async amountChanged(
-    amount: BigNumber,
-    tokenAddress: Address,
-    tokenWeight: BigNumber,
+  @computedFrom("_bPrimeAmount")
+  private get bPrimeAmount(): BigNumber {
+    return this._bPrimeAmount;
+  }
+
+  private set bPrimeAmount(newValue: BigNumber) {
+    this._bPrimeAmount = newValue;
+    this.bPrimeAmountChanged();
+  }
+
+  @computedFrom("primeAmount", "model.userPrimeBalance")
+  private get primeAmountValid(): boolean {
+    return !!this.primeAmount?.lte(this.model.userPrimeBalance) && !this.primeAmount?.isZero();
+  }
+
+  @computedFrom("wethAmount", "model.userWethBalance")
+  private get wethAmountValid(): boolean {
+    return !!this.wethAmount?.lte(this.model.userWethBalance) && !this.wethAmount?.isZero();
+  }
+
+
+  private async bPrimeAmountChanged() {
+
+  }
+
+  private amountChanged(
+    changedAmount: BigNumber,
+    changedToken: Address,
   ) {
 
-    if (this.model.remove) {
-      /**
-       * enforce that only one token has a non-zero value, ie, cannot be multiasset.
-       */
-      if (this.isMultiAsset) {
-        if (tokenAddress === this.model.primeTokenAddress) {
-          this.defaultWethAmount = BigNumber.from(0);
-        } else {
-          this.defaultPrimeAmount = BigNumber.from(0);
-        }
-      }
+    changedAmount = changedAmount ?? BigNumber.from(0);
+
+    const changedTokenBalance = toBigNumberJs(this.model.poolBalances.get(changedToken));
+    const ratio = toBigNumberJs(changedAmount).div(changedTokenBalance);
+    const poolTotalSupply = toBigNumberJs(this.model.poolTotalSupply);
+
+    if (this.isMultiAsset) {
+      this.poolTokens = calcPoolTokensByRatio(
+        toBigNumberJs(ratio),
+        toBigNumberJs(poolTotalSupply));
     } else {
-      const poolTokenBalance = toBigNumberJs(this.model.bPoolBalances.get(tokenAddress));
-      // const prevAmount = toBigNumberJs(this.amounts[tokenAddress]).integerValue(BigNumberJs.ROUND_UP);
-      const bnAmount = toBigNumberJs(amount).integerValue(BigNumberJs.ROUND_UP);
-      const ratio = toBigNumberJs(amount).div(poolTokenBalance);
-      const poolTotalSupply = toBigNumberJs(await this.model.bPool.totalSupply());
-
-      if (this.isMultiAsset) {
-        this.poolTokens = calcPoolTokensByRatio(
-          toBigNumberJs(ratio),
-          toBigNumberJs(poolTotalSupply));
-      } else {
-        const totalWeight = await this.model.bPool.getTotalDenormalizedWeight();
-        const maxInRatio = 1 / 2;
-        if (bnAmount.div(poolTokenBalance).gt(maxInRatio)) {
-          return;
-        }
-
-        this.poolTokens = await calcPoolOutGivenSingleIn(
-          poolTokenBalance, // tokenBalanceIn
-          toBigNumberJs(tokenWeight), // tokenWeightIn
-          poolTotalSupply, // poolSupply
-          totalWeight, // totalWeight
-          bnAmount, // tokenAmountIn
-          toBigNumberJs(this.model.swapfee))
-          .toString(); // swapFee
+      const tokenIn = this.activeSingleTokenAddress;
+      const amount = toBigNumberJs(this.amounts[tokenIn] ?? this.activeSingleTokenAmount);
+      const tokenInBalanceIn = toBigNumberJs(this.model.poolBalances.get(tokenIn));
+      const maxInRatio = 1 / 2;
+      if (amount.div(tokenInBalanceIn).gt(maxInRatio)) {
+        return;
       }
 
-      if (this.isMultiAsset) {
-        this.model.poolTokenAddresses.map(tokenAddr => {
-          if (tokenAddr !== tokenAddress) {
-            this.amounts.set(tokenAddr,
-              ratio.isNaN() ? "" : ratio.times(toBigNumberJs(this.model.bPoolBalances[tokenAddr])) as any);
+      const tokenWeightIn = this.model.poolTokenWeights.get(tokenIn);
+      const tokenAmountIn = amount.integerValue(BigNumberJs.ROUND_UP);
+      const totalWeight = toBigNumberJs(this.model.poolTotalDenormWeight);
+
+      this.poolTokens = calcPoolOutGivenSingleIn(
+        tokenInBalanceIn,
+        toBigNumberJs(tokenWeightIn),
+        poolTotalSupply,
+        totalWeight,
+        tokenAmountIn,
+        toBigNumberJs(this.model.swapfee))
+        .toString(); // swapFee
+    }
+
+    if (this.isMultiAsset) {
+      this.model.poolTokenAddresses.map(tokenAddr => {
+        if (tokenAddr !== changedToken) {
+          const balancedAmountString = ratio.isNaN() ? "" :
+            ratio.times(toBigNumberJs(this.model.poolBalances.get(tokenAddr))).toString();
+
+          this.amounts.set(tokenAddr, balancedAmountString);
+          // since we're not yet binding the UI to an array of tokens
+          const balancedAmount = BigNumber.from(balancedAmountString);
+          if (tokenAddr === this.model.wethTokenAddress) {
+            this.defaultWethAmount = balancedAmount;
+          } else {
+            this.defaultPrimeAmount = balancedAmount;
           }
-        });
-      }
+        }
+      });
     }
   }
 
@@ -156,36 +216,9 @@ export class Liquidity {
      * hack alert: until we have something more dynamic...
      */
     if (this?.model?.poolTokenWeights) {
-      this.primeWeight = this.model.poolTokenWeights.get("PRIME");
-      this.wethWeight = this.model.poolTokenWeights.get("WETH");
+      this.primeWeight = this.model.poolTokenWeights.get(this.model.primeTokenAddress);
+      this.wethWeight = this.model.poolTokenWeights.get(this.model.wethTokenAddress);
     }
-  }
-
-  private valid(): boolean {
-    if (this.model.remove) {
-
-      if (this.isSingleAsset) {
-        if (this.activeSingleTokenAmount.gt(this.model.bPoolBalances.get(this.activeSingleTokenAddress))) {
-          this.eventAggregator.publish("handleValidationError", "Can't remove this amount because it exceeds the amount in the pool");
-          return false;
-        }
-      }
-
-    } else {
-      if (this.wethAmount &&
-        !this.wethAmount.isZero() &&
-        this.wethAmount.gt(this.model.userTokenBalances.get(this.model.wethTokenAddress))) {
-        this.eventAggregator.publish("handleValidationError", "Can't add this amount, you will exceed your balance of WETH");
-        return false;
-      }
-      if (this.primeAmount &&
-      !this.primeAmount.isZero() &&
-      this.primeAmount.gt(this.model.userTokenBalances.get(this.model.primeTokenAddress))) {
-        this.eventAggregator.publish("handleValidationError", "Can't add this amount, you will exceed your balance of PRIME");
-        return false;
-      }
-    }
-    return true;
   }
 
   private async getRemoveTokenAmountOut(
@@ -194,10 +227,10 @@ export class Liquidity {
 
     if (!parseFloat(poolAmountIn?.toString())) return new BigNumberJs(0);
 
-    const tokenBalanceOut = toBigNumberJs(this.model.bPoolBalances.get(tokenAddress));
-    const tokenWeightOut = await this.model.bPool.getDenormalizedWeight(tokenAddress);
-    const poolSupply = toBigNumberJs(await this.model.bPool.totalSupply());
-    const totalWeight = await this.model.bPool.getTotalDenormalizedWeight();
+    const tokenBalanceOut = toBigNumberJs(this.model.poolBalances.get(tokenAddress));
+    const tokenWeightOut = await this.model.crPool.getDenormalizedWeight(tokenAddress);
+    const poolSupply = toBigNumberJs(await this.model.crPool.totalSupply());
+    const totalWeight = await this.model.crPool.getTotalDenormalizedWeight();
     const swapFee = bnum(toBigNumberJs(this.model.swapfee)).times("1e18");
 
     return calcSingleOutGivenPoolIn(
@@ -208,6 +241,38 @@ export class Liquidity {
       toBigNumberJs(poolAmountIn),
       swapFee,
     );
+  }
+
+  private valid(): boolean {
+    if (this.model.remove) {
+
+      if (this.isSingleAsset) {
+        if (this.activeSingleTokenAmount.gt(this.model.poolBalances.get(this.activeSingleTokenAddress))) {
+          this.eventAggregator.publish("handleValidationError", "Can't remove this amount because it exceeds the amount in the pool");
+          return false;
+        }
+      }
+
+    } else {
+
+      if (!this.wethAmount?.isZero() && !this.primeAmount?.isZero()) {
+        this.eventAggregator.publish("handleValidationError", "Please specify amounts for PRIME and WETH");
+        return false;
+      }
+      if (this.wethAmount &&
+        !this.wethAmount.isZero() &&
+        this.wethAmount.gt(this.model.userTokenBalances.get(this.model.wethTokenAddress))) {
+        this.eventAggregator.publish("handleValidationError", "Can't add this amount, you will exceed your balance of WETH");
+        return false;
+      }
+      if (this.primeAmount &&
+        !this.primeAmount.isZero() &&
+        this.primeAmount.gt(this.model.userTokenBalances.get(this.model.primeTokenAddress))) {
+        this.eventAggregator.publish("handleValidationError", "Can't add this amount, you will exceed your balance of PRIME");
+        return false;
+      }
+    }
+    return true;
   }
 
   private async handleSubmit(): Promise<void> {
@@ -290,16 +355,14 @@ export class Liquidity {
 }
 
 interface ILiquidityModel {
-  bPool: any;
-  bPoolAddress: Address;
-  bPoolBalances: Map<Address, BigNumber>;
+  bPool: any,
+  poolBalances: Map<Address, BigNumber>;
   connected: boolean;
   crPool: any,
   liquidityJoinPool(poolAmountOut, maxAmountsIn): Promise<void>;
   liquidityJoinswapExternAmountIn(minPoolAmountOut, tokenAmountIn): Promise<void>;
   liquidityExit(poolAmountIn, minAmountsOut): Promise<void>;
   liquidityExitswapPoolAmountIn(tokenAddress, poolAmountIn, minTokenAmountOut): Promise<void>;
-  poolshare: BigNumber;
   remove: boolean; // if falsy then add
   swapfee: BigNumber;
   userBPrimeBalance: BigNumber;
@@ -309,6 +372,8 @@ interface ILiquidityModel {
   poolTokenAddresses: Array<Address>;
   primeToken: any;
   primeTokenAddress: Address;
+  poolTotalSupply: BigNumber;
+  poolTotalDenormWeight: BigNumber;
   weth: any;
   wethTokenAddress: Address;
   userTokenBalances: Map<Address, BigNumber>;

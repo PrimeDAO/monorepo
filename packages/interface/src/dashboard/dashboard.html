@@ -70,7 +70,7 @@
         </div>
         <div class="poolshare right">
           <div class="value" if.to-view="connected">
-            <floating-point-number class="share" value.to-view="poolshare | ethwei" precision="4"
+            <floating-point-number value.to-view="poolshare | ethwei" precision="4"
               placement.to-view="top"></floating-point-number>%
           </div>
           <div else>--</div>
@@ -93,7 +93,7 @@
       <div class="section middle">
         <div class="currentAPY">
           <div class="value">
-            <floating-point-number class="share" value.to-view="currentAPY | ethwei" precision="4"
+            <floating-point-number value.to-view="currentAPY | ethwei" precision="4"
               placement.to-view="top"></floating-point-number>%
           </div>
           <div class="label">Current APY</div>
@@ -102,7 +102,7 @@
       <div class="section middle doubleSection">
         <div class="primeFarmed left">
           <div class="value">
-            <floating-point-number if.to-view="connected" class="share" value.to-view="primeFarmed | ethwei" precision="8"
+            <floating-point-number if.to-view="connected" value.to-view="primeFarmed | ethwei" precision="8"
               placement.to-view="top"></floating-point-number>
             <span else>--</span>
           </div>
@@ -110,7 +110,7 @@
         </div>
         <div class="bprimeStaked right">
           <div class="value">
-            <floating-point-number if.to-view="connected" class="share" value.to-view="bPrimeStaked | ethwei" precision="8"
+            <floating-point-number if.to-view="connected" value.to-view="bPrimeStaked | ethwei" precision="8"
               placement.to-view="top"></floating-point-number>
             <span else>--</span>
           </div>

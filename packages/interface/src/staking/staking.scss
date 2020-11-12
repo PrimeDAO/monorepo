@@ -6,7 +6,6 @@
   margin: auto;
 
   .header {
-    grid-area: header;
     margin-bottom: 20px;
 
     .triangle {
@@ -37,7 +36,6 @@
   }
 
   .secondRow {
-    grid-area: secondRow;
     text-align: center;
     margin-bottom: 20px;
 
@@ -47,7 +45,6 @@
   }
 
   .thirdRow {
-    grid-area: thirdRow;
     text-align: center;
 
     &.back img {
