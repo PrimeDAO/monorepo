@@ -34,10 +34,6 @@ contract('StakingRewards', (accounts) => {
     let setup;
     let stakeAmount;
     let halfStake;
-    let quarterStake
-    let irregularStake;
-    let irregularStake2;
-    let tinyStake;
     let rewardAmount;
     let _initreward = (BigInt(925 * 100 * 1000000000000000000)).toString(); // "92500000000000003145728"
     let _starttime = 1600560000; // 2020-09-20 00:00:00 (UTC +00:00)
