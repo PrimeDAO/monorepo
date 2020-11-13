@@ -228,6 +228,10 @@ contract StakingRewards is Ownable, ReentrancyGuard {
 
     function _notifyRewardAmount(uint256 reward) internal updateReward(address(0)) {
         rewardRate = reward.div(DURATION);
+<<<<<<< HEAD
+=======
+
+>>>>>>> dbee75e62a503c41658717c2a5d1a7b22cb62761
         lastUpdateTime = block.timestamp;
         periodFinish = block.timestamp.add(DURATION);
         emit RewardAdded(reward);
