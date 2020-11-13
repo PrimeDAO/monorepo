@@ -30,7 +30,7 @@ const deploy = async (accounts) => {
     return setup;
 };
 
-contract('StakingRewards', (accounts) => {
+contract('Staking: 1 month messypath', (accounts) => {
     let setup;
     let stakeAmount;
     let halfStake;

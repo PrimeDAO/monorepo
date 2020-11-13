@@ -30,7 +30,7 @@ const deploy = async (accounts) => {
     return setup;
 };
 
-contract('StakingRewards', (accounts) => {
+contract('Staking: 1 week happypath', (accounts) => {
     let setup;
     let stakeAmount;
     let halfStake;
@@ -130,6 +130,8 @@ contract('StakingRewards', (accounts) => {
                 //     expect(irregReward).to.equal(erned5);
                 // });
                 it('users 1 - 6 can claim their PRIME rewards whilst keeping tokens staked', async () => {
+                    await time.increase(time.duration.days(2));
+
                     let earned = (await setup.incentives.stakingRewards.earned(accounts[1])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[1] } );
                     let balance = (await setup.tokens.primeToken.balanceOf(accounts[1])).toString();
