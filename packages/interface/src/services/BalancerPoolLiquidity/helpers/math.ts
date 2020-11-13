@@ -1,4 +1,4 @@
-import BigNumber from "./bignumber";
+import BigNumber from "../../BigNumberService";
 
 const BONE = new BigNumber(10).pow(18);
 const EXIT_FEE = new BigNumber(0);

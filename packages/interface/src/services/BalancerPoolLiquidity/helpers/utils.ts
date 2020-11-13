@@ -3,7 +3,7 @@
 // import { Contract } from "@ethersproject/contracts";
 // import { Provider } from "@ethersproject/providers";
 // import { Wallet } from "@ethersproject/wallet";
-import BigNumber from "./bignumber";
+import BigNumber from "../../BigNumberService";
 
 // export const ITEMS_PER_PAGE = 20;
 // export const MAX_GAS = new BigNumber("0xffffffff");

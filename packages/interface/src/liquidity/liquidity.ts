@@ -1,18 +1,21 @@
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject, customElement, computedFrom } from "aurelia-framework";
 import { BigNumber } from "ethers";
-import { toBigNumberJs } from "services/BalancerPoolLiquidity/helpers/bignumber";
+import { toBigNumberJs } from "services/BigNumberService";
 import { calcPoolOutGivenSingleIn, calcSingleOutGivenPoolIn } from "services/BalancerPoolLiquidity/helpers/math";
 import { calcPoolTokensByRatio } from "services/BalancerPoolLiquidity/helpers/utils";
 import { Address } from "services/EthereumService";
 import "./liquidity.scss";
-import BigNumberJs from "services/BalancerPoolLiquidity/helpers/bignumber";
+import BigNumberJs from "services/BigNumberService";
 
 const BALANCE_BUFFER = 0.01;
 
 @customElement("liquidity")
 @autoinject
 export class Liquidity {
+
+  constructor(
+    private eventAggregator: EventAggregator) { }
 
   private model: ILiquidityModel;
   private defaultPrimeAmount: BigNumber | string;
@@ -28,9 +31,6 @@ export class Liquidity {
   private _primeSelected = false;
   private _wethSelected = false;
 
-  constructor(
-    private eventAggregator: EventAggregator) {}
-
   public activate(_model: unknown, routeConfig: { settings: { state: ILiquidityModel } }): void {
     this.model = routeConfig.settings.state;
     /**
@@ -40,6 +40,16 @@ export class Liquidity {
       this.primeWeight = this.model.poolTokenNormWeights.get(this.model.primeTokenAddress);
       this.wethWeight = this.model.poolTokenNormWeights.get(this.model.wethTokenAddress);
     }
+  }
+
+  @computedFrom("model.poolUsersTokenShare")
+  private get userPrimePoolShare(): BigNumber {
+    return this.model.poolUsersTokenShare?.get(this.model.primeTokenAddress);
+  }
+
+  @computedFrom("model.poolUsersTokenShare")
+  private get userWethPoolShare(): BigNumber {
+    return this.model.poolUsersTokenShare?.get(this.model.wethTokenAddress);
   }
 
   private get primeSelected() {
@@ -300,7 +310,7 @@ export class Liquidity {
   }
 
   private valid(issueMessage = true): boolean {
-    let message;
+    let message: string;
 
     if (this.model.remove) {
 
@@ -440,6 +450,7 @@ interface ILiquidityModel {
   poolTokenNormWeights: Map<Address, BigNumber>;
   poolTokenAddresses: Array<Address>;
   poolTokenAllowances: Map<Address, BigNumber>;
+  poolUsersTokenShare: Map<Address, BigNumber>;
   primeToken: any;
   primeTokenAddress: Address;
   poolTotalBPrimeSupply: BigNumber;

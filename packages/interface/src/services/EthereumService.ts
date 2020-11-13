@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { ethers, Signer } from "ethers";
+import { BigNumber, ethers, Signer } from "ethers";
 import { BaseProvider, Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -7,6 +7,7 @@ import Torus from "@toruslabs/torus-embed";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
 import { EventConfigFailure } from "services/GeneralEvents";
+import { formatEther, parseEther } from "ethers/lib/utils";
 
 interface IEIP1193 {
   on(eventName: "accountsChanged", handler: (accounts: Array<Address>) => void);
@@ -252,3 +253,11 @@ export class EthereumService {
 }
 
 export type Address = string;
+
+export const toWei = (ethValue: BigNumber | string | number): BigNumber => {
+  return parseEther(ethValue.toString());
+};
+
+export const fromWei = (weiValue: BigNumber | string): BigNumber => {
+  return BigNumber.from(formatEther(weiValue.toString()));
+};

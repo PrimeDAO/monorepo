@@ -1,4 +1,4 @@
-import { autoinject, singleton } from "aurelia-framework";
+import { autoinject, singleton, computedFrom } from "aurelia-framework";
 import { ContractNames } from "services/ContractsService";
 import { ContractsService } from "services/ContractsService";
 import "./dashboard.scss";
@@ -9,6 +9,7 @@ import { BigNumber } from "ethers";
 import { EventConfigException, EventConfigFailure } from "services/GeneralEvents";
 import { PriceService } from "services/PriceService";
 import { Router } from "aurelia-router";
+import { toBigNumberJs } from "services/BigNumberService";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -43,6 +44,7 @@ import { Router } from "aurelia-router";
 @singleton(false)
 @autoinject
 export class Dashboard {
+  private initialized = false;
   private weth: any;
   private crPool: any;
   private bPool: any;
@@ -53,13 +55,12 @@ export class Dashboard {
   private connected = false;
   private liquidityBalance: BigNumber;
   private swapfee: BigNumber;
-  private poolUsersBPrimeShare: BigNumber;
+  /**
+   * % number:  the amount of bprime that the user has in proportion to the total supply.
+   */
+  private poolUsersBPrimeShare: number;
   private currentAPY: BigNumber;
   private primeFarmed: BigNumber;
-  private userPrimeBalance: BigNumber;
-  private userWethBalance: BigNumber;
-  private userEthBalance: BigNumber;
-  private userBPrimeBalance: BigNumber;
   private bPrimeStaked: BigNumber;
   private defaultWethEthAmount: BigNumber;
   private poolTotalDenormWeights: Map<Address, BigNumber>;
@@ -67,6 +68,7 @@ export class Dashboard {
 
   // token balances in bPool
   private poolBalances: Map<Address, BigNumber>;
+  private poolUsersTokenShare: Map<Address, BigNumber>
   // user token balances
   private userTokenBalances: Map<Address, BigNumber>;
   private primeTokenAddress: Address;
@@ -76,6 +78,27 @@ export class Dashboard {
   private poolTotalBPrimeSupply: BigNumber;
   private poolTotalDenormWeight: BigNumber;
   private poolTokenAllowances: Map<Address, BigNumber>;
+  private ethWethAmount: BigNumber;
+  private wethEthAmount: BigNumber;
+  private priceWeth: BigNumber;
+  private pricePrimeToken: BigNumber;
+
+  @computedFrom("userTokenBalances")
+  private get userPrimeBalance(): BigNumber {
+    return this.userTokenBalances?.get(this.primeTokenAddress);
+  }
+  @computedFrom("userTokenBalances")
+  private get userWethBalance(): BigNumber {
+    return this.userTokenBalances?.get(this.wethTokenAddress);
+  }
+  @computedFrom("userTokenBalances")
+  private get userEthBalance(): BigNumber {
+    return this.userTokenBalances?.get("ETH");
+  }
+  @computedFrom("userTokenBalances")
+  private get userBPrimeBalance(): BigNumber {
+    return this.userTokenBalances?.get(this.bPrimeTokenAddress);
+  }
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -86,23 +109,22 @@ export class Dashboard {
     private router: Router) {
   }
 
-  protected attached(): void {
-    this.eventAggregator.subscribe("Network.Changed.Account", async (account: Address) => {
-      this.connected = false; // force reconnect
-      this.initialize(account);
+  private async attached(): Promise<void> {
+    this.eventAggregator.subscribe("Network.Changed.Account", async () => {
+      this.getUserBalances();
     });
-    this.initialize();
+    this.eventAggregator.subscribe("Network.Changed.Disconnect", async () => {
+      // TODO: undefine the bound variables
+      this.initialized = false;
+    });
+    await this.initialize();
+    return this.getUserBalances(true);
   }
 
-  private ethWethAmount: BigNumber;
-  private wethEthAmount: BigNumber;
-  private priceWeth: BigNumber;
-  private pricePrimeToken: BigNumber;
-
-  private async initialize(account?: Address): Promise<void> {
-    if (!this.connected) {
+  private async initialize(): Promise<void> {
+    if (!this.initialized) {
       try {
-        // timeout to allow styles to load on startup to modalscreen sizes correctly
+      // timeout to allow styles to load on startup to modalscreen sizes correctly
         setTimeout(() => this.eventAggregator.publish("dashboard.loading", true), 100);
 
         this.primeTokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
@@ -139,59 +161,75 @@ export class Dashboard {
 
         await this.getStakingAmounts();
         await this.getLiquidityAmounts();
-        await this.getUserBalances();
-
-        // TODO: fully revert the connection when no account
-        this.connected = !!account;
-
-        this.eventAggregator.publish("dashboard.loading", false);
       } catch (ex) {
         this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
-        // TODO: fully revert the connection when no account
-        this.connected = false;
+      }
+      finally {
         this.eventAggregator.publish("dashboard.loading", false);
+        this.initialized = true;
       }
     }
   }
 
-  private async getUserBalances(): Promise<void> {
-    if (this.ethereumService.defaultAccountAddress) {
-      const provider = this.ethereumService.readOnlyProvider;
-      this.userEthBalance = await provider.getBalance(this.ethereumService.defaultAccountAddress);
-      this.userWethBalance = await this.weth.balanceOf(this.ethereumService.defaultAccountAddress);
-      this.userPrimeBalance = await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress);
+  private async getUserBalances(initializing = false): Promise<void> {
+    if (this.initialized && this.ethereumService.defaultAccountAddress) {
+      try {
+        if (!initializing) {
+        // timeout to allow styles to load on startup to modalscreen sizes correctly
+          setTimeout(() => this.eventAggregator.publish("dashboard.loading", true), 100);
+        }
+        const provider = this.ethereumService.readOnlyProvider;
 
-      const userTokenBalances = new Map();
-      userTokenBalances.set(this.primeTokenAddress, this.userPrimeBalance);
-      userTokenBalances.set(this.wethTokenAddress, this.userWethBalance);
-      this.userTokenBalances = userTokenBalances;
+        const userTokenBalances = new Map();
+        userTokenBalances.set(this.primeTokenAddress, await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress));
+        userTokenBalances.set(this.wethTokenAddress, await this.weth.balanceOf(this.ethereumService.defaultAccountAddress));
+        userTokenBalances.set(this.bPrimeTokenAddress, await this.bPrimeToken.balanceOf(this.ethereumService.defaultAccountAddress));
+        userTokenBalances.set("ETH", await provider.getBalance(this.ethereumService.defaultAccountAddress));
+        this.userTokenBalances = userTokenBalances;
+
+        /**
+     * this is user's % of bprime in the total
+     */
+        this.poolUsersBPrimeShare = toBigNumberJs(this.userBPrimeBalance).div(toBigNumberJs(await this.bPrimeToken.totalSupply())).toNumber();
+
+        const getUserTokenBalance = (tokenAddress: Address): BigNumber => {
+          return BigNumber.from(toBigNumberJs(this.userTokenBalances.get(tokenAddress)).times(this.poolUsersBPrimeShare).integerValue().toString());
+        };
+
+        const poolUsersTokenShare = new Map();
+        poolUsersTokenShare.set(this.primeTokenAddress, getUserTokenBalance(this.primeTokenAddress));
+        poolUsersTokenShare.set(this.wethTokenAddress, getUserTokenBalance(this.wethTokenAddress));
+        this.poolUsersTokenShare = poolUsersTokenShare;
+
+        this.primeFarmed = await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress);
+
+        this.bPrimeStaked = await this.stakingRewards.balanceOf(this.ethereumService.defaultAccountAddress);
+
+        this.getTokenAllowances();
+
+        this.connected= true;
+      } catch (ex) {
+        this.connected = false;
+        this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
+      }
+      finally {
+        if (!initializing) {
+          this.eventAggregator.publish("dashboard.loading", false);
+        }
+      }
     } else {
-      this.userEthBalance =
-      this.userPrimeBalance =
-      this.userWethBalance =
-      this.userTokenBalances = undefined;
+      this.bPrimeStaked =
+        this.poolUsersBPrimeShare =
+        this.primeFarmed =
+        this.poolUsersTokenShare =
+        this.userTokenBalances = undefined;
+
+      this.connected = false;
     }
   }
 
   private async getStakingAmounts(): Promise<void> {
-
     this.currentAPY = await this.stakingRewards.rewardPerTokenStored();
-
-    if (this.ethereumService.defaultAccountAddress) {
-      this.primeFarmed = await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress);
-      this.userBPrimeBalance = await this.bPrimeToken.balanceOf(this.ethereumService.defaultAccountAddress);
-      /**
-     * this is BPRIME
-     */
-      this.poolUsersBPrimeShare = this.userBPrimeBalance.div(await this.bPrimeToken.totalSupply());
-
-      this.bPrimeStaked = await this.stakingRewards.balanceOf(this.ethereumService.defaultAccountAddress);
-    } else {
-      this.bPrimeStaked =
-      this.userBPrimeBalance =
-      this.poolUsersBPrimeShare =
-      this.primeFarmed = undefined;
-    }
   }
 
   private async getLiquidityAmounts(): Promise<void> {
@@ -215,11 +253,6 @@ export class Dashboard {
       this.poolTotalBPrimeSupply = await this.bPrimeToken.totalSupply();
 
       this.poolTotalDenormWeight = await this.bPool.getTotalDenormalizedWeight();
-
-      if (this.ethereumService.defaultAccountAddress) {
-        this.getTokenAllowances();
-      }
-
     } catch (ex) {
       this.eventAggregator.publish("handleException",
         new EventConfigException("Unable to fetch a token price", ex));

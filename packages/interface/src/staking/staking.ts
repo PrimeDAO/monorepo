@@ -18,8 +18,26 @@ export class Staking {
     this.model = routeConfig.settings.state;
   }
 
+  private valid(issueMessage = true): boolean {
+    let message: string;
+
+    if (this.bPrimeAmount.gt(this.model.userBPrimeBalance)) {
+      message = "You don't have enough BPRIME to stake the amount you requested";
+    }
+    if (message) {
+      if (issueMessage) {
+        this.eventAggregator.publish("handleValidationError", message);
+      }
+      return false;
+    }
+
+    return true;
+  }
+
   private handleSubmit(): void {
-    this.model.stakingStake(this.bPrimeAmount);
+    if (this.valid()) {
+      this.model.stakingStake(this.bPrimeAmount);
+    }
   }
 
   private handleGetMaxBPrime() {
