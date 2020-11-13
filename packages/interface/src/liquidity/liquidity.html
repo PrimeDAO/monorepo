@@ -15,7 +15,7 @@
         <div class="dataGroup">
           <label>My share:</label>
           <div class="value" if.to-view="model.connected">
-            <floating-point-number value.to-view="model.poolshare | ethwei" precision="4"
+            <floating-point-number value.to-view="model.poolUsersBPrimeShare | ethwei" precision="4"
               placement.to-view="top"></floating-point-number>%
           </div>
           <div else class="value">--</div>
@@ -25,7 +25,7 @@
           <floating-point-number value.to-view="model.swapfee | ethwei" precision="4"
             placement.to-view="top"></floating-point-number>%
         </div>
-        <div class="assets" with.bind="this.model.poolTokenWeights">
+        <div class="assets" with.bind="this.model.poolTotalDenormWeightseights">
           <div><img src=" /PD_APP_ICON_PD_01.svg" />${primeWeight | ethwei}% PRIME
           </div>
           <div><img src="/PD_APP_ICON_ETH_01.svg" />${wethWeight | ethwei}% WETH</div>
@@ -104,14 +104,27 @@
       <div class="bPrimeAmount section">
         <div class="label">BPRIME Amount</div>
         <div if.to-view="!model.remove" class="amount">
-          <div if.to-view="model.connected" class="value">
+          <div if.to-view="isSingleAsset" class="value">
+            <formatted-number
+              value.to-view="userLiquidity.absolute.current | ethwei"
+              format="0.00a"
+              placement.to-view="top">
+            </formatted-number>
+            <span> → </span>
+            <formatted-number
+              value.to-view="userLiquidity.absolute.future | ethwei"
+              format="0.00a"
+              placement.to-view="top">
+            </formatted-number> BPRIME
+          </div>
+          <div if.to-view="isMultiAsset" class="value">
             <formatted-number
               value.to-view="bPrimeAmount | ethwei"
               format="0.00a"
               placement.to-view="top"> BPRIME
             </formatted-number>
           </div>
-          <div else class="label">--</div>
+          <div if.to-view="!isSingleAsset && !isMultiAsset">--</div>
         </div>
         <div else>
           <label if.to-view="model.userBPrimeBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxBPrime()">Max</button></label>

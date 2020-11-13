@@ -6,6 +6,7 @@ import {
 } from "aurelia-framework";
 import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
+import { throwIfEmpty } from "rxjs/operators";
 import { NumberService } from "services/numberService";
 
 @autoinject
@@ -19,6 +20,8 @@ export class NumericInput {
    * If isWei then should be in Wei and will be converted to ETH for the user.
    */
   @bindable({ defaultBindingMode: bindingMode.toView }) public defaultvalue?: BigNumber | number | string = "";
+  @bindable({ defaultBindingMode: bindingMode.toView }) public defaultText = "";
+  @bindable({ defaultBindingMode: bindingMode.toView }) public autocomplete = "off";
   /**
    * this value starts out as equal to defaultValue and is updated as the user types.
    * If isWei then value is set to a BigNumber.  If the input is not value, then set to `undefined`.
@@ -89,6 +92,9 @@ export class NumericInput {
   private hydrateFromDefaultValue(): void {
     if (this.defaultvalue === undefined) {
       this.defaultvalue = "";
+    } else if (this.defaultvalue === null) {// then intentionally blank
+      this.innerValue = this.defaultText;
+      return;
     }
     try {
       if (this.isWei) {

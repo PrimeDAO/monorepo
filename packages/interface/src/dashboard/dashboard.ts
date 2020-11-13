@@ -48,11 +48,12 @@ export class Dashboard {
   private bPool: any;
   private stakingRewards: any;
   private primeToken: any;
+  private bPrimeToken: any;
   // private usdcToken: any;
   private connected = false;
   private liquidityBalance: BigNumber;
   private swapfee: BigNumber;
-  private poolshare: BigNumber;
+  private poolUsersBPrimeShare: BigNumber;
   private currentAPY: BigNumber;
   private primeFarmed: BigNumber;
   private userPrimeBalance: BigNumber;
@@ -61,15 +62,18 @@ export class Dashboard {
   private userBPrimeBalance: BigNumber;
   private bPrimeStaked: BigNumber;
   private defaultWethEthAmount: BigNumber;
-  private poolTokenWeights: Map<Address, BigNumber>;
+  private poolTotalDenormWeights: Map<Address, BigNumber>;
+  private poolTokenNormWeights: Map<Address, BigNumber>;
+
   // token balances in bPool
   private poolBalances: Map<Address, BigNumber>;
   // user token balances
   private userTokenBalances: Map<Address, BigNumber>;
   private primeTokenAddress: Address;
   private wethTokenAddress: Address;
+  private bPrimeTokenAddress: Address;
   private poolTokenAddresses: Array<Address>;
-  private poolTotalSupply: BigNumber;
+  private poolTotalBPrimeSupply: BigNumber;
   private poolTotalDenormWeight: BigNumber;
   private poolTokenAllowances: Map<Address, BigNumber>;
 
@@ -103,6 +107,7 @@ export class Dashboard {
 
         this.primeTokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
         this.wethTokenAddress = this.contractsService.getContractAddress(ContractNames.WETH);
+        this.bPrimeTokenAddress = this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool);
         this.poolTokenAddresses = [
           this.primeTokenAddress,
           this.wethTokenAddress,
@@ -113,14 +118,24 @@ export class Dashboard {
         this.stakingRewards = await this.contractsService.getContractFor(ContractNames.STAKINGREWARDS);
         this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
         this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
-        this.swapfee = await this.bPool.getSwapFee();
-        const weights = new Map();
-        weights.set(this.primeTokenAddress,
-          (await this.bPool.getNormalizedWeight(this.primeTokenAddress)).mul(100));
-        weights.set(this.wethTokenAddress,
-          (await this.bPool.getNormalizedWeight(this.wethTokenAddress)).mul(100));
+        this.bPrimeToken = this.crPool;
 
-        this.poolTokenWeights = weights;
+        this.swapfee = await this.bPool.getSwapFee();
+        let weights = new Map();
+        weights.set(this.primeTokenAddress,
+          (await this.bPool.getDenormalizedWeight(this.primeTokenAddress)));
+        weights.set(this.wethTokenAddress,
+          (await this.bPool.getDenormalizedWeight(this.wethTokenAddress)));
+
+        this.poolTotalDenormWeights = weights;
+
+        weights = new Map();
+        weights.set(this.primeTokenAddress,
+          (await this.bPool.getNormalizedWeight(this.primeTokenAddress)));
+        weights.set(this.wethTokenAddress,
+          (await this.bPool.getNormalizedWeight(this.wethTokenAddress)));
+
+        this.poolTokenNormWeights = weights;
 
         await this.getStakingAmounts();
         await this.getLiquidityAmounts();
@@ -164,17 +179,17 @@ export class Dashboard {
 
     if (this.ethereumService.defaultAccountAddress) {
       this.primeFarmed = await this.stakingRewards.earned(this.ethereumService.defaultAccountAddress);
-      this.userBPrimeBalance = await this.crPool.balanceOf(this.ethereumService.defaultAccountAddress);
+      this.userBPrimeBalance = await this.bPrimeToken.balanceOf(this.ethereumService.defaultAccountAddress);
       /**
      * this is BPRIME
      */
-      this.poolshare = this.userBPrimeBalance.div(await this.crPool.totalSupply());
+      this.poolUsersBPrimeShare = this.userBPrimeBalance.div(await this.bPrimeToken.totalSupply());
 
       this.bPrimeStaked = await this.stakingRewards.balanceOf(this.ethereumService.defaultAccountAddress);
     } else {
       this.bPrimeStaked =
       this.userBPrimeBalance =
-      this.poolshare =
+      this.poolUsersBPrimeShare =
       this.primeFarmed = undefined;
     }
   }
@@ -193,13 +208,11 @@ export class Dashboard {
       this.liquidityBalance = priceWethLiquidity.add(pricePrimeTokenLiquidity);
 
       const poolBalances = new Map();
-      poolBalances.set(this.primeTokenAddress, await this.primeToken.balanceOf(this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool)));
-      poolBalances.set(this.wethTokenAddress, await this.weth.balanceOf(this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool)));
-      // poolBalances.set(this.primeTokenAddress, BigNumber.from("300000000000000000000000"));
-      // poolBalances.set(this.wethTokenAddress, BigNumber.from("80000000000000000000"));
+      poolBalances.set(this.primeTokenAddress, await this.primeToken.balanceOf(this.contractsService.getContractAddress(ContractNames.BPOOL)));
+      poolBalances.set(this.wethTokenAddress, await this.weth.balanceOf(this.contractsService.getContractAddress(ContractNames.BPOOL)));
       this.poolBalances = poolBalances;
 
-      this.poolTotalSupply = await this.crPool.totalSupply();
+      this.poolTotalBPrimeSupply = await this.bPrimeToken.totalSupply();
 
       this.poolTotalDenormWeight = await this.bPool.getTotalDenormalizedWeight();
 

@@ -68,15 +68,15 @@ export function bnum(val: string | number | BigNumber): BigNumber {
   return new BigNumber(val.toString());
 }
 
-export function scale(input: BigNumber, decimalPlaces: number): BigNumber {
-  const scalePow = new BigNumber(decimalPlaces.toString());
-  const scaleMul = new BigNumber(10).pow(scalePow);
-  return input.times(scaleMul);
-}
+// export function scale(input: BigNumber, decimalPlaces: number): BigNumber {
+//   const scalePow = new BigNumber(decimalPlaces.toString());
+//   const scaleMul = new BigNumber(10).pow(scalePow);
+//   return input.times(scaleMul);
+// }
 
-export function toWei(val: string | BigNumber): BigNumber {
-  return scale(bnum(val.toString()), 18).integerValue();
-}
+// export function toWei(val: string | BigNumber): BigNumber {
+//   return scale(bnum(val.toString()), 18).integerValue();
+// }
 
 // export function denormalizeBalance(
 //   amount: BigNumber,
@@ -150,13 +150,13 @@ export function toWei(val: string | BigNumber): BigNumber {
 // }
 
 export function calcPoolTokensByRatio(ratio: BigNumber, totalShares: BigNumber): string {
-  if (ratio.isNaN()) {
+  if (ratio.isNaN() || ratio.isZero()) {
     return "0";
   }
   // @TODO - fix calcs so no buffer is needed
   const buffer = bnum(100);
   return bnum(ratio)
-    .times(toWei(totalShares))
+    .times(totalShares)
     .integerValue(BigNumber.ROUND_DOWN)
     .minus(buffer)
     .toString();
