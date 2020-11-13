@@ -111,16 +111,29 @@ export class Dashboard {
 
   private async attached(): Promise<void> {
     this.eventAggregator.subscribe("Network.Changed.Account", async () => {
+      await this.loadContracts();
       this.getUserBalances();
     });
     this.eventAggregator.subscribe("Network.Changed.Disconnect", async () => {
       // TODO: undefine the bound variables
       this.initialized = false;
     });
+    await this.loadContracts();
     await this.initialize();
     return this.getUserBalances(true);
   }
 
+  /**
+   * have to call this with and without an account
+   */
+  private async loadContracts() {
+    this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
+    this.bPool = await this.contractsService.getContractFor(ContractNames.BPOOL);
+    this.stakingRewards = await this.contractsService.getContractFor(ContractNames.STAKINGREWARDS);
+    this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
+    this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
+    this.bPrimeToken = this.crPool;
+  }
   private async initialize(): Promise<void> {
     if (!this.initialized) {
       try {
@@ -134,13 +147,6 @@ export class Dashboard {
           this.primeTokenAddress,
           this.wethTokenAddress,
         ];
-
-        this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
-        this.bPool = await this.contractsService.getContractFor(ContractNames.BPOOL);
-        this.stakingRewards = await this.contractsService.getContractFor(ContractNames.STAKINGREWARDS);
-        this.weth = await this.contractsService.getContractFor(ContractNames.WETH);
-        this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
-        this.bPrimeToken = this.crPool;
 
         this.swapfee = await this.bPool.getSwapFee();
         let weights = new Map();
@@ -390,13 +396,9 @@ export class Dashboard {
 
   private async stakingStake(amount: BigNumber): Promise<void> {
     if (this.ensureConnected()) {
-      if (amount.gt(this.userBPrimeBalance)) {
-        this.eventAggregator.publish("handleValidationError", new EventConfigFailure("You don't have enough BPRIME to stake the amount you requested"));
-      } else {
-        await this.transactionsService.send(() => this.stakingRewards.stake(amount));
-        // TODO:  should happen after mining
-        this.getStakingAmounts();
-      }
+      await this.transactionsService.send(() => this.stakingRewards.stake(amount));
+      // TODO:  should happen after mining
+      this.getStakingAmounts();
     }
   }
 
