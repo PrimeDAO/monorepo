@@ -72,14 +72,14 @@
     "absolutePath": "/Users/arseny/Projects/primeDAO/monorepo/packages/contracts/contracts/vesting/VestingFactory.sol",
     "exportedSymbols": {
       "VestingFactory": [
-        2671
+        2691
       ]
     },
-    "id": 2672,
+    "id": 2692,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2611,
+        "id": 2631,
         "literals": [
           "solidity",
           ">=",
@@ -92,10 +92,10 @@
       {
         "absolutePath": "/Users/arseny/Projects/primeDAO/monorepo/packages/contracts/contracts/vesting/TokenVesting.sol",
         "file": "./TokenVesting.sol",
-        "id": 2612,
+        "id": 2632,
         "nodeType": "ImportDirective",
-        "scope": 2672,
-        "sourceUnit": 2610,
+        "scope": 2692,
+        "sourceUnit": 2630,
         "src": "27:28:10",
         "symbolAliases": [],
         "unitAlias": ""
@@ -103,14 +103,14 @@
       {
         "baseContracts": [],
         "contractDependencies": [
-          2609
+          2629
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 2671,
+        "id": 2691,
         "linearizedBaseContracts": [
-          2671
+          2691
         ],
         "name": "VestingFactory",
         "nodeType": "ContractDefinition",
@@ -118,20 +118,20 @@
           {
             "anonymous": false,
             "documentation": null,
-            "id": 2616,
+            "id": 2636,
             "name": "VestingCreated",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2615,
+              "id": 2635,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2614,
+                  "id": 2634,
                   "indexed": false,
                   "name": "vestingContractAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2616,
+                  "scope": 2636,
                   "src": "109:30:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -140,7 +140,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2613,
+                    "id": 2633,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "109:7:10",
@@ -160,7 +160,7 @@
           },
           {
             "body": {
-              "id": 2669,
+              "id": 2689,
               "nodeType": "Block",
               "src": "295:361:10",
               "statements": [
@@ -174,18 +174,18 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 2638,
+                        "id": 2658,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "argumentTypes": null,
-                          "id": 2634,
+                          "id": 2654,
                           "name": "owner",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2618,
+                          "referencedDeclaration": 2638,
                           "src": "313:5:10",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -200,7 +200,7 @@
                             {
                               "argumentTypes": null,
                               "hexValue": "30",
-                              "id": 2636,
+                              "id": 2656,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -223,7 +223,7 @@
                                 "typeString": "int_const 0"
                               }
                             ],
-                            "id": 2635,
+                            "id": 2655,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -236,7 +236,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 2637,
+                          "id": 2657,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -259,7 +259,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "56657374696e67466163746f72793a206f776e657220697320746865207a65726f2061646472657373",
-                        "id": 2639,
+                        "id": 2659,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -286,21 +286,21 @@
                           "typeString": "literal_string \"VestingFactory: owner is the zero address\""
                         }
                       ],
-                      "id": 2633,
+                      "id": 2653,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        13181,
-                        13182
+                        13201,
+                        13202
                       ],
-                      "referencedDeclaration": 13182,
+                      "referencedDeclaration": 13202,
                       "src": "305:7:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 2640,
+                    "id": 2660,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -314,37 +314,37 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 2641,
+                  "id": 2661,
                   "nodeType": "ExpressionStatement",
                   "src": "305:73:10"
                 },
                 {
                   "assignments": [
-                    2643
+                    2663
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 2643,
+                      "id": 2663,
                       "name": "newVestingContract",
                       "nodeType": "VariableDeclaration",
-                      "scope": 2669,
+                      "scope": 2689,
                       "src": "388:31:10",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                        "typeIdentifier": "t_contract$_TokenVesting_$2629",
                         "typeString": "contract TokenVesting"
                       },
                       "typeName": {
                         "contractScope": null,
-                        "id": 2642,
+                        "id": 2662,
                         "name": "TokenVesting",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 2609,
+                        "referencedDeclaration": 2629,
                         "src": "388:12:10",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                          "typeIdentifier": "t_contract$_TokenVesting_$2629",
                           "typeString": "contract TokenVesting"
                         }
                       },
@@ -352,17 +352,17 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 2652,
+                  "id": 2672,
                   "initialValue": {
                     "argumentTypes": null,
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 2646,
+                        "id": 2666,
                         "name": "beneficiary",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2620,
+                        "referencedDeclaration": 2640,
                         "src": "439:11:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -371,11 +371,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 2647,
+                        "id": 2667,
                         "name": "start",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2622,
+                        "referencedDeclaration": 2642,
                         "src": "452:5:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -384,11 +384,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 2648,
+                        "id": 2668,
                         "name": "cliffDuration",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2624,
+                        "referencedDeclaration": 2644,
                         "src": "459:13:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -397,11 +397,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 2649,
+                        "id": 2669,
                         "name": "duration",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2626,
+                        "referencedDeclaration": 2646,
                         "src": "474:8:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -410,11 +410,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 2650,
+                        "id": 2670,
                         "name": "revocable",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2628,
+                        "referencedDeclaration": 2648,
                         "src": "484:9:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
@@ -445,7 +445,7 @@
                           "typeString": "bool"
                         }
                       ],
-                      "id": 2645,
+                      "id": 2665,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -453,23 +453,23 @@
                       "nodeType": "NewExpression",
                       "src": "422:16:10",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_creation_nonpayable$_t_address_$_t_uint256_$_t_uint256_$_t_uint256_$_t_bool_$returns$_t_contract$_TokenVesting_$2609_$",
+                        "typeIdentifier": "t_function_creation_nonpayable$_t_address_$_t_uint256_$_t_uint256_$_t_uint256_$_t_bool_$returns$_t_contract$_TokenVesting_$2629_$",
                         "typeString": "function (address,uint256,uint256,uint256,bool) returns (contract TokenVesting)"
                       },
                       "typeName": {
                         "contractScope": null,
-                        "id": 2644,
+                        "id": 2664,
                         "name": "TokenVesting",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 2609,
+                        "referencedDeclaration": 2629,
                         "src": "426:12:10",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                          "typeIdentifier": "t_contract$_TokenVesting_$2629",
                           "typeString": "contract TokenVesting"
                         }
                       }
                     },
-                    "id": 2651,
+                    "id": 2671,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -479,7 +479,7 @@
                     "nodeType": "FunctionCall",
                     "src": "422:72:10",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                      "typeIdentifier": "t_contract$_TokenVesting_$2629",
                       "typeString": "contract TokenVesting"
                     }
                   },
@@ -492,11 +492,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 2656,
+                        "id": 2676,
                         "name": "owner",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2618,
+                        "referencedDeclaration": 2638,
                         "src": "541:5:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -513,32 +513,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 2653,
+                        "id": 2673,
                         "name": "newVestingContract",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2643,
+                        "referencedDeclaration": 2663,
                         "src": "504:18:10",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                          "typeIdentifier": "t_contract$_TokenVesting_$2629",
                           "typeString": "contract TokenVesting"
                         }
                       },
-                      "id": 2655,
+                      "id": 2675,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "transferOwnership",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 12160,
+                      "referencedDeclaration": 12180,
                       "src": "504:36:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address) external"
                       }
                     },
-                    "id": 2657,
+                    "id": 2677,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -552,7 +552,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 2658,
+                  "id": 2678,
                   "nodeType": "ExpressionStatement",
                   "src": "504:43:10"
                 },
@@ -565,14 +565,14 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 2661,
+                            "id": 2681,
                             "name": "newVestingContract",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2643,
+                            "referencedDeclaration": 2663,
                             "src": "585:18:10",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                              "typeIdentifier": "t_contract$_TokenVesting_$2629",
                               "typeString": "contract TokenVesting"
                             }
                           }
@@ -580,11 +580,11 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                              "typeIdentifier": "t_contract$_TokenVesting_$2629",
                               "typeString": "contract TokenVesting"
                             }
                           ],
-                          "id": 2660,
+                          "id": 2680,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -597,7 +597,7 @@
                           },
                           "typeName": "address"
                         },
-                        "id": 2662,
+                        "id": 2682,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -619,18 +619,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 2659,
+                      "id": 2679,
                       "name": "VestingCreated",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2616,
+                      "referencedDeclaration": 2636,
                       "src": "562:14:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
                       }
                     },
-                    "id": 2663,
+                    "id": 2683,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -644,7 +644,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 2664,
+                  "id": 2684,
                   "nodeType": "EmitStatement",
                   "src": "557:48:10"
                 },
@@ -654,14 +654,14 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 2666,
+                        "id": 2686,
                         "name": "newVestingContract",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2643,
+                        "referencedDeclaration": 2663,
                         "src": "630:18:10",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                          "typeIdentifier": "t_contract$_TokenVesting_$2629",
                           "typeString": "contract TokenVesting"
                         }
                       }
@@ -669,11 +669,11 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                          "typeIdentifier": "t_contract$_TokenVesting_$2629",
                           "typeString": "contract TokenVesting"
                         }
                       ],
-                      "id": 2665,
+                      "id": 2685,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -686,7 +686,7 @@
                       },
                       "typeName": "address"
                     },
-                    "id": 2667,
+                    "id": 2687,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -700,30 +700,30 @@
                       "typeString": "address"
                     }
                   },
-                  "functionReturnParameters": 2632,
-                  "id": 2668,
+                  "functionReturnParameters": 2652,
+                  "id": 2688,
                   "nodeType": "Return",
                   "src": "615:34:10"
                 }
               ]
             },
             "documentation": null,
-            "id": 2670,
+            "id": 2690,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "create",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2629,
+              "id": 2649,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2618,
+                  "id": 2638,
                   "name": "owner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "163:13:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -732,7 +732,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2617,
+                    "id": 2637,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "163:7:10",
@@ -747,10 +747,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 2620,
+                  "id": 2640,
                   "name": "beneficiary",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "178:19:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -759,7 +759,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2619,
+                    "id": 2639,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "178:7:10",
@@ -774,10 +774,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 2622,
+                  "id": 2642,
                   "name": "start",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "199:13:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -786,7 +786,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2621,
+                    "id": 2641,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "199:7:10",
@@ -800,10 +800,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 2624,
+                  "id": 2644,
                   "name": "cliffDuration",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "214:21:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -812,7 +812,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2623,
+                    "id": 2643,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "214:7:10",
@@ -826,10 +826,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 2626,
+                  "id": 2646,
                   "name": "duration",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "237:16:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -838,7 +838,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2625,
+                    "id": 2645,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "237:7:10",
@@ -852,10 +852,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 2628,
+                  "id": 2648,
                   "name": "revocable",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "255:14:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -864,7 +864,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 2627,
+                    "id": 2647,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "255:4:10",
@@ -880,15 +880,15 @@
               "src": "162:108:10"
             },
             "returnParameters": {
-              "id": 2632,
+              "id": 2652,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2631,
+                  "id": 2651,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "286:7:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -897,7 +897,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2630,
+                    "id": 2650,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "286:7:10",
@@ -913,14 +913,14 @@
               ],
               "src": "285:9:10"
             },
-            "scope": 2671,
+            "scope": 2691,
             "src": "147:509:10",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 2672,
+        "scope": 2692,
         "src": "57:601:10"
       }
     ],
@@ -930,14 +930,14 @@
     "absolutePath": "/Users/arseny/Projects/primeDAO/monorepo/packages/contracts/contracts/vesting/VestingFactory.sol",
     "exportedSymbols": {
       "VestingFactory": [
-        2671
+        2691
       ]
     },
-    "id": 2672,
+    "id": 2692,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2611,
+        "id": 2631,
         "literals": [
           "solidity",
           ">=",
@@ -950,10 +950,10 @@
       {
         "absolutePath": "/Users/arseny/Projects/primeDAO/monorepo/packages/contracts/contracts/vesting/TokenVesting.sol",
         "file": "./TokenVesting.sol",
-        "id": 2612,
+        "id": 2632,
         "nodeType": "ImportDirective",
-        "scope": 2672,
-        "sourceUnit": 2610,
+        "scope": 2692,
+        "sourceUnit": 2630,
         "src": "27:28:10",
         "symbolAliases": [],
         "unitAlias": ""
@@ -961,14 +961,14 @@
       {
         "baseContracts": [],
         "contractDependencies": [
-          2609
+          2629
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 2671,
+        "id": 2691,
         "linearizedBaseContracts": [
-          2671
+          2691
         ],
         "name": "VestingFactory",
         "nodeType": "ContractDefinition",
@@ -976,20 +976,20 @@
           {
             "anonymous": false,
             "documentation": null,
-            "id": 2616,
+            "id": 2636,
             "name": "VestingCreated",
             "nodeType": "EventDefinition",
             "parameters": {
-              "id": 2615,
+              "id": 2635,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2614,
+                  "id": 2634,
                   "indexed": false,
                   "name": "vestingContractAddress",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2616,
+                  "scope": 2636,
                   "src": "109:30:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -998,7 +998,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2613,
+                    "id": 2633,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "109:7:10",
@@ -1018,7 +1018,7 @@
           },
           {
             "body": {
-              "id": 2669,
+              "id": 2689,
               "nodeType": "Block",
               "src": "295:361:10",
               "statements": [
@@ -1032,18 +1032,18 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 2638,
+                        "id": 2658,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "argumentTypes": null,
-                          "id": 2634,
+                          "id": 2654,
                           "name": "owner",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2618,
+                          "referencedDeclaration": 2638,
                           "src": "313:5:10",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -1058,7 +1058,7 @@
                             {
                               "argumentTypes": null,
                               "hexValue": "30",
-                              "id": 2636,
+                              "id": 2656,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
@@ -1081,7 +1081,7 @@
                                 "typeString": "int_const 0"
                               }
                             ],
-                            "id": 2635,
+                            "id": 2655,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": true,
@@ -1094,7 +1094,7 @@
                             },
                             "typeName": "address"
                           },
-                          "id": 2637,
+                          "id": 2657,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -1117,7 +1117,7 @@
                       {
                         "argumentTypes": null,
                         "hexValue": "56657374696e67466163746f72793a206f776e657220697320746865207a65726f2061646472657373",
-                        "id": 2639,
+                        "id": 2659,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -1144,21 +1144,21 @@
                           "typeString": "literal_string \"VestingFactory: owner is the zero address\""
                         }
                       ],
-                      "id": 2633,
+                      "id": 2653,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        13181,
-                        13182
+                        13201,
+                        13202
                       ],
-                      "referencedDeclaration": 13182,
+                      "referencedDeclaration": 13202,
                       "src": "305:7:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 2640,
+                    "id": 2660,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1172,37 +1172,37 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 2641,
+                  "id": 2661,
                   "nodeType": "ExpressionStatement",
                   "src": "305:73:10"
                 },
                 {
                   "assignments": [
-                    2643
+                    2663
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 2643,
+                      "id": 2663,
                       "name": "newVestingContract",
                       "nodeType": "VariableDeclaration",
-                      "scope": 2669,
+                      "scope": 2689,
                       "src": "388:31:10",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                        "typeIdentifier": "t_contract$_TokenVesting_$2629",
                         "typeString": "contract TokenVesting"
                       },
                       "typeName": {
                         "contractScope": null,
-                        "id": 2642,
+                        "id": 2662,
                         "name": "TokenVesting",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 2609,
+                        "referencedDeclaration": 2629,
                         "src": "388:12:10",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                          "typeIdentifier": "t_contract$_TokenVesting_$2629",
                           "typeString": "contract TokenVesting"
                         }
                       },
@@ -1210,17 +1210,17 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 2652,
+                  "id": 2672,
                   "initialValue": {
                     "argumentTypes": null,
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 2646,
+                        "id": 2666,
                         "name": "beneficiary",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2620,
+                        "referencedDeclaration": 2640,
                         "src": "439:11:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -1229,11 +1229,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 2647,
+                        "id": 2667,
                         "name": "start",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2622,
+                        "referencedDeclaration": 2642,
                         "src": "452:5:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1242,11 +1242,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 2648,
+                        "id": 2668,
                         "name": "cliffDuration",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2624,
+                        "referencedDeclaration": 2644,
                         "src": "459:13:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1255,11 +1255,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 2649,
+                        "id": 2669,
                         "name": "duration",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2626,
+                        "referencedDeclaration": 2646,
                         "src": "474:8:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1268,11 +1268,11 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 2650,
+                        "id": 2670,
                         "name": "revocable",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2628,
+                        "referencedDeclaration": 2648,
                         "src": "484:9:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bool",
@@ -1303,7 +1303,7 @@
                           "typeString": "bool"
                         }
                       ],
-                      "id": 2645,
+                      "id": 2665,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1311,23 +1311,23 @@
                       "nodeType": "NewExpression",
                       "src": "422:16:10",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_creation_nonpayable$_t_address_$_t_uint256_$_t_uint256_$_t_uint256_$_t_bool_$returns$_t_contract$_TokenVesting_$2609_$",
+                        "typeIdentifier": "t_function_creation_nonpayable$_t_address_$_t_uint256_$_t_uint256_$_t_uint256_$_t_bool_$returns$_t_contract$_TokenVesting_$2629_$",
                         "typeString": "function (address,uint256,uint256,uint256,bool) returns (contract TokenVesting)"
                       },
                       "typeName": {
                         "contractScope": null,
-                        "id": 2644,
+                        "id": 2664,
                         "name": "TokenVesting",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 2609,
+                        "referencedDeclaration": 2629,
                         "src": "426:12:10",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                          "typeIdentifier": "t_contract$_TokenVesting_$2629",
                           "typeString": "contract TokenVesting"
                         }
                       }
                     },
-                    "id": 2651,
+                    "id": 2671,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1337,7 +1337,7 @@
                     "nodeType": "FunctionCall",
                     "src": "422:72:10",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                      "typeIdentifier": "t_contract$_TokenVesting_$2629",
                       "typeString": "contract TokenVesting"
                     }
                   },
@@ -1350,11 +1350,11 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 2656,
+                        "id": 2676,
                         "name": "owner",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2618,
+                        "referencedDeclaration": 2638,
                         "src": "541:5:10",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -1371,32 +1371,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 2653,
+                        "id": 2673,
                         "name": "newVestingContract",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2643,
+                        "referencedDeclaration": 2663,
                         "src": "504:18:10",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                          "typeIdentifier": "t_contract$_TokenVesting_$2629",
                           "typeString": "contract TokenVesting"
                         }
                       },
-                      "id": 2655,
+                      "id": 2675,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "transferOwnership",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 12160,
+                      "referencedDeclaration": 12180,
                       "src": "504:36:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address) external"
                       }
                     },
-                    "id": 2657,
+                    "id": 2677,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1410,7 +1410,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 2658,
+                  "id": 2678,
                   "nodeType": "ExpressionStatement",
                   "src": "504:43:10"
                 },
@@ -1423,14 +1423,14 @@
                         "arguments": [
                           {
                             "argumentTypes": null,
-                            "id": 2661,
+                            "id": 2681,
                             "name": "newVestingContract",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2643,
+                            "referencedDeclaration": 2663,
                             "src": "585:18:10",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                              "typeIdentifier": "t_contract$_TokenVesting_$2629",
                               "typeString": "contract TokenVesting"
                             }
                           }
@@ -1438,11 +1438,11 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                              "typeIdentifier": "t_contract$_TokenVesting_$2629",
                               "typeString": "contract TokenVesting"
                             }
                           ],
-                          "id": 2660,
+                          "id": 2680,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -1455,7 +1455,7 @@
                           },
                           "typeName": "address"
                         },
-                        "id": 2662,
+                        "id": 2682,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -1477,18 +1477,18 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 2659,
+                      "id": 2679,
                       "name": "VestingCreated",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 2616,
+                      "referencedDeclaration": 2636,
                       "src": "562:14:10",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$returns$__$",
                         "typeString": "function (address)"
                       }
                     },
-                    "id": 2663,
+                    "id": 2683,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1502,7 +1502,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 2664,
+                  "id": 2684,
                   "nodeType": "EmitStatement",
                   "src": "557:48:10"
                 },
@@ -1512,14 +1512,14 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 2666,
+                        "id": 2686,
                         "name": "newVestingContract",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2643,
+                        "referencedDeclaration": 2663,
                         "src": "630:18:10",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                          "typeIdentifier": "t_contract$_TokenVesting_$2629",
                           "typeString": "contract TokenVesting"
                         }
                       }
@@ -1527,11 +1527,11 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_TokenVesting_$2609",
+                          "typeIdentifier": "t_contract$_TokenVesting_$2629",
                           "typeString": "contract TokenVesting"
                         }
                       ],
-                      "id": 2665,
+                      "id": 2685,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1544,7 +1544,7 @@
                       },
                       "typeName": "address"
                     },
-                    "id": 2667,
+                    "id": 2687,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1558,30 +1558,30 @@
                       "typeString": "address"
                     }
                   },
-                  "functionReturnParameters": 2632,
-                  "id": 2668,
+                  "functionReturnParameters": 2652,
+                  "id": 2688,
                   "nodeType": "Return",
                   "src": "615:34:10"
                 }
               ]
             },
             "documentation": null,
-            "id": 2670,
+            "id": 2690,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "create",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2629,
+              "id": 2649,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2618,
+                  "id": 2638,
                   "name": "owner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "163:13:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1590,7 +1590,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2617,
+                    "id": 2637,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "163:7:10",
@@ -1605,10 +1605,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 2620,
+                  "id": 2640,
                   "name": "beneficiary",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "178:19:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1617,7 +1617,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2619,
+                    "id": 2639,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "178:7:10",
@@ -1632,10 +1632,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 2622,
+                  "id": 2642,
                   "name": "start",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "199:13:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1644,7 +1644,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2621,
+                    "id": 2641,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "199:7:10",
@@ -1658,10 +1658,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 2624,
+                  "id": 2644,
                   "name": "cliffDuration",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "214:21:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1670,7 +1670,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2623,
+                    "id": 2643,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "214:7:10",
@@ -1684,10 +1684,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 2626,
+                  "id": 2646,
                   "name": "duration",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "237:16:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1696,7 +1696,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 2625,
+                    "id": 2645,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "237:7:10",
@@ -1710,10 +1710,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 2628,
+                  "id": 2648,
                   "name": "revocable",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "255:14:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1722,7 +1722,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 2627,
+                    "id": 2647,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "255:4:10",
@@ -1738,15 +1738,15 @@
               "src": "162:108:10"
             },
             "returnParameters": {
-              "id": 2632,
+              "id": 2652,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2631,
+                  "id": 2651,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2670,
+                  "scope": 2690,
                   "src": "286:7:10",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1755,7 +1755,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2630,
+                    "id": 2650,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "286:7:10",
@@ -1771,14 +1771,14 @@
               ],
               "src": "285:9:10"
             },
-            "scope": 2671,
+            "scope": 2691,
             "src": "147:509:10",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 2672,
+        "scope": 2692,
         "src": "57:601:10"
       }
     ],
@@ -1788,9 +1788,30 @@
     "name": "solc",
     "version": "0.5.13+commit.5b0b510c.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "42": {
+      "events": {
+        "0xe4fb76c0ff20ae19784efe78af7946d749e229fec6e13499ab078f997113d6d3": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "vestingContractAddress",
+              "type": "address"
+            }
+          ],
+          "name": "VestingCreated",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xcf0E153f448a299d587dCca5585e150E5f8d7B26",
+      "transactionHash": "0x15721bbc9e79d050b25c57ec9f26b0c2037346f7929b5b2c60edba0586357e6c"
+    }
+  },
   "schemaVersion": "3.2.4",
-  "updatedAt": "2020-11-12T16:41:28.760Z",
+  "updatedAt": "2020-11-13T16:57:49.836Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

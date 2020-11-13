@@ -13,5 +13,12 @@
 	"reward":"500000",
 	"startTime":"1605189137",
 	"duration":"30"
+	},
+"vesting":{
+	"owner":"0x137dcE536912b0313D534aE0d10d122eA4C7a9ad",
+	"beneficiaries":["0x64947E10E6EacEb8C4cB8cF3EeF306344C4F4ED0","0x4fCAA30BEe5f55880fA87BD5186F8592bfafd5Ed","0x84F282840d93A2020aE677c570b7F2b26B6852d1"],
+	"start":"1605283350",
+	"cliffDuration":"7890000",
+	"duration":"31536000"
 	}
 }
