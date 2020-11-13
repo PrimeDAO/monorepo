@@ -16,15 +16,16 @@ export class NumericInput {
   @bindable({ defaultBindingMode: bindingMode.toView }) public css?: string;
   @bindable({ defaultBindingMode: bindingMode.oneTime }) public id?: string;
   /**
-   * set this to initialize the value to display in the input.
-   * If isWei then should be in Wei and will be converted to ETH for the user.
+   * set this to initialize the value to display in the input. you can
+   * change the input value at any time by updating this.  (You can't do it
+   * by updating the value directly)
    */
   @bindable({ defaultBindingMode: bindingMode.toView }) public defaultvalue?: BigNumber | number | string = "";
   @bindable({ defaultBindingMode: bindingMode.toView }) public defaultText = "";
   @bindable({ defaultBindingMode: bindingMode.toView }) public autocomplete = "off";
   /**
    * this value starts out as equal to defaultValue and is updated as the user types.
-   * If isWei then value is set to a BigNumber.  If the input is not value, then set to `undefined`.
+   * Assumed to be in Wei and will be converted to ETH for the user and back to Wei for parent component.
    * Else value us set to  whatever string the user types.
    * If nothing is entered, then value is set to `undefined`.
    */

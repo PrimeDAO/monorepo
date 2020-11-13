@@ -258,6 +258,6 @@ export const toWei = (ethValue: BigNumber | string | number): BigNumber => {
   return parseEther(ethValue.toString());
 };
 
-export const fromWei = (weiValue: BigNumber | string): BigNumber => {
-  return BigNumber.from(formatEther(weiValue.toString()));
+export const fromWei = (weiValue: BigNumber | string): string => {
+  return formatEther(weiValue.toString());
 };

@@ -10,6 +10,7 @@ import { EventConfigException, EventConfigFailure } from "services/GeneralEvents
 import { PriceService } from "services/PriceService";
 import { Router } from "aurelia-router";
 import { toBigNumberJs } from "services/BigNumberService";
+import { getContractAddress } from "ethers/lib/utils";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");
@@ -69,12 +70,13 @@ export class Dashboard {
   // token balances in bPool
   private poolBalances: Map<Address, BigNumber>;
   private poolUsersTokenShare: Map<Address, BigNumber>
-  // user token balances
+  // user balance in the given token
   private userTokenBalances: Map<Address, BigNumber>;
   private primeTokenAddress: Address;
   private wethTokenAddress: Address;
   private bPrimeTokenAddress: Address;
   private poolTokenAddresses: Array<Address>;
+  private poolTokenBalances: Map<any, any>;
   private poolTotalBPrimeSupply: BigNumber;
   private poolTotalDenormWeight: BigNumber;
   private poolTokenAllowances: Map<Address, BigNumber>;
@@ -193,13 +195,19 @@ export class Dashboard {
         userTokenBalances.set("ETH", await provider.getBalance(this.ethereumService.defaultAccountAddress));
         this.userTokenBalances = userTokenBalances;
 
+        const poolTokenBalances = new Map();
+        poolTokenBalances.set(this.primeTokenAddress, await this.primeToken.balanceOf(this.contractsService.getContractAddress(ContractNames.BPOOL)));
+        poolTokenBalances.set(this.wethTokenAddress, await this.weth.balanceOf(this.contractsService.getContractAddress(ContractNames.BPOOL)));
+        this.poolTokenBalances = poolTokenBalances;
+
         /**
-     * this is user's % of bprime in the total
-     */
+         * this is user's % of bprime in the total
+         */
         this.poolUsersBPrimeShare = toBigNumberJs(this.userBPrimeBalance).div(toBigNumberJs(await this.bPrimeToken.totalSupply())).toNumber();
 
         const getUserTokenBalance = (tokenAddress: Address): BigNumber => {
-          return BigNumber.from(toBigNumberJs(this.userTokenBalances.get(tokenAddress)).times(this.poolUsersBPrimeShare).integerValue().toString());
+          // (user's BPRIME share %) * (the pool's balance of the given token)
+          return BigNumber.from(toBigNumberJs(this.poolTokenBalances.get(tokenAddress)).times(this.poolUsersBPrimeShare).integerValue().toString());
         };
 
         const poolUsersTokenShare = new Map();
@@ -211,7 +219,7 @@ export class Dashboard {
 
         this.bPrimeStaked = await this.stakingRewards.balanceOf(this.ethereumService.defaultAccountAddress);
 
-        this.getTokenAllowances();
+        await this.getTokenAllowances();
 
         this.connected= true;
       } catch (ex) {
@@ -228,6 +236,7 @@ export class Dashboard {
         this.poolUsersBPrimeShare =
         this.primeFarmed =
         this.poolUsersTokenShare =
+      this.poolTokenBalances =
         this.userTokenBalances = undefined;
 
       this.connected = false;
@@ -274,6 +283,9 @@ export class Dashboard {
     await allowances.set(this.wethTokenAddress, await this.weth.allowance(
       this.ethereumService.defaultAccountAddress,
       this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool)));
+    await allowances.set(this.bPrimeTokenAddress, await this.bPrimeToken.allowance(
+      this.ethereumService.defaultAccountAddress,
+      this.contractsService.getContractAddress(ContractNames.STAKINGREWARDS)));
     this.poolTokenAllowances = allowances;
   }
   private ensureConnected(): boolean {
@@ -305,7 +317,6 @@ export class Dashboard {
         this.eventAggregator.publish("handleValidationError", new EventConfigFailure("You don't have enough WETH to unwrap the amount you requested"));
       } else {
         await this.transactionsService.send(() => this.weth.withdraw(this.wethEthAmount));
-        // TODO:  should happen after mining
         this.getUserBalances();
       }
     }
@@ -316,8 +327,7 @@ export class Dashboard {
   private async handleHarvestWithdraw() {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.stakingRewards.exit());
-      // TODO:  should happen after mining
-      this.getStakingAmounts();
+      this.getUserBalances();
     }
   }
 
@@ -354,8 +364,7 @@ export class Dashboard {
         tokenIn,
         tokenAmountIn,
         minPoolAmountOut));
-      // TODO:  should happen after mining
-      this.getLiquidityAmounts();
+      this.getUserBalances();
     }
   }
 
@@ -370,16 +379,14 @@ export class Dashboard {
   private async liquidityExit(poolAmountIn, minAmountsOut): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.crPool.exitPool(poolAmountIn, minAmountsOut));
-      // TODO:  should happen after mining
-      this.getLiquidityAmounts();
+      this.getUserBalances();
     }
   }
 
   private async liquidityExitswapPoolAmountIn(tokenOutAddress, poolAmountIn, minTokenAmountOut): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.crPool.exitswapPoolAmountIn(tokenOutAddress, poolAmountIn, minTokenAmountOut));
-      // TODO:  should happen after mining
-      this.getLiquidityAmounts();
+      this.getUserBalances();
     }
   }
 
@@ -394,11 +401,22 @@ export class Dashboard {
     }
   }
 
+  private async stakingSetTokenAllowance(amount: BigNumber): Promise<void> {
+    if (this.ensureConnected()) {
+      const tokenContract = this.bPrimeToken;
+      await this.transactionsService.send(() => tokenContract.approve(
+        this.contractsService.getContractAddress(ContractNames.STAKINGREWARDS),
+        amount));
+      // TODO:  should happen after mining
+      this.getTokenAllowances();
+    }
+  }
+
   private async stakingStake(amount: BigNumber): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.stakingRewards.stake(amount));
       // TODO:  should happen after mining
-      this.getStakingAmounts();
+      this.getUserBalances();
     }
   }
 
@@ -406,7 +424,7 @@ export class Dashboard {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.stakingRewards.getReward());
       // TODO:  should happen after mining
-      this.getStakingAmounts();
+      this.getUserBalances();
     }
   }
 
@@ -418,6 +436,7 @@ export class Dashboard {
       } else {
         await this.transactionsService.send(() => this.stakingRewards.exit());
       }
+      this.getUserBalances();
     }
   }
 

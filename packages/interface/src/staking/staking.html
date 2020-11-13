@@ -13,12 +13,14 @@
         BPRIME available to stake.
       </div>
       <div>
-        <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxBPrime()">Max</button></label>
+
+        <label if.to-view="model.userBPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxBPrime()">Max</button></label>
         <numeric-input id="bPrimeAmount"
           defaultvalue.to-view="defaultBPrimeAmount"
           value.two-way="bPrimeAmount"
           placeholder="0.0"
           css="clearInput"></numeric-input>
+        <button if.to-view="bPrimeAmountValid && !bPrimeHasSufficientAllowance" class="unlock button4 small" click.delegate="unlock()">Unlock</button>
       </div>
     </div>
     <div class="secondRow">
