@@ -69,7 +69,7 @@
         <!-- "Add PRIME amount" -->
         <div class="cell" if.one-time="!model.remove">
           <div if.to-view="model.connected">
-            <div show.to-view="primeSelected">
+            <div if.to-view="primeSelected">
               <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxPrime()">Max</button></label>
               <numeric-input id="primeAmount"
                 defaultvalue.to-view="defaultPrimeAmount"
@@ -121,7 +121,7 @@
         <!-- "Add WETH amount" -->
         <div class="cell" if.one-time="!model.remove">
           <div if.to-view="model.connected">
-            <div show.to-view="wethSelected">
+            <div if.to-view="wethSelected">
               <label if.to-view="model.userWethBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxWeth()">Max</button></label>
               <numeric-input id="wethAmount"
                 defaultvalue.to-view="defaultWethAmount"

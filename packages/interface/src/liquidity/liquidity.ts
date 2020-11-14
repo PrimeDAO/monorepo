@@ -236,19 +236,21 @@ export class Liquidity {
     const poolTokenBalance = this.model.poolBalances.get(tokenAddress);
     const bPoolTokenSupply = this.model.poolTotalBPrimeSupply;
     if (this.isMultiAsset) {
-      return poolTokenBalance.div(bPoolTokenSupply).mul(this.bPrimeAmount);
+      return BigNumber.from(toBigNumberJs(poolTokenBalance)
+        .div(toBigNumberJs(bPoolTokenSupply))
+        .times(toBigNumberJs(this.bPrimeAmount))
+        .integerValue(BigNumberJs.ROUND_UP)
+        .toString());
     } else {
-      const tokenAmountOut = calcSingleOutGivenPoolIn(
+      return BigNumber.from(calcSingleOutGivenPoolIn(
         toBigNumberJs(poolTokenBalance),
         toBigNumberJs(this.model.poolTotalDenormWeights.get(tokenAddress)),
         toBigNumberJs(bPoolTokenSupply),
         toBigNumberJs(this.model.poolTotalDenormWeight),
         toBigNumberJs(this.bPrimeAmount),
-        toBigNumberJs(this.model.swapfee),
-      )
+        toBigNumberJs(this.model.swapfee))
         .integerValue(BigNumberJs.ROUND_UP)
-        .toString();
-      return BigNumber.from(tokenAmountOut);
+        .toString());
     }
   }
 
