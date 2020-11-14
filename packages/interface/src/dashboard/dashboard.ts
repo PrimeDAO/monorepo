@@ -10,7 +10,6 @@ import { EventConfigException, EventConfigFailure } from "services/GeneralEvents
 import { PriceService } from "services/PriceService";
 import { Router } from "aurelia-router";
 import { toBigNumberJs } from "services/BigNumberService";
-import { getContractAddress } from "ethers/lib/utils";
 
 // const goto = (where: string) => {
 //   window.open(where, "_blank", "noopener noreferrer");

@@ -180,6 +180,14 @@
         </div>
       </div>
     </div>
+    <div class="messageRow">
+      <div if.to-view="showSlippage" class="liquidityMessage">
+        <div class="icon"><img src="/PD_ASSET_ICON_INFO_01.svg" /></div>
+        <div class="body">
+          <div>Adding liquidity will incur ${slippage}% of slippage</div>
+        </div>
+      </div>
+    </div>
     <div class="secondRow">
       <button class="button1" click.delegate="handleSubmit()">${ model.remove ? (isSingleAsset ? "Remove": "Remove All" ) : "Add" } Liquidity</button>
     </div>

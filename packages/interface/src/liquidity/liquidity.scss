@@ -10,6 +10,7 @@
   grid-template-areas:
     "header header header"
     "leftColumn . rightColumn"
+    "messageRow messageRow messageRow"
     "secondRow secondRow secondRow"
     "thirdRow thirdRow thirdRow";
 
@@ -169,6 +170,24 @@
         width: 90px;
         text-align: right;
       }
+    }
+  }
+
+  .messageRow {
+    grid-area: messageRow;
+    padding: 20px;
+
+    .icon {
+      display: inline-block;
+
+      img {
+        width: 14px;
+        margin-right: 20px;
+      }
+    }
+
+    .body {
+      display: inline-block;
     }
   }
 

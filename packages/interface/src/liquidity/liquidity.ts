@@ -202,7 +202,7 @@ export class Liquidity {
     const userShares = toBigNumberJs(this.model.userBPrimeBalance);
     const totalShares = toBigNumberJs(this.model.poolTotalBPrimeSupply);
     const current = userShares.div(totalShares).integerValue(BigNumberJs.ROUND_UP);
-    if (!this.valid(false) || !(this.isSingleAsset || this.isMultiAsset)) {
+    if (!this.isValid(false) || !(this.isSingleAsset || this.isMultiAsset)) {
       return {
         absolute: {
           current: BigNumber.from(userShares.toString()),
@@ -229,6 +229,45 @@ export class Liquidity {
         future: BigNumber.from(future.toString()),
       },
     };
+  }
+
+  @computedFrom("valid", "isMultiAsset", "model.remove")
+  private get showSlippage(): boolean {
+    return !(!this.valid || this.isMultiAsset || this.model.remove);
+  }
+
+  @computedFrom("activeSingleTokenAddress", "valid", "isMultiAsset", "model.remove")
+  private get slippage(): BigNumber {
+    if (this.showSlippage) {
+      return undefined;
+    }
+    const tokenInAddress = this.activeSingleTokenAddress;
+    const tokenIn = this.activeSingleTokenAddress;
+    const amount = toBigNumberJs(this.amounts[tokenInAddress]);
+
+    const tokenInBalanceIn = toBigNumberJs(this.model.poolBalances.get(tokenIn));
+    const poolTokenShares = toBigNumberJs(this.model.poolTotalBPrimeSupply);
+    const tokenWeightIn = toBigNumberJs(this.model.poolTotalDenormWeights.get(tokenIn));
+    const tokenAmountIn = toBigNumberJs(amount.integerValue(BigNumberJs.ROUND_UP));
+    const totalWeight = toBigNumberJs(this.model.poolTotalDenormWeight);
+
+    const poolAmountOut = calcPoolOutGivenSingleIn(
+      tokenInBalanceIn,
+      toBigNumberJs(tokenWeightIn),
+      poolTokenShares,
+      totalWeight,
+      tokenAmountIn,
+      toBigNumberJs(this.model.swapfee));
+
+    const expectedPoolAmountOut = tokenAmountIn
+      .times(tokenWeightIn)
+      .times(poolTokenShares)
+      .div(tokenInBalanceIn)
+      .div(totalWeight);
+
+    return BigNumber.from(toBigNumberJs(1)
+      .minus(poolAmountOut.div(expectedPoolAmountOut))
+      .toString());
   }
 
   private computeTokenToRemoveAmount(tokenAddress: Address): BigNumber {
@@ -291,7 +330,7 @@ export class Liquidity {
           totalWeight,
           tokenAmountIn,
           toBigNumberJs(this.model.swapfee))
-          .toString(); // swapFee
+          .toString();
       }
 
       this.amounts.set(changedToken, changedAmount.toString());
@@ -365,7 +404,12 @@ export class Liquidity {
     return true;
   }
 
-  private valid(issueMessage = true): boolean {
+  @computedFrom("wethAmount", "primeAmount", "isSingleAsset", "model.remove", "model.poolBalances", "activeSingleTokenAmount")
+  private get valid(): boolean {
+    return this.isValid(false);
+  }
+
+  private isValid(issueMessage = true): boolean {
     let message: string;
 
     if (this.model.remove) {
@@ -404,7 +448,7 @@ export class Liquidity {
 
   private async handleSubmit(): Promise<void> {
 
-    if (!this.valid() || !this.assetsAreLocked()) {
+    if (!this.isValid() || !this.assetsAreLocked()) {
       return;
     }
 
