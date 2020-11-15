@@ -181,18 +181,18 @@
         </div>
       </div>
     </div>
-    <div if.to-view="showSlippage" class="messageRow">
+    <!-- <div show.to-view="showSlippage" class="messageRow">
       <div class="liquidityMessage">
         <div class="icon"><img src="/PD_ASSET_ICON_INFO_01.svg" /></div>
         <div class="body">
           <div>Adding liquidity will incur <formatted-number
-              value.to-view="slippage | ethwei"
-              format="0.00a"
+              value.to-view="slippage"
+              format="0.0000a"
               placement.to-view="top">
             </formatted-number> % of slippage</div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="secondRow">
       <button class="button1" ref="submitButton" click.delegate="handleSubmit()">${ model.remove ? (isSingleAsset ? "Remove": "Withdraw" ) : "Add" } Liquidity</button>
     </div>
