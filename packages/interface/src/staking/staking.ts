@@ -9,7 +9,6 @@ export class Staking {
 
   private model: IStakingModel;
   private bPrimeAmount: BigNumber;
-  private defaultBPrimeAmount: BigNumber;
 
   constructor(
     private eventAggregator: EventAggregator) {}
@@ -69,7 +68,7 @@ export class Staking {
       this.eventAggregator.publish("handleValidationError", message);
     }
 
-    return !!message;
+    return !message;
   }
 
   private unlock() {
@@ -83,7 +82,7 @@ export class Staking {
   }
 
   private handleGetMaxBPrime() {
-    this.defaultBPrimeAmount = this.model.userBPrimeBalance;
+    this.bPrimeAmount = this.model.userBPrimeBalance;
   }
 }
 

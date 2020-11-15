@@ -9,7 +9,7 @@
   margin: auto;
   right: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 10001; // above all
   text-align: center;
   pointer-events: none;
 }

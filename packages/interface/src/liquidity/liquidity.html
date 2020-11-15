@@ -39,7 +39,7 @@
 
         <div class="cell heading heading3">${model.remove ? "My Pool Balance" : "Wallet Balance" & oneTime}</div>
 
-        <div class="cell heading heading3">Deposit</div>
+        <div class="cell heading heading3">${model.remove ? "Remove" : "Deposit"}</div>
 
         <div class="cell"><input type="checkbox" checked.bind="primeSelected" /></div>
         <div class="cell"><img src="/PD_APP_ICON_PD_01.svg" />PRIME
@@ -72,7 +72,6 @@
             <div if.to-view="primeSelected">
               <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxPrime()">Max</button></label>
               <numeric-input id="primeAmount"
-                defaultvalue.to-view="defaultPrimeAmount"
                 value.two-way="primeAmount"
                 placeholder="0.0"
                 css="clearInput"></numeric-input>
@@ -124,7 +123,6 @@
             <div if.to-view="wethSelected">
               <label if.to-view="model.userWethBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxWeth()">Max</button></label>
               <numeric-input id="wethAmount"
-                defaultvalue.to-view="defaultWethAmount"
                 value.two-way="wethAmount"
                 placeholder="0.0"
                 css="clearInput"></numeric-input>
@@ -175,7 +173,6 @@
         <div else>
           <label if.to-view="model.userBPrimeBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxBPrime()">Max</button></label>
           <numeric-input id="bPrimeAmount"
-            defaultvalue.to-view="defaultBPrimeAmount"
             value.two-way="bPrimeAmount"
             placeholder="0.0"
             css="clearInput"></numeric-input>

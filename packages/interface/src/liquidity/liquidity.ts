@@ -17,9 +17,9 @@ export class Liquidity {
     private eventAggregator: EventAggregator) { }
 
   private model: ILiquidityModel;
-  private defaultPrimeAmount: BigNumber | string;
-  private defaultBPrimeAmount: BigNumber | string;
-  private defaultWethAmount: BigNumber | string;
+  // private defaultPrimeAmount: BigNumber | string;
+  // private defaultBPrimeAmount: BigNumber | string;
+  // private defaultWethAmount: BigNumber | string;
   private primeWeight: BigNumber;
   private wethWeight: BigNumber;
   private amounts = new Map<Address, string>();
@@ -61,12 +61,13 @@ export class Liquidity {
     if (!this.model.remove) {
       this.poolTokens = null;
       // this.amounts = new Map<Address, string>();
-      this.defaultPrimeAmount = null;
+      this.primeAmount = null;
 
       // setTimeout(() => this.amountChanged(
       //   this.primeAmount,
       //   this.model.primeTokenAddress), 0);
     } else {
+      this.updateSubmitButton();
       setTimeout(() => this.syncWithNewBPrimeAmount(), 100);
     }
   }
@@ -80,11 +81,12 @@ export class Liquidity {
     if (!this.model.remove) {
       this.poolTokens = null;
       // this.amounts = new Map<Address, string>();
-      this.defaultWethAmount = null;
+      this.wethAmount = null;
     // setTimeout(() => this.amountChanged(
     //   this.wethAmount,
     //   this.model.wethTokenAddress), 100);
     } else {
+      this.updateSubmitButton();
       setTimeout(() => this.syncWithNewBPrimeAmount(), 100);
     }
 
@@ -102,16 +104,7 @@ export class Liquidity {
    */
   @computedFrom("wethSelected", "primeSelected")
   private get isSingleAsset(): boolean {
-    const yes = this.wethSelected !== this.primeSelected;
-    if (this.model.remove) {
-      if (yes) {
-        this.submitButton.classList.add("colorMeRed");
-      }
-      else {
-        this.submitButton.classList.remove("colorMeRed");
-      }
-    }
-    return yes;
+    return this.wethSelected !== this.primeSelected;
   }
 
   @computedFrom("wethSelected", "primeSelected")
@@ -138,11 +131,15 @@ export class Liquidity {
   }
 
   private set primeAmount(newValue: BigNumber) {
+    const oldValue = this._primeAmount;
     this._primeAmount = newValue;
-    if (!this.model.remove && (!this.defaultPrimeAmount || !this._primeAmount?.eq(this.defaultPrimeAmount))) { // to avoid cycles
-      this.amountChanged(
-        this.primeAmount,
-        this.model.primeTokenAddress);
+    if (!this.model.remove &&
+      ((newValue && !oldValue) ||
+       (oldValue && !newValue) ||
+       ((oldValue && newValue) && !newValue.eq(oldValue)))) { // to avoid cycles
+      setTimeout(() => this.amountChanged(
+        newValue,
+        this.model.primeTokenAddress), 100);
     }
   }
 
@@ -152,11 +149,15 @@ export class Liquidity {
   }
 
   private set wethAmount(newValue: BigNumber) {
+    const oldValue = this._wethAmount;
     this._wethAmount = newValue;
-    if (!this.model.remove && (!this.defaultWethAmount || !this._wethAmount?.eq(this.defaultWethAmount))) { // to avoid cycles
-      this.amountChanged(
-        this.wethAmount,
-        this.model.wethTokenAddress);
+    if (!this.model.remove &&
+      ((newValue && !oldValue) ||
+       (oldValue && !newValue) ||
+       ((oldValue && newValue) && !newValue.eq(oldValue)))) { // to avoid cycles
+      setTimeout(() => this.amountChanged(
+        newValue,
+        this.model.wethTokenAddress), 100);
     }
   }
 
@@ -169,6 +170,17 @@ export class Liquidity {
     if (this.model.remove){
       this._bPrimeAmount = newValue;
       this.syncWithNewBPrimeAmount();
+    }
+  }
+
+  private updateSubmitButton(): void {
+    if (this.model.remove) {
+      if (this.isMultiAsset) {
+        this.submitButton.classList.add("colorMeRed");
+      }
+      else {
+        this.submitButton.classList.remove("colorMeRed");
+      }
     }
   }
 
@@ -319,7 +331,7 @@ export class Liquidity {
         this.poolTokens = calcPoolTokensByRatio(
           toBigNumberJs(ratio),
           toBigNumberJs(poolTokenShares));
-      } else {
+      } else if (this.isSingleAsset) {
         const tokenIn = this.activeSingleTokenAddress;
         const amount = toBigNumberJs(this.activeSingleTokenAmount);
         const tokenInBalanceIn = toBigNumberJs(this.model.poolBalances.get(tokenIn));
@@ -359,9 +371,9 @@ export class Liquidity {
             // since we're not yet binding the UI to an array of tokens
             const balancedAmount = BigNumber.from(balancedAmountString);
             if (tokenAddr === this.model.wethTokenAddress) {
-              this.defaultWethAmount = balancedAmount;
+              this.wethAmount = balancedAmount;
             } else {
-              this.defaultPrimeAmount = balancedAmount;
+              this.primeAmount = balancedAmount;
             }
           }
         });
@@ -470,7 +482,7 @@ export class Liquidity {
       this.eventAggregator.publish("handleValidationError", message);
     }
 
-    return !!message;
+    return !message;
   }
 
   private async handleSubmit(): Promise<void> {
@@ -485,7 +497,7 @@ export class Liquidity {
           this.bPrimeAmount,
           this.model.poolTokenAddresses.map(() => "0"),
         );
-      } else {
+      } else if (this.isSingleAsset) {
         const bPrimeAmount = this.activeSingleTokenAmount;
         const tokenAddress = this.activeSingleTokenAddress;
         const minTokenAmountOut = (await this.getRemoveTokenAmountOut(bPrimeAmount, tokenAddress))
@@ -519,7 +531,7 @@ export class Liquidity {
 
         this.model.liquidityJoinPool(poolAmountOut, maxAmountsIn);
 
-      } else { // singleAsset
+      } else if (this.isSingleAsset) {
         const tokenIn = this.activeSingleTokenAddress;
         if (!tokenIn) {
           return;
@@ -540,15 +552,15 @@ export class Liquidity {
   }
 
   private handleGetMaxWeth() {
-    this.defaultWethAmount = this.model.userWethBalance;
+    this.wethAmount = this.model.userWethBalance;
   }
 
   private handleGetMaxPrime() {
-    this.defaultPrimeAmount = this.model.userPrimeBalance;
+    this.primeAmount = this.model.userPrimeBalance;
   }
 
   private handleGetMaxBPrime() {
-    this.defaultBPrimeAmount = this.model.userBPrimeBalance;
+    this.bPrimeAmount = this.model.userBPrimeBalance;
   }
 
   private unlock(tokenAddress: Address) {

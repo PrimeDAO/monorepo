@@ -6,7 +6,6 @@ import {
 } from "aurelia-framework";
 import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
-import { throwIfEmpty } from "rxjs/operators";
 import { NumberService } from "services/numberService";
 
 @autoinject
@@ -20,7 +19,6 @@ export class NumericInput {
    * change the input value at any time by updating this.  (You can't do it
    * by updating the value directly)
    */
-  @bindable({ defaultBindingMode: bindingMode.toView }) public defaultvalue?: BigNumber | number | string = "";
   @bindable({ defaultBindingMode: bindingMode.toView }) public defaultText = "";
   @bindable({ defaultBindingMode: bindingMode.toView }) public autocomplete = "off";
   /**
@@ -62,59 +60,28 @@ export class NumericInput {
     }
   }
 
-  constructor(private numberService: NumberService) {
-  }
-
-  private defaultvalueChanged(newValue: BigNumber | number | string, _prevValue: BigNumber | number | string): void {
-    /**
-     * TODO: validate that this is a valid value, like for preventing pasting nonsense into the field
-     */
-    if (newValue?.toString() !== this.value?.toString()) {
-
-      this.hydrateFromDefaultValue();
-
-      // let newString = newValue;
-
-      // if (newString) {
-      //   if (this.isWei) {
-      //     newString = formatEther(newString.toString());
-      //   }
-      //   if ((typeof newValue === "string") && (!newValue || (newValue as string).match(/.*\.$/))) {
-      //     newString = newValue;
-      //     // numberService.toString would return '' for anything that ends in a '.'
-      //   } else {
-      //     newString = this.numberService.toString(newValue);
-      //   }
-      // }
-      // this._innerValue = newString;
-    }
-  }
-
-  private hydrateFromDefaultValue(): void {
-    if (this.defaultvalue === undefined) {
-      this.defaultvalue = "";
-    } else if (this.defaultvalue === null) {// then intentionally blank
-      this.innerValue = this.defaultText;
-      return;
-    }
-    try {
-      if (this.isWei) {
-        if (this.defaultvalue !== "") {
-          this.innerValue = formatEther(this.defaultvalue.toString());
+  private valueChanged(newValue: string | BigNumber, oldValue: string | BigNumber ) {
+    if (!newValue) {
+      this._innerValue = this.defaultText || "";
+    } else if (newValue !== oldValue) {
+      try {
+        if (this.isWei) {
+          this._innerValue = formatEther(newValue.toString());
         } else {
-          this.innerValue = "";
+          this._innerValue = newValue.toString();
         }
-      } else {
-        this.innerValue = this.defaultvalue.toString();
+      } catch {
+        this.innerValue = "NaN";
       }
-    } catch {
-      this.innerValue = "NaN";
     }
+  }
+
+  constructor(private numberService: NumberService) {
   }
 
   public attached(): void {
     this.element.addEventListener("keydown", (e) => { this.keydown(e); });
-    this.hydrateFromDefaultValue();
+    // this.hydrateFromDefaultValue();
   }
 
   public detached(): void {
