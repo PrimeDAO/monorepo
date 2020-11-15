@@ -189,14 +189,14 @@ export class Liquidity {
     this.wethAmount = this.computeTokenToRemoveAmount(this.model.wethTokenAddress);
   }
 
-  @computedFrom("validPrimeAdd", "primeHasSufficientAllowance", "this.model.remove")
+  @computedFrom("invalidPrimeAdd", "primeHasSufficientAllowance", "this.model.remove")
   private get showPrimeUnlock(): boolean {
-    return !this.model.remove && this.validPrimeAdd && !this.primeHasSufficientAllowance;
+    return !this.model.remove && !this.invalidPrimeAdd && !this.primeHasSufficientAllowance;
   }
 
-  @computedFrom("validWethAdd", "wethHasSufficientAllowance", "this.model.remove")
+  @computedFrom("invalidWethAdd", "wethHasSufficientAllowance", "this.model.remove")
   private get showWethUnlock(): boolean {
-    return !this.model.remove && this.validWethAdd && !this.wethHasSufficientAllowance;
+    return !this.model.remove && !this.invalidWethAdd && !this.wethHasSufficientAllowance;
   }
 
   @computedFrom("model.poolTokenAllowances")
@@ -428,7 +428,7 @@ export class Liquidity {
   /**
    * return is valid enough to submit, except for checking unlocked condition
  */
-  @computedFrom("validPrimeAdd", "validWethAdd", "isSingleAsset", "model.remove", "model.poolBalances", "activeSingleTokenAmount", "activeSingleTokenAddress")
+  @computedFrom("invalidPrimeAdd", "invalidWethAdd", "isSingleAsset", "model.remove", "model.poolBalances", "activeSingleTokenAmount", "activeSingleTokenAddress")
   private get valid(): string {
     let message: string;
 
@@ -439,14 +439,14 @@ export class Liquidity {
         }
       }
     } else {
-      message = this.validPrimeAdd || this.validWethAdd;
+      message = this.invalidPrimeAdd || this.invalidWethAdd;
     }
 
     return message;
   }
 
   @computedFrom("primeAmount")
-  private get validPrimeAdd(): string {
+  private get invalidPrimeAdd(): string {
     let message: string;
 
     if (this.primeAmount?.isZero()) {
@@ -461,7 +461,7 @@ export class Liquidity {
   }
 
   @computedFrom("wethAmount")
-  private get validWethAdd(): string {
+  private get invalidWethAdd(): string {
     let message: string;
 
     if (this.wethAmount?.isZero()) {
@@ -564,18 +564,8 @@ export class Liquidity {
   }
 
   private unlock(tokenAddress: Address) {
-    // just to be sure
-    if ((tokenAddress === this.model.primeTokenAddress) && (this.primeAllowance.gte(this.primeAmount))) {
-      this.eventAggregator.publish("handleValidationError", "An error has occurred, the PRIME allowance is already sufficient");
-      return;
-    }
-    if ((tokenAddress === this.model.wethTokenAddress) && (this.wethAllowance.gte(this.wethAmount))) {
-      this.eventAggregator.publish("handleValidationError", "An error has occurred, the WETH allowance is already sufficient");
-      return;
-    }
     this.model.liquiditySetTokenAllowance(tokenAddress,
-      tokenAddress === this.model.primeTokenAddress ?
-        this.primeAmount.sub(this.primeAllowance) : this.wethAmount.sub(this.wethAllowance));
+      tokenAddress === this.model.primeTokenAddress ? this.primeAmount : this.wethAmount);
   }
 }
 

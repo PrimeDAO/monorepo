@@ -72,7 +72,7 @@ export class Staking {
   }
 
   private unlock() {
-    this.model.stakingSetTokenAllowance(this.bPrimeAmount.sub(this.bPrimeAllowance));
+    this.model.stakingSetTokenAllowance(this.bPrimeAmount);
   }
 
   private handleSubmit(): void {
