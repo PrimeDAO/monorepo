@@ -20,7 +20,7 @@
             value.two-way="bPrimeAmount"
             placeholder="0.0"
             css="clearInput"></numeric-input>
-          <button if.to-view="valid && !bPrimeHasSufficientAllowance" class="unlock button4 small" click.delegate="unlock()">Unlock</button>
+          <button if.to-view="!invalid && !bPrimeHasSufficientAllowance" class="unlock button4 small" click.delegate="unlock()">Unlock</button>
         </div>
       </div>
       <div class="secondRow">

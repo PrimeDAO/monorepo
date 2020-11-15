@@ -26,7 +26,6 @@ export class Liquidity {
   private _bPrimeAmount: BigNumber;
   private _primeSelected = false;
   private _wethSelected = false;
-  private submitButton: HTMLButtonElement;
 
   public activate(_model: unknown, routeConfig: { settings: { state: ILiquidityModel } }): void {
     this.model = routeConfig.settings.state;
@@ -63,7 +62,6 @@ export class Liquidity {
         this.handleAmountChange(this.model.primeTokenAddress);
       }
     } else {
-      this.updateSubmitButton();
       setTimeout(() => this.syncWithNewBPrimeAmount(), 100);
     }
   }
@@ -82,7 +80,6 @@ export class Liquidity {
         this.handleAmountChange(this.model.wethTokenAddress);
       }
     } else {
-      this.updateSubmitButton();
       setTimeout(() => this.syncWithNewBPrimeAmount(), 100);
     }
 
@@ -138,17 +135,6 @@ export class Liquidity {
       setTimeout(() => this.amountChanged(
         (tokenAddress === this.model.primeTokenAddress) ? this.primeAmount : this.wethAmount,
         tokenAddress), 100);
-    }
-  }
-
-  private updateSubmitButton(): void {
-    if (this.model.remove) {
-      if (this.isMultiAsset) {
-        this.submitButton.classList.add("colorMeRed");
-      }
-      else {
-        this.submitButton.classList.remove("colorMeRed");
-      }
     }
   }
 

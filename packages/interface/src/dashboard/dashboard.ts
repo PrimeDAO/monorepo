@@ -32,7 +32,6 @@ export class Dashboard {
   private currentAPY: BigNumber;
   private primeFarmed: BigNumber;
   private bPrimeStaked: BigNumber;
-  private defaultWethEthAmount: BigNumber;
   private poolTotalDenormWeights: Map<Address, BigNumber>;
   private poolTokenNormWeights: Map<Address, BigNumber>;
 
@@ -414,6 +413,6 @@ export class Dashboard {
   }
 
   private handleGetMax() {
-    this.defaultWethEthAmount = this.userWethBalance;
+    this.wethEthAmount = this.userWethBalance;
   }
 }

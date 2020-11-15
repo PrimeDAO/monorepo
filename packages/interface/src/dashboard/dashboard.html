@@ -30,7 +30,7 @@
               value.two-way="wethEthAmount"
               placeholder="0.0"></numeric-input>
           </div>
-          <label if.to-view="userWethBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMax()">Max</button></label>
+          <label if.to-view="userWethBalance.gt(0)"><button click.delegate="handleGetMax()" class="button4 small" click.delegate="handleGetMax()">Max</button></label>
           <button class="button2 small" disabled.to-view="!wethEthAmount || wethEthAmount.eq(0)" click.delegate="handleWithdraw()">Unwrap</button>
         </div>
       </div>

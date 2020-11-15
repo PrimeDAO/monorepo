@@ -47,7 +47,7 @@ export class Staking {
    * return is valid enough to submit, except for checking unlocked condition
    */
   @computedFrom("bPrimeAmount", "userBPrimeBalance")
-  private get valid(): string {
+  private get invalid(): string {
     let message: string;
 
     if (!this.bPrimeAmount || this.bPrimeAmount.eq(0)) {
@@ -62,7 +62,7 @@ export class Staking {
   }
 
   private isValid(): boolean {
-    const message = this.valid;
+    const message = this.invalid;
 
     if (message) {
       this.eventAggregator.publish("handleValidationError", message);
