@@ -72,6 +72,7 @@
             <div if.to-view="primeSelected">
               <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxPrime()">Max</button></label>
               <numeric-input id="primeAmount"
+                handle-change.call="handleAmountChange(model.primeTokenAddress, { keyCode: number })"
                 value.two-way="primeAmount"
                 placeholder="0.0"
                 css="clearInput"></numeric-input>
@@ -123,6 +124,7 @@
             <div if.to-view="wethSelected">
               <label if.to-view="model.userWethBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxWeth()">Max</button></label>
               <numeric-input id="wethAmount"
+                handle-change.call="handleAmountChange(model.wethTokenAddress, { keyCode: number })"
                 value.two-way="wethAmount"
                 placeholder="0.0"
                 css="clearInput"></numeric-input>

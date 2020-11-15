@@ -17,15 +17,12 @@ export class Liquidity {
     private eventAggregator: EventAggregator) { }
 
   private model: ILiquidityModel;
-  // private defaultPrimeAmount: BigNumber | string;
-  // private defaultBPrimeAmount: BigNumber | string;
-  // private defaultWethAmount: BigNumber | string;
   private primeWeight: BigNumber;
   private wethWeight: BigNumber;
   private amounts = new Map<Address, string>();
   private poolTokens: any;
-  private _primeAmount: BigNumber;
-  private _wethAmount: BigNumber;
+  private primeAmount: BigNumber;
+  private wethAmount: BigNumber;
   private _bPrimeAmount: BigNumber;
   private _primeSelected = false;
   private _wethSelected = false;
@@ -60,12 +57,11 @@ export class Liquidity {
     this._primeSelected = yes;
     if (!this.model.remove) {
       this.poolTokens = null;
-      // this.amounts = new Map<Address, string>();
+      this.amounts[this.model.primeTokenAddress] = undefined;
       this.primeAmount = null;
-
-      // setTimeout(() => this.amountChanged(
-      //   this.primeAmount,
-      //   this.model.primeTokenAddress), 0);
+      if (!this.model.remove) {
+        this.handleAmountChange(this.model.primeTokenAddress);
+      }
     } else {
       this.updateSubmitButton();
       setTimeout(() => this.syncWithNewBPrimeAmount(), 100);
@@ -80,11 +76,11 @@ export class Liquidity {
     this._wethSelected = yes;
     if (!this.model.remove) {
       this.poolTokens = null;
-      // this.amounts = new Map<Address, string>();
+      this.amounts[this.model.wethTokenAddress] = undefined;
       this.wethAmount = null;
-    // setTimeout(() => this.amountChanged(
-    //   this.wethAmount,
-    //   this.model.wethTokenAddress), 100);
+      if (!this.model.remove) {
+        this.handleAmountChange(this.model.wethTokenAddress);
+      }
     } else {
       this.updateSubmitButton();
       setTimeout(() => this.syncWithNewBPrimeAmount(), 100);
@@ -125,42 +121,6 @@ export class Liquidity {
     }
   }
 
-  @computedFrom("_primeAmount")
-  private get primeAmount(): BigNumber {
-    return this._primeAmount;
-  }
-
-  private set primeAmount(newValue: BigNumber) {
-    const oldValue = this._primeAmount;
-    this._primeAmount = newValue;
-    if (!this.model.remove &&
-      ((newValue && !oldValue) ||
-       (oldValue && !newValue) ||
-       ((oldValue && newValue) && !newValue.eq(oldValue)))) { // to avoid cycles
-      setTimeout(() => this.amountChanged(
-        newValue,
-        this.model.primeTokenAddress), 100);
-    }
-  }
-
-  @computedFrom("_wethAmount")
-  private get wethAmount(): BigNumber {
-    return this._wethAmount;
-  }
-
-  private set wethAmount(newValue: BigNumber) {
-    const oldValue = this._wethAmount;
-    this._wethAmount = newValue;
-    if (!this.model.remove &&
-      ((newValue && !oldValue) ||
-       (oldValue && !newValue) ||
-       ((oldValue && newValue) && !newValue.eq(oldValue)))) { // to avoid cycles
-      setTimeout(() => this.amountChanged(
-        newValue,
-        this.model.wethTokenAddress), 100);
-    }
-  }
-
   @computedFrom("_bPrimeAmount")
   private get bPrimeAmount(): BigNumber {
     return this._bPrimeAmount;
@@ -170,6 +130,14 @@ export class Liquidity {
     if (this.model.remove){
       this._bPrimeAmount = newValue;
       this.syncWithNewBPrimeAmount();
+    }
+  }
+
+  private handleAmountChange(tokenAddress: Address): void {
+    if (!this.model.remove) {
+      setTimeout(() => this.amountChanged(
+        (tokenAddress === this.model.primeTokenAddress) ? this.primeAmount : this.wethAmount,
+        tokenAddress), 100);
     }
   }
 
@@ -224,7 +192,7 @@ export class Liquidity {
     const userShares = toBigNumberJs(this.model.userBPrimeBalance);
     const totalShares = toBigNumberJs(this.model.poolTotalBPrimeSupply);
     const current = userShares.div(totalShares).integerValue(BigNumberJs.ROUND_UP);
-    if (!this.valid || !(this.isSingleAsset || this.isMultiAsset)) {
+    if (this.invalid || !(this.isSingleAsset || this.isMultiAsset)) {
       return {
         absolute: {
           current: BigNumber.from(userShares.toString()),
@@ -255,7 +223,7 @@ export class Liquidity {
 
   @computedFrom("valid", "activeSingleTokenAddress", "model.remove")
   private get showSlippage(): boolean {
-    return this.valid && this.activeSingleTokenAddress && !this.model.remove;
+    return !this.invalid && this.activeSingleTokenAddress && !this.model.remove;
   }
 
   @computedFrom("showSlippage", "activeSingleTokenAmount", "model.poolBalances", "model.poolTotalBPrimeSupply", "model.poolTotalDenormWeights", "model.poolTotalDenormWeight")
@@ -264,6 +232,10 @@ export class Liquidity {
       return undefined;
     }
     const tokenInAddress = this.activeSingleTokenAddress;
+    if (!this.amounts[tokenInAddress]) {
+      return undefined;
+    }
+
     const amount = toBigNumberJs(this.amounts[tokenInAddress]);
 
     const tokenInBalanceIn = toBigNumberJs(this.model.poolBalances.get(tokenInAddress));
@@ -290,6 +262,17 @@ export class Liquidity {
       .minus(poolAmountOut.div(expectedPoolAmountOut))
       .toString());
   }
+
+  // private setAmount(tokenAddress: Address, amount: BigNumber, syncOtherAmount = false) {
+  //   if (!this.model.remove) {
+  //     if (tokenAddress === this.model.primeTokenAddress) {
+  //       this.primeAmount = amount;
+  //     } else {
+  //       this.wethAmount = amount;
+  //     }
+  //     this.handleAmountChange(tokenAddress);
+  //   }
+  // }
 
   private computeTokenToRemoveAmount(tokenAddress: Address): BigNumber {
     if (!this.bPrimeAmount || this.bPrimeAmount.eq(0)) return BigNumber.from(0);
@@ -375,6 +358,8 @@ export class Liquidity {
             } else {
               this.primeAmount = balancedAmount;
             }
+            // this.setAmount((tokenAddr === this.model.wethTokenAddress) ?
+            //   this.model.primeTokenAddress : this.model.wethTokenAddress, balancedAmount);
           }
         });
       }
@@ -426,10 +411,10 @@ export class Liquidity {
   }
 
   /**
-   * return is valid enough to submit, except for checking unlocked condition
+   * return error message if not valid enough to submit, except for checking unlocked condition
  */
   @computedFrom("invalidPrimeAdd", "invalidWethAdd", "isSingleAsset", "model.remove", "model.poolBalances", "activeSingleTokenAmount", "activeSingleTokenAddress")
-  private get valid(): string {
+  private get invalid(): string {
     let message: string;
 
     if (this.model.remove) {
@@ -476,7 +461,7 @@ export class Liquidity {
   }
 
   private isValid(): boolean {
-    const message = this.valid;
+    const message = this.invalid;
 
     if (message) {
       this.eventAggregator.publish("handleValidationError", message);
@@ -553,10 +538,16 @@ export class Liquidity {
 
   private handleGetMaxWeth() {
     this.wethAmount = this.model.userWethBalance;
+    if (!this.model.remove) {
+      this.handleAmountChange(this.model.wethTokenAddress);
+    }
   }
 
   private handleGetMaxPrime() {
     this.primeAmount = this.model.userPrimeBalance;
+    if (!this.model.remove) {
+      this.handleAmountChange(this.model.primeTokenAddress);
+    }
   }
 
   private handleGetMaxBPrime() {
