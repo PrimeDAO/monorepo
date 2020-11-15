@@ -1,33 +1,35 @@
 <template>
   <div class="animated-page au-animate stakingContainer">
-    <div class="header">
-      <span class="triangle"><img /></span>
-      <div class="heading2 title">Stake BPRIME Tokens</div>
-    </div>
-    <div class="section form">
-      <div>Earn PRIME rewards by staking BPRIME tokens!</div>
-      <div class="balance">
-        You have <floating-point-number if.to-view="model.connected" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
-          placement.to-view="top"></floating-point-number>
-        <span else>--</span>
-        BPRIME available to stake.
+    <div class="innerContainer">
+      <div class="header">
+        <span class="triangle"><img /></span>
+        <div class="heading2 title">Stake BPRIME Tokens</div>
       </div>
-      <div>
+      <div class="section form">
+        <div>Earn PRIME rewards by staking BPRIME tokens!</div>
+        <div class="balance">
+          You have <floating-point-number if.to-view="model.connected" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
+            placement.to-view="top"></floating-point-number>
+          <span else>--</span>
+          BPRIME available to stake.
+        </div>
+        <div>
 
-        <label if.to-view="model.userBPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxBPrime()">Max</button></label>
-        <numeric-input id="bPrimeAmount"
-          defaultvalue.to-view="defaultBPrimeAmount"
-          value.two-way="bPrimeAmount"
-          placeholder="0.0"
-          css="clearInput"></numeric-input>
-        <button if.to-view="bPrimeAmountValid && !bPrimeHasSufficientAllowance" class="unlock button4 small" click.delegate="unlock()">Unlock</button>
+          <label if.to-view="model.userBPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxBPrime()">Max</button></label>
+          <numeric-input id="bPrimeAmount"
+            defaultvalue.to-view="defaultBPrimeAmount"
+            value.two-way="bPrimeAmount"
+            placeholder="0.0"
+            css="clearInput"></numeric-input>
+          <button if.to-view="valid && !bPrimeHasSufficientAllowance" class="unlock button4 small" click.delegate="unlock()">Unlock</button>
+        </div>
       </div>
-    </div>
-    <div class="secondRow">
-      <button disabled.to-view="!bPrimeAmount || bPrimeAmount.eq(0)" class="button1" click.delegate="handleSubmit()">Stake</button>
-    </div>
-    <div class="thirdRow back">
-      <a route-href="route: dashboard"><img src="/back.svg"></img> Back</a>
+      <div class="secondRow">
+        <button disabled.to-view="!bPrimeAmount || bPrimeAmount.eq(0)" class="button1" click.delegate="handleSubmit()">Stake</button>
+      </div>
+      <div class="thirdRow back">
+        <a route-href="route: dashboard"><img src="/back.svg"></img> Back</a>
+      </div>
     </div>
   </div>
 </template>

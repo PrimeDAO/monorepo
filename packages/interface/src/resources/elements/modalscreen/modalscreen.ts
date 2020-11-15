@@ -28,7 +28,7 @@ export class ModalScreen {
 
   private onResize() {
     if (this.container) {
-      this.mask.style.height = `${this.container.offsetHeight}px`;
+      this.mask.style.height = `${this.container.scrollHeight}px`;
       this.mask.style.top = `${this.container.offsetTop}px`;
     }
   }

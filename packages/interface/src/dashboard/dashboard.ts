@@ -11,36 +11,6 @@ import { PriceService } from "services/PriceService";
 import { Router } from "aurelia-router";
 import { toBigNumberJs } from "services/BigNumberService";
 
-// const goto = (where: string) => {
-//   window.open(where, "_blank", "noopener noreferrer");
-// };
-
-// const showMobileMenu = (container: RefObject<HTMLDivElement>, show: boolean) => {
-//   if (show) {
-//     container.current.classList.add("showMobileMenu");
-//   } else {
-//     container.current.classList.remove("showMobileMenu");
-//   }
-// };
-
-// const MobileMenu = (props: { container: RefObject<HTMLDivElement> }): React.ReactElement => {
-//   return (
-//     <div className="mobileMenu">
-//       <div className="header">
-//         <div className="logo"><img src="PrimeDAOLogo.svg" /></div>
-//         <div className="mobilemenuButton"><img onClick={() => showMobileMenu(props.container, false)} src="hamburger_menu.svg" /></div>
-//       </div>
-
-//       <div className="item" onClick={() => goto("https://medium.com/primedao")}><div className="name">Blog</div><div className="triangle"></div></div>
-//       <div className="item" onClick={() => goto("https://ipfs.io/ipfs/QmPCtPR4gthh4HunCRANhXnsA5j2VDzG1j13GKqoCX9uhR")}><div className="name">Litepaper</div><div className="triangle"></div></div>
-//       <div className="item" onClick={() => goto("https://discord.gg/x8v59pG")}><div className="name">Discord</div><div className="triangle"></div></div>
-//       <div className="item" onClick={() => goto(" https://twitter.com/PrimeDAO_?s=09")}><div className="name">Twitter</div><div className="triangle"></div></div>
-//       <div className="item" onClick={() => goto("https://github.com/PrimeDAO")}><div className="name">Github</div><div className="triangle"></div></div>
-//       <div className="item" onClick={() => goto("mailto:hello@primedao.io")}><div className="name">Contact</div><div className="triangle"></div></div>
-//     </div>
-//   );
-// };
-
 @singleton(false)
 @autoinject
 export class Dashboard {
@@ -119,6 +89,7 @@ export class Dashboard {
       // TODO: undefine the bound variables
       this.initialized = false;
     });
+
     await this.loadContracts();
     await this.initialize();
     return this.getUserBalances(true);
@@ -149,6 +120,7 @@ export class Dashboard {
           this.wethTokenAddress,
         ];
 
+        // comment out to run DISCONNECTED
         this.swapfee = await this.bPool.getSwapFee();
         let weights = new Map();
         weights.set(this.primeTokenAddress,
@@ -179,12 +151,14 @@ export class Dashboard {
   }
 
   private async getUserBalances(initializing = false): Promise<void> {
+
     if (this.initialized && this.ethereumService.defaultAccountAddress) {
       try {
         if (!initializing) {
         // timeout to allow styles to load on startup to modalscreen sizes correctly
           setTimeout(() => this.eventAggregator.publish("dashboard.loading", true), 100);
         }
+        // comment out to run DISCONNECTED
         const provider = this.ethereumService.readOnlyProvider;
 
         const userTokenBalances = new Map();

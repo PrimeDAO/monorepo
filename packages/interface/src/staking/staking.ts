@@ -23,11 +23,6 @@ export class Staking {
     return this.model.poolTokenAllowances.get(this.model.bPrimeTokenAddress);
   }
 
-  @computedFrom("bPrimeAmount", "model.userBPrimeBalance")
-  private get bPrimeAmountValid(): boolean {
-    return !this.bPrimeAmount || (this.bPrimeAmount.lte(this.model.userBPrimeBalance) && !this.bPrimeAmount.isZero());
-  }
-
   @computedFrom("bPrimeAmount", "bPrimeAllowance")
   private get bPrimeHasSufficientAllowance(): boolean {
     return !this.bPrimeAmount || this.bPrimeAllowance.gte(this.bPrimeAmount);
@@ -49,20 +44,32 @@ export class Staking {
     return true;
   }
 
-  private valid(issueMessage = true): boolean {
+  /**
+   * return is valid enough to submit, except for checking unlocked condition
+   */
+  @computedFrom("bPrimeAmount", "userBPrimeBalance")
+  private get valid(): string {
     let message: string;
 
-    if (this.bPrimeAmount.gt(this.model.userBPrimeBalance)) {
-      message = "You don't have enough BPRIME to stake the amount you requested";
-    }
-    if (message) {
-      if (issueMessage) {
-        this.eventAggregator.publish("handleValidationError", message);
-      }
-      return false;
+    if (!this.bPrimeAmount || this.bPrimeAmount.eq(0)) {
+      message = "You must enter an amount of BPRIME to stake";
     }
 
-    return true;
+    else if (this.bPrimeAmount.gt(this.model.userBPrimeBalance)) {
+      message = "You don't have enough BPRIME to stake the amount you requested";
+    }
+
+    return message;
+  }
+
+  private isValid(): boolean {
+    const message = this.valid;
+
+    if (message) {
+      this.eventAggregator.publish("handleValidationError", message);
+    }
+
+    return !!message;
   }
 
   private unlock() {
@@ -70,7 +77,7 @@ export class Staking {
   }
 
   private handleSubmit(): void {
-    if (this.valid() && this.assetsAreLocked()) {
+    if (this.isValid() && this.assetsAreLocked()) {
       this.model.stakingStake(this.bPrimeAmount);
     }
   }

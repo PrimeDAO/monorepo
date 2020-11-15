@@ -15,7 +15,7 @@
         <div class="dataGroup">
           <label>My share:</label>
           <div class="value" if.to-view="model.connected">
-            <floating-point-number value.to-view="model.poolUsersBPrimeShare" precision="4"
+            <floating-point-number value.to-view="model.poolUsersBPrimeShare * 100" precision="4"
               placement.to-view="top"></floating-point-number>%
           </div>
           <div else class="value">--</div>
@@ -43,7 +43,7 @@
 
         <div class="cell"><input type="checkbox" checked.bind="primeSelected" /></div>
         <div class="cell"><img src="/PD_APP_ICON_PD_01.svg" />PRIME
-          <button if.to-view="!model.remove && primeAmountValid && !primeHasSufficientAllowance" class="unlock button4 small" click.delegate="unlock(model.primeTokenAddress)">Unlock</button>
+          <button if.to-view="showPrimeUnlock" class="unlock button4 small" click.delegate="unlock(model.primeTokenAddress)">Unlock</button>
         </div>
         <div class="cell">
           <div if.to-view="model.connected">
@@ -95,7 +95,7 @@
         </div>
         <div class="cell"><input type="checkbox" checked.bind="wethSelected" /></div>
         <div class="cell"><img src="/PD_APP_ICON_ETH_01.svg" />WETH
-          <button if.to-view="!model.remove && wethAmountValid && !wethHasSufficientAllowance" class="unlock button4 small" click.delegate="unlock(model.wethTokenAddress)">Unlock</button>
+          <button if.to-view="showWethUnlock" class="unlock button4 small" click.delegate="unlock(model.wethTokenAddress)">Unlock</button>
         </div>
         <div class="cell">
           <div if.to-view="model.connected">
@@ -148,6 +148,7 @@
       </div>
       <div class="bPrimeAmount section">
         <div class="label">BPRIME Amount</div>
+        <!-- BPrime Amount:  Add -->
         <div if.one-time="!model.remove" class="amount">
           <div if.to-view="userLiquidity.absolute.future" class="value">
             <formatted-number
@@ -170,6 +171,7 @@
             </formatted-number> BPRIME
           </div>
         </div>
+        <!-- BPrime Amount:  Remove -->
         <div else>
           <label if.to-view="model.userBPrimeBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxBPrime()">Max</button></label>
           <numeric-input id="bPrimeAmount"
@@ -180,16 +182,20 @@
         </div>
       </div>
     </div>
-    <div class="messageRow">
-      <div if.to-view="showSlippage" class="liquidityMessage">
+    <div if.to-view="showSlippage" class="messageRow">
+      <div class="liquidityMessage">
         <div class="icon"><img src="/PD_ASSET_ICON_INFO_01.svg" /></div>
         <div class="body">
-          <div>Adding liquidity will incur ${slippage}% of slippage</div>
+          <div>Adding liquidity will incur <formatted-number
+              value.to-view="slippage | ethwei"
+              format="0.00a"
+              placement.to-view="top">
+            </formatted-number> % of slippage</div>
         </div>
       </div>
     </div>
     <div class="secondRow">
-      <button class="button1" click.delegate="handleSubmit()">${ model.remove ? (isSingleAsset ? "Remove": "Remove All" ) : "Add" } Liquidity</button>
+      <button class="button1" ref="submitButton" click.delegate="handleSubmit()">${ model.remove ? (isSingleAsset ? "Remove": "Withdraw" ) : "Add" } Liquidity</button>
     </div>
     <div class="thirdRow back">
       <a route-href="route: dashboard"><img src="/back.svg"></img> Back</a>

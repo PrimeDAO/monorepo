@@ -54,7 +54,7 @@ export class FormattedNumber {
 
   @computedFrom("_value")
   private get tooltip():string {
-    return this._value.toString(10);
+    return this._value?.toString(10);
   }
 
   private setTooltip() {

@@ -3,14 +3,12 @@
 @import "tippy.js/dist/tippy.css"; // TODO: use CDN?
 
 html {
-  height: 100%;
-
   body {
     margin: 0;
     background-color: $global-background-color;
     color: $color-white;
     font-family: Aeonik;
-    height: 100%;
+    min-height: 100vh;
 
     input {
       border: $section-border;
@@ -213,4 +211,10 @@ etherscanlink {
 
 .copy-to-clip-button:hover {
   color: $color-grey-3;
+}
+
+#WEB3_CONNECT_MODAL_ID {
+  div:first-of-type {
+    z-index: 10001; // stay over everything
+  }
 }

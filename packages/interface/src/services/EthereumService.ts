@@ -91,6 +91,7 @@ export class EthereumService {
       throw new Error(`Please connect to either ${Networks.Mainnet} or ${Networks.Kovan}`);
     }
 
+    // comment out to run DISCONNECTED
     this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[this.targetedNetwork]);
 
     if (!this.blockSubscribed) {

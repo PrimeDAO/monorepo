@@ -2,8 +2,10 @@
 
 .liquidityContainer {
   padding-top: 40px;
+  padding-bottom: 40px;
   margin: auto;
   max-width: 700px;
+  height: calc(100vh - 220px);
   display: grid;
   grid-template-columns: auto auto auto;
   grid-template-rows: auto;
@@ -29,7 +31,8 @@
 
   .leftColumn {
     grid-area: leftColumn;
-    margin-bottom: 20px;
+    margin-bottom: 38px;
+    padding-bottom: 15px;
 
     .heading {
       margin-bottom: 16px;
@@ -61,7 +64,7 @@
 
   .rightColumn {
     grid-area: rightColumn;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     background-color: transparent;
     .table {
       display: grid;
@@ -177,12 +180,14 @@
     grid-area: messageRow;
     padding: 20px;
 
-    .icon {
-      display: inline-block;
+    .liquidityMessage {
+      .icon {
+        display: inline-block;
 
-      img {
-        width: 14px;
-        margin-right: 20px;
+        img {
+          width: 14px;
+          margin-right: 20px;
+        }
       }
     }
 
@@ -198,6 +203,10 @@
 
     button {
       width: 100%;
+
+      &.colorMeRed {
+        background-color: $color-red;
+      }
     }
   }
 

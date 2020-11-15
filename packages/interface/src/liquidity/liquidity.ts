@@ -29,6 +29,7 @@ export class Liquidity {
   private _bPrimeAmount: BigNumber;
   private _primeSelected = false;
   private _wethSelected = false;
+  private submitButton: HTMLButtonElement;
 
   public activate(_model: unknown, routeConfig: { settings: { state: ILiquidityModel } }): void {
     this.model = routeConfig.settings.state;
@@ -101,7 +102,16 @@ export class Liquidity {
    */
   @computedFrom("wethSelected", "primeSelected")
   private get isSingleAsset(): boolean {
-    return this.wethSelected !== this.primeSelected;
+    const yes = this.wethSelected !== this.primeSelected;
+    if (this.model.remove) {
+      if (yes) {
+        this.submitButton.classList.add("colorMeRed");
+      }
+      else {
+        this.submitButton.classList.remove("colorMeRed");
+      }
+    }
+    return yes;
   }
 
   @computedFrom("wethSelected", "primeSelected")
@@ -167,14 +177,14 @@ export class Liquidity {
     this.wethAmount = this.computeTokenToRemoveAmount(this.model.wethTokenAddress);
   }
 
-  @computedFrom("primeAmount", "model.userPrimeBalance")
-  private get primeAmountValid(): boolean {
-    return !this.primeAmount || (this.primeAmount.lte(this.model.userPrimeBalance) && !this.primeAmount.isZero());
+  @computedFrom("validPrimeAdd", "primeHasSufficientAllowance", "this.model.remove")
+  private get showPrimeUnlock(): boolean {
+    return !this.model.remove && this.validPrimeAdd && !this.primeHasSufficientAllowance;
   }
 
-  @computedFrom("wethAmount", "model.userWethBalance")
-  private get wethAmountValid(): boolean {
-    return !this.wethAmount || (this.wethAmount.lte(this.model.userWethBalance) && !this.wethAmount.isZero());
+  @computedFrom("validWethAdd", "wethHasSufficientAllowance", "this.model.remove")
+  private get showWethUnlock(): boolean {
+    return !this.model.remove && this.validWethAdd && !this.wethHasSufficientAllowance;
   }
 
   @computedFrom("model.poolTokenAllowances")
@@ -202,7 +212,7 @@ export class Liquidity {
     const userShares = toBigNumberJs(this.model.userBPrimeBalance);
     const totalShares = toBigNumberJs(this.model.poolTotalBPrimeSupply);
     const current = userShares.div(totalShares).integerValue(BigNumberJs.ROUND_UP);
-    if (!this.isValid(false) || !(this.isSingleAsset || this.isMultiAsset)) {
+    if (!this.valid || !(this.isSingleAsset || this.isMultiAsset)) {
       return {
         absolute: {
           current: BigNumber.from(userShares.toString()),
@@ -231,23 +241,22 @@ export class Liquidity {
     };
   }
 
-  @computedFrom("valid", "isMultiAsset", "model.remove")
+  @computedFrom("valid", "activeSingleTokenAddress", "model.remove")
   private get showSlippage(): boolean {
-    return !(!this.valid || this.isMultiAsset || this.model.remove);
+    return this.valid && this.activeSingleTokenAddress && !this.model.remove;
   }
 
-  @computedFrom("activeSingleTokenAddress", "valid", "isMultiAsset", "model.remove")
+  @computedFrom("showSlippage", "activeSingleTokenAmount", "model.poolBalances", "model.poolTotalBPrimeSupply", "model.poolTotalDenormWeights", "model.poolTotalDenormWeight")
   private get slippage(): BigNumber {
-    if (this.showSlippage) {
+    if (!this.showSlippage) {
       return undefined;
     }
     const tokenInAddress = this.activeSingleTokenAddress;
-    const tokenIn = this.activeSingleTokenAddress;
     const amount = toBigNumberJs(this.amounts[tokenInAddress]);
 
-    const tokenInBalanceIn = toBigNumberJs(this.model.poolBalances.get(tokenIn));
+    const tokenInBalanceIn = toBigNumberJs(this.model.poolBalances.get(tokenInAddress));
     const poolTokenShares = toBigNumberJs(this.model.poolTotalBPrimeSupply);
-    const tokenWeightIn = toBigNumberJs(this.model.poolTotalDenormWeights.get(tokenIn));
+    const tokenWeightIn = toBigNumberJs(this.model.poolTotalDenormWeights.get(tokenInAddress));
     const tokenAmountIn = toBigNumberJs(amount.integerValue(BigNumberJs.ROUND_UP));
     const totalWeight = toBigNumberJs(this.model.poolTotalDenormWeight);
 
@@ -404,46 +413,64 @@ export class Liquidity {
     return true;
   }
 
-  @computedFrom("wethAmount", "primeAmount", "isSingleAsset", "model.remove", "model.poolBalances", "activeSingleTokenAmount")
-  private get valid(): boolean {
-    return this.isValid(false);
-  }
-
-  private isValid(issueMessage = true): boolean {
+  /**
+   * return is valid enough to submit, except for checking unlocked condition
+ */
+  @computedFrom("validPrimeAdd", "validWethAdd", "isSingleAsset", "model.remove", "model.poolBalances", "activeSingleTokenAmount", "activeSingleTokenAddress")
+  private get valid(): string {
     let message: string;
 
     if (this.model.remove) {
-
       if (this.isSingleAsset) {
         if (this.activeSingleTokenAmount.gt(this.model.poolBalances.get(this.activeSingleTokenAddress))) {
           message = "Can't remove this amount because it exceeds the amount in the pool";
         }
       }
-
     } else {
-      if (this.wethAmount?.isZero() && this.primeAmount?.isZero()) {
-        message = "Please specify amounts for PRIME and/or WETH";
-      }
-      if (this.wethAmount &&
-        !this.wethAmount.isZero() &&
-        this.wethAmount.gt(this.model.userTokenBalances.get(this.model.wethTokenAddress))) {
-        message = "Can't add this amount, you will exceed your balance of WETH";
-      }
-      if (this.primeAmount &&
-        !this.primeAmount.isZero() &&
-        this.primeAmount.gt(this.model.userTokenBalances.get(this.model.primeTokenAddress))) {
-        message = "Can't add this amount, you will exceed your balance of PRIME";
-      }
+      message = this.validPrimeAdd || this.validWethAdd;
     }
+
+    return message;
+  }
+
+  @computedFrom("primeAmount")
+  private get validPrimeAdd(): string {
+    let message: string;
+
+    if (this.primeAmount?.isZero()) {
+      message = "Please specify an amount of PRIME";
+    }
+
+    // if (!this.primeHasSufficientAllowance) {
+    //   message = "Can't add this amount, you will exceed your balance of PRIME";
+    // }
+
+    return message;
+  }
+
+  @computedFrom("wethAmount")
+  private get validWethAdd(): string {
+    let message: string;
+
+    if (this.wethAmount?.isZero()) {
+      message = "Please specify an amount of WETH";
+    }
+
+    // if (!this.wethHasSufficientAllowance) {
+    //   message = "Can't add this amount, you will exceed your balance of WETH";
+    // }
+
+    return message;
+  }
+
+  private isValid(): boolean {
+    const message = this.valid;
 
     if (message) {
-      if (issueMessage) {
-        this.eventAggregator.publish("handleValidationError", message);
-      }
-      return false;
+      this.eventAggregator.publish("handleValidationError", message);
     }
 
-    return true;
+    return !!message;
   }
 
   private async handleSubmit(): Promise<void> {
@@ -525,6 +552,15 @@ export class Liquidity {
   }
 
   private unlock(tokenAddress: Address) {
+    // just to be sure
+    if ((tokenAddress === this.model.primeTokenAddress) && (this.primeAllowance.gte(this.primeAmount))) {
+      this.eventAggregator.publish("handleValidationError", "An error has occurred, the PRIME allowance is already sufficient");
+      return;
+    }
+    if ((tokenAddress === this.model.wethTokenAddress) && (this.wethAllowance.gte(this.wethAmount))) {
+      this.eventAggregator.publish("handleValidationError", "An error has occurred, the WETH allowance is already sufficient");
+      return;
+    }
     this.model.liquiditySetTokenAllowance(tokenAddress,
       tokenAddress === this.model.primeTokenAddress ?
         this.primeAmount.sub(this.primeAllowance) : this.wethAmount.sub(this.wethAllowance));
