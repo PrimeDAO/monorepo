@@ -173,6 +173,11 @@
         </div>
         <!-- BPrime Amount:  Remove -->
         <div else>
+          <formatted-number
+            value.to-view="model.userBPrimeBalance | ethwei"
+            format="0.00a"
+            placement.to-view="top">
+          </formatted-number> BPRIME
           <label if.to-view="model.userBPrimeBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxBPrime()">Max</button></label>
           <numeric-input id="bPrimeAmount"
             value.two-way="bPrimeAmount"
