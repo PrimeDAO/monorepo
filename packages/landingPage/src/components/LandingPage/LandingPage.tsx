@@ -19,6 +19,12 @@ const MainMenu = (props: { container: RefObject<HTMLDivElement> }): React.ReactE
 
   return (
     <>
+      {/* <div className="primeToken">
+        <div className="name"
+          onMouseEnter={() => showMenu('Prime', true)}
+          onMouseLeave={() => showMenu('Prime', false)}
+        >Learn<div className="menuDivider"></div></div> */}
+
       <div className="learn">
         <div className="name"
           onMouseEnter={() => showMenu('Learn', true)}
@@ -187,7 +193,7 @@ const LandingPage = (): React.ReactElement => {
         <div className="leftColumn">
           <div className="productName">DeFi&apos;s Safety Interface</div>
           <div className="body">In order to achieve its mission of safety and reliability, PrimeDAO will own and manage a decentralized, self-governing interface that provides scoring and analysis of the security of DeFi ecosystem protocols, products, and primitives.</div>
-          <a className="appComingButton" target="_blank" rel="noopener noreferrer">App Coming Soon</a>
+          {/* <a className="appComingButton" target="_blank" rel="noopener noreferrer">App Coming Soon</a> */}
         </div>
         <div className="rightColumn">
           <img src="CURVE_PD_LP_DEFI-SAFETY-INTERFACE_V01-2_web.jpg" />
