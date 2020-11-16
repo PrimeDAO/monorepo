@@ -315,7 +315,7 @@ contract('BalancerProxy', (accounts) => {
                     setup.data.proxy = await BalancerProxy.new();
                     await setup.data.proxy.initialize(setup.organization.avatar.address, setup.balancer.pool.address, await setup.balancer.pool.bPool());
 
-                    // transfer tokens to avatar 
+                    // transfer tokens to avatar
                     await token.transfer(setup.organization.avatar.address, toWei('10000'));
                 });
                 it('updates weight', async () => {
