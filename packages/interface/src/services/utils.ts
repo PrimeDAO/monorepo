@@ -8,7 +8,7 @@ export class Utils {
       return "";
     }
     const len = str.length;
-    return `${str.slice(0, 6)}...${str.slice(len - 5, len - 1)}`;
+    return `${str.slice(0, 6)}...${str.slice(len - 5, len)}`;
   }
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   // public static getObjectKeys(obj: any): Array<string> {
