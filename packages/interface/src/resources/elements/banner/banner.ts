@@ -122,7 +122,11 @@ export class Banner {
 
     const message = `${config.message}: <span class="transactionHash"><etherscanlink text="${Utils.smallHexString(config.receipt.transactionHash)}" address="${config.receipt.transactionHash}" type="tx"></etherscanlink></span>`;
 
-    this.queueEventConfig({ message, type: EventMessageType.Info });
+    this.queueEventConfig({
+      message,
+      type: EventMessageType.Info,
+      timer: 10000,
+    });
   }
 
   private handleException(config: EventConfigException | any): void {
