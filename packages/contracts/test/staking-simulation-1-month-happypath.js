@@ -123,6 +123,16 @@ contract('Staking: 1 month happypath', (accounts) => {
                     expect((await setup.balancer.pool.balanceOf(accounts[7])).toString()).to.equal('0');
                     expect((await setup.balancer.pool.balanceOf(accounts[8])).toString()).to.equal('0');
                     expect((await setup.balancer.pool.balanceOf(accounts[9])).toString()).to.equal('0');
+
+                    expect((await setup.tokens.primeToken.balanceOf(accounts[1])).toString()).to.equal('0');
+                    expect((await setup.tokens.primeToken.balanceOf(accounts[2])).toString()).to.equal('0');
+                    expect((await setup.tokens.primeToken.balanceOf(accounts[3])).toString()).to.equal('0');
+                    expect((await setup.tokens.primeToken.balanceOf(accounts[4])).toString()).to.equal('0');
+                    expect((await setup.tokens.primeToken.balanceOf(accounts[5])).toString()).to.equal('0');
+                    expect((await setup.tokens.primeToken.balanceOf(accounts[6])).toString()).to.equal('0');
+                    expect((await setup.tokens.primeToken.balanceOf(accounts[7])).toString()).to.equal('0');
+                    expect((await setup.tokens.primeToken.balanceOf(accounts[8])).toString()).to.equal('0');
+                    expect((await setup.tokens.primeToken.balanceOf(accounts[9])).toString()).to.equal('0');
                 });
             });
             context('» week 2: some users getReward', async () => {
