@@ -50,9 +50,6 @@ contract('Staking: 1 month happypath', (accounts) => {
     let earned4;
     let earned5;
     let earned6;
-    let earned7;
-    let earned8;
-    let earned9;
 
     before('!! deploy setup', async () => {
         setup = await deploy(accounts);

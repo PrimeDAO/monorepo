@@ -155,25 +155,6 @@ contract('Staking: 1 week happypath', (accounts) => {
 
                     await time.increase(time.duration.hours(1));
                 });
-                it('user PRIME balances are correct', async () => {
-                    let balance = (await setup.tokens.primeToken.balanceOf(accounts[1])).toString();
-                    expect(earned).to.equal(balance);
-
-                    let balance2 = (await setup.tokens.primeToken.balanceOf(accounts[2])).toString();
-                    expect(earned2).to.equal(balance2);
-
-                    let balance3 = (await setup.tokens.primeToken.balanceOf(accounts[3])).toString();
-                    expect(earned3).to.equal(balance3);
-
-                    let balance4 = (await setup.tokens.primeToken.balanceOf(accounts[4])).toString();
-                    expect(earned4).to.equal(balance4);
-
-                    let balance5 = (await setup.tokens.primeToken.balanceOf(accounts[5])).toString();
-                    expect(earned5).to.equal(balance5);
-
-                    let balance6 = (await setup.tokens.primeToken.balanceOf(accounts[6])).toString();
-                    expect(earned6).to.equal(balance6);
-                });
                 it('user and contract bPRIME balances are correct', async () => {
                     expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal('0');
                     expect((await setup.balancer.pool.balanceOf(accounts[2])).toString()).to.equal('0');
