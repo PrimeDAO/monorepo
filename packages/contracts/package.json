@@ -15,7 +15,7 @@
     "deploy:contracts:mainnet": "truffle migrate --network mainnet --reset",
     "deploy:dao:mainnet": "npx run scripts/kovan/migrateDAO.js --network mainnet",
     "setup:oracle:mainnet": "npx truffle exec scripts/kovan/setupPriceOracle.js --network mainnet",
-    "create:pool:mainnet": "npx truffle exec scripts/kovan/setupPool.js --network mainnet",
+    "create:pool:mainnet": "npx truffle exec scripts/mainnet/createPool.js --network mainnet",
     "transfer:pool:mainnet": "npx truffle exec scripts/kovan/transferPool.js --network mainnet",
     "innit:staking:mainnet": "npx truffle exec scripts/kovan/setupRewards.js --network mainnet",
     "coverage": "truffle run coverage"

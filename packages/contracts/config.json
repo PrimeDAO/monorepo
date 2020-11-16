@@ -3,9 +3,9 @@
 	"lpTokenName":"Prime Liquidity Pool One Token",
 	"lpTokenSymbol":"BPRIME",
 	"lpTokenAmount":"125000",
-	"PRIMEAmount": "162000",
-	"WETHAmount": "45",
-	"swapFee": "0.1",
+	"PRIMEAmount": "161290",
+	"WETHAmount": "54",
+	"swapFee": "0.015",
 	"PRIMEWeight": "32",
 	"WETHWeight":"8"
 	},
