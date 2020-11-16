@@ -131,23 +131,10 @@ contract('Staking: 1 week happypath', (accounts) => {
                 });
             });
             context('» day 2: getReward', async () => {
-                it('users rewards are proportional to their stake', async () => {
+                it('users 1 - 6 can claim their PRIME rewards whilst keeping tokens staked', async () => {
+
                     await time.increase(time.duration.days(2));
 
-                    let earnedReward = BigNumber(await setup.incentives.stakingRewards.earned(accounts[1]));
-                    let earnedReward2 = BigNumber(await setup.incentives.stakingRewards.earned(accounts[2]));
-                    let earnedReward3 = BigNumber(await setup.incentives.stakingRewards.earned(accounts[3]));
-                    let earnedReward5 = BigNumber(await setup.incentives.stakingRewards.earned(accounts[5]));
-
-                    let halfReward = earnedReward.dividedBy(2);
-                    let quarterReward = earnedReward.dividedBy(4);
-                    let irregReward = (earnedReward.dividedBy(100).multipliedBy(76));
-
-                    expect(halfReward.toFixed(18)).to.equal(earnedReward2.toFixed(18));
-                    expect(quarterReward.toFixed(18)).to.equal(earnedReward3.toFixed(18));
-                    expect(irregReward.toFixed(18)).to.equal(earnedReward5.toFixed(18));
-                });
-                it('users 1 - 6 can claim their PRIME rewards whilst keeping tokens staked', async () => {
                     earned = (await setup.incentives.stakingRewards.earned(accounts[1])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[1] } );
 

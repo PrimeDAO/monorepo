@@ -479,4 +479,68 @@ contract('StakingRewards', (accounts) => {
             });
         });
     });
+    context('# balanceOf', () => {
+        context('» generics', () => {
+            before('!! deploy setup', async () => {
+                setup = await deploy(accounts);
+                stakeAmount = toWei('100');
+                rewardAmount = toWei('100');
+            });
+            context('» balanceOf', async () => {
+                before('!! fund & initialize contract', async () => {
+                    await setup.tokens.primeToken.transfer(setup.incentives.stakingRewards.address, _initreward);
+                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
+                });
+                it('returns the staked balance of an account when stake == 0', async () => {
+                    let stakingBal = await setup.incentives.stakingRewards.balanceOf(accounts[1]);
+                    expect(stakingBal.toString()).to.equal('0');
+                });
+                it('returns the staked balance of an account when staked', async () => {
+                    await setup.balancer.pool.transfer(accounts[1], stakeAmount);
+                    await setup.balancer.pool.approve(setup.incentives.stakingRewards.address, stakeAmount, { from: accounts[1] });
+
+                    await setup.incentives.stakingRewards.stake(stakeAmount, {from: accounts[1]});
+                    let stakingBal = await setup.incentives.stakingRewards.balanceOf(accounts[1]);
+                    expect(stakingBal.toString()).to.equal(stakeAmount);
+                });
+                it('updates balance when account withdraws', async () => {
+                    await setup.incentives.stakingRewards.withdraw(stakeAmount, { from: accounts[1] });
+                    let stakingBal = await setup.incentives.stakingRewards.balanceOf(accounts[1]);
+                    expect(stakingBal.toString()).to.equal('0');
+                });
+            });
+        });
+    });
+    context('# totalSupply', () => {
+        context('» generics', () => {
+            before('!! deploy setup', async () => {
+                setup = await deploy(accounts);
+                stakeAmount = toWei('100');
+                rewardAmount = toWei('100');
+            });
+            context('» totalSupply', async () => {
+                before('!! fund & initialize contract', async () => {
+                    await setup.tokens.primeToken.transfer(setup.incentives.stakingRewards.address, _initreward);
+                    await setup.incentives.stakingRewards.initialize(setup.tokens.primeToken.address, setup.balancer.pool.address, _initreward, _starttime, _durationDays);
+                });
+                it('_totalSupply == 0 before staking occurs', async () => {
+                    let initialSupply = await setup.incentives.stakingRewards.totalSupply();
+                    expect(initialSupply.toString()).to.equal('0');
+                });
+                it('updates when user stakes', async () => {
+                    await setup.balancer.pool.transfer(accounts[1], stakeAmount);
+                    await setup.balancer.pool.approve(setup.incentives.stakingRewards.address, stakeAmount, { from: accounts[1] });
+
+                    await setup.incentives.stakingRewards.stake(stakeAmount, {from: accounts[1]});
+                    let totalSupply = await setup.incentives.stakingRewards.totalSupply();
+                    expect(totalSupply.toString()).to.equal(stakeAmount);
+                });
+                it('updates when user withdraws', async () => {
+                    await setup.incentives.stakingRewards.withdraw(stakeAmount, { from: accounts[1] });
+                    let totalSupply = await setup.incentives.stakingRewards.totalSupply();
+                    expect(totalSupply.toString()).to.equal('0');
+                });
+            });
+        });
+    });
 });
