@@ -84,8 +84,8 @@ const MobileMenu = (props: { container: RefObject<HTMLDivElement> }): React.Reac
         <div className="mobilemenuButton"><img onClick={() => showMobileMenu(props.container, false)} src="hamburger_menu.svg" /></div>
       </div>
 
-      <div className="item" onClick={() => goto('https://docs.primedao.io/primedao/tokenomics')}><div className="name">Tokenomics</div><div className="triangle"></div></div>
-      <div className="item" onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
+      <div className="item" onClick={() => goto('https://medium.com/primedao/the-prime-initial-decentralized-offering-78a8787b9cff')}><div className="name">Get PRIME Now!</div><div className="triangle"></div></div>
+      <div className="item" onClick={() => goto('http://router.primedao.io/')}><div className="name">Swap Tokens</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://docs.primedao.io/')}><div className="name">Documentation</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
