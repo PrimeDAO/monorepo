@@ -53,6 +53,10 @@
     border-top: 4px solid $color-lightblue;
     padding-top: 30px;
 
+    a {
+      text-decoration: underline;
+    }
+
     > div {
       margin-bottom: 16px;
     }

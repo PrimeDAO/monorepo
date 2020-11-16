@@ -6,6 +6,7 @@ import { PLATFORM } from "aurelia-pal";
 import "./styles/styles.scss";
 import "./app.scss";
 import { ConsoleLogService } from "services/ConsoleLogService";
+import { Utils } from "services/utils";
 
 @autoinject
 export class App {
@@ -85,5 +86,9 @@ export class App {
     config.fallbackRoute("");
 
     this.router = router;
+  }
+
+  goto(where: string): void {
+    Utils.goto(where);
   }
 }
