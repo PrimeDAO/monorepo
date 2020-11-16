@@ -37,9 +37,9 @@ const MainMenu = (props: { container: RefObject<HTMLDivElement> }): React.ReactE
         onMouseLeave={() => showMenu('Learn', false)}
       >
         <div className="learnMenu">
-          <div onClick={() => goto('https://medium.com/primedao/prime-tokenomics-and-initial-decentralized-offering-73ae04021c6d')}><div className="name">Token Offering</div><div className="triangle"></div></div>
+          <div onClick={() => goto('https://docs.primedao.io/primedao/tokenomics')}><div className="name">Tokenomics</div><div className="triangle"></div></div>
           <div onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
-          <div onClick={() => goto('https://ipfs.io/ipfs/QmNTcjL8sSrhDcYXoJfH2xD6XnvQAwmWxXSySeZN7UG1jJ')}><div className="name">Litepaper</div><div className="triangle"></div></div>
+          <div onClick={() => goto('https://docs.primedao.io/')}><div className="name">Documentation</div><div className="triangle"></div></div>
           <div onClick={() => { document.getElementById('wall').scrollIntoView(); }}><div className="name">Members</div><div className="triangle"></div></div>
           <div onClick={() => goto('https://docs.primedao.io/primedao/faqs')}><div className="name">FAQ</div><div className="triangle"></div></div>
         </div>
@@ -78,9 +78,9 @@ const MobileMenu = (props: { container: RefObject<HTMLDivElement> }): React.Reac
         <div className="mobilemenuButton"><img onClick={() => showMobileMenu(props.container, false)} src="hamburger_menu.svg" /></div>
       </div>
 
-      <div className="item" onClick={() => goto('https://medium.com/primedao/prime-tokenomics-and-initial-decentralized-offering-73ae04021c6d')}><div className="name">Token Offering</div><div className="triangle"></div></div>
+      <div className="item" onClick={() => goto('https://docs.primedao.io/primedao/tokenomics')}><div className="name">Tokenomics</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
-      <div className="item" onClick={() => goto('https://ipfs.io/ipfs/QmNTcjL8sSrhDcYXoJfH2xD6XnvQAwmWxXSySeZN7UG1jJ')}><div className="name">Litepaper</div><div className="triangle"></div></div>
+      <div className="item" onClick={() => goto('https://docs.primedao.io/')}><div className="name">Documentation</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://t.me/primedao')}><div className="name">Telegram</div><div className="triangle"></div></div>
@@ -114,8 +114,8 @@ const LandingPage = (): React.ReactElement => {
               <div className="body">A new system of open finance based on programmable money is being realized on Ethereum. PrimeDAO is here to catalyze and coordinate an open-source ecosystem of partners, builders, and users that simplifies, secures, and makes decentralized finance (<a href="https://defipulse.com/blog/what-is-defi/" target="_blank" rel="noopener noreferrer">DeFi</a>) accessible for the masses.</div>
             </div>
             <div className="buttons">
-              <a className="button tokenoffering" href="https://medium.com/primedao/prime-tokenomics-and-initial-decentralized-offering-73ae04021c6d" target="_blank" rel="noopener noreferrer">Token Offering - Nov 16!</a>
-              <a className="button litepaper" href="https://ipfs.io/ipfs/QmNTcjL8sSrhDcYXoJfH2xD6XnvQAwmWxXSySeZN7UG1jJ" target="_blank" rel="noopener noreferrer">Read the Litepaper</a>
+              <a className="button tokenoffering" href="https://medium.com/primedao/the-prime-initial-decentralized-offering-78a8787b9cff" target="_blank" rel="noopener noreferrer">Get PRIME Now!</a>
+              <a className="button litepaper" href="https://docs.primedao.io/" target="_blank" rel="noopener noreferrer">Documentation</a>
             </div>
             <div className="footer">
               <div className="moreIcon"></div>
@@ -164,7 +164,7 @@ const LandingPage = (): React.ReactElement => {
           <div className="leftColumn">
             <div className="productName">Prime Router: Peer to Peer Exchange Reimagined</div>
             <div className="body">PrimeDAO’s premiere launch product is a smart router that aggregates liquidity from multiple decentralized exchanges and lending pools. Soon after launch, the router will be integrated into the DAO, whose members will govern its settings, such as its whitelisted sources of liquidity.</div>
-            <a className="moreInfoButton">App Coming Soon</a>
+            <a className="moreInfoButton" href="http://router.primedao.io/" target="_blank" rel="noopener noreferrer">Swap Tokens</a>
           </div>
           <div className="rightColumn">
             <img src="CURVE_PD_LP_PRIMER-ROUTER-GRAPHIC_V01-2_web.jpg" />
@@ -179,7 +179,7 @@ const LandingPage = (): React.ReactElement => {
         <div className="rightColumn">
           <div className="productName">Liquidity Pool Manager</div>
           <div className="body">PrimeDAO will govern a liquidity pool (LP) on Balancer Protocol. LP’s are a type of automated market with a basket of tokens that have different weights. PrimeDAO will be able to choose which tokens and weights to include in its LP, and will experiment with co-farming, where liquidity providers receive PRIME token rewards and DAO voting rights in exchange for depositing liquidity to the pool.</div>
-          <a className="moreInfoButton" href="https://docs.primedao.io/primedao/products" target="_blank" rel="noopener noreferrer">Learn More</a>
+          <a className="moreInfoButton" href="https://medium.com/primedao/primes-first-liquidity-mining-program-b8e4abb6c63" target="_blank" rel="noopener noreferrer">Farm Prime!</a>
         </div>
       </div>
 
@@ -187,6 +187,7 @@ const LandingPage = (): React.ReactElement => {
         <div className="leftColumn">
           <div className="productName">DeFi&apos;s Safety Interface</div>
           <div className="body">In order to achieve its mission of safety and reliability, PrimeDAO will own and manage a decentralized, self-governing interface that provides scoring and analysis of the security of DeFi ecosystem protocols, products, and primitives.</div>
+          <a className="appComingButton" target="_blank" rel="noopener noreferrer">App Coming Soon</a>
         </div>
         <div className="rightColumn">
           <img src="CURVE_PD_LP_DEFI-SAFETY-INTERFACE_V01-2_web.jpg" />

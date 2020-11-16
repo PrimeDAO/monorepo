@@ -545,6 +545,18 @@ $text-transform-uppercase: uppercase;
     .leftColumn {
       flex-basis: 50%;
       align-self: center;
+
+      .appComingButton {
+        @extend .stdButton3;
+        /**
+           * temporary until we have a real link
+           */
+        &:hover {
+          cursor: default;
+          background-color: inherit;
+          color: inherit;
+        }
+      }
     }
 
     .rightColumn {
