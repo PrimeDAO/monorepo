@@ -130,42 +130,44 @@ contract('Staking: 1 month happypath', (accounts) => {
 
                     await time.increase(time.duration.weeks(2));
 
-                    earned = BigNumber(await setup.incentives.stakingRewards.earned(accounts[1]));
+                    earned = (await setup.incentives.stakingRewards.earned(accounts[1])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[1] } );
 
-                    earned2 = BigNumber(await setup.incentives.stakingRewards.earned(accounts[2]));
+                    earned2 = (await setup.incentives.stakingRewards.earned(accounts[2])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[2] } );
 
-                    earned3 = BigNumber(await setup.incentives.stakingRewards.earned(accounts[3]));
+                    earned3 = (await setup.incentives.stakingRewards.earned(accounts[3])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[3] } );
 
-                    earned4 = BigNumber(await setup.incentives.stakingRewards.earned(accounts[4]));
+                    earned4 = (await setup.incentives.stakingRewards.earned(accounts[4])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[4] } );
 
-                    earned5 = BigNumber(await setup.incentives.stakingRewards.earned(accounts[5]));
+                    earned5 = (await setup.incentives.stakingRewards.earned(accounts[5])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[5] } );
 
-                    earned6 = BigNumber(await setup.incentives.stakingRewards.earned(accounts[6]));
+                    earned6 = (await setup.incentives.stakingRewards.earned(accounts[6])).toString();
                     await setup.incentives.stakingRewards.getReward( { from: accounts[6] } );
+
+                    await time.increase(time.duration.hours(1));
                 });
                 it('user PRIME balances are correct', async () => {
-                    let balance = BigNumber(await setup.tokens.primeToken.balanceOf(accounts[1]));
-                    expect(earned.toFixed(18)).to.equal(balance.toFixed(18));
+                    let balance = (await setup.tokens.primeToken.balanceOf(accounts[1])).toString();
+                    expect(earned).to.equal(balance);
 
-                    let balance2 = BigNumber(await setup.tokens.primeToken.balanceOf(accounts[2]));
-                    expect(earned2.toFixed(18)).to.equal(balance2.toFixed(18));
+                    let balance2 = (await setup.tokens.primeToken.balanceOf(accounts[2])).toString();
+                    expect(earned2).to.equal(balance2);
 
-                    let balance3 = BigNumber(await setup.tokens.primeToken.balanceOf(accounts[3]));
-                    expect(earned3.toFixed(18)).to.equal(balance3.toFixed(18));
+                    let balance3 = (await setup.tokens.primeToken.balanceOf(accounts[3])).toString();
+                    expect(earned3).to.equal(balance3);
 
-                    let balance4 = BigNumber(await setup.tokens.primeToken.balanceOf(accounts[4]));
-                    expect(earned4.toFixed(18)).to.equal(balance4.toFixed(18));
+                    let balance4 = (await setup.tokens.primeToken.balanceOf(accounts[4])).toString();
+                    expect(earned4).to.equal(balance4);
 
-                    let balance5 = BigNumber(await setup.tokens.primeToken.balanceOf(accounts[5]));
-                    expect(earned5.toFixed(18)).to.equal(balance5.toFixed(18));
+                    let balance5 = (await setup.tokens.primeToken.balanceOf(accounts[5])).toString();
+                    expect(earned5).to.equal(balance5);
 
-                    let balance6 = BigNumber(await setup.tokens.primeToken.balanceOf(accounts[6]));
-                    expect(earned6.toFixed(18)).to.equal(balance6.toFixed(18));
+                    let balance6 = (await setup.tokens.primeToken.balanceOf(accounts[6])).toString();
+                    expect(earned6).to.equal(balance6);
                 });
                 it('user and contract bPRIME balances are correct', async () => {
                     expect((await setup.balancer.pool.balanceOf(accounts[1])).toString()).to.equal('0');
