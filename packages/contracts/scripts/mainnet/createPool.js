@@ -4,6 +4,7 @@ const PrimeToken = artifacts.require('PrimeToken');
 const WETH = artifacts.require('WETH');
 
 const contracts = require('../../contractAddresses.json');
+const config = require('../../config.json');
 
 const fs = require("fs");
 
