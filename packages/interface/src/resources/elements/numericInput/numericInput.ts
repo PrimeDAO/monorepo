@@ -15,15 +15,19 @@ export class NumericInput {
   @bindable({ defaultBindingMode: bindingMode.toView }) public css?: string;
   @bindable({ defaultBindingMode: bindingMode.oneTime }) public id?: string;
   /**
-   * set this to initialize the value to display in the input.
-   * If isWei then should be in Wei and will be converted to ETH for the user.
+   * what to display when there is no value
    */
-  @bindable({ defaultBindingMode: bindingMode.toView }) public defaultvalue?: BigNumber | number | string = "";
+  @bindable({ defaultBindingMode: bindingMode.toView }) public defaultText = "";
   /**
-   * this value starts out as equal to defaultValue and is updated as the user types.
-   * If isWei then value is set to a BigNumber.  If the input is not value, then set to `undefined`.
+   * handle should return falsey to accept the key.  Only fired on key strokes that have
+   * already passed the default character filter.
+   */
+  @bindable({ defaultBindingMode: bindingMode.toView }) public handleChange: ({ keyCode: number }) => boolean;
+  @bindable({ defaultBindingMode: bindingMode.toView }) public autocomplete = "off";
+  /**
+   * Assumed to be in Wei and will be converted to ETH for the user and back to Wei for parent component.
    * Else value us set to  whatever string the user types.
-   * If nothing is entered, then value is set to `undefined`.
+   * If nothing is entered, then value is set to `defaultText`.
    */
   @bindable({ defaultBindingMode: bindingMode.twoWay }) public value: string | BigNumber;
   /**
@@ -58,56 +62,35 @@ export class NumericInput {
     }
   }
 
-  constructor(private numberService: NumberService) {
-  }
-
-  private defaultvalueChanged(newValue: BigNumber | number | string, prevValue: BigNumber | number | string): void {
-    /**
-     * TODO: validate that this is a valid value, like for preventing pasting nonsense into the field
-     */
-    if (newValue?.toString() !== prevValue?.toString()) {
-
-      this.hydrateFromDefaultValue();
-
-      // let newString = newValue;
-
-      // if (newString) {
-      //   if (this.isWei) {
-      //     newString = formatEther(newString.toString());
-      //   }
-      //   if ((typeof newValue === "string") && (!newValue || (newValue as string).match(/.*\.$/))) {
-      //     newString = newValue;
-      //     // numberService.toString would return '' for anything that ends in a '.'
-      //   } else {
-      //     newString = this.numberService.toString(newValue);
-      //   }
-      // }
-      // this._innerValue = newString;
-    }
-  }
-
-  private hydrateFromDefaultValue(): void {
-    if (this.defaultvalue === undefined) {
-      this.defaultvalue = "";
-    }
-    try {
-      if (this.isWei) {
-        if (this.defaultvalue !== "") {
-          this.innerValue = formatEther(this.defaultvalue.toString());
+  private valueChanged(newValue: string | BigNumber, oldValue: string | BigNumber ) {
+    if (!newValue) {
+      this._innerValue = this.defaultText || "";
+    } else if (newValue !== oldValue) {
+      try {
+        let newStringValue: string;
+        if (this.isWei) {
+          newStringValue = formatEther(newValue.toString());
         } else {
-          this.innerValue = "";
+          newStringValue = newValue.toString();
         }
-      } else {
-        this.innerValue = this.defaultvalue.toString();
+        /**
+         * don't let the new string reformat the user's input
+         */
+        if (this.numberService.fromString(this._innerValue) !== this.numberService.fromString(newStringValue)) {
+          this._innerValue = newStringValue;
+        }
+      } catch {
+        this.innerValue = "NaN";
       }
-    } catch {
-      this.innerValue = "NaN";
     }
+  }
+
+  constructor(private numberService: NumberService) {
   }
 
   public attached(): void {
     this.element.addEventListener("keydown", (e) => { this.keydown(e); });
-    this.hydrateFromDefaultValue();
+    // this.hydrateFromDefaultValue();
   }
 
   public detached(): void {
@@ -120,6 +103,7 @@ export class NumericInput {
   private isNavigationOrSelectionKey(e): boolean {
     // Allow: backspace, delete, tab, escape, enter and .
     const currentValue = this.element.value as string;
+    let returnValue = false;
     if (
       ([46, 8, 9, 27, 13, 110].indexOf(e.keyCode) !== -1) ||
       // Allow: Ctrl+A/X/C/V, Command+A/X/C/V
@@ -128,17 +112,17 @@ export class NumericInput {
       (e.keyCode >= 35 && e.keyCode <= 40)
     ) {
       // let it happen, don't do anything
-      return true;
+      returnValue = true;
     } else {
       /**
        * decimals are allowed, is a decimal, and there is not already a decimal
        */
       if ((this.decimal && (e.keyCode === 190) &&
         (!currentValue || !currentValue.length || (currentValue.indexOf(".") === -1)))) {
-        return true;
+        returnValue =true;
       }
     }
-    return false;
+    return returnValue;
   }
 
   // http://stackoverflow.com/a/995193/725866
@@ -146,6 +130,11 @@ export class NumericInput {
     if (!this.isNavigationOrSelectionKey(e)) {
       // If it's not a number, prevent the keypress...
       if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+        e.preventDefault();
+      }
+    }
+    if (this.handleChange) {
+      if (this.handleChange({ keyCode: e.keyCode })) {
         e.preventDefault();
       }
     }

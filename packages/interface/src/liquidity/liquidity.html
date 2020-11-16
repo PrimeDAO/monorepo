@@ -1,6 +1,7 @@
 <template>
   <div class="animated-page au-animate liquidityContainer">
     <div class="header">
+      <span class="triangle"><img /></span>
       <div class="heading2 title">${ model.remove ? "Remove" : "Add" } Liquidity</div>
     </div>
     <div class="leftColumn section">
@@ -14,17 +15,17 @@
         <div class="dataGroup">
           <label>My share:</label>
           <div class="value" if.to-view="model.connected">
-            <floating-point-number class="share" value.to-view="model.poolshare | ethwei" precision="4"
+            <floating-point-number value.to-view="model.poolUsersBPrimeShare * 100" precision="4"
               placement.to-view="top"></floating-point-number>%
           </div>
           <div else class="value">--</div>
         </div>
         <div class="dataGroup">
           <label>Swap fee:</label>
-          <div class="value" if.to-view="model.swapfee">${model.swapfee | ethwei}</div>
-          <div else class="value">--</div>
+          <floating-point-number value.to-view="model.swapfee | ethwei" precision="4"
+            placement.to-view="top"></floating-point-number>%
         </div>
-        <div class="assets" with.bind="this.model.poolTokenWeights">
+        <div class="assets" with.bind="this.model.poolTotalDenormWeightseights">
           <div><img src=" /PD_APP_ICON_PD_01.svg" />${primeWeight | ethwei}% PRIME
           </div>
           <div><img src="/PD_APP_ICON_ETH_01.svg" />${wethWeight | ethwei}% WETH</div>
@@ -32,56 +33,173 @@
       </div>
     </div>
     <div class="rightColumn sectionStyles">
-      <div class="table">
+      <div class="table sectionStyles">
+        <div class="cell heading heading3"></div>
         <div class="cell heading heading3">Asset</div>
-        <div class="cell heading heading3">Wallet Balance</div>
-        <div class="cell heading heading3">Deposit</div>
-        <div class="cell"><img src="/PD_APP_ICON_PD_01.svg" />PRIME</div>
+
+        <div class="cell heading heading3">${model.remove ? "My Pool Balance" : "Wallet Balance" & oneTime}</div>
+
+        <div class="cell heading heading3">${model.remove ? "Remove" : "Deposit"}</div>
+
+        <div class="cell"><input type="checkbox" checked.bind="primeSelected" /></div>
+        <div class="cell"><img src="/PD_APP_ICON_PD_01.svg" />PRIME
+          <button if.to-view="showPrimeUnlock" class="unlock button4 small" click.delegate="unlock(model.primeTokenAddress)">Unlock</button>
+        </div>
         <div class="cell">
           <div if.to-view="model.connected">
-            <floating-point-number class="share" value.to-view="model.userPrimeBalance | ethwei" precision="4"
-              placement.to-view="top"></floating-point-number>
+            <div if.one-time="!model.remove">
+              <!-- "Wallet Balance" -->
+              <formatted-number
+                value.to-view="model.userPrimeBalance | ethwei"
+                format="0.00a"
+                placement.to-view="top">
+              </formatted-number>
+            </div>
+            <div else>
+              <!-- "My Pool Balance" -->
+              <formatted-number
+                value.to-view="userPrimePoolShare | ethwei"
+                format="0.0000a"
+                placement.to-view="top">
+              </formatted-number>
+            </div>
           </div>
           <div else>--</div>
         </div>
-        <div class="cell">
-          <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxPrime()">Max</button></label>
-          <numeric-input id="wethAmount"
-            defaultvalue.to-view="defaultWethBalance"
-            value.two-way="userWethAmount"
-            placeholder="0.0"
-            css="clearInput"></numeric-input>
-        </div>
-        <div class="cell"><img src="/PD_APP_ICON_ETH_01.svg" />WETH</div>
-        <div class="cell">
+        <!-- "Add PRIME amount" -->
+        <div class="cell" if.one-time="!model.remove">
           <div if.to-view="model.connected">
-            <floating-point-number class="share" value.to-view="model.userWethBalance | ethwei" precision="4"
-              placement.to-view="top"></floating-point-number>
+            <div if.to-view="primeSelected">
+              <label if.to-view="model.userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxPrime()">Max</button></label>
+              <numeric-input id="primeAmount"
+                handle-change.call="handleAmountChange(model.primeTokenAddress, { keyCode: number })"
+                value.two-way="primeAmount"
+                placeholder="0.0"
+                css="clearInput"></numeric-input>
+            </div>
+          </div>
+        </div>
+        <!-- "Remove PRIME amount" -->
+        <div class="cell" else>
+          <div if.to-view="model.connected">
+            <div if.to-view="primeSelected">
+              <formatted-number
+                value.to-view="primeAmount | ethwei"
+                format="0.0000a"
+                placement.to-view="top">
+              </formatted-number>
+            </div>
+            <div else>--</div>
           </div>
           <div else>--</div>
         </div>
+        <div class="cell"><input type="checkbox" checked.bind="wethSelected" /></div>
+        <div class="cell"><img src="/PD_APP_ICON_ETH_01.svg" />WETH
+          <button if.to-view="showWethUnlock" class="unlock button4 small" click.delegate="unlock(model.wethTokenAddress)">Unlock</button>
+        </div>
         <div class="cell">
-          <label if.to-view="model.userWethBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxWeth()">Max</button></label>
-          <numeric-input id="primeAmount"
-            defaultvalue.to-view="defaultPrimeBalance"
-            value.two-way="userPrimeAmount"
-            placeholder="0.0"
-            css="clearInput"></numeric-input>
+          <div if.to-view="model.connected">
+            <div if.one-time="!model.remove">
+              <!-- "Wallet Balance" -->
+              <formatted-number
+                value.to-view="model.userWethBalance | ethwei"
+                format="0.00a"
+                placement.to-view="top">
+              </formatted-number>
+            </div>
+            <div else>
+              <!-- "My Pool Balance" -->
+              <formatted-number
+                value.to-view="userWethPoolShare | ethwei"
+                format="0.0000a"
+                placement.to-view="top">
+              </formatted-number>
+            </div>
+          </div>
+          <div else>--</div>
+        </div>
+        <!-- "Add WETH amount" -->
+        <div class="cell" if.one-time="!model.remove">
+          <div if.to-view="model.connected">
+            <div if.to-view="wethSelected">
+              <label if.to-view="model.userWethBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxWeth()">Max</button></label>
+              <numeric-input id="wethAmount"
+                handle-change.call="handleAmountChange(model.wethTokenAddress, { keyCode: number })"
+                value.two-way="wethAmount"
+                placeholder="0.0"
+                css="clearInput"></numeric-input>
+            </div>
+          </div>
+        </div>
+        <!-- "Remove WETH amount" -->
+        <div class="cell" else>
+          <div if.to-view="model.connected">
+            <div if.to-view="wethSelected">
+              <formatted-number
+                value.to-view="wethAmount | ethwei"
+                format="0.0000a"
+                placement.to-view="top">
+              </formatted-number>
+            </div>
+            <div else>--</div>
+          </div>
+          <div else>--</div>
         </div>
       </div>
       <div class="bPrimeAmount section">
-        <div class="label">My BPRIME Amount</div>
-        <div class="amount">
-          <div if.to-view="model.connected" class="value">
-            <floating-point-number class="share" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
-              placement.to-view="top"></floating-point-number>
+        <div class="label">BPRIME Amount</div>
+        <!-- BPrime Amount:  Add -->
+        <div if.one-time="!model.remove" class="amount">
+          <div if.to-view="userLiquidity.absolute.future" class="value">
+            <formatted-number
+              value.to-view="userLiquidity.absolute.current | ethwei"
+              format="0.00a"
+              placement.to-view="top">
+            </formatted-number>
+            <span> → </span>
+            <formatted-number
+              value.to-view="userLiquidity.absolute.future | ethwei"
+              format="0.00a"
+              placement.to-view="top">
+            </formatted-number> BPRIME
           </div>
-          <div else class="label">--</div> BPRIME
+          <div else class="value">
+            <formatted-number
+              value.to-view="userLiquidity.absolute.current | ethwei"
+              format="0.00a"
+              placement.to-view="top">
+            </formatted-number> BPRIME
+          </div>
+        </div>
+        <!-- BPrime Amount:  Remove -->
+        <div else>
+          <formatted-number
+            value.to-view="model.userBPrimeBalance | ethwei"
+            format="0.00a"
+            placement.to-view="top">
+          </formatted-number> BPRIME
+          <label if.to-view="model.userBPrimeBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxBPrime()">Max</button></label>
+          <numeric-input id="bPrimeAmount"
+            value.two-way="bPrimeAmount"
+            placeholder="0.0"
+            css="clearInput"></numeric-input>
         </div>
       </div>
     </div>
+    <!-- <div show.to-view="showSlippage" class="messageRow">
+      <div class="liquidityMessage">
+        <div class="icon"><img src="/PD_ASSET_ICON_INFO_01.svg" /></div>
+        <div class="body">
+          <div>Adding liquidity will incur <formatted-number
+              value.to-view="slippage"
+              format="0.0000a"
+              placement.to-view="top">
+            </formatted-number> % of slippage</div>
+        </div>
+      </div>
+    </div> -->
     <div class="secondRow">
-      <button class="button1" click.delegate="handleSubmit()">${ model.remove ? "Remove" : "Add" } Liquidity</button>
+      <button class.one-time="model.remove ? 'button2' : 'button1'" click.delegate="handleSubmit()">${ model.remove ? (isSingleAsset ? "Remove": "Withdraw" ) : "Add" } Liquidity</button>
     </div>
     <div class="thirdRow back">
       <a route-href="route: dashboard"><img src="/back.svg"></img> Back</a>

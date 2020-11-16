@@ -50,4 +50,8 @@ export class Utils {
   //     setTimeout(func, diff);
   //   }
   // }
+
+  public static goto(where: string): void {
+    window.open(where, "_blank", "noopener noreferrer");
+  }
 }

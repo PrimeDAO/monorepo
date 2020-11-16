@@ -9,7 +9,7 @@
   margin: auto;
   right: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 10001; // above all
   text-align: center;
   pointer-events: none;
 }
@@ -57,7 +57,7 @@
 
 .banner.info .body {
   color: $color-white;
-  background-color: $color-darkblue;
+  background-color: $color-green;
 }
 
 .banner.info .body a {
@@ -72,7 +72,7 @@
 }
 
 .banner.info button.close {
-  background-color: $color-darkblue;
+  background-color: $color-green;
 }
 
 .banner button.close span {

@@ -6,6 +6,7 @@ import { PLATFORM } from "aurelia-pal";
 import "./styles/styles.scss";
 import "./app.scss";
 import { ConsoleLogService } from "services/ConsoleLogService";
+import { Utils } from "services/utils";
 
 @autoinject
 export class App {
@@ -15,6 +16,7 @@ export class App {
 
   private router: Router;
   private onOff = false;
+  private modalMessage: string;
 
   private errorHandler = (ex: unknown): boolean => {
     this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an unexpected error occurred", ex));
@@ -24,7 +26,13 @@ export class App {
   public attached(): void {
     window.addEventListener("error", this.errorHandler);
 
+    this.eventAggregator.subscribe("dashboard.loading", async (onOff: boolean) => {
+      this.modalMessage = "Thank you for your patience while we initialize for a few moments...";
+      this.onOff = onOff;
+    });
+
     this.eventAggregator.subscribe("transaction.sent", async () => {
+      this.modalMessage = "Awaiting confirmation...";
       this.onOff = true;
     });
 
@@ -78,5 +86,9 @@ export class App {
     config.fallbackRoute("");
 
     this.router = router;
+  }
+
+  goto(where: string): void {
+    Utils.goto(where);
   }
 }

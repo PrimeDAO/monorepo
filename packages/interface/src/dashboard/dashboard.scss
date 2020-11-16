@@ -1,14 +1,11 @@
 @import "styles/colors.scss";
 .dashboardContainer {
-  height: 100%;
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  justify-content: center;
   padding-top: 70px;
   padding-left: 80px;
   padding-right: 80px;
   padding-bottom: 40px;
-  box-sizing: border-box;
 
   .button1,
   .button2,
@@ -17,14 +14,18 @@
     margin: auto;
   }
 
+  > div:not(:last-child) {
+    margin-right: 26px;
+  }
+
   .prepare,
   .contribute,
   .learnmore,
   .farming {
     text-align: left;
-    max-width: min-content;
     margin-bottom: 25px;
-    min-width: 270px;
+    min-width: 290px;
+    max-width: 290px;
 
     .inputButtonGroup {
       text-align: left;
@@ -51,6 +52,10 @@
   .learnmore {
     border-top: 4px solid $color-lightblue;
     padding-top: 30px;
+
+    a {
+      text-decoration: underline;
+    }
 
     > div {
       margin-bottom: 16px;
@@ -100,6 +105,15 @@
       > div:not(:last-child) {
         margin-bottom: 12px;
       }
+    }
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .dashboardContainer {
+    flex-wrap: wrap;
+    > div {
+      margin-right: 26px;
     }
   }
 }

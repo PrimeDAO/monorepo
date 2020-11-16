@@ -3,14 +3,12 @@
 @import "tippy.js/dist/tippy.css"; // TODO: use CDN?
 
 html {
-  height: 100%;
-
   body {
     margin: 0;
     background-color: $global-background-color;
     color: $color-white;
     font-family: Aeonik;
-    height: 100%;
+    min-height: 100vh;
 
     input {
       border: $section-border;
@@ -116,11 +114,33 @@ html {
       outline: none;
     }
 
+    .triangle {
+      position: absolute;
+      transform: translateY(-21px);
+
+      img {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 0 38px 38px;
+        border-color: transparent transparent $triangle-color transparent;
+        display: inline-block;
+      }
+    }
+
     .sectionStyles {
       font-size: 12px;
       letter-spacing: 0.6px;
       line-height: 15px;
       background-color: $section-background-color;
+
+      a {
+        text-decoration: underline;
+      }
+
+      input {
+        font-size: 12px;
+      }
     }
 
     .section {
@@ -139,20 +159,6 @@ html {
 
         > div {
           margin-bottom: 16px;
-        }
-
-        .triangle {
-          position: absolute;
-          transform: translateY(-21px);
-
-          img {
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 0 38px 38px;
-            border-color: transparent transparent $triangle-color transparent;
-            display: inline-block;
-          }
         }
       }
       &.middle {
@@ -209,4 +215,10 @@ etherscanlink {
 
 .copy-to-clip-button:hover {
   color: $color-grey-3;
+}
+
+#WEB3_CONNECT_MODAL_ID {
+  div:first-of-type {
+    z-index: 10002; // stay over everything
+  }
 }

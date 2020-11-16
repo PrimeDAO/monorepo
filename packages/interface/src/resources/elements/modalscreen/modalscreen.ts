@@ -9,6 +9,8 @@ import { bindable, bindingMode, containerless, customElement } from "aurelia-fra
 export class ModalScreen {
 
   @bindable({ defaultBindingMode: bindingMode.toView }) public onOff: boolean;
+  @bindable({ defaultBindingMode: bindingMode.toView }) public message: string;
+
   private container: HTMLElement;
   private mask: HTMLElement;
 
@@ -26,7 +28,7 @@ export class ModalScreen {
 
   private onResize() {
     if (this.container) {
-      this.mask.style.height = `${this.container.offsetHeight}px`;
+      this.mask.style.height = `${this.container.scrollHeight}px`;
       this.mask.style.top = `${this.container.offsetTop}px`;
     }
   }

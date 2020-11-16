@@ -54,16 +54,16 @@ export class FormattedNumber {
 
   @computedFrom("_value")
   private get tooltip():string {
-    return this._value.toString(10);
+    return this._value?.toString(10);
   }
 
   private setTooltip() {
-    if (this.textElement && this.text) {
+    if (this.textElement && this.value) {
       // tippy(this.textElement, "dispose");
       const instance = tippy(this.textElement, {
         appendTo: () => document.body, // because is "interactive" and otherwise messes with the layout on hover
       });
-      instance.setContent(this.text);
+      instance.setContent(this.value.toString());
     }
   }
 }

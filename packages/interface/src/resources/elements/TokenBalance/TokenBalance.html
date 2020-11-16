@@ -1,9 +1,17 @@
 <template>
-  <floating-point-number
-    class="tokenbalance"
-    if.to-view="balance !== null"
-    value.to-view="balance | ethwei"
-    precision="6"
-    placement.to-view="placement"></floating-point-number>
+  <span if.to-view="balance !== null">
+    <formatted-number
+      if.to-view="formatted"
+      value.to-view="balance | ethwei"
+      format.to-view="formatted"
+      placement.to-view="top">
+    </formatted-number>
+    <floating-point-number
+      else
+      class="tokenbalance"
+      value.to-view="balance | ethwei"
+      precision="6"
+      placement.to-view="placement"></floating-point-number>
+  </span>
   <span else class="tokenbalance">--</span>
 </template>

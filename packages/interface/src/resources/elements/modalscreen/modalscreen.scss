@@ -1,5 +1,5 @@
 .modalScreenContainer {
-  height: 100%;
+  height: auto;
   .modalMask {
     z-index: 999;
     position: absolute;
@@ -11,6 +11,10 @@
 
     .modelContent {
       text-align: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%);
       i {
         font-size: 38px;
         color: rgb(109, 168, 255);

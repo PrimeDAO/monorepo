@@ -11,6 +11,7 @@ import { IErc20Token, TokenService } from "services/TokenService";
 export class TokenBalance {
   @bindable({ defaultBindingMode: bindingMode.toView }) public tokenAddress: Address;
   @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
+  @bindable({ defaultBindingMode: bindingMode.toView }) public formatted;
 
   private balance: BigNumber = null;
   private subscriptions = new DisposableCollection();

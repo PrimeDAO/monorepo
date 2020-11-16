@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { ethers, Signer } from "ethers";
+import { BigNumber, ethers, Signer } from "ethers";
 import { BaseProvider, Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -7,6 +7,7 @@ import Torus from "@toruslabs/torus-embed";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
 import { EventConfigFailure } from "services/GeneralEvents";
+import { formatEther, parseEther } from "ethers/lib/utils";
 
 interface IEIP1193 {
   on(eventName: "accountsChanged", handler: (accounts: Array<Address>) => void);
@@ -40,10 +41,10 @@ export class EthereumService {
     "kovan": `https://kovan.infura.io/v3/${process.env.INFURA_ID}`,
   }
   private static providerOptions = {
-    network: "",
     torus: {
       package: Torus, // required
       options: {
+        network: "",
         // networkParams: {
         //   host: "https://localhost:8545", // optional
         //   chainId: 1337, // optional
@@ -81,13 +82,16 @@ export class EthereumService {
       throw new Error("Ethereum.initialize: `network` must be specified");
     }
 
-    this.targetedNetwork = EthereumService.providerOptions.network = network;
+    this.targetedNetwork = network;
+
+    EthereumService.providerOptions.torus.options.network = network;
 
     const readonlyEndPoint = EthereumService.ProviderEndpoints[this.targetedNetwork];
     if (!readonlyEndPoint) {
       throw new Error(`Please connect to either ${Networks.Mainnet} or ${Networks.Kovan}`);
     }
 
+    // comment out to run DISCONNECTED
     this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[this.targetedNetwork]);
 
     if (!this.blockSubscribed) {
@@ -250,3 +254,11 @@ export class EthereumService {
 }
 
 export type Address = string;
+
+export const toWei = (ethValue: BigNumber | string | number): BigNumber => {
+  return parseEther(ethValue.toString());
+};
+
+export const fromWei = (weiValue: BigNumber | string): string => {
+  return formatEther(weiValue.toString());
+};
