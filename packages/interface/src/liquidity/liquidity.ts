@@ -411,12 +411,12 @@ export class Liquidity {
           message = "Can't remove this amount because it exceeds the amount in the pool";
         }
       }
+    } else if (this.isSingleAsset) {
+      message = (this.activeSingleTokenAddress === this.model.primeTokenAddress) ? this.invalidPrimeAdd : this.invalidWethAdd;
+    } else if (this.isMultiAsset) {
+      message = this.invalidPrimeAdd || this.invalidWethAdd;
     } else {
-      if (this.isSingleAsset) {
-        message = (this.activeSingleTokenAddress === this.model.primeTokenAddress) ? this.invalidPrimeAdd : this.invalidWethAdd;
-      } else if (this.isMultiAsset) {
-        message = this.invalidPrimeAdd || this.invalidWethAdd;
-      }
+      message = "To add liquidity you must select at least one asset";
     }
 
     return message;

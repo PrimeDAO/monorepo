@@ -199,7 +199,7 @@
       </div>
     </div> -->
     <div class="secondRow">
-      <button class="button2" click.delegate="handleSubmit()">${ model.remove ? (isSingleAsset ? "Remove": "Withdraw" ) : "Add" } Liquidity</button>
+      <button class.one-time="model.remove ? 'button2' : 'button1'" click.delegate="handleSubmit()">${ model.remove ? (isSingleAsset ? "Remove": "Withdraw" ) : "Add" } Liquidity</button>
     </div>
     <div class="thirdRow back">
       <a route-href="route: dashboard"><img src="/back.svg"></img> Back</a>
