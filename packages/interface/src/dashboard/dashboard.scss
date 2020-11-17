@@ -52,6 +52,9 @@
   .learnmore {
     border-top: 4px solid $color-lightblue;
     padding-top: 30px;
+    .image {
+      text-align: center;
+    }
 
     a {
       text-decoration: underline;
@@ -112,8 +115,10 @@
 @media screen and (max-width: 1300px) {
   .dashboardContainer {
     flex-wrap: wrap;
-    > div {
-      margin-right: 26px;
+    > div:not(:last-child),
+    > div:last-child {
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 }
