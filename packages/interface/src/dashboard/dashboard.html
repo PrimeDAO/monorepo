@@ -62,7 +62,7 @@
       <div class="section middle doubleSection">
         <div class="swapfee left">
           <div class="value">
-            <floating-point-number class="fee" value.to-view="swapfee | ethwei" precision="4"
+            <floating-point-number class="fee" value.to-view="swapfee.mul(100) | ethwei" precision="4"
               placement.to-view="top"></floating-point-number>%
           </div>
           <div class="label">Swap fee</div>

@@ -22,7 +22,7 @@
         </div>
         <div class="dataGroup">
           <label>Swap fee:</label>
-          <floating-point-number value.to-view="model.swapfee | ethwei" precision="4"
+          <floating-point-number value.to-view="model.swapfee.mul(100) | ethwei" precision="4"
             placement.to-view="top"></floating-point-number>%
         </div>
         <div class="assets" with.bind="this.model.poolTotalDenormWeightseights">
