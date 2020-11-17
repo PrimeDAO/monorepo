@@ -217,3 +217,58 @@
     }
   }
 }
+
+@media screen and (max-width: 1300px) {
+  .liquidityContainer {
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+
+    grid-template-columns: auto;
+    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-areas:
+      "header"
+      "leftColumn"
+      "rightColumn"
+      "messageRow"
+      "secondRow"
+      "thirdRow";
+
+    .header {
+      text-align: center;
+    }
+
+    .leftColumn {
+      text-align: center;
+      max-width: 160px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .rightColumn {
+      margin-bottom: 18px;
+
+      .table .cell {
+        &.heading.heading3 {
+          white-space: unset;
+        }
+        input {
+          max-width: 74px;
+        }
+      }
+      .table .cell:nth-child(4n) {
+        min-width: unset;
+      }
+
+      .table .cell:nth-child(4n + 2) {
+        min-width: unset;
+      }
+
+      .bPrimeAmount {
+        input {
+          width: 55px;
+        }
+      }
+    }
+  }
+}
