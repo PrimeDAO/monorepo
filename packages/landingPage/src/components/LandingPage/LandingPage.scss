@@ -302,27 +302,43 @@ $text-transform-uppercase: uppercase;
       }
       .centerMenu,
       .rightColumn {
-        text-align: right;
+        text-align: center;
         @extend .text-menu;
-        min-width: 345px;
+        font-size: 20px;
+        // min-width: 345px;
         display: grid;
-        grid-template-columns: auto auto;
+        grid-template-columns: 48% 22% 30%;
         grid-template-rows: 50px max-content;
+        grid-template-areas: "primeToken learn connect" "menu menu menu";
         column-gap: 16px;
 
+        .primeToken {
+          grid-area: primeToken;
+        }
+        .learn {
+          grid-area: learn;
+        }
+        .connect {
+          grid-area: connect;
+        }
+
+        &.showPrimeToken .primeToken .menuDivider,
         &.showLearn .learn .menuDivider,
         &.showConnect .connect .menuDivider {
           display: block;
         }
 
+        &.showPrimeToken .primeTokenMenu,
         &.showLearn .learnMenu,
         &.showConnect .connectMenu {
-          height: initial;
+          display: flex;
         }
 
+        .primeToken,
         .learn,
         .connect {
           .name {
+            white-space: nowrap;
             display: inline-block;
             width: 100%;
           }
@@ -333,21 +349,23 @@ $text-transform-uppercase: uppercase;
           }
         }
 
+        .primeTokenMenu,
         .learnMenu,
         .connectMenu {
-          padding-top: 20px;
+          grid-area: menu;
+          font-size: 12px;
           text-align: left;
-          display: flex;
+          display: none;
           flex-direction: column;
-          height: 0;
           overflow-y: hidden;
+          padding-top: 20px;
 
           > div {
             @extend .text-menu-item;
             background-color: $color-white;
-            margin-bottom: 16px;
             display: flex;
             padding: 14px;
+            margin-bottom: 16px;
             cursor: pointer;
             color: $color-black;
 
@@ -868,6 +886,7 @@ $text-transform-uppercase: uppercase;
             .centerMenu {
               display: grid;
 
+              .primeTokenMenu,
               .learnMenu,
               .connectMenu {
                 position: absolute;

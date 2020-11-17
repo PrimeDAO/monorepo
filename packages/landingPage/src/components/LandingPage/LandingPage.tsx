@@ -19,50 +19,58 @@ const MainMenu = (props: { container: RefObject<HTMLDivElement> }): React.ReactE
 
   return (
     <>
-      {/* <div className="primeToken">
+      <div className="primeToken">
         <div className="name"
-          onMouseEnter={() => showMenu('Prime', true)}
-          onMouseLeave={() => showMenu('Prime', false)}
-        >Learn<div className="menuDivider"></div></div> */}
+          onMouseEnter={() => showMenu('PrimeToken', true)}
+          onMouseLeave={() => showMenu('PrimeToken', false)}
+        >PRIME Token<div className="menuDivider"></div></div>
+      </div>
 
       <div className="learn">
         <div className="name"
           onMouseEnter={() => showMenu('Learn', true)}
           onMouseLeave={() => showMenu('Learn', false)}
         >Learn<div className="menuDivider"></div></div>
-
       </div>
+
       <div className="connect">
         <div className="name"
           onMouseEnter={() => showMenu('Connect', true)}
           onMouseLeave={() => showMenu('Connect', false)}
         >Connect<div className="menuDivider"></div></div>
       </div>
-      <div
+
+      <div className="primeTokenMenu"
+        onMouseEnter={() => showMenu('PrimeToken', true)}
+        onMouseLeave={() => showMenu('PrimeToken', false)}
+      >
+        <div onClick={() => goto('http://raise.primedao.io')}><div className="name">Get PRIME Now!</div><div className="triangle"></div></div>
+        <div onClick={() => goto('https://medium.com/primedao/the-prime-initial-decentralized-offering-78a8787b9cff')}><div className="name">Offering Guide</div><div className="triangle"></div></div>
+        <div onClick={() => goto('https://medium.com/primedao/primes-first-liquidity-mining-program-b8e4abb6c63')}><div className="name">Seed Liquidity</div><div className="triangle"></div></div>
+        <div onClick={() => goto(' http://router.primedao.io/')}><div className="name">Swap To PRIME</div><div className="triangle"></div></div>
+      </div>
+
+      <div className="learnMenu"
         onMouseEnter={() => showMenu('Learn', true)}
         onMouseLeave={() => showMenu('Learn', false)}
       >
-        <div className="learnMenu">
-          <div onClick={() => goto('https://docs.primedao.io/primedao/tokenomics')}><div className="name">Tokenomics</div><div className="triangle"></div></div>
-          <div onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
-          <div onClick={() => goto('https://docs.primedao.io/')}><div className="name">Documentation</div><div className="triangle"></div></div>
-          <div onClick={() => { document.getElementById('wall').scrollIntoView(); }}><div className="name">Members</div><div className="triangle"></div></div>
-          <div onClick={() => goto('https://docs.primedao.io/primedao/faqs')}><div className="name">FAQ</div><div className="triangle"></div></div>
-        </div>
+        <div onClick={() => goto('https://docs.primedao.io/primedao/tokenomics')}><div className="name">Tokenomics</div><div className="triangle"></div></div>
+        <div onClick={() => goto('https://medium.com/primedao')}><div className="name">Blog</div><div className="triangle"></div></div>
+        <div onClick={() => goto('https://docs.primedao.io/')}><div className="name">Documentation</div><div className="triangle"></div></div>
+        <div onClick={() => { document.getElementById('wall').scrollIntoView(); }}><div className="name">Members</div><div className="triangle"></div></div>
+        <div onClick={() => goto('https://docs.primedao.io/primedao/faqs')}><div className="name">FAQ</div><div className="triangle"></div></div>
       </div>
-      <div
+      <div className="connectMenu"
         onMouseEnter={() => showMenu('Connect', true)}
         onMouseLeave={() => showMenu('Connect', false)}
       >
-        <div className="connectMenu">
-          <div onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
-          <div onClick={() => goto(' https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
-          <div onClick={() => goto('https://github.com/PrimeDAO')}><div className="name">Github</div><div className="triangle"></div></div>
-          <div onClick={() => goto('https://daotalk.org/c/daos/primedao/38')}><div className="name">Forum</div><div className="triangle"></div></div>
-          <div onClick={() => goto('https://t.me/primedao')}><div className="name">Telegram</div><div className="triangle"></div></div>
-          <div onClick={() => goto('https://primedao.substack.com/')}><div className="name">Newsletter</div><div className="triangle"></div></div>
-          <div onClick={() => { window.open('mailto:hello@primedao.io', '#', 'noopener noreferrer'); }}><div className="name">Contact</div><div className="triangle"></div></div>
-        </div>
+        <div onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
+        <div onClick={() => goto(' https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
+        <div onClick={() => goto('https://github.com/PrimeDAO')}><div className="name">Github</div><div className="triangle"></div></div>
+        <div onClick={() => goto('https://daotalk.org/c/daos/primedao/38')}><div className="name">Forum</div><div className="triangle"></div></div>
+        <div onClick={() => goto('https://t.me/primedao')}><div className="name">Telegram</div><div className="triangle"></div></div>
+        <div onClick={() => goto('https://primedao.substack.com/')}><div className="name">Newsletter</div><div className="triangle"></div></div>
+        <div onClick={() => { window.open('mailto:hello@primedao.io', '#', 'noopener noreferrer'); }}><div className="name">Contact</div><div className="triangle"></div></div>
       </div>
     </>
   );
