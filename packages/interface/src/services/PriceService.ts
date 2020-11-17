@@ -18,14 +18,14 @@ export class PriceService {
       `${this.ethereumService.targetedNetwork}-` : ""}api.ethplorer.io/`;
   }
 
-  public getTokenPrice(address: Address, peggedToEth = false): Promise<string> {
+  public getTokenPrice(address: Address, peggedToEth = false): Promise<number> {
     return axios.get(`${this.baseUrl}getTokenInfo/${address}?apiKey=${process.env.ETHPLORER_ID}`)
       .then(
         (response) => {
           // TODO:  peggedToEth eems to do little in kovan (with WETH anyway)
           // and I'm not sure its needed on mainnet.  Confirm.
           return response.data.price ? response.data.price.rate :
-            (peggedToEth ? this.getEthPrice(address) : "0");
+            (peggedToEth ? this.getEthPrice(address) : 0);
         },
       )
       .catch((error) => {
@@ -51,16 +51,21 @@ export class PriceService {
       });
   }
 
-  public async getEthPrice(address?: Address): Promise<string> {
-    /**
-     * heuristic is to pass the DAO's address. but there is an ETH price associated with any
-     * contract, and maybe is a good way to get the value of WETH by passing its address.
-     * Pass no address to use the PrimeDAO's address.
-     */
-    if (!address) {
-      address = this.contractService.getContractAddress(ContractNames.PrimeDAO);
-    }
+  // public async getEthPrice(address?: Address): Promise<string> {
+  //   /**
+  //    * heuristic is to pass the DAO's address. but there is an ETH price associated with any
+  //    * contract, and maybe is a good way to get the value of WETH by passing its address.
+  //    * Pass no address to use the PrimeDAO's address.
+  //    */
+  //   if (!address) {
+  //     address = this.contractService.getContractAddress(ContractNames.PrimeDAO);
+  //   }
+  //   const tokenInfo = await this.getAddressInfo(address);
+  //   return tokenInfo.ETH.price ? tokenInfo.ETH.price.rate : "0";
+  // }
+
+  public async getEthPrice(address: Address): Promise<number> {
     const tokenInfo = await this.getAddressInfo(address);
-    return tokenInfo.ETH.price ? tokenInfo.ETH.price.rate : "0";
+    return tokenInfo.ETH.price ? tokenInfo.ETH.price.rate : 0;
   }
 }

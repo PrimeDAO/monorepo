@@ -15,9 +15,8 @@ export enum ContractNames {
   , BPOOL = "BPool"
   , WETH = "WETH"
   , PRIMETOKEN = "PrimeToken"
-  , USDC = "USDC"
   , STAKINGREWARDS = "StakingRewards"
-  , PrimeDAO = "Avatar"
+  //  , PrimeDAO = "Avatar"
   , IERC20 = "IERC20"
   ,
 }
@@ -36,7 +35,6 @@ export class ContractsService {
       , [ContractNames.STAKINGREWARDS, STAKINGREWARDS.abi]
       , [ContractNames.WETH, WETHABI.abi]
       , [ContractNames.PRIMETOKEN, ERC20ABI.abi]
-      , [ContractNames.USDC, ERC20ABI.abi]
       , [ContractNames.IERC20, ERC20ABI.abi]
       ,
     ],
@@ -48,7 +46,6 @@ export class ContractsService {
     , [ContractNames.STAKINGREWARDS, null]
     , [ContractNames.WETH, null]
     , [ContractNames.PRIMETOKEN, null]
-    , [ContractNames.USDC, null]
     ,
   ]);
 

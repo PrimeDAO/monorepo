@@ -4,12 +4,13 @@ import { ContractsService } from "services/ContractsService";
 import "./dashboard.scss";
 import { EventAggregator } from "aurelia-event-aggregator";
 import TransactionsService from "services/TransactionsService";
-import { Address, EthereumService } from "services/EthereumService";
+import { Address, EthereumService, fromWei } from "services/EthereumService";
 import { BigNumber } from "ethers";
 import { EventConfigException, EventConfigFailure } from "services/GeneralEvents";
 import { PriceService } from "services/PriceService";
 import { Router } from "aurelia-router";
 import { toBigNumberJs } from "services/BigNumberService";
+import { NumberService } from "services/numberService";
 
 @singleton(false)
 @autoinject
@@ -23,7 +24,7 @@ export class Dashboard {
   private bPrimeToken: any;
   // private usdcToken: any;
   private connected = false;
-  private liquidityBalance: BigNumber;
+  private liquidityBalance: number;
   private swapfee: BigNumber;
   /**
    * % number:  the amount of bprime that the user has in proportion to the total supply.
@@ -50,8 +51,8 @@ export class Dashboard {
   private poolTokenAllowances: Map<Address, BigNumber>;
   private ethWethAmount: BigNumber;
   private wethEthAmount: BigNumber;
-  private priceWeth: BigNumber;
-  private pricePrimeToken: BigNumber;
+  private priceWeth: number;
+  private pricePrimeToken: number;
 
   @computedFrom("userTokenBalances")
   private get userPrimeBalance(): BigNumber {
@@ -76,6 +77,7 @@ export class Dashboard {
     private ethereumService: EthereumService,
     private transactionsService: TransactionsService,
     private priceService: PriceService,
+    private numberService: NumberService,
     private router: Router) {
   }
 
@@ -221,16 +223,18 @@ export class Dashboard {
 
   private async getLiquidityAmounts(): Promise<void> {
     try {
-      this.priceWeth = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.WETH), true));
-      this.pricePrimeToken = BigNumber.from(await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)));
+      this.priceWeth = await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.WETH), true);
+      this.pricePrimeToken = await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN));
 
-      const priceWethLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))
-        .mul(this.priceWeth);
+      const priceWethLiquidity =
+        this.numberService.fromString(fromWei(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))) *
+        this.priceWeth;
 
-      const pricePrimeTokenLiquidity = (await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)))
-        .mul(this.pricePrimeToken);
+      const pricePrimeTokenLiquidity =
+          this.numberService.fromString(fromWei(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)))) *
+          this.pricePrimeToken;
 
-      this.liquidityBalance = priceWethLiquidity.add(pricePrimeTokenLiquidity);
+      this.liquidityBalance = priceWethLiquidity + pricePrimeTokenLiquidity;
 
       const poolBalances = new Map();
       poolBalances.set(this.primeTokenAddress, await this.primeToken.balanceOf(this.contractsService.getContractAddress(ContractNames.BPOOL)));
