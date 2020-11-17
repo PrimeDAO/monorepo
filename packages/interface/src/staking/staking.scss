@@ -65,3 +65,13 @@
     }
   }
 }
+
+@media screen and (max-width: 800px) {
+  .stakingContainer {
+    .innerContainer {
+      .header {
+        margin: auto;
+      }
+    }
+  }
+}
