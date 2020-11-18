@@ -229,6 +229,9 @@ export function calcSingleOutGivenPoolIn(
   const newPoolSupply = poolSupply.minus(poolAmountInAfterExitFee);
   const poolRatio = bdiv(newPoolSupply, poolSupply);
 
+  if (poolRatio.lt(0)) {
+    return null; // otherwise bpow will hang
+  }
   const tokenOutRatio = bpow(poolRatio, bdiv(BONE, normalizedWeight));
   const newTokenBalanceOut = bmul(tokenOutRatio, tokenBalanceOut);
 

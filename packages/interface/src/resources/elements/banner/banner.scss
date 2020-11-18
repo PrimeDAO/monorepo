@@ -37,7 +37,7 @@
     flex-shrink: 2;
     color: $color-white;
     cursor: pointer;
-    background-color: $color-red;
+    background-color: transparent;
     border: none;
     font-size: 18px;
     padding: 0;
@@ -46,13 +46,13 @@
 }
 
 .banner.warning .body {
-  color: $color-darkblue;
-  background-color: $color-orange;
+  color: $color-orange;
+  background-color: $color-black;
 }
 
 .banner.failure .body {
-  color: $color-white;
-  background-color: $color-red;
+  color: $color-red;
+  background-color: $color-black;
 }
 
 .banner.info .body {
@@ -71,21 +71,21 @@
   color: $color-yellow;
 }
 
-.banner.info button.close {
-  background-color: $color-green;
-}
+// .banner.info button.close {
+//   background-color: $color-green;
+// }
 
-.banner button.close span {
-  color: $color-white;
-}
+// .banner button.close span {
+//   color: $color-white;
+// }
 
-.banner.warning button.close {
-  background-color: $color-orange;
-}
+// .banner.warning button.close {
+//   background-color: $color-orange;
+// }
 
-.banner.warning button.close span {
-  color: $color-darkblue;
-}
+// .banner.warning button.close span {
+//   color: $color-darkblue;
+// }
 
 .banner.au-enter-active {
   animation: slideDown 1s;

@@ -273,15 +273,22 @@ export class Liquidity {
         .integerValue(BigNumberJs.ROUND_UP)
         .toString());
     } else {
-      return BigNumber.from(calcSingleOutGivenPoolIn(
+
+      const singleOut = calcSingleOutGivenPoolIn(
         toBigNumberJs(poolTokenBalance),
         toBigNumberJs(this.model.poolTotalDenormWeights.get(tokenAddress)),
         toBigNumberJs(bPoolTokenSupply),
         toBigNumberJs(this.model.poolTotalDenormWeight),
         toBigNumberJs(this.bPrimeAmount),
-        toBigNumberJs(this.model.swapfee))
-        .integerValue(BigNumberJs.ROUND_UP)
-        .toString());
+        toBigNumberJs(this.model.swapfee));
+
+      if (singleOut === null) {
+        return null;
+      } else {
+        return BigNumber.from(singleOut
+          .integerValue(BigNumberJs.ROUND_UP)
+          .toString());
+      }
     }
   }
 
@@ -354,9 +361,9 @@ export class Liquidity {
     }
   }
 
-  private async getRemoveTokenAmountOut(
+  private getRemoveTokenAmountOut(
     bPrimeAmount: BigNumber,
-    tokenAddress: Address): Promise<BigNumberJs> {
+    tokenAddress: Address): BigNumberJs {
 
     if (!bPrimeAmount || bPrimeAmount.eq(0)) return new BigNumberJs(0);
 
@@ -374,16 +381,16 @@ export class Liquidity {
     let message: string;
     if (this.isMultiAsset) {
       if (!this.primeHasSufficientAllowance || !this.wethHasSufficientAllowance) {
-        message = "You need to unlock PRIME and/or WETH for transfer";
+        message = "Before adding you need to unlock PRIME and/or WETH tokens for transfer";
       }
     } else if (this.isSingleAsset) {
       if (this.primeSelected) {
         if (!this.primeHasSufficientAllowance) {
-          message = "You need to unlock PRIME for transfer";
+          message = "Before adding you need to unlock the PRIME tokens for transfer";
         }
       } else {
         if (!this.wethHasSufficientAllowance) {
-          message = "You need to unlock WETH for transfer";
+          message = "Before adding you need to unlock the WETH tokens for transfer";
         }
       }
     }
@@ -428,6 +435,10 @@ export class Liquidity {
 
     if (!this.primeAmount || this.primeAmount.isZero()) {
       message = "Please specify an amount of PRIME";
+    } else if (!this.model.remove) {
+      if (this.primeAmount.gt(this.model.userPrimeBalance)) {
+        message = "Cannot add this amount of PRIME because it exceeds your PRIME balance";
+      }
     }
 
     // if (!this.primeHasSufficientAllowance) {
@@ -443,6 +454,10 @@ export class Liquidity {
 
     if (!this.wethAmount || this.wethAmount.isZero()) {
       message = "Please specify an amount of WETH";
+    } else if (!this.model.remove) {
+      if (this.wethAmount.gt(this.model.userWethBalance)) {
+        message = "Cannot add this amount of WETH because it exceeds your WETH balance";
+      }
     }
 
     // if (!this.wethHasSufficientAllowance) {
@@ -453,7 +468,19 @@ export class Liquidity {
   }
 
   private isValid(): boolean {
-    const message = this.invalid;
+    let message;
+
+    if (this.model.remove) {
+      if (this.isSingleAsset) {
+        if (this.bPrimeAmount.gt(this.model.userBPrimeBalance)) {
+          message = "Can't remove this amount because it exceeds your total share of BPRIME";
+        }
+      }
+    }
+
+    if (!message) {
+      message = this.invalid;
+    }
 
     if (message) {
       this.eventAggregator.publish("handleValidationError", message);
@@ -477,7 +504,11 @@ export class Liquidity {
       } else if (this.isSingleAsset) {
         const bPrimeAmount = this.activeSingleTokenAmount;
         const tokenAddress = this.activeSingleTokenAddress;
-        const minTokenAmountOut = (await this.getRemoveTokenAmountOut(bPrimeAmount, tokenAddress))
+        const amountOut = this.getRemoveTokenAmountOut(bPrimeAmount, tokenAddress);
+        if (amountOut === null) {
+          this.eventAggregator.publish("handleValidationError", "Cannot process an amount this large");
+        }
+        const minTokenAmountOut = amountOut
           .times(1 - BALANCE_BUFFER)
           .integerValue(BigNumberJs.ROUND_UP)
           .toString();
