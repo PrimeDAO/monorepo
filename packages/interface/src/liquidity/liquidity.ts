@@ -445,10 +445,47 @@ export class Liquidity {
       if (this.isSingleAsset) {
         if (this.activeSingleTokenAmount.gt(this.model.poolBalances.get(this.activeSingleTokenAddress))) {
           message = "Can't remove this amount because it exceeds the amount in the pool";
+        } else {
+          const tokenAddress = this.activeSingleTokenAddress;
+          const maxOutRatio = 1 / 3;
+          const amount = toBigNumberJs(this.bPrimeAmount);
+          const tokenBalance = toBigNumberJs(this.model.poolBalances.get(tokenAddress));
+          const poolTokenShares = toBigNumberJs(this.model.poolTotalBPrimeSupply);
+          const tokenWeight = toBigNumberJs(this.model.poolTotalDenormWeights.get(tokenAddress));
+          const totalWeight = toBigNumberJs(this.model.poolTotalDenormWeight);
+          const swapfee = toBigNumberJs(this.model.swapfee);
+
+          if (amount.div(poolTokenShares).gt(0.99)) {
+            // Invalidate user's attempt to withdraw the entire pool supply in a single token
+            // At amounts close to 100%, solidity math freaks out
+            message = "Insufficient pool liquidity.  Reduce the amount you wish to remove.";
+          } else {
+            const tokenAmountOut = calcSingleOutGivenPoolIn(
+              tokenBalance,
+              tokenWeight,
+              poolTokenShares,
+              totalWeight,
+              amount,
+              swapfee);
+
+            if (tokenAmountOut.div(tokenBalance).gt(maxOutRatio)) {
+              message = "Insufficient pool liquidity.  Reduce the amount you wish to remove.";
+            }
+          }
         }
       }
-    } else if (this.isSingleAsset) {
+    } else /* adding */ if (this.isSingleAsset) {
       message = (this.activeSingleTokenAddress === this.model.primeTokenAddress) ? this.invalidPrimeAdd : this.invalidWethAdd;
+
+      if (!message) {
+        const maxInRatio = 1 / 2;
+        const amount = toBigNumberJs(this.amounts.get(this.activeSingleTokenAddress));
+        const tokenBalance = toBigNumberJs(this.model.poolBalances.get(this.activeSingleTokenAddress));
+
+        if (amount.div(tokenBalance).gt(maxInRatio)) {
+          message = "Insufficient pool liquidity.  Reduce the amount you wish to add.";
+        }
+      }
     } else if (this.isMultiAsset) {
       message = this.invalidPrimeAdd || this.invalidWethAdd;
     } else {
