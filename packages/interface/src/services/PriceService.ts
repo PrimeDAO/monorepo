@@ -3,7 +3,7 @@ import { Address, EthereumService, Networks } from "services/EthereumService";
 import axios from "axios";
 import { EventConfigFailure } from "services/GeneralEvents";
 import { ConsoleLogService } from "services/ConsoleLogService";
-import { ContractNames, ContractsService } from "services/ContractsService";
+import { ContractsService } from "services/ContractsService";
 
 @autoinject
 export class PriceService {
