@@ -8,8 +8,13 @@
       <div class="section form">
         <div>Earn PRIME rewards by staking BPRIME tokens!</div>
         <div class="balance">
-          You have <floating-point-number if.to-view="model.connected" value.to-view="model.userBPrimeBalance | ethwei" precision="4"
-            placement.to-view="top"></floating-point-number>
+          You have
+          <formatted-number
+            if.to-view="model.connected"
+            value.to-view="model.userBPrimeBalance | ethwei"
+            format="0.00a"
+            placement.to-view="top">
+          </formatted-number>
           <span else>--</span>
           BPRIME available to stake.
         </div>
