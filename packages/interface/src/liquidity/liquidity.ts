@@ -7,6 +7,7 @@ import { calcPoolTokensByRatio } from "services/BalancerPoolLiquidity/helpers/ut
 import { Address } from "services/EthereumService";
 import "./liquidity.scss";
 import BigNumberJs from "services/BigNumberService";
+import { getThemeColors } from "web3modal";
 
 const BALANCE_BUFFER = 0.01;
 
@@ -141,6 +142,8 @@ export class Liquidity {
   private syncWithNewBPrimeAmount(): void {
     this.primeAmount = this.computeTokenToRemoveAmount(this.model.primeTokenAddress);
     this.wethAmount = this.computeTokenToRemoveAmount(this.model.wethTokenAddress);
+    // TODO: figure out smarter way to handle this dependency
+    this.refreshShowSlippage();
   }
 
   @computedFrom("invalidPrimeAdd", "primeHasSufficientAllowance", "this.model.remove")
@@ -211,65 +214,80 @@ export class Liquidity {
   private showSlippage: boolean;
 
   private refreshShowSlippage() {
-    this.showSlippage = !this.model.remove &&
+    this.showSlippage =
       this.activeSingleTokenAddress &&
       !this.invalid &&
-      !!this.amounts.get(this.activeSingleTokenAddress) &&
-      !BigNumber.from(this.amounts.get(this.activeSingleTokenAddress)).isZero();
+      (this.model.remove ? this.bPrimeAmount?.gt(0) :
+        (!!this.amounts.get(this.activeSingleTokenAddress) && BigNumber.from(this.amounts.get(this.activeSingleTokenAddress)).gt(0)));
   }
 
-  @computedFrom("showSlippage", "activeSingleTokenAmount", "primeAmount", "wethAmount", "model.poolBalances", "model.poolTotalBPrimeSupply", "model.poolTotalDenormWeights", "model.poolTotalDenormWeight")
+  @computedFrom("showSlippage", "activeSingleTokenAmount", "primeAmount", "wethAmount", "bPrimeAmount", "model.poolBalances", "model.poolTotalBPrimeSupply", "model.poolTotalDenormWeights", "model.poolTotalDenormWeight")
   private get slippage(): string {
     this.refreshShowSlippage();
-    console.log(`checking slippage:  ${this.showSlippage}`);
     if (!this.showSlippage) {
       return undefined;
     }
-    const tokenInAddress = this.activeSingleTokenAddress;
-
-    const amount = toBigNumberJs(this.amounts.get(tokenInAddress));
-
-    const tokenInBalanceIn = toBigNumberJs(this.model.poolBalances.get(tokenInAddress));
+    const tokenAddress = this.activeSingleTokenAddress;
+    const tokenBalance = toBigNumberJs(this.model.poolBalances.get(tokenAddress));
     const poolTokenShares = toBigNumberJs(this.model.poolTotalBPrimeSupply);
-    const tokenWeightIn = toBigNumberJs(this.model.poolTotalDenormWeights.get(tokenInAddress));
-    const tokenAmountIn = toBigNumberJs(amount.integerValue(BigNumberJs.ROUND_UP));
+    const tokenWeight = toBigNumberJs(this.model.poolTotalDenormWeights.get(tokenAddress));
     const totalWeight = toBigNumberJs(this.model.poolTotalDenormWeight);
+    const swapfee = toBigNumberJs(this.model.swapfee);
 
-    const poolAmountOut = calcPoolOutGivenSingleIn(
-      tokenInBalanceIn,
-      toBigNumberJs(tokenWeightIn),
-      poolTokenShares,
-      totalWeight,
-      tokenAmountIn,
-      toBigNumberJs(this.model.swapfee));
+    let amount: BigNumberJs;
 
-    const expectedPoolAmountOut = tokenAmountIn
-      .times(tokenWeightIn)
-      .times(poolTokenShares)
-      .div(tokenInBalanceIn)
-      .div(totalWeight);
+    if (this.model.remove) {
+      amount = toBigNumberJs(this.bPrimeAmount);
+    } else {
+      amount = toBigNumberJs(this.amounts.get(tokenAddress));
+    }
 
-    console.log(`slippage: ${toBigNumberJs(1)
-      .minus(poolAmountOut.div(expectedPoolAmountOut))
-      .times(100)
-      .toString()}`);
+    let amountOut: BigNumberJs;
+    let expectedAmount: BigNumberJs;
+
+    if (this.model.remove) {
+      if (amount.div(poolTokenShares).gt(0.99)) {
+        // Invalidate user's attempt to withdraw the entire pool supply in a single token
+        // At amounts close to 100%, solidity math freaks out
+        return "";
+      }
+      amountOut = calcSingleOutGivenPoolIn(
+        tokenBalance,
+        tokenWeight,
+        poolTokenShares,
+        totalWeight,
+        amount,
+        swapfee);
+
+      expectedAmount = amount
+        .times(totalWeight)
+        .times(tokenBalance)
+        .div(poolTokenShares)
+        .div(tokenWeight);
+
+    } else {
+      const roundedIntAmount = toBigNumberJs(amount.integerValue(BigNumberJs.ROUND_UP));
+
+      amountOut = calcPoolOutGivenSingleIn(
+        tokenBalance,
+        tokenWeight,
+        poolTokenShares,
+        totalWeight,
+        roundedIntAmount,
+        swapfee);
+
+      expectedAmount = roundedIntAmount
+        .times(tokenWeight)
+        .times(poolTokenShares)
+        .div(tokenBalance)
+        .div(totalWeight);
+    }
 
     return toBigNumberJs(1)
-      .minus(poolAmountOut.div(expectedPoolAmountOut))
+      .minus(amountOut.div(expectedAmount))
       .times(100)
       .toString();
   }
-
-  // private setAmount(tokenAddress: Address, amount: BigNumber, syncOtherAmount = false) {
-  //   if (!this.model.remove) {
-  //     if (tokenAddress === this.model.primeTokenAddress) {
-  //       this.primeAmount = amount;
-  //     } else {
-  //       this.wethAmount = amount;
-  //     }
-  //     this.handleAmountChange(tokenAddress);
-  //   }
-  // }
 
   private computeTokenToRemoveAmount(tokenAddress: Address): BigNumber {
     if (!this.bPrimeAmount || this.bPrimeAmount.eq(0)) return BigNumber.from(0);
