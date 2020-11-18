@@ -207,49 +207,58 @@ export class Liquidity {
     };
   }
 
-  // @computedFrom("invalid", "activeSingleTokenAddress", "model.remove")
-  // private get showSlippage(): boolean {
+  // @computedFrom("invalid", "activeSingleTokenAddress", "model.remove", "amounts")
+  private showSlippage: boolean;
 
-  //   return !this.model.remove &&
-  //   this.activeSingleTokenAddress &&
-  //   !this.invalid &&
-  //     !!this.amounts.get(this.activeSingleTokenAddress) &&
-  //     !toBigNumberJs(this.amounts.get(this.activeSingleTokenAddress)).isZero();
-  // }
+  private refreshShowSlippage() {
+    this.showSlippage = !this.model.remove &&
+      this.activeSingleTokenAddress &&
+      !this.invalid &&
+      !!this.amounts.get(this.activeSingleTokenAddress) &&
+      !BigNumber.from(this.amounts.get(this.activeSingleTokenAddress)).isZero();
+  }
 
-  // @computedFrom("showSlippage", "activeSingleTokenAmount", "primeAmount", "wethAmount", "model.poolBalances", "model.poolTotalBPrimeSupply", "model.poolTotalDenormWeights", "model.poolTotalDenormWeight")
-  // private get slippage(): string {
-  //   if (!this.showSlippage) {
-  //     return undefined;
-  //   }
-  //   const tokenInAddress = this.activeSingleTokenAddress;
+  @computedFrom("showSlippage", "activeSingleTokenAmount", "primeAmount", "wethAmount", "model.poolBalances", "model.poolTotalBPrimeSupply", "model.poolTotalDenormWeights", "model.poolTotalDenormWeight")
+  private get slippage(): string {
+    this.refreshShowSlippage();
+    console.log(`checking slippage:  ${this.showSlippage}`);
+    if (!this.showSlippage) {
+      return undefined;
+    }
+    const tokenInAddress = this.activeSingleTokenAddress;
 
-  //   const amount = toBigNumberJs(this.amounts.get(tokenInAddress));
+    const amount = toBigNumberJs(this.amounts.get(tokenInAddress));
 
-  //   const tokenInBalanceIn = toBigNumberJs(this.model.poolBalances.get(tokenInAddress));
-  //   const poolTokenShares = toBigNumberJs(this.model.poolTotalBPrimeSupply);
-  //   const tokenWeightIn = toBigNumberJs(this.model.poolTotalDenormWeights.get(tokenInAddress));
-  //   const tokenAmountIn = toBigNumberJs(amount.integerValue(BigNumberJs.ROUND_UP));
-  //   const totalWeight = toBigNumberJs(this.model.poolTotalDenormWeight);
+    const tokenInBalanceIn = toBigNumberJs(this.model.poolBalances.get(tokenInAddress));
+    const poolTokenShares = toBigNumberJs(this.model.poolTotalBPrimeSupply);
+    const tokenWeightIn = toBigNumberJs(this.model.poolTotalDenormWeights.get(tokenInAddress));
+    const tokenAmountIn = toBigNumberJs(amount.integerValue(BigNumberJs.ROUND_UP));
+    const totalWeight = toBigNumberJs(this.model.poolTotalDenormWeight);
 
-  //   const poolAmountOut = calcPoolOutGivenSingleIn(
-  //     tokenInBalanceIn,
-  //     toBigNumberJs(tokenWeightIn),
-  //     poolTokenShares,
-  //     totalWeight,
-  //     tokenAmountIn,
-  //     toBigNumberJs(this.model.swapfee));
+    const poolAmountOut = calcPoolOutGivenSingleIn(
+      tokenInBalanceIn,
+      toBigNumberJs(tokenWeightIn),
+      poolTokenShares,
+      totalWeight,
+      tokenAmountIn,
+      toBigNumberJs(this.model.swapfee));
 
-  //   const expectedPoolAmountOut = tokenAmountIn
-  //     .times(tokenWeightIn)
-  //     .times(poolTokenShares)
-  //     .div(tokenInBalanceIn)
-  //     .div(totalWeight);
+    const expectedPoolAmountOut = tokenAmountIn
+      .times(tokenWeightIn)
+      .times(poolTokenShares)
+      .div(tokenInBalanceIn)
+      .div(totalWeight);
 
-  //   return toBigNumberJs(1)
-  //     .minus(poolAmountOut.div(expectedPoolAmountOut))
-  //     .toString();
-  // }
+    console.log(`slippage: ${toBigNumberJs(1)
+      .minus(poolAmountOut.div(expectedPoolAmountOut))
+      .times(100)
+      .toString()}`);
+
+    return toBigNumberJs(1)
+      .minus(poolAmountOut.div(expectedPoolAmountOut))
+      .times(100)
+      .toString();
+  }
 
   // private setAmount(tokenAddress: Address, amount: BigNumber, syncOtherAmount = false) {
   //   if (!this.model.remove) {
@@ -358,6 +367,8 @@ export class Liquidity {
           }
         });
       }
+      // TODO: figure out smarter way to handle this dependency
+      this.refreshShowSlippage();
     }
   }
 
