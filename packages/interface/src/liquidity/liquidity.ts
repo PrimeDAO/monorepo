@@ -520,7 +520,7 @@ export class Liquidity {
 
   private async handleSubmit(): Promise<void> {
 
-    if (!this.isValid() || !this.assetsAreLocked()) {
+    if (!this.isValid() || (!this.model.remove && !this.assetsAreLocked())) {
       return;
     }
 
