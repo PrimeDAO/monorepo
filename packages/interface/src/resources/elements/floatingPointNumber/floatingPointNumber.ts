@@ -98,6 +98,7 @@ export class FloatingPointNumber {
       // tippy(this.textElement, "dispose");
       const instance = tippy(this.textElement, {
         appendTo: () => document.body, // because is "interactive" and otherwise messes with the layout on hover
+        zIndex: 10001,
       });
       instance.setContent(this.value.toString());
     }
