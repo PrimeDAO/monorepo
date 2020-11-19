@@ -30,7 +30,7 @@ export class Dashboard {
    * % number:  the amount of bprime that the user has in proportion to the total supply.
    */
   private poolUsersBPrimeShare: number;
-  private currentAPY: BigNumber;
+  private currentAPY: number;
   private primeFarmed: BigNumber;
   private bPrimeStaked: BigNumber;
   private poolTotalDenormWeights: Map<Address, BigNumber>;
@@ -51,6 +51,7 @@ export class Dashboard {
   private poolTokenAllowances: Map<Address, BigNumber>;
   private ethWethAmount: BigNumber;
   private wethEthAmount: BigNumber;
+  private primePrice: number;
 
   @computedFrom("userTokenBalances")
   private get userPrimeBalance(): BigNumber {
@@ -137,8 +138,9 @@ export class Dashboard {
 
         this.poolTokenNormWeights = weights;
 
-        await this.getStakingAmounts();
         await this.getLiquidityAmounts();
+        // do this after liquidity
+        await this.getStakingAmounts();
       } catch (ex) {
         this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
       }
@@ -216,12 +218,17 @@ export class Dashboard {
   }
 
   private async getStakingAmounts(): Promise<void> {
-    this.currentAPY = await this.stakingRewards.rewardPerTokenStored();
+    this.currentAPY =
+    ((this.numberService.fromString(fromWei((await this.stakingRewards.initreward()))) / 30)
+    * this.primePrice * 365) / this.liquidityBalance;
   }
 
   private async getLiquidityAmounts(): Promise<void> {
     try {
       const prices = await this.priceService.getTokenPrices();
+
+      // for APY
+      this.primePrice = prices.primedao;
 
       const priceWethLiquidity =
         this.numberService.fromString(fromWei(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))) *
