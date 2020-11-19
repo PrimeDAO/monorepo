@@ -11,7 +11,6 @@ export function configure(config: FrameworkConfiguration): void {
     PLATFORM.moduleName("./elements/copyToClipboardButton/copyToClipboardButton"),
     PLATFORM.moduleName("./elements/numericInput/numericInput"),
     PLATFORM.moduleName("./elements/formattedNumber/formattedNumber"),
-    PLATFORM.moduleName("./elements/floatingPointNumber/floatingPointNumber"),
     PLATFORM.moduleName("./elements/ConnectButton/ConnectButton"),
     PLATFORM.moduleName("./elements/NetworkFeedback/NetworkFeedback"),
     PLATFORM.moduleName("./elements/modalscreen/modalscreen"),
