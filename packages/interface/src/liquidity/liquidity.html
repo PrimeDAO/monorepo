@@ -190,7 +190,7 @@
       <div class="liquidityMessage">
         <div class="icon"><img src="/PD_ASSET_ICON_INFO_01.svg" /></div>
         <div class="body">
-          <div>Adding liquidity will incur <formatted-number
+          <div>${model.remove ? "Removing" : "Adding"} liquidity will incur <formatted-number
               value.to-view="slippage"
               format="0.00a"
               placement.to-view="top">
