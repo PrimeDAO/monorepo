@@ -27,6 +27,25 @@
     min-width: 290px;
     max-width: 290px;
 
+    .moreinfo {
+      display: flex;
+      align-items: center;
+
+      .icon {
+        flex-shrink: 2;
+        padding-right: 10px;
+        img {
+          height: 16px;
+          position: relative;
+          top: 2px;
+        }
+      }
+
+      .message {
+        flex-grow: 2;
+      }
+    }
+
     .inputButtonGroup {
       text-align: left;
       display: block;
@@ -54,6 +73,10 @@
     padding-top: 30px;
     .image {
       text-align: center;
+
+      img {
+        width: 265px;
+      }
     }
 
     a {
@@ -66,10 +89,6 @@
 
     .moreinfo {
       margin-bottom: 28px;
-    }
-
-    img {
-      width: 265px;
     }
   }
   .prepare {
