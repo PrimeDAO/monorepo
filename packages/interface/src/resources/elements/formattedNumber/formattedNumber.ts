@@ -5,6 +5,7 @@ import {
   computedFrom,
 } from "aurelia-framework";
 import { NumberService } from "services/numberService";
+import { Utils } from "services/utils";
 import tippy from "tippy.js";
 
 @autoinject
@@ -14,7 +15,9 @@ export class FormattedNumber {
    * how many significant digits we want to display
    */
   //  @bindable({ defaultBindingMode: bindingMode.toView }) public format?: string;
-  @bindable({ defaultBindingMode: bindingMode.toView }) public precision = 3;
+  @bindable({ defaultBindingMode: bindingMode.toView }) public precision?: string | number;
+  @bindable({ defaultBindingMode: bindingMode.toView }) public average?: string | boolean;
+  @bindable({ defaultBindingMode: bindingMode.toView }) public mantissa?: string | number;
   @bindable({ defaultBindingMode: bindingMode.toView }) public value: number | string;
   @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
   @bindable({ defaultBindingMode: bindingMode.toView }) public defaultText = "--";
@@ -37,7 +40,14 @@ export class FormattedNumber {
     let text = null;
 
     if (this._value) {
-      text = this.numberService.toString(Number(this._value), { precision: this.precision });
+      const average = (this.average === undefined) ? true : Utils.toBoolean(this.average);
+      text = this.numberService.toString(Number(this._value),
+        {
+          precision: this.precision ? this.precision : (average ? 3 : undefined),
+          average,
+          mantissa: this.mantissa !== undefined ? this.mantissa : undefined,
+        },
+      );
     }
 
     this.text = text ?? this.defaultText;

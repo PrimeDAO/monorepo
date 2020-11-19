@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export class Utils {
   public static sleep(milliseconds: number): Promise<any> {
     return new Promise((resolve: () => void): any => setTimeout(resolve, milliseconds));
@@ -53,5 +55,25 @@ export class Utils {
 
   public static goto(where: string): void {
     window.open(where, "_blank", "noopener noreferrer");
+  }
+
+  public static toBoolean(value?: string | boolean): boolean {
+    if (!value) {
+      return false;
+    }
+
+    if (typeof(value) === "string") {
+      switch (value.toLocaleLowerCase()) {
+        case "true":
+        case "1":
+        case "on":
+        case "yes":
+          return true;
+        default:
+          return false;
+      }
+    } else {
+      return value;
+    }
   }
 }

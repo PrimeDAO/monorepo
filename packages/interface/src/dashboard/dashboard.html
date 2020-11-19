@@ -63,6 +63,8 @@
         <div class="swapfee left">
           <div class="value">
             <formatted-number class="fee" value.to-view="swapfee.mul(100) | ethwei"
+              average="false"
+              mantissa="2"
               placement.to-view="top"></formatted-number>%
           </div>
           <div class="label">Swap fee</div>
@@ -70,6 +72,8 @@
         <div class="poolUsersBPrimeShare right">
           <div class="value">
             <formatted-number if.to-view="connected" value.to-view="poolUsersBPrimeShare * 100"
+              average="false"
+              mantissa="2"
               placement.to-view="top"></formatted-number>
             <span else>--</span> %
           </div>
@@ -93,6 +97,8 @@
         <div class="currentAPY">
           <div class="value">
             <formatted-number value.to-view="currentAPY | ethwei"
+              average="false"
+              mantissa="2"
               placement.to-view="top"></formatted-number>%
           </div>
           <div class="label">Current APY</div>

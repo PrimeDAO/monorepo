@@ -15,7 +15,9 @@ export class NumberService {
   public toString(value: number | string,
     options?: {
       precision?: string | number,
-      average?: boolean },
+      average?: boolean,
+      mantissa?: string | number,
+    },
   ): string | null | undefined {
 
     // this helps to display the erroneus value in the GUI
@@ -29,7 +31,8 @@ export class NumberService {
     return numbro(value).format(
       Object.assign(
         { average: !!options?.average },
-        Number(options?.precision) ? { totalLength: Number(options.precision) } : {},
+        Number(options?.precision) ? { totalLength: this.fromString(options.precision) } : {},
+        options.mantissa !== undefined ? { mantissa: this.fromString(options.mantissa) } : undefined,
       ) );
   }
 
@@ -68,7 +71,9 @@ export class NumberService {
   //   return result;
   // }
 
-  public fromString(value: string, decimalPlaces = 1000): number {
+  public fromString(value: string | number, decimalPlaces = 1000): number {
+
+    if (typeof(value) === "number") return value;
 
     // this helps to display the erroneus value in the GUI
     if (!this.stringIsNumber(value, decimalPlaces)) {

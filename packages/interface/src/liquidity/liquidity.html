@@ -16,6 +16,8 @@
           <label>My share:</label>
           <div class="value" if.to-view="model.connected">
             <formatted-number value.to-view="model.poolUsersBPrimeShare * 100"
+              average="false"
+              mantissa="2"
               placement.to-view="top"></formatted-number>%
           </div>
           <div else class="value">--</div>
@@ -23,12 +25,24 @@
         <div class="dataGroup">
           <label>Swap fee:</label>
           <formatted-number value.to-view="model.swapfee.mul(100) | ethwei"
+            average="false"
+            mantissa="2"
             placement.to-view="top"></formatted-number>%
         </div>
         <div class="assets" with.bind="this.model.poolTotalDenormWeightseights">
-          <div><img src=" /PD_APP_ICON_PD_01.svg" />${primeWeight | ethwei}% PRIME
+          <div><img src=" /PD_APP_ICON_PD_01.svg" />
+            <formatted-number
+              value.to-view="primeWeight | ethwei"
+              average="false"
+              mantissa="2"
+              placement.to-view="top"></formatted-number>% PRIME
           </div>
-          <div><img src="/PD_APP_ICON_ETH_01.svg" />${wethWeight | ethwei}% WETH</div>
+          <div><img src="/PD_APP_ICON_ETH_01.svg" />
+            <formatted-number value.to-view="wethWeight | ethwei"
+              average="false"
+              mantissa="2"
+              placement.to-view="top"></formatted-number>% WETH
+          </div>
         </div>
       </div>
     </div>
@@ -192,7 +206,8 @@
         <div class="body">
           <div>${model.remove ? "Removing" : "Adding"} liquidity will incur <formatted-number
               value.to-view="slippage"
-              format="0.00a"
+              average="false"
+              mantissa="2"
               placement.to-view="top">
             </formatted-number>% of slippage</div>
         </div>
