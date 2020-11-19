@@ -568,9 +568,9 @@ export class Liquidity {
           this.model.poolTokenAddresses.map(() => "0"),
         );
       } else if (this.isSingleAsset) {
-        const bPrimeAmount = this.activeSingleTokenAmount;
+        const tokenAmount = this.activeSingleTokenAmount;
         const tokenAddress = this.activeSingleTokenAddress;
-        const amountOut = this.getRemoveTokenAmountOut(bPrimeAmount, tokenAddress);
+        const amountOut = this.getRemoveTokenAmountOut(tokenAmount, tokenAddress);
         if (amountOut === null) {
           this.eventAggregator.publish("handleValidationError", "Cannot process an amount this large");
         }
@@ -580,7 +580,7 @@ export class Liquidity {
           .toString();
         this.model.liquidityExitswapPoolAmountIn(
           tokenAddress,
-          bPrimeAmount,
+          this.bPrimeAmount,
           minTokenAmountOut,
         );
       }
