@@ -65,7 +65,6 @@
               <!-- "Wallet Balance" -->
               <formatted-number
                 value.to-view="model.userPrimeBalance | ethwei"
-                format="0.00a"
                 placement.to-view="top">
               </formatted-number>
             </div>
@@ -117,7 +116,6 @@
               <!-- "Wallet Balance" -->
               <formatted-number
                 value.to-view="model.userWethBalance | ethwei"
-                format="0.00a"
                 placement.to-view="top">
               </formatted-number>
             </div>
@@ -167,20 +165,17 @@
           <div if.to-view="userLiquidity.absolute.future" class="value">
             <formatted-number
               value.to-view="userLiquidity.absolute.current | ethwei"
-              format="0.00a"
               placement.to-view="top">
             </formatted-number>
             <span> → </span>
             <formatted-number
               value.to-view="userLiquidity.absolute.future | ethwei"
-              format="0.00a"
               placement.to-view="top">
             </formatted-number> BPRIME
           </div>
           <div else class="value">
             <formatted-number
               value.to-view="userLiquidity.absolute.current | ethwei"
-              format="0.00a"
               placement.to-view="top">
             </formatted-number> BPRIME
           </div>
@@ -189,7 +184,6 @@
         <div else>
           <formatted-number
             value.to-view="model.userBPrimeBalance | ethwei"
-            format="0.00a"
             placement.to-view="top">
           </formatted-number> BPRIME
           <label if.to-view="model.userBPrimeBalance.gt(0)"><button class="button4  small" click.delegate="handleGetMaxBPrime()">Max</button></label>
