@@ -10,7 +10,7 @@
   "homepage": "./",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --env.production --extractCss",
+    "build": "webpack --extractCss",
     "start": "webpack-dev-server --extractCss --open",
     "serve": "webpack-dev-server --extractCss",
     "build:dev": "webpack --extractCss",
