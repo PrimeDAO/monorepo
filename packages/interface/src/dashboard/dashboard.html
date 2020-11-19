@@ -62,15 +62,16 @@
       <div class="section middle doubleSection">
         <div class="swapfee left">
           <div class="value">
-            <floating-point-number class="fee" value.to-view="swapfee.mul(100) | ethwei" precision="4"
-              placement.to-view="top"></floating-point-number>%
+            <formatted-number class="fee" value.to-view="swapfee.mul(100) | ethwei"
+              precision="3"
+              placement.to-view="top"></formatted-number>%
           </div>
           <div class="label">Swap fee</div>
         </div>
         <div class="poolUsersBPrimeShare right">
           <div class="value" if.to-view="connected">
-            <floating-point-number value.to-view="poolUsersBPrimeShare * 100" precision="4"
-              placement.to-view="top"></floating-point-number>%
+            <formatted-number value.to-view="poolUsersBPrimeShare * 100"
+              placement.to-view="top"></formatted-number>%
           </div>
           <div else>--</div>
           <div class="label">My pool share</div>
@@ -92,8 +93,8 @@
       <div class="section middle">
         <div class="currentAPY">
           <div class="value">
-            <floating-point-number value.to-view="currentAPY | ethwei" precision="4"
-              placement.to-view="top"></floating-point-number>%
+            <formatted-number value.to-view="currentAPY | ethwei"
+              placement.to-view="top"></formatted-number>%
           </div>
           <div class="label">Current APY</div>
         </div>
@@ -101,16 +102,16 @@
       <div class="section middle doubleSection">
         <div class="primeFarmed left">
           <div class="value">
-            <floating-point-number if.to-view="connected" value.to-view="primeFarmed | ethwei" precision="8"
-              placement.to-view="top"></floating-point-number>
+            <formatted-number if.to-view="connected" value.to-view="primeFarmed | ethwei"
+              placement.to-view="top"></formatted-number>
             <span else>--</span>
           </div>
           <div class="label">PRIME Farmed</div>
         </div>
         <div class="bprimeStaked right">
           <div class="value">
-            <floating-point-number if.to-view="connected" value.to-view="bPrimeStaked | ethwei" precision="8"
-              placement.to-view="top"></floating-point-number>
+            <formatted-number if.to-view="connected" value.to-view="bPrimeStaked | ethwei"
+              placement.to-view="top"></formatted-number>
             <span else>--</span>
           </div>
           <div class="label">BPRIME Staked</div>

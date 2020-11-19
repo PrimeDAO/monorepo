@@ -6,12 +6,11 @@
       format.to-view="formatted"
       placement.to-view="top">
     </formatted-number>
-    <floating-point-number
+    <formatted-number
       else
       class="tokenbalance"
       value.to-view="balance | ethwei"
-      precision="6"
-      placement.to-view="placement"></floating-point-number>
+      placement.to-view="placement"></formatted-number>
   </span>
   <span else class="tokenbalance">--</span>
 </template>

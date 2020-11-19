@@ -1,5 +1,5 @@
 ﻿import BN from "bignumber.js"; // buried in other packages
-import * as numeral from "numeral";
+const numbro = require("numbro");
 
 // export enum RoundingType {
 //   Bankers = 1,
@@ -8,11 +8,15 @@ import * as numeral from "numeral";
 
 export class NumberService {
   /**
-   * Note this will round up when needed and last displayed digit is .5 or higher.
+   * Note this will round up when average==true and lazt significant digit is .5 or higher.
    * @param value
    * @param format
    */
-  public toString(value: number | string, format?: string): string | null | undefined {
+  public toString(value: number | string,
+    options?: {
+      precision?: string | number,
+      average?: boolean },
+  ): string | null | undefined {
 
     // this helps to display the erroneus value in the GUI
     if ((typeof value === "string") || (value === null) || (typeof value === "undefined")) {
@@ -22,8 +26,11 @@ export class NumberService {
     if (Number.isNaN(value)) {
       return null;
     }
-
-    return numeral(value).format(format);
+    return numbro(value).format(
+      Object.assign(
+        { average: !!options?.average },
+        Number(options?.precision) ? { totalLength: Number(options.precision) } : {},
+      ) );
   }
 
   /**
@@ -33,33 +40,34 @@ export class NumberService {
    * @param exponentialAt Go exponential at the given magnitude, or low and high values
    * @param roundUp 0 to round up, 1 to round down
    */
-  public toFixedNumberString(
-    value: string | number,
-    precision = 5,
-    exponentialAt: number | [number, number] = [-7, 20],
-    roundUp = false): string | null | undefined {
+  // public toFixedNumberString(
+  //   value: string | number,
+  //   precision = 5,
+  //   exponentialAt: number | [number, number] = [-7, 20],
+  //   roundUp = false): string | null | undefined {
 
-    if ((value === null) || (value === undefined)) {
-      return value as any;
-    }
+  //   if ((value === null) || (value === undefined)) {
+  //     return value as any;
+  //   }
 
-    if ((value.toString().trim() === "") || Number.isNaN(Number(value))) {
-      return undefined;
-    }
+  //   if ((value.toString().trim() === "") || Number.isNaN(Number(value))) {
+  //     return undefined;
+  //   }
 
-    const bnClone = BN.clone({ EXPONENTIAL_AT: exponentialAt });
-    /**
-     * value may be a number or a string
-     * because we're using BigNumber.js it can be a fixed number
-     *
-     * ethers BigNumber doesn't accept fixed point except when converting ETH to WEI.
-     */
-    const bn = new bnClone(value.toString());
+  //   const bnClone = BN.clone({ EXPONENTIAL_AT: exponentialAt });
+  //   /**
+  //    * value may be a number or a string
+  //    * because we're using BigNumber.js it can be a fixed number
+  //    *
+  //    * ethers BigNumber doesn't accept fixed point except when converting ETH to WEI.
+  //    */
+  //   const bn = new bnClone(value.toString());
 
-    const result = bn.toPrecision(precision, roundUp ? 0 : 1);
+  //   const result = bn.toPrecision(precision, roundUp ? 0 : 1);
 
-    return result;
-  }
+  //   return result;
+  // }
+
   public fromString(value: string, decimalPlaces = 1000): number {
 
     // this helps to display the erroneus value in the GUI
@@ -73,7 +81,7 @@ export class NumberService {
        */
       return 0;
     } else {
-      return numeral(value).value();
+      return numbro.unformat(value);
     }
   }
 

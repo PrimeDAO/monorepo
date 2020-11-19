@@ -13,7 +13,8 @@ export class FormattedNumber {
   /**
    * how many significant digits we want to display
    */
-  @bindable({ defaultBindingMode: bindingMode.toView }) public format?: string;
+  //  @bindable({ defaultBindingMode: bindingMode.toView }) public format?: string;
+  @bindable({ defaultBindingMode: bindingMode.toView }) public precision = 3;
   @bindable({ defaultBindingMode: bindingMode.toView }) public value: number | string;
   @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
   @bindable({ defaultBindingMode: bindingMode.toView }) public defaultText = "--";
@@ -36,7 +37,7 @@ export class FormattedNumber {
     let text = null;
 
     if (this._value) {
-      text = this.numberService.toString(Number(this._value), this.format);
+      text = this.numberService.toString(Number(this._value), { precision: this.precision });
     }
 
     this.text = text ?? this.defaultText;
