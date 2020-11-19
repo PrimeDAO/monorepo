@@ -1,71 +1,40 @@
 import { autoinject } from "aurelia-framework";
-import { Address, EthereumService, Networks } from "services/EthereumService";
 import axios from "axios";
 import { EventConfigFailure } from "services/GeneralEvents";
 import { ConsoleLogService } from "services/ConsoleLogService";
-import { ContractsService } from "services/ContractsService";
+
+export interface ITokenPrices {
+  // key is "weth" or "primedao"
+  [key: string]: number;
+}
 
 @autoinject
 export class PriceService {
-  private baseUrl: string;
 
   constructor(
     private consoleLogService: ConsoleLogService,
-    private contractService: ContractsService,
-    private ethereumService: EthereumService,
   ) {
-    this.baseUrl = `https://${(this.ethereumService.targetedNetwork !== Networks.Mainnet) ?
-      `${this.ethereumService.targetedNetwork}-` : ""}api.ethplorer.io/`;
   }
 
-  public getTokenPrice(address: Address, peggedToEth = false): Promise<number> {
-    return axios.get(`${this.baseUrl}getTokenInfo/${address}?apiKey=${process.env.ETHPLORER_ID}`)
-      .then(
-        (response) => {
-          // TODO:  peggedToEth eems to do little in kovan (with WETH anyway)
-          // and I'm not sure its needed on mainnet.  Confirm.
-          return response.data.price ? response.data.price.rate :
-            (peggedToEth ? this.getEthPrice(address) : 0);
-        },
-      )
+  public getTokenPrices(): Promise<ITokenPrices> {
+    const uri = "https://api.coingecko.com/api/v3/simple/price?ids=primedao%2Cweth&vs_currencies=USD%2CUSD";
+    return axios.get(uri)
+      .then((response) => {
+        const keys = Object.keys(response.data);
+        const keyCount = keys.length;
+        const result: ITokenPrices = {};
+        for (let i = 0; i < keyCount; ++i) {
+          const tokenId = keys[i];
+          result[tokenId] = response.data[tokenId].usd;
+        }
+        return result;
+      })
       .catch((error) => {
         this.consoleLogService.handleFailure(
-          new EventConfigFailure(`PriceService: ${error.response?.data?.error.message ?? "Error fetching token price"}: ${address}`));
+          new EventConfigFailure(`PriceService: Error fetching token price ${error?.message}`));
         // throw new Error(`${error.response?.data?.error.message ?? "Error fetching token price"}`);
         // TODO:  restore the exception?
-        return "0";
+        return {};
       });
-  }
-
-  public getAddressInfo(address: Address): Promise<any> {
-    return axios.get(`${this.baseUrl}getAddressInfo/${address}?apiKey=${process.env.ETHPLORER_ID}&token`)
-      .then(
-        (response) => {
-          return response.data;
-        },
-      )
-      .catch((error) => {
-        this.consoleLogService.handleFailure(
-          new EventConfigFailure(`PriceService: ${error.response?.data?.error.message ?? "Error fetching token information"}: ${address}`));
-        throw new Error(`${error.response?.data?.error.message ?? "Error fetching token information"}`);
-      });
-  }
-
-  // public async getEthPrice(address?: Address): Promise<string> {
-  //   /**
-  //    * heuristic is to pass the DAO's address. but there is an ETH price associated with any
-  //    * contract, and maybe is a good way to get the value of WETH by passing its address.
-  //    * Pass no address to use the PrimeDAO's address.
-  //    */
-  //   if (!address) {
-  //     address = this.contractService.getContractAddress(ContractNames.PrimeDAO);
-  //   }
-  //   const tokenInfo = await this.getAddressInfo(address);
-  //   return tokenInfo.ETH.price ? tokenInfo.ETH.price.rate : "0";
-  // }
-
-  public async getEthPrice(address: Address): Promise<number> {
-    const tokenInfo = await this.getAddressInfo(address);
-    return tokenInfo.ETH.price ? tokenInfo.ETH.price.rate : 0;
   }
 }

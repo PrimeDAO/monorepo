@@ -51,8 +51,6 @@ export class Dashboard {
   private poolTokenAllowances: Map<Address, BigNumber>;
   private ethWethAmount: BigNumber;
   private wethEthAmount: BigNumber;
-  private priceWeth: number;
-  private pricePrimeToken: number;
 
   @computedFrom("userTokenBalances")
   private get userPrimeBalance(): BigNumber {
@@ -223,16 +221,15 @@ export class Dashboard {
 
   private async getLiquidityAmounts(): Promise<void> {
     try {
-      this.priceWeth = await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.WETH), true);
-      this.pricePrimeToken = await this.priceService.getTokenPrice(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN));
+      const prices = await this.priceService.getTokenPrices();
 
       const priceWethLiquidity =
         this.numberService.fromString(fromWei(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))) *
-        this.priceWeth;
+        prices.weth;
 
       const pricePrimeTokenLiquidity =
           this.numberService.fromString(fromWei(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)))) *
-          this.pricePrimeToken;
+        prices.primedao;
 
       this.liquidityBalance = priceWethLiquidity + pricePrimeTokenLiquidity;
 
