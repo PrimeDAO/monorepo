@@ -55,7 +55,9 @@ export class NumericInput {
     } else {
       // assuming here that the input element will always give us a string
       try {
-        this.value = this.isWei ? parseEther(newValue) : newValue;
+        if (newValue !== ".") {
+          this.value = this.isWei ? parseEther(newValue) : newValue;
+        }
       } catch {
         this.value = undefined;
       }
