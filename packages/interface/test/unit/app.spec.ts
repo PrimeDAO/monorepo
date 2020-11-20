@@ -18,7 +18,7 @@ describe("Stage App Component", () => {
       // const view = component.element;
       const dashboardElement = document.querySelector("dashboard");
       expect(dashboardElement).toBeDefined();
-      // expect(view.textContent.trim()).toBe("interface.PrimeDAO.eth!");
+      // expect(view.textContent.trim()).toBe("primepool.eth!");
       done();
     }).catch(e => {
       fail(e);

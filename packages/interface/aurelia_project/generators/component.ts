@@ -34,7 +34,7 @@ export default class ElementGenerator {
   message: string;
 
   constructor() {
-    this.message = 'interface.PrimeDAO.eth';
+    this.message = 'primepool.eth';
   }
 }
 `
