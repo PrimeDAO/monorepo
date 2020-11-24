@@ -1,13 +1,20 @@
 # PrimeDAO contracts package
 
+> 🤖 PrimeDAO Smart contracts 
+
 ## Development
+
+To install node modules
+
+```
+npm i
+```
 
 To compile contract
 
 ```
 truffle compile
 ```
-
 
 To run tests
 
@@ -61,3 +68,15 @@ set up price oracle
 ```
 npm run setup:oracle:kovan
 ```
+
+## License
+```
+Copyright 2020 Prime Foundation
+
+Licensed under the GNU General Public License v3.0.
+You may obtain a copy of this license at:
+
+  https://www.gnu.org/licenses/gpl-3.0.en.html
+
+```
+
