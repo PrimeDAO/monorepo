@@ -46,7 +46,7 @@ const MainMenu = (props: { container: RefObject<HTMLDivElement> }): React.ReactE
       >
         <div onClick={() => goto('http://raise.primedao.io')}><div className="name">Get PRIME Now!</div><div className="triangle"></div></div>
         <div onClick={() => goto('https://medium.com/primedao/the-prime-initial-decentralized-offering-78a8787b9cff')}><div className="name">Offering Guide</div><div className="triangle"></div></div>
-        <div onClick={() => goto('https://medium.com/primedao/primes-first-liquidity-mining-program-b8e4abb6c63')}><div className="name">Seed Liquidity</div><div className="triangle"></div></div>
+        <div onClick={() => goto('https://primepool.eth.link/')}><div className="name">Seed Liquidity</div><div className="triangle"></div></div>
         <div onClick={() => goto(' http://router.primedao.io/')}><div className="name">Swap To PRIME</div><div className="triangle"></div></div>
       </div>
 
@@ -193,7 +193,7 @@ const LandingPage = (): React.ReactElement => {
         <div className="rightColumn">
           <div className="productName">Liquidity Pool Manager</div>
           <div className="body">PrimeDAO will govern a liquidity pool (LP) on Balancer Protocol. LP’s are a type of automated market with a basket of tokens that have different weights. PrimeDAO will be able to choose which tokens and weights to include in its LP, and will experiment with co-farming, where liquidity providers receive PRIME token rewards and DAO voting rights in exchange for depositing liquidity to the pool.</div>
-          <a className="moreInfoButton" href="https://medium.com/primedao/primes-first-liquidity-mining-program-b8e4abb6c63" target="_blank" rel="noopener noreferrer">Farm Prime!</a>
+          <a className="moreInfoButton" href="https://primepool.eth.link/" target="_blank" rel="noopener noreferrer">Farm Prime!</a>
         </div>
       </div>
 
@@ -237,7 +237,7 @@ const LandingPage = (): React.ReactElement => {
 
 
       <div id="wall" className="wall">
-        <img src="primedao_logo_wall_web.jpg"></img>
+        <img src="CURVE_PD_LOGO-WALL_V01-4.jpg"></img>
       </div>
 
       <div className="primeDev">
