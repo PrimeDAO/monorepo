@@ -1,7 +1,7 @@
 <h1 align="center">
 <br>
 
- <img src="https://i.ibb.co/DDW7x4x/2020-11-24-17-30-19.jpg" alt="PrimeDAO" width="200">
+ <img src="https://i.ibb.co/SwxJNhJ/2020-11-24-17-49-46.jpg" alt="PrimeDAO" width="200">
   <br>
   PrimeDAO monorepo
   <br>
