@@ -26,7 +26,7 @@
 	"CRPFactory":"0xed52D8E202401645eDAD1c0AA21e872498ce47D0",
 	"StakingRewards":"0xE25faBF901Be98099b0FD8C8b3827A4c69F909E4",
 	"PriceOracle":"",
-	"BalancerProxy":"",
+	"BalancerProxy":"0x34441fA51bd02AC54A02FB7cE0172690C6d49913",
 	"BalancerPoolManager":"",
 	"BPool":"0xDD0B69d938c6E98bf8f16f04c4913A0c07E0bb6E",
 	"ConfigurableRightsPool":"0x51A2310B37ead1D8F8Fe01B89b4Cd68FA58992d0",
