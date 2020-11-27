@@ -9,8 +9,8 @@ const migrateDAO = async () => {
   specs.CustomSchemes[0].address = contracts.mainnet.BalancerProxy;
   specs.CustomSchemes[0].params = [contracts.mainnet.ConfigurableRightsPool, contracts.mainnet.BPool];
   specs.CustomSchemes[1].params[2] = contracts.mainnet.BalancerProxy;
-  specs.CustomSchemes[2].params[5] = contracts.mainnet.PriceOracle;
-  specs.CustomSchemes[2].params[6] = "0x0000000000000000000000000000000000000000";
+  specs.CustomSchemes[2].params[2] = contracts.mainnet.EnsPublicResolver;
+  specs.CustomSchemes[3].params[2] = contracts.mainnet.EnsRegistry;
 
   const options = {
     arcVersion: '0.0.1-rc.44',
