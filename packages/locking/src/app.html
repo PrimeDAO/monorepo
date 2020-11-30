@@ -1,0 +1,26 @@
+<template>
+  <banner></banner>
+  <!-- TODO: get animation working -->
+  <div class="appWrapper animated-page au-animate">
+    <div class="appHeader">
+      <div click.delegate="goto('http://primedao.io')" class="logo">
+        <img src="/logo.svg" />
+      </div>
+      <div class="networkFeedback">
+        <networkfeedback></networkfeedback>
+      </div>
+      <div class="connectButton">
+        <connectbutton></connectbutton>
+      </div>
+    </div>
+    <modalscreen on-off.to-view="onOff" message.to-view="modalMessage">
+      <router-view></router-view>
+    </modalscreen>
+    <div class="appFooter">
+      <img src="/logo-white.svg" />
+      <div class="text">&copy; 2020 Prime Development Foundation</div>
+    </div>
+  </div>
+  </modalscreen>
+  </div>
+</template>

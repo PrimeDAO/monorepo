@@ -1,0 +1,118 @@
+@import "styles/colors.scss";
+
+.banner {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  max-width: 95vw;
+  max-height: 43px;
+  margin: auto;
+  right: 0;
+  left: 0;
+  z-index: 10001; // above all
+  text-align: center;
+  pointer-events: none;
+}
+
+.banner .body {
+  display: flex;
+  max-width: 100%;
+  padding-top: 0.6rem;
+  padding-right: 1.25rem;
+  padding-bottom: 0.6rem;
+  padding-left: 1.25rem;
+  border-radius: 0px 0px 10px 10px;
+  -moz-border-radius: 0px 0px 10px 10px;
+  -webkit-border-radius: 0px 0px 10px 10px;
+  border: 0px solid #000000;
+  pointer-events: auto;
+
+  .message {
+    overflow: hidden;
+    white-space: nowrap;
+    margin-right: 12px;
+  }
+
+  button.close {
+    flex-shrink: 2;
+    color: $color-white;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    padding: 0;
+    outline: none;
+  }
+}
+
+.banner.warning .body {
+  color: $color-orange;
+  background-color: $color-black;
+}
+
+.banner.failure .body {
+  color: $color-red;
+  background-color: $color-black;
+}
+
+.banner.info .body {
+  color: $color-white;
+  background-color: $color-green;
+}
+
+.banner.info .body a {
+  margin-left: 0.5rem;
+  color: $color-yellow;
+  text-transform: uppercase;
+}
+
+.banner.info .body .copy-to-clip-button {
+  margin-left: 0.5rem;
+  color: $color-yellow;
+}
+
+// .banner.info button.close {
+//   background-color: $color-green;
+// }
+
+// .banner button.close span {
+//   color: $color-white;
+// }
+
+// .banner.warning button.close {
+//   background-color: $color-orange;
+// }
+
+// .banner.warning button.close span {
+//   color: $color-darkblue;
+// }
+
+.banner.au-enter-active {
+  animation: slideDown 1s;
+}
+
+.banner.au-leave-active {
+  animation: slideUp 0.6s;
+}
+
+.banner.au-stagger {
+  animation-delay: 50ms;
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}

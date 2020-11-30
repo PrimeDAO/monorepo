@@ -1,0 +1,25 @@
+.modalScreenContainer {
+  height: auto;
+  .modalMask {
+    z-index: 999;
+    position: absolute;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; // set to flex by the view model
+    justify-content: center;
+    align-items: center;
+
+    .modelContent {
+      text-align: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      i {
+        font-size: 38px;
+        color: rgb(109, 168, 255);
+        margin-bottom: 8px;
+      }
+    }
+  }
+}

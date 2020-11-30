@@ -1,0 +1,142 @@
+<template>
+  <div class="animated-page au-animate dashboardContainer">
+    <div class="learnmore">
+      <div class="title">PRIME Pool</div>
+      <div class="blurb">Put your tokens to use by contributing liquidity to the Prime Pool. By doing so, you can earn more PRIME tokens.</div>
+      <div class="moreinfo">
+        <div class="icon"><img src="/PD_ASSET_ICON_INFO_01.svg" /></div>
+        <div class="message">Learn more about <a href="https://docs.primedao.io/primedao/products/poolmanager" target="_blank" rel="noopener noreferrer">Liquidity Pools</a>.</div>
+      </div>
+      <div class="image"><img src="/PD_APP_LIQ-POOL-MANAGER_V01-1-02.png" /></div>
+    </div>
+    <div class="prepare">
+      <div class="section top">
+        <span class="triangle"><img /></span>
+        <div class="heading1">Prepare Your Assets</div>
+        <div class="blurb">You can contribute liquidity in either PRIME, ETH, or both. If you have ETH, you'll need to wrap it first and create wrapped-ETH, or WETH. Don't worry — you won't lose your ETH by wrapping it, as it can be unwrapped in the future.</div>
+        <div class="moreinfo">
+          <div class="icon"><img src="/PD_ASSET_ICON_INFO_01.svg" /></div>
+          <div class="message">You can acquire PRIME and ETH using the <a href="http://router.primedao.io/" target="_blank" rel="noopener noreferrer">Prime Aggregator</a>.</div>
+        </div>
+      </div>
+      <div class="section bottom">
+        <div class="inputButtonGroup">
+          <div class="inputGroup">
+            <label for="ethWethAmount">ETH &RightArrow; WETH</label>
+            <numeric-input id="ethWethAmount"
+              value.two-way="ethWethAmount"
+              placeholder="0.0"></numeric-input>
+          </div>
+          <button class="button1 small" disabled.to-view="!ethWethAmount || ethWethAmount.eq(0)" click.delegate="handleDeposit()">Wrap</button>
+        </div>
+        <div class="inputButtonGroup">
+          <div class="inputGroup">
+            <label for="wethEthAmount">WETH &RightArrow; ETH</label>
+            <numeric-input id="wethEthAmount"
+              value.two-way="wethEthAmount"
+              placeholder="0.0"></numeric-input>
+          </div>
+          <label if.to-view="userWethBalance.gt(0)"><button click.delegate="handleGetMax()" class="button4 small" click.delegate="handleGetMax()">Max</button></label>
+          <button class="button2 small" disabled.to-view="!wethEthAmount || wethEthAmount.eq(0)" click.delegate="handleWithdraw()">Unwrap</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="contribute">
+      <div class="section top">
+        <span class="triangle"><img /></span>
+        <div class="heading1">Contribute Liquidity</div>
+        <div class="class">Want to put your PRIME to use? Contribute liquidity to the Prime Pool to earn more PRIME
+          tokens.</div>
+        <div class="class">Adding liquidity will exchange your PRIME or WETH (wrapped ETH) into liquidity provider
+          tokens called BPRIME.</div>
+        <div>Removing liquidity will exchange your liquidity provider tokens into PRIME and WETH, claiming any
+          accrued rewards.</div>
+        <div class="moreinfo">
+          <div class="icon"><img src="/PD_ASSET_ICON_INFO_01.svg" /></div>
+          <div class="message">Visit the <a href="https://pools.balancer.exchange/#/pool/0xdd0b69d938c6e98bf8f16f04c4913a0c07e0bb6e/" target="_blank" rel="noopener noreferrer">Prime Liquidity Pool on Balancer</a> for more pool information.</div>
+        </div>
+      </div>
+      <div class="section middle">
+        <div class="value">
+          $<formatted-number
+            class="balance"
+            value.to-view="liquidityBalance"
+            placement.to-view="top">
+          </formatted-number>
+        </div>
+        <div class="label">Liquidity</div>
+      </div>
+      <div class="section middle doubleSection">
+        <div class="swapfee left">
+          <div class="value">
+            <formatted-number class="fee" value.to-view="swapfee.mul(100) | ethwei"
+              average="false"
+              mantissa="2"
+              placement.to-view="top"></formatted-number>%
+          </div>
+          <div class="label">Swap fee</div>
+        </div>
+        <div class="poolUsersBPrimeShare right">
+          <div class="value">
+            <formatted-number if.to-view="connected" value.to-view="poolUsersBPrimeShare * 100"
+              average="false"
+              mantissa="2"
+              placement.to-view="top"></formatted-number>
+            <span else>--</span> %
+          </div>
+          <div class="label">My pool share</div>
+        </div>
+      </div>
+      <div class="section bottom">
+        <div class="liquidityButtons">
+          <div><button class="button1 addLiquidity" click.delegate="gotoLiquidity()">Add Liquidity</button></div>
+          <div><button class="button2 removeLiquidity" click.delegate="gotoLiquidity(true)">Withdraw Liquidity</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="farming">
+      <div class="section top">
+        <span class="triangle"><img /></span>
+        <div class="heading1">Start Farming</div>
+        <div class="class">Earn PRIME rewards by staking BPRIME tokens!</div>
+      </div>
+      <div class="section middle">
+        <div class="currentAPY">
+          <div class="value">
+            <formatted-number value.to-view="currentAPY * 100"
+              average="false"
+              mantissa="2"
+              placement.to-view="top"></formatted-number>%
+          </div>
+          <div class="label">Current APY</div>
+        </div>
+      </div>
+      <div class="section middle doubleSection">
+        <div class="primeFarmed left">
+          <div class="value">
+            <formatted-number if.to-view="connected" value.to-view="primeFarmed | ethwei"
+              placement.to-view="top"></formatted-number>
+            <span else>--</span>
+          </div>
+          <div class="label">PRIME Farmed</div>
+        </div>
+        <div class="bprimeStaked right">
+          <div class="value">
+            <formatted-number if.to-view="connected" value.to-view="bPrimeStaked | ethwei"
+              placement.to-view="top"></formatted-number>
+            <span else>--</span>
+          </div>
+          <div class="label">BPRIME Staked</div>
+        </div>
+      </div>
+      <div class="section bottom">
+        <div class="stakingButtons">
+          <div><button class="button1 stakeBPrime" click.delegate="gotoStaking()">Stake BPRIME tokens</button></div>
+          <div><button class="button2 harvestYield" click.delegate="stakingHarvest()">Harvest Yield</button></div>
+          <div><button class="button3 harvestAndWithdraw" click.delegate="stakingExit()">Harvest and Withdraw</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
