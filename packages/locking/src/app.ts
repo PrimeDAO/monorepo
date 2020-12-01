@@ -66,7 +66,7 @@ export class App {
         nav: false,
         route: ["", "/"],
         title: "",
-      }
+      },
     ]);
 
     config.fallbackRoute("");

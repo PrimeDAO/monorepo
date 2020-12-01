@@ -1,15 +1,15 @@
-import { EventAggregator } from 'aurelia-event-aggregator';
-import { autoinject, computedFrom, signalBindings } from 'aurelia-framework';
+import { EventAggregator } from "aurelia-event-aggregator";
+import { autoinject, computedFrom, signalBindings } from "aurelia-framework";
 import {
   EventConfigException,
   EventConfigFailure,
   EventConfigTransaction,
-  EventMessageType
-} from 'services/GeneralEvents';
-import { Locking4Reputation } from './Locking4Reputation';
-import { ITokenSpecification, LockService } from 'services/lockServices';
-import { TokenService } from 'services/TokenService';
-import { Utils as UtilsInternal } from 'services/utils';
+  EventMessageType,
+} from "services/GeneralEvents";
+import { Locking4Reputation } from "./Locking4Reputation";
+import { ITokenSpecification, LockService } from "services/lockServices";
+import { TokenService } from "services/TokenService";
+import { Utils as UtilsInternal } from "services/utils";
 // import {
 //   Address,
 //   Erc20Factory,
@@ -24,45 +24,45 @@ export class LockingToken4Reputation extends Locking4Reputation {
 
   private lockableTokens: Array<ITokenSpecificationX> = [];
   private selectedToken: ITokenSpecification = null;
-  private selectedTokenIsLiquid: boolean = false;
+  private selectedTokenIsLiquid = false;
   private dashboard: HTMLElement;
   private tokensInited = false;
   private allowance = new BigNumber(0);
-  private _approving: boolean = false;
+  private _approving = false;
 
-  @computedFrom('_approving')
+  @computedFrom("_approving")
   protected get approving(): boolean {
     return this._approving;
   }
 
   protected set approving(val: boolean) {
     this._approving = val;
-    setTimeout(() => this.eventAggregator.publish('dashboard.busy', val), 0);
+    setTimeout(() => this.eventAggregator.publish("dashboard.busy", val), 0);
   }
 
   private get approveButton(): HTMLElement {
-    return this.myView.find('#approveButton')[0];
+    return this.myView.find("#approveButton")[0];
   }
 
-  @computedFrom('allowance')
+  @computedFrom("allowance")
   private get noAllowance(): boolean {
-    return this.allowance.eq('0');
+    return this.allowance.eq("0");
   }
 
-  @computedFrom('allowance', 'lockModel.amount')
+  @computedFrom("allowance", "lockModel.amount")
   private get sufficientAllowance(): boolean {
-    return this.allowance.gt('0') && this.allowance.gte(this.lockModel.amount || 0);
+    return this.allowance.gt("0") && this.allowance.gte(this.lockModel.amount || 0);
   }
 
-  @computedFrom('allowance', 'lockModel.amount')
+  @computedFrom("allowance", "lockModel.amount")
   private get hasPartialAllowance(): boolean {
-    return this.allowance.gt('0') && this.allowance.lt(this.lockModel.amount || 0);
+    return this.allowance.gt("0") && this.allowance.lt(this.lockModel.amount || 0);
   }
 
   constructor(
     eventAggregator: EventAggregator,
     web3Service: Web3Service,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {
     super(eventAggregator, web3Service);
   }
@@ -90,7 +90,7 @@ export class LockingToken4Reputation extends Locking4Reputation {
   protected async lock(): Promise<boolean> {
 
     if (!this.selectedToken) {
-      this.eventAggregator.publish('handleFailure', new EventConfigFailure(`Please select a token`));
+      this.eventAggregator.publish("handleFailure", new EventConfigFailure("Please select a token"));
       return;
     }
 
@@ -112,16 +112,16 @@ export class LockingToken4Reputation extends Locking4Reputation {
 
         const success = await super.lock(true);
         if (success) {
-          UtilsInternal.resetInputField(this.dashboard, 'lockAmount', null);
-          UtilsInternal.resetInputField(this.dashboard, 'lockingPeriod', null);
+          UtilsInternal.resetInputField(this.dashboard, "lockAmount", null);
+          UtilsInternal.resetInputField(this.dashboard, "lockingPeriod", null);
         }
         return success;
       }
     } catch (ex) {
-      this.eventAggregator.publish('handleException',
-        new EventConfigException(`The token lock was not approved`, ex));
+      this.eventAggregator.publish("handleException",
+        new EventConfigException("The token lock was not approved", ex));
       await BalloonService.show({
-        content: `The token lock was not approved`,
+        content: "The token lock was not approved",
         eventMessageType: EventMessageType.Exception,
         originatingUiElement: this.lockButton,
       });
@@ -140,7 +140,7 @@ export class LockingToken4Reputation extends Locking4Reputation {
   private async approve(): Promise<boolean> {
 
     if (!this.selectedToken) {
-      this.eventAggregator.publish('handleFailure', new EventConfigFailure(`Please select a token`));
+      this.eventAggregator.publish("handleFailure", new EventConfigFailure("Please select a token"));
       return false;
     }
 
@@ -148,8 +148,8 @@ export class LockingToken4Reputation extends Locking4Reputation {
       /**
        * this shouldn't happen
        */
-      this.eventAggregator.publish('handleFailure',
-        new EventConfigFailure(`The token already has sufficient allowance`));
+      this.eventAggregator.publish("handleFailure",
+        new EventConfigFailure("The token already has sufficient allowance"));
       return false;
     }
 
@@ -175,16 +175,16 @@ export class LockingToken4Reputation extends Locking4Reputation {
 
       await result.watchForTxMined();
 
-      this.eventAggregator.publish('handleTransaction', new EventConfigTransaction(
-        `The token approval has been recorded`, result.tx));
+      this.eventAggregator.publish("handleTransaction", new EventConfigTransaction(
+        "The token approval has been recorded", result.tx));
 
       return true;
 
     } catch (ex) {
-      this.eventAggregator.publish('handleException',
-        new EventConfigException(`The token approval was not accepted`, ex));
+      this.eventAggregator.publish("handleException",
+        new EventConfigException("The token approval was not accepted", ex));
       await BalloonService.show({
-        content: `The token approval was not accepted`,
+        content: "The token approval was not accepted",
         eventMessageType: EventMessageType.Exception,
         originatingUiElement: this.approveButton,
       });
@@ -201,7 +201,7 @@ export class LockingToken4Reputation extends Locking4Reputation {
       this.allowance = await this.tokenService.getTokenAllowance(
         this.selectedToken.address,
         this.web3Service.defaultAccount,
-        this.address
+        this.address,
       );
     } else {
       this.allowance = new BigNumber(0);
@@ -230,7 +230,7 @@ export class LockingToken4Reputation extends Locking4Reputation {
     }
 
     if (this.tokensInited) {
-      signalBindings('token.changed');
+      signalBindings("token.changed");
     }
   }
 }

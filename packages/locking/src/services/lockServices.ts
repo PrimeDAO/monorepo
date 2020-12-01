@@ -2,12 +2,12 @@ import {
   Erc20Wrapper,
   Hash,
   LockingToken4ReputationWrapper,
-  ReleaseInfo
-} from '@daostack/arc.js';
-import { AureliaConfiguration } from 'aurelia-configuration';
-import { Container } from 'aurelia-framework';
-import { BigNumber } from 'bignumber.js';
-import { Address, LockInfo, Locking4ReputationWrapper } from 'services/ArcService';
+  ReleaseInfo,
+} from "@daostack/arc.js";
+import { AureliaConfiguration } from "aurelia-configuration";
+import { Container } from "aurelia-framework";
+import { BigNumber } from "bignumber.js";
+import { Address, LockInfo, Locking4ReputationWrapper } from "services/ArcService";
 
 export class LockService {
 
@@ -24,9 +24,9 @@ export class LockService {
   constructor(
     private wrapper: Locking4ReputationWrapper,
     private userAddress: Address,
-    private startingBlockNumber: number
+    private startingBlockNumber: number,
   ) {
-    this.lockableTokenSpecs = LockService.appConfig.get('lockableTokens');
+    this.lockableTokenSpecs = LockService.appConfig.get("lockableTokens");
   }
 
   public async getUserLocks(): Promise<Array<ILockInfoX>> {
@@ -125,7 +125,7 @@ export class LockService {
       if (foundTokenSpecs.length >= 1) {
         spec = foundTokenSpecs[0];
       } else {
-        spec = { address: null, symbol: 'N/A' };
+        spec = { address: null, symbol: "N/A" };
       }
 
       LockService.lockableTokens.set(lockInfo.lockId, spec);

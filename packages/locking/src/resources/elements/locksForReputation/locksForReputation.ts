@@ -1,9 +1,9 @@
-import { EventAggregator } from 'aurelia-event-aggregator';
-import { autoinject, bindable, bindingMode } from 'aurelia-framework';
-import { LockInfo, Locking4ReputationWrapper } from 'services/ArcService';
-import { DateService } from 'services/DateService';
-import { ILockInfoX } from 'services/lockServices';
-import { Web3Service } from 'services/Web3Service';
+import { EventAggregator } from "aurelia-event-aggregator";
+import { autoinject, bindable, bindingMode } from "aurelia-framework";
+import { LockInfo, Locking4ReputationWrapper } from "services/ArcService";
+import { DateService } from "services/DateService";
+import { ILockInfoX } from "services/lockServices";
+import { Web3Service } from "services/Web3Service";
 
 @autoinject
 export class LocksForReputation {
@@ -18,12 +18,12 @@ export class LocksForReputation {
 
   private _locks: Array<LockInfo>;
   private anyCanRelease: boolean;
-  private loading: boolean = true;
+  private loading = true;
 
   constructor(
     private web3Service: Web3Service,
     private eventAggregator: EventAggregator,
-    private dateService: DateService
+    private dateService: DateService,
   ) {
   }
 
@@ -47,7 +47,7 @@ export class LocksForReputation {
     this.anyCanRelease = tmpLocks.filter((l: ILockInfoInternal) => l.canRelease).length > 0;
     this._locks = tmpLocks;
     this.loading = false;
-    setTimeout(() => $('[data-release-time="true"]').tooltip(), 0);
+    setTimeout(() => $("[data-release-time=\"true\"]").tooltip(), 0);
   }
 
   private async _release(lock: ILockInfoInternal, event: Event) {
@@ -92,18 +92,18 @@ export class LocksForReputation {
   private releaseDate(lock: ILockInfoInternal): string {
 
     // tslint:disable-next-line: max-line-length
-    return `${this.dateService.toString(lock.releaseTime, lock.releasableToday ? 'table-time' : 'table-date')}${lock.releasableToday ? ' today' : ''}`;
+    return `${this.dateService.toString(lock.releaseTime, lock.releasableToday ? "table-time" : "table-date")}${lock.releasableToday ? " today" : ""}`;
   }
 
   private releaseTitle(lock: ILockInfoInternal): string {
-    return `${this.dateService.toString(lock.releaseTime, 'table-datetime')}`;
+    return `${this.dateService.toString(lock.releaseTime, "table-datetime")}`;
   }
 
   private async _refresh(): Promise<void> {
     this.loading = true;
     try {
       await this.refresh();
-      this.eventAggregator.publish('showMessage', 'Locks have been refreshed');
+      this.eventAggregator.publish("showMessage", "Locks have been refreshed");
     } finally {
       this.loading = false;
     }

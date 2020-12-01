@@ -1,18 +1,18 @@
 // import { AureliaConfiguration } from 'aurelia-configuration';
-import { EventAggregator } from 'aurelia-event-aggregator';
-import { autoinject, computedFrom, View } from 'aurelia-framework';
-import { ILocksTableInfo } from 'resources/elements/locksForReputation/locksForReputation';
+import { EventAggregator } from "aurelia-event-aggregator";
+import { autoinject, computedFrom, View } from "aurelia-framework";
+import { ILocksTableInfo } from "resources/elements/locksForReputation/locksForReputation";
 //import { ISchemeDashboardModel } from 'schemeDashboards/schemeDashboardModel';
 // import { BalloonService } from 'services/balloonService';
-import { DisposableCollection } from 'services/DisposableCollection';
-import { LockService } from 'services/lockServices';
-import { Utils } from 'services/utils';
+import { DisposableCollection } from "services/DisposableCollection";
+import { LockService } from "services/lockServices";
+import { Utils } from "services/utils";
 import {
   EventConfigException,
   EventConfigFailure,
   EventConfigTransaction,
-  EventMessageType
-} from 'services/GeneralEvents';
+  EventMessageType,
+} from "services/GeneralEvents";
 // import {
 //   Address,
 //   ArcTransactionDataResult,
@@ -29,7 +29,7 @@ import {
 @autoinject
 export abstract class Locking4Reputation {
 
-  @computedFrom('lockingPeriodHasNotStarted', 'lockingPeriodIsEnded')
+  @computedFrom("lockingPeriodHasNotStarted", "lockingPeriodIsEnded")
   protected get inLockingPeriod(): boolean {
     return !this.lockingPeriodHasNotStarted && !this.lockingPeriodIsEnded;
   }
@@ -39,37 +39,37 @@ export abstract class Locking4Reputation {
   protected lockingPeriodIsEnded: boolean;
   protected msUntilCanLockCountdown: number;
   protected msRemainingInPeriodCountdown: number;
-  protected refreshing: boolean = false;
-  protected loaded: boolean = false;
+  protected refreshing = false;
+  protected loaded = false;
   protected lockerInfo: LockerInfo;
   protected subscriptions = new DisposableCollection();
   protected locks: Array<ILocksTableInfo>;
-  protected _locking: boolean = false;
-  protected _releasing: boolean = false;
-  protected sending: boolean = false;
+  protected _locking = false;
+  protected _releasing = false;
+  protected sending = false;
 
-  @computedFrom('_locking')
+  @computedFrom("_locking")
   protected get locking(): boolean {
     return this._locking;
   }
 
   protected set locking(val: boolean) {
     this._locking = val;
-    setTimeout(() => this.eventAggregator.publish('dashboard.busy', val), 0);
+    setTimeout(() => this.eventAggregator.publish("dashboard.busy", val), 0);
   }
 
-  @computedFrom('_releasing')
+  @computedFrom("_releasing")
   protected get releasing(): boolean {
     return this._releasing;
   }
 
   protected set releasing(val: boolean) {
     this._releasing = val;
-    setTimeout(() => this.eventAggregator.publish('dashboard.busy', val), 0);
+    setTimeout(() => this.eventAggregator.publish("dashboard.busy", val), 0);
   }
 
   protected get lockButton(): HTMLElement {
-    return this.myView.find('#lockButton')[0];
+    return this.myView.find("#lockButton")[0];
   }
 
   protected lockModel: LockingOptions = {
@@ -85,7 +85,7 @@ export abstract class Locking4Reputation {
   constructor(
     // protected appConfig: AureliaConfiguration,
     protected eventAggregator: EventAggregator,
-    protected web3Service: Web3Service
+    protected web3Service: Web3Service,
   ) {
     super();
   }
@@ -107,11 +107,11 @@ export abstract class Locking4Reputation {
 
       await this.refresh();
 
-      this.subscriptions.push(this.eventAggregator.subscribe('Network.Changed.Account', (account: Address) => {
+      this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account", (account: Address) => {
         this.accountChanged(account);
       }));
 
-      this.subscriptions.push(this.eventAggregator.subscribe('secondPassed', async (blockDate: Date) => {
+      this.subscriptions.push(this.eventAggregator.subscribe("secondPassed", async (blockDate: Date) => {
         this.refreshCounters(blockDate);
       }));
     } finally {
@@ -149,7 +149,7 @@ export abstract class Locking4Reputation {
 
     if (!reason) {
       if (!Number.isInteger(this.lockModel.period)) {
-        reason = 'The desired locking period is not expressed as a number of days';
+        reason = "The desired locking period is not expressed as a number of days";
       }
       // else {
       //   const maxLockingPeriodDays = this.appConfig.get('maxLockingPeriodDays');
@@ -165,7 +165,7 @@ export abstract class Locking4Reputation {
     }
 
     if (reason) {
-      this.eventAggregator.publish('handleFailure', new EventConfigFailure(`Can't lock: ${reason}`));
+      this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Can't lock: ${reason}`));
       await BalloonService.show({
         content: `Can't lock: ${reason}`,
         eventMessageType: EventMessageType.Failure,
@@ -177,7 +177,7 @@ export abstract class Locking4Reputation {
     return false;
   }
 
-  protected async lock(alreadyCheckedForBlock: boolean = false): Promise<boolean> {
+  protected async lock(alreadyCheckedForBlock = false): Promise<boolean> {
 
     if (this.locking || this.releasing) {
       return false;
@@ -202,18 +202,18 @@ export abstract class Locking4Reputation {
 
         await this.getLocks();
 
-        this.eventAggregator.publish('handleTransaction', new EventConfigTransaction(
-          `The lock has been recorded`, result.tx));
+        this.eventAggregator.publish("handleTransaction", new EventConfigTransaction(
+          "The lock has been recorded", result.tx));
 
-        this.eventAggregator.publish('Lock.Submitted');
+        this.eventAggregator.publish("Lock.Submitted");
 
         success = true;
       }
 
     } catch (ex) {
-      this.eventAggregator.publish('handleException', new EventConfigException(`The lock was not recorded`, ex));
+      this.eventAggregator.publish("handleException", new EventConfigException("The lock was not recorded", ex));
       await BalloonService.show({
-        content: `The lock was not recorded`,
+        content: "The lock was not recorded",
         eventMessageType: EventMessageType.Exception,
         originatingUiElement: this.lockButton,
       });
@@ -244,20 +244,20 @@ export abstract class Locking4Reputation {
 
       await result.watchForTxMined();
 
-      this.eventAggregator.publish('handleTransaction',
-        new EventConfigTransaction('The lock has been released', result.tx));
+      this.eventAggregator.publish("handleTransaction",
+        new EventConfigTransaction("The lock has been released", result.tx));
 
       lockInfo.released = true;
 
-      this.eventAggregator.publish('Lock.Released');
+      this.eventAggregator.publish("Lock.Released");
 
       success = true;
 
     } catch (ex) {
-      this.eventAggregator.publish('handleException',
-        new EventConfigException(`The lock was not released`, ex));
+      this.eventAggregator.publish("handleException",
+        new EventConfigException("The lock was not released", ex));
       await BalloonService.show({
-        content: `The lock was not released`,
+        content: "The lock was not released",
         eventMessageType: EventMessageType.Exception,
         originatingUiElement: config.releaseButton,
       });
