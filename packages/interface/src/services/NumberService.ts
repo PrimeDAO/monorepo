@@ -1,5 +1,4 @@
-﻿import BN from "bignumber.js"; // buried in other packages
-const numbro = require("numbro");
+﻿const numbro = require("numbro");
 
 // export enum RoundingType {
 //   Bankers = 1,

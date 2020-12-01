@@ -7,7 +7,6 @@ import { calcPoolTokensByRatio } from "services/BalancerPoolLiquidity/helpers/ut
 import { Address } from "services/EthereumService";
 import "./liquidity.scss";
 import BigNumberJs from "services/BigNumberService";
-import { getThemeColors } from "web3modal";
 
 const BALANCE_BUFFER = 0.01;
 

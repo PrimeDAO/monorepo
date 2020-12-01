@@ -1,5 +1,3 @@
-import { type } from "os";
-
 export class Utils {
   public static sleep(milliseconds: number): Promise<any> {
     return new Promise((resolve: () => void): any => setTimeout(resolve, milliseconds));
