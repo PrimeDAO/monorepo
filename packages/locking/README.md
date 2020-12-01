@@ -1,48 +1,40 @@
-# The PrimeDAO’s Home for Network Members
+# PrimeDAO's friendly module for token holders to generate voting power
 
-This is the [PrimeDAO](primedao.eth.link) web interface enabling interaction with PrimeDAO contracts.
+This is the [PrimeDAO](primedao.eth.link) web interface enabling token holders to generate voting power in the PrimeDAO.
 
 ## Technical Description
 
 This project is bootstrapped by [aurelia-cli](https://github.com/aurelia/cli).
 
-It is write mostly in Typescript, and is bundled using Webpack.
+It is written mostly in Typescript, and is bundled using Webpack.
 
 For more information, go to https://aurelia.io/docs/cli/webpack
 
 ## Install
-Note this is part of a monorepo.  Install dependencies with the following command:
+Note this is part of a monorepo.  Install dependencies at the root of the monorepo with the following command:
 ```
 npx lerna bootstrap
 ```
 
-To add a new dependency:
-
+Or within this package with:
 ```
-npx lerna add [package name] --scope @primedao/interface
-```
-
-Import the required contracts from the sibling contracts package:
-
-```
-npm run updateScripts
+npm ci
 ```
 
-## Import the required contracts
-
-The contract addresses and ABIs originate in the sibling package "contracts".
-Whenever you need to update the contract addresses or ABIs, run:
+To add a new dependency to this package, run:
 
 ```
-npm run updateScripts
+npm i [package name] [--save | --save-dev ]
+npx lerna boostrap
 ```
+
 ## Run dev app
 
-Run `npm start`, then open `http://localhost:3300`. Or more simply, run `au run --open`.
+Run `npm start`, then open `http://localhost:3300`.
 
 You can change the standard webpack configurations from CLI easily with something like this: `npm start -- --open --port 8888`. However, it is better to change the respective npm scripts or `webpack.config.js` with these options, as per your need.
 
-To enable Webpack Bundle Analyzer, do `npm run analyze` (production build).
+To run the Webpack Bundle Analyzer, do `npm run analyze` (production build).
 
 To enable hot module reload, do `npm start -- --hmr`.
 
@@ -52,11 +44,9 @@ To change dev server host, do `npm start -- --host 127.0.0.1`
 
 **PS:** You could mix all the flags as well, `npm start -- --host 127.0.0.1 --port 7070 --open --hmr`
 
-For long time aurelia-cli user, you can still use `au run` with those arguments like `au run --env prod --open --hmr`. But `au run` now simply executes `npm start` command.
-
 ## Build for production
 
-Run `npm run build`, or the old way `au build --env prod`.
+Run `npm run build`.
 
 ## Formatting and Linting
 
@@ -64,11 +54,20 @@ Run `npm run lint` to confirm lint succeeds before git commits.
 
 ## Unit tests
 
-Run `au test` (or `au jest`).
+Run `npm run test`.
 
-To run in watch mode, `au test --watch` or `au jest --watch`.
+To run in watch mode, `npm run test --watch`.
 
 ## Deployment
+
+Make sure you have in your environment (or a .env file) the following:
+
+```
+IPFS_DEPLOY_PINATA__SECRET_API_KEY=
+IPFS_DEPLOY_PINATA__API_KEY=
+RIVET_ID=
+INFURA_ID=
+```
 
 To make the build of the dapp use the command `npm run build`. It will create production build that can be hosted anywhere. We host in IPFS.
 

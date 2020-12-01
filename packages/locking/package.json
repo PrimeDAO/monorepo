@@ -1,7 +1,7 @@
 {
   "name": "@primedao/locking",
   "version": "1.0.0",
-  "description": "The PrimeDAO’s home for network members",
+  "description": "PrimeDAO's friendly module for token holders to generate voting power",
   "repository": {
     "type": "git",
     "url": "https://github.com/PrimeDAO/monorepo/tree/master/packages/locking"
@@ -10,7 +10,7 @@
   "homepage": "./",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --extractCss",
+    "build": "webpack --env.production --extractCss",
     "start": "webpack-dev-server --extractCss --open",
     "serve": "webpack-dev-server --extractCss",
     "build:dev": "webpack --extractCss",
