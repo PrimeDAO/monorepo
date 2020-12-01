@@ -1,6 +1,17 @@
 # PrimeDAO contracts package
 
-> 🤖 PrimeDAO Smart contracts 
+> 🤖 PrimeDAO Smart contracts
+
+This repo contains the smart contracts making up PrimeDAO, the mission of which is to [facilitate wide adoption of open finance by coordinating and cultivating projects that promote safety, reliability, liquidity, and open access](https://docs.primedao.io/primedao/intro).
+
+`/contracts/` is organized as follows:
+- `/contracts/incentives/` contains the `StakingRewards` contract for the [PrimeDAO liquidity mining](https://github.com/PrimeDAO/liquidity-mining) scheme.
+- `/contracts/schemes/` contains the `BalancerProxy` contract, the Configurable Rights Pool proxy for the Prime [Balancer Pool](https://pools.balancer.exchange/#/pool/0xdd0b69d938c6e98bf8f16f04c4913a0c07e0bb6e/).
+- `/contracts/utils/` contains interfaces for the ConfigurableRightsPool and BPool contracts.
+- `/contracts/vesting/` contains contracts for the [token vesting scheme](https://docs.primedao.io/primedao/tokenomics/roles-and-rewards/vesting-contract-guide). 
+- `/contracts/PrimeToken.sol` is PrimeDAO's native token, [PRIME](https://etherscan.io/address/0xE59064a8185Ed1Fca1D17999621eFedfab4425c9).
+
+See `/docs/` for functional documentation of individual contracts.
 
 ## Development
 
@@ -69,6 +80,9 @@ set up price oracle
 npm run setup:oracle:kovan
 ```
 
+## Contributing to PrimeDAO
+If you wish to contribute to PrimeDAO, check out our [Contributor Onboarding documentation](https://docs.primedao.io/primedao/call-for-contributors).
+
 ## License
 ```
 Copyright 2020 Prime Foundation
@@ -79,4 +93,3 @@ You may obtain a copy of this license at:
   https://www.gnu.org/licenses/gpl-3.0.en.html
 
 ```
-
