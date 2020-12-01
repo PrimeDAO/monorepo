@@ -68,6 +68,15 @@ To run in watch mode, `npm run test --watch`.
 
 ## Deployment
 
+Make sure you have in your environment (or a .env file) the following:
+
+```
+IPFS_DEPLOY_PINATA__SECRET_API_KEY=
+IPFS_DEPLOY_PINATA__API_KEY=
+RIVET_ID=
+INFURA_ID=
+```
+
 To make the build of the dapp use the command `npm run build`. It will create production build that can be hosted anywhere. We host in IPFS.
 
 ### IPFS
