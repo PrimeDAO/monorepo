@@ -7,14 +7,21 @@ This is the home page of PrimeDAO, accessible at [primedao.eth.link](primedao.et
 The web page is written in Javascript and Typescript, it uses ReactJS and Webpack.
 
 ## Install
-Note this is part of a monorepo.  Install dependencies with the following command:
+Note this is part of a monorepo.  Install dependencies at the root of the monorepo with the following command:
 ```
 npx lerna bootstrap
 ```
-To add a new dependency:
+
+Or within this package with:
+```
+npm ci
+```
+
+To add a new dependency to this package, run:
 
 ```
-npx lerna add [package name] --scope @primedao/landingPage
+npm i [package name] [--save | --save-dev ]
+npx lerna boostrap
 ```
 
 ## Test
