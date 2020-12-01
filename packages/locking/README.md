@@ -60,7 +60,7 @@ To run in watch mode, `npm run test --watch`.
 
 ## Deployment
 
-Make sure you have in your environment (or a .env file) the following:
+Make sure you have in your environment (or in a .env file) the following:
 
 ```
 IPFS_DEPLOY_PINATA__SECRET_API_KEY=
