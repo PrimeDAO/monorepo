@@ -45,7 +45,6 @@ export class Dashboard {
   private wethTokenAddress: Address;
   private bPrimeTokenAddress: Address;
   private poolTokenAddresses: Array<Address>;
-  private poolTokenBalances: Map<any, any>;
   private poolTotalBPrimeSupply: BigNumber;
   private poolTotalDenormWeight: BigNumber;
   private poolTokenAllowances: Map<Address, BigNumber>;
@@ -169,11 +168,6 @@ export class Dashboard {
         userTokenBalances.set("ETH", await provider.getBalance(this.ethereumService.defaultAccountAddress));
         this.userTokenBalances = userTokenBalances;
 
-        const poolTokenBalances = new Map();
-        poolTokenBalances.set(this.primeTokenAddress, await this.primeToken.balanceOf(this.contractsService.getContractAddress(ContractNames.BPOOL)));
-        poolTokenBalances.set(this.wethTokenAddress, await this.weth.balanceOf(this.contractsService.getContractAddress(ContractNames.BPOOL)));
-        this.poolTokenBalances = poolTokenBalances;
-
         /**
          * this is user's % of bprime in the total
          */
@@ -181,7 +175,8 @@ export class Dashboard {
 
         const getUserTokenBalance = (tokenAddress: Address): BigNumber => {
           // (user's BPRIME share %) * (the pool's balance of the given token)
-          return BigNumber.from(toBigNumberJs(this.poolTokenBalances.get(tokenAddress)).times(this.poolUsersBPrimeShare).integerValue().toString());
+          // note you need to have called getLiquidityAmounts prior
+          return BigNumber.from(toBigNumberJs(this.poolBalances.get(tokenAddress)).times(this.poolUsersBPrimeShare).integerValue().toString());
         };
 
         const poolUsersTokenShare = new Map();
@@ -210,7 +205,6 @@ export class Dashboard {
         this.poolUsersBPrimeShare =
         this.primeFarmed =
         this.poolUsersTokenShare =
-      this.poolTokenBalances =
         this.userTokenBalances = undefined;
 
       this.connected = false;
@@ -248,9 +242,12 @@ export class Dashboard {
       this.poolTotalBPrimeSupply = await this.bPrimeToken.totalSupply();
 
       this.poolTotalDenormWeight = await this.bPool.getTotalDenormalizedWeight();
+
     } catch (ex) {
+
       this.eventAggregator.publish("handleException",
         new EventConfigException("Unable to fetch a token price", ex));
+      this.poolBalances =
       this.liquidityBalance = undefined;
     }
   }
@@ -344,6 +341,7 @@ export class Dashboard {
         tokenIn,
         tokenAmountIn,
         minPoolAmountOut));
+      await this.getLiquidityAmounts();
       this.getUserBalances();
     }
   }
@@ -351,14 +349,15 @@ export class Dashboard {
   private async liquidityJoinPool(poolAmountOut, maxAmountsIn): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.crPool.joinPool(poolAmountOut, maxAmountsIn));
-      // TODO:  should happen after mining
-      this.getLiquidityAmounts();
+      await this.getLiquidityAmounts();
+      this.getUserBalances();
     }
   }
 
   private async liquidityExit(poolAmountIn, minAmountsOut): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.crPool.exitPool(poolAmountIn, minAmountsOut));
+      await this.getLiquidityAmounts();
       this.getUserBalances();
     }
   }
@@ -366,6 +365,7 @@ export class Dashboard {
   private async liquidityExitswapPoolAmountIn(tokenOutAddress, poolAmountIn, minTokenAmountOut): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.crPool.exitswapPoolAmountIn(tokenOutAddress, poolAmountIn, minTokenAmountOut));
+      await this.getLiquidityAmounts();
       this.getUserBalances();
     }
   }
