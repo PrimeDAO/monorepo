@@ -18,7 +18,7 @@ const migrateDAO = async () => {
     provider: process.env.PROVIDER,
     privateKey: '0x'+process.env.KEY,
     customAbisLocation: './build/contracts',
-    gasPrice: 10,
+    gasPrice: 25,
     quiet: false,
     force: true,
     restart: true,

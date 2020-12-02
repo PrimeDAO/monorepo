@@ -48,13 +48,13 @@
       "activationTime": 0,
       "boostedVotePeriodLimit": 172800,
       "daoBountyConst": 10,
-      "minimumDaoBounty": 100,
+      "minimumDaoBounty": 50,
       "preBoostedVotePeriodLimit": 86400,
       "proposingRepReward": 0,
       "queuedVotePeriodLimit": 604800,
       "queuedVoteRequiredPercentage": 50,
       "quietEndingPeriod": 172800,
-      "thresholdConst": 1500,
+      "thresholdConst": 1200,
       "voteOnBehalf": "0x0000000000000000000000000000000000000000",
       "votersReputationLossRatio": 0
     }
