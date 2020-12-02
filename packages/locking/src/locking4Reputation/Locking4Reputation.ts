@@ -5,7 +5,7 @@ import { ILocksTableInfo } from "resources/elements/locksForReputation/locksForR
 //import { ISchemeDashboardModel } from 'schemeDashboards/schemeDashboardModel';
 // import { BalloonService } from 'services/balloonService';
 import { DisposableCollection } from "services/DisposableCollection";
-import { LockService } from "services/lockServices";
+import { LockService } from "services/LockService";
 import { Utils } from "services/utils";
 import {
   EventConfigException,

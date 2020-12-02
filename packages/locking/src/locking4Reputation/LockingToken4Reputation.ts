@@ -7,7 +7,7 @@ import {
   EventMessageType,
 } from "services/GeneralEvents";
 import { Locking4Reputation } from "./Locking4Reputation";
-import { ITokenSpecification, LockService } from "services/lockServices";
+import { ITokenSpecification, LockService } from "services/LockService";
 import { TokenService } from "services/TokenService";
 import { Utils as UtilsInternal } from "services/utils";
 // import {

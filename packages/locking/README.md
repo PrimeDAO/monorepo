@@ -27,6 +27,14 @@ To add a new dependency to this package, run:
 npm i [package name] [--save | --save-dev ]
 npx lerna boostrap
 ```
+## Import the required contracts
+
+The contract addresses and ABIs originate in the sibling package "contracts".
+Whenever you need to update the contract addresses or ABIs, run:
+
+```
+npm run fetchContracts
+```
 
 ## Run dev app
 

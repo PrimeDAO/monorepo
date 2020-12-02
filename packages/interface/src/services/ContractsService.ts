@@ -49,7 +49,6 @@ export class ContractsService {
     ,
   ]);
 
-  // private static readOnlyProvider = this.ethereumService.readOnlyProvider;
   private initializingContracts: Promise<void>;
   private initializingContractsResolver: () => void;
   private networkInfo: IChainEventInfo;

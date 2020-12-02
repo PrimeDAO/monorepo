@@ -18,7 +18,8 @@
     "test": "au test",
     "ipfs-deploy": "ipfs-deploy dist --pinner pinata --no-open --no-clipboard",
     "lint": "eslint --ext .ts ./src ./test",
-    "lint.fix": "npm run lint -- --fix"
+    "lint.fix": "npm run lint -- --fix",
+    "fetchContracts": "node scripts/fetchContracts.js"
   },
   "dependencies": {
     "@toruslabs/torus-embed": "^1.8.6",

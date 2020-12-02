@@ -2,7 +2,7 @@ import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject, bindable, bindingMode } from "aurelia-framework";
 import { LockInfo, Locking4ReputationWrapper } from "services/ArcService";
 import { DateService } from "services/DateService";
-import { ILockInfoX } from "services/lockServices";
+import { ILockInfoX } from "services/LockService";
 import { Web3Service } from "services/Web3Service";
 
 @autoinject

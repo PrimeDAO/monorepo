@@ -3,19 +3,14 @@ import { Address, EthereumService, IChainEventInfo } from "services/EthereumServ
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
 
-const ContractAddresses = {}; // require("../contracts/contractAddresses.json") as INetworkContractAddresses;
-// const ConfigurableRightsPoolABI = require("../contracts/ConfigurableRightsPool.json");
-// const WETHABI = require("../contracts/WETH.json");
-// const BPOOL = require("../contracts/BPool.json");
-// const STAKINGREWARDS = require("../contracts/StakingRewards.json");
-// const ERC20ABI = require("../contracts/ERC20.json");
+const ContractAddresses = require("../contracts/contractAddresses.json") as INetworkContractAddresses;
+
+const LockingToken4Reputation = require("../contracts/LockingTokensReputation.json");
+const ERC20ABI = require("../contracts/ERC20.json");
 
 export enum ContractNames {
-  ConfigurableRightsPool = "ConfigurableRightsPool"
-  , BPOOL = "BPool"
-  , WETH = "WETH"
+  LockingToken4Reputation = "LockingToken4Reputation"
   , PRIMETOKEN = "PrimeToken"
-  , STAKINGREWARDS = "StakingRewards"
   //  , PrimeDAO = "Avatar"
   , IERC20 = "IERC20"
 }
@@ -29,26 +24,21 @@ export class ContractsService {
 
   private static ABIs = new Map<ContractNames, any>(
     [
-      // [ContractNames.ConfigurableRightsPool, ConfigurableRightsPoolABI.abi]
-      // , [ContractNames.BPOOL, BPOOL.abi]
-      // , [ContractNames.STAKINGREWARDS, STAKINGREWARDS.abi]
-      // , [ContractNames.WETH, WETHABI.abi]
-      // , [ContractNames.PRIMETOKEN, ERC20ABI.abi]
-      // , [ContractNames.IERC20, ERC20ABI.abi]
-      // ,
+      [ContractNames.LockingToken4Reputation, LockingToken4Reputation.abi]
+      , [ContractNames.PRIMETOKEN, ERC20ABI.abi]
+      // we wont get a contract for IERC20, it is just used for its ABI
+      , [ContractNames.IERC20, ERC20ABI.abi]
+      ,
     ],
   );
 
   private static Contracts = new Map<ContractNames, Contract>([
-    // [ContractNames.ConfigurableRightsPool, null]
-    // , [ContractNames.BPOOL, null]
-    // , [ContractNames.STAKINGREWARDS, null]
-    // , [ContractNames.WETH, null]
-    // , [ContractNames.PRIMETOKEN, null]
-    // ,
+    [ContractNames.LockingToken4Reputation, null]
+    , [ContractNames.PRIMETOKEN, null]
+    // don't get a contract for IERC20, it is just used for its ABI
+    ,
   ]);
 
-  // private static readOnlyProvider = this.ethereumService.readOnlyProvider;
   private initializingContracts: Promise<void>;
   private initializingContractsResolver: () => void;
   private networkInfo: IChainEventInfo;
@@ -124,7 +114,7 @@ export class ContractsService {
     const networkInfo = this.networkInfo;
 
     const reuseContracts = // at least one random contract already exists
-      ContractsService.Contracts.get(ContractNames.ConfigurableRightsPool);
+      ContractsService.Contracts.get(ContractNames.LockingToken4Reputation);
 
     let signerOrProvider;
     if (this.accountAddress) {
@@ -160,7 +150,5 @@ export class ContractsService {
 
   public getContractAddress(contractName: ContractNames): Address {
     return ContractAddresses[this.ethereumService.targetedNetwork][contractName];
-    // const contract = ContractsService.Contracts.get(contractName);
-    // return contract.address || await contract.signer.getAddress();
   }
 }

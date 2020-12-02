@@ -1,28 +1,22 @@
-import {
-  Erc20Wrapper,
-  Hash,
-  LockingToken4ReputationWrapper,
-  ReleaseInfo,
-} from "@daostack/arc.js";
-import { AureliaConfiguration } from "aurelia-configuration";
-import { Container } from "aurelia-framework";
-import { BigNumber } from "bignumber.js";
-import { Address, LockInfo, Locking4ReputationWrapper } from "services/ArcService";
+import { autoinject } from "aurelia-framework";
+import { ContractsService } from "services/ContractsService";
+import { Address } from "services/EthereumService";
 
+@autoinject
 export class LockService {
 
-  public static initialize(container: Container) {
-    this.appConfig = container.get(AureliaConfiguration);
+  public initialize() {
+
   }
 
   private static lockableTokens: Map<Address, ITokenSpecification> = new Map<Address, ITokenSpecification>();
 
-  private static appConfig: AureliaConfiguration;
-
   public lockableTokenSpecs: Array<ITokenSpecification>;
 
+  private lock4RepContract: any;
+
   constructor(
-    private wrapper: Locking4ReputationWrapper,
+    private constractsService: ContractsService,
     private userAddress: Address,
     private startingBlockNumber: number,
   ) {
@@ -31,7 +25,7 @@ export class LockService {
 
   public async getUserLocks(): Promise<Array<ILockInfoX>> {
 
-    const releasesFetcher = this.wrapper.getReleases();
+    const releasesFetcher = this.constractsService.getReleases();
 
     const releases: Array<ReleaseInfo> = await releasesFetcher(
       { _beneficiary: this.userAddress },
