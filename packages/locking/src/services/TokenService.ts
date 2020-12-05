@@ -13,6 +13,40 @@ export interface IErc20Token {
   transferFrom(sender: Address, recipient: Address, amount: BigNumber): Promise<boolean>
 }
 
+export interface IApprovalEvent {
+  /**
+   * The account from which the tokens originated.
+   * indexed
+   */
+  owner: Address;
+  /**
+   * The account that was approved-to and initiated the transfer on behalf of owner.
+   * indexed
+   */
+  spender: Address;
+  /**
+   * When the event is emitted by `approve`, then this is the amount that was requested
+   * for approval from spender by owner by the specific function call.
+   * When the event is emitted by `increaseApproval` or `decreaseApproval`, then
+   * this is the current net amount approved to transfer from spender by owner.
+   */
+  value: BigNumber;
+}
+
+export interface ITransferEvent {
+  /**
+   * `msg.sender` for `transfer`, `from` for `transferFrom`
+   * indexed
+   */
+  from: Address;
+  /**
+   * the recipient of the tokens
+   * indexed
+   */
+  to: Address;
+  value: BigNumber;
+}
+
 @autoinject
 export class TokenService {
 

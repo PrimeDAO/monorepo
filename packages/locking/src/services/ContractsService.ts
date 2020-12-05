@@ -5,7 +5,7 @@ import { autoinject } from "aurelia-framework";
 
 const ContractAddresses = require("../contracts/contractAddresses.json") as INetworkContractAddresses;
 
-const LockingToken4Reputation = require("../contracts/LockingTokensReputation.json");
+const LockingToken4Reputation = require("../contracts/LockingToken4Reputation.json");
 const ERC20ABI = require("../contracts/ERC20.json");
 
 export enum ContractNames {
@@ -75,6 +75,8 @@ export class ContractsService {
     this.eventAggregator.subscribe("Network.Changed.Id", (info: IChainEventInfo): void => {
       networkChange(info);
     });
+
+    this.initializeContracts();
   }
 
   private setInitializingContracts(): void {
@@ -99,7 +101,7 @@ export class ContractsService {
     return this.initializingContracts;
   }
 
-  public initializeContracts(): void {
+  private initializeContracts(): void {
     if (!ContractAddresses || !ContractAddresses[this.ethereumService.targetedNetwork]) {
       throw new Error("initializeContracts: ContractAddresses not set");
     }
@@ -136,6 +138,9 @@ export class ContractsService {
       }
       ContractsService.Contracts.set(contractName, contract);
     });
+
+    this.eventAggregator.publish("Contracts.Changed");
+
     this.resolveInitializingContracts();
   }
 

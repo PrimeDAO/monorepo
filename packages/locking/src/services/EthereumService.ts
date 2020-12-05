@@ -76,6 +76,10 @@ export class EthereumService {
 
   private blockSubscribed: boolean;
 
+  private handleNewBlock = (): void => {
+    this.eventAggregator.publish("Network.NewBlock");
+  }
+
   public initialize(network: AllowedNetworks): void {
 
     if (!network) {
@@ -95,10 +99,8 @@ export class EthereumService {
     this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[this.targetedNetwork]);
 
     if (!this.blockSubscribed) {
-      this.readOnlyProvider.on("block", () => {
-        this.eventAggregator.publish("Network.NewBlock");
-        this.blockSubscribed = true;
-      });
+      this.readOnlyProvider.on("block", this.handleNewBlock);
+      this.blockSubscribed = true;
     }
   }
 
@@ -251,9 +253,17 @@ export class EthereumService {
     this.walletProvider = undefined;
     this.fireDisconnectHandler(error);
   }
+
+  /**
+   * so unit tests will be able to complete
+   */
+  public dispose(): void {
+    this.readOnlyProvider.off("block", this.handleNewBlock);
+  }
 }
 
 export type Address = string;
+export type Hash = string;
 
 export const toWei = (ethValue: BigNumber | string | number): BigNumber => {
   return parseEther(ethValue.toString());

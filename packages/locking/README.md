@@ -62,7 +62,17 @@ Run `npm run lint` to confirm lint succeeds before git commits.
 
 ## Unit tests
 
-Run `npm run test`.
+To run all tests:
+
+```
+npm run test
+```
+
+To run one test (like events):
+
+```
+npm run test -- --spec events.spec.ts
+```
 
 To run in watch mode, `npm run test --watch`.
 

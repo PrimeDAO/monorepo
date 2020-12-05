@@ -109,8 +109,9 @@
     "setupFiles": [
       "<rootDir>/test/jest-pretest.ts"
     ],
+    "verbose": false,
     "testEnvironment": "node",
-    "collectCoverage": true,
+    "collectCoverage": false,
     "collectCoverageFrom": [
       "src/**/*.{js,ts}",
       "!**/*.spec.{js,ts}",

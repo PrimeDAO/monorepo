@@ -20,14 +20,14 @@ describe("Observables", () => {
     observable.subscribe(
       {
         complete: () => {
-          console.log("Observer got a complete notification");
+          // console.log("Observer got a complete notification");
         },
-        error: (err) => {
-          console.log("Observer got an error: " + err);
+        error: (_err) => {
+          // console.log("Observer got an error: " + _err);
           expect(true).toBeFalsy();
         },
         next: (x) => {
-          console.log("Observer got a value: " + x);
+          // console.log("Observer got a value: " + x);
           expect(x).toBe(2);
         },
       });
@@ -40,14 +40,14 @@ describe("Observables", () => {
     subject.subscribe(
       {
         complete: () => {
-          console.log("Observer got a complete notification");
+          // console.log("Observer got a complete notification");
         },
-        error: (err) => {
-          console.log("Observer got an error: " + err);
+        error: (_err) => {
+          // console.log("Observer got an error: " + _err);
           expect(true).toBeFalsy();
         },
         next: (x: { name: string }) => {
-          console.log("Observer got a value: " + x.name);
+          // console.log("Observer got a value: " + x.name);
           expect(x.name).toBe("Gabrielle");
         },
       });
@@ -63,7 +63,7 @@ describe("Observables", () => {
     const throttledInput = input.pipe(concatMap((x) => {
       return from(new Promise(function(resolve, _reject) {
         setTimeout(() => {
-          console.log("resolving to: " + x);
+          // console.log("resolving to: " + x);
           resolve(x);
         }, 1000);
       }));
@@ -76,14 +76,14 @@ describe("Observables", () => {
     throttledInput.subscribe(
       {
         complete: () => {
-          console.log("throttledInput sent a complete notification");
+          // console.log("throttledInput sent a complete notification");
         },
-        error: (err) => {
-          console.log("throttledInput generated an error: " + err);
+        error: (_err) => {
+          // console.log("throttledInput generated an error: " + _err);
           expect(true).toBeFalsy();
         },
         next: (x) => {
-          console.log(`throttledInput emitted: ${x} at ${new Date().getSeconds()} seconds after the minute`);
+          // console.log(`throttledInput emitted: ${x} at ${new Date().getSeconds()} seconds after the minute`);
           expect(x).toBe(count++);
         },
       });

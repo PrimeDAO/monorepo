@@ -6,6 +6,7 @@ import { EventConfigException } from "services/GeneralEvents";
 import { ConsoleLogService } from "services/ConsoleLogService";
 import { ContractsService } from "services/ContractsService";
 import { EventAggregator } from "aurelia-event-aggregator";
+import { LockService } from "services/LockService";
 
 export function configure(aurelia: Aurelia): void {
   aurelia.use
@@ -26,13 +27,17 @@ export function configure(aurelia: Aurelia): void {
     aurelia.use.plugin(PLATFORM.moduleName("aurelia-testing"));
   }
 
-  aurelia.start().then(() => {
+  aurelia.start().then(async () => {
     aurelia.container.get(ConsoleLogService);
     try {
       const ethereumService = aurelia.container.get(EthereumService);
       ethereumService.initialize(process.env.NODE_ENV === "development" ? Networks.Kovan : Networks.Mainnet);
-      const contractsService = aurelia.container.get(ContractsService);
-      contractsService.initializeContracts();
+      /**
+       * instantiate first so will capture the needed ensuing contracts events
+       */
+      aurelia.container.get(LockService);
+      aurelia.container.get(ContractsService);
+
     } catch (ex) {
       const eventAggregator = aurelia.container.get(EventAggregator);
       eventAggregator.publish("handleException", new EventConfigException("Sorry, couldn't connect to ethereum", ex));
