@@ -5,7 +5,7 @@ import * as packageJson from '../../package.json';
 import { CLIOptions } from 'aurelia-cli';
 
 export default (cb) => {
-  let options = packageJson.jest;
+  const options = packageJson.jest;
 
   if (CLIOptions.hasFlag('watch')) {
     Object.assign(options, { watch: true });
@@ -14,8 +14,6 @@ export default (cb) => {
   if (CLIOptions.hasFlag('spec')) {
     Object.assign(options, { '_': [CLIOptions.getFlagValue('spec')] });
   }
-
-  // Object.assign(options, { detectOpenHandles: true });
 
   runCLI(options, [path.resolve(__dirname, '../../')]).then(({ results }) => {
     if (results.numFailedTests || results.numFailedTestSuites) {
