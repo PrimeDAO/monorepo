@@ -14,6 +14,7 @@ export function configure(config: FrameworkConfiguration): void {
     PLATFORM.moduleName("./elements/ConnectButton/ConnectButton"),
     PLATFORM.moduleName("./elements/NetworkFeedback/NetworkFeedback"),
     PLATFORM.moduleName("./elements/modalscreen/modalscreen"),
+    PLATFORM.moduleName("./elements/lockingToken4Reputation/LockingToken4Reputation"),
     PLATFORM.moduleName("./elements/locksForReputation/locksForReputation"),
     PLATFORM.moduleName("./value-converters/number"),
     PLATFORM.moduleName("./value-converters/ethwei"),

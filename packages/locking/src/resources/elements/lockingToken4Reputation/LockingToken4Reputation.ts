@@ -4,7 +4,7 @@ import {
   EventConfigException,
   EventConfigFailure,
 } from "services/GeneralEvents";
-import { ILockerInfo, ILockingOptions, ITokenSpecification, LockService } from "services/LockService";
+import { ILockingOptions, ITokenSpecification, LockService } from "services/LockService";
 import { IErc20Token, TokenService } from "services/TokenService";
 import { Address, EthereumService } from "services/EthereumService";
 import { ContractNames, ContractsService } from "services/ContractsService";
@@ -35,6 +35,7 @@ export class LockingToken4Reputation {
   private _releasing = false;
   private sending = false;
   private tokenAddress: Address;
+  private approveButton: HTMLButtonElement;
 
   private lockModel: ILockingOptions = {
     tokenAddress: undefined,
@@ -70,10 +71,6 @@ export class LockingToken4Reputation {
   private set approving(val: boolean) {
     this._approving = val;
     setTimeout(() => this.eventAggregator.publish("approving.busy", val), 0);
-  }
-
-  private get approveButton(): HTMLElement {
-    return this.myView.find("#approveButton")[0];
   }
 
   @computedFrom("allowance")
