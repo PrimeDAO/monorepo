@@ -455,6 +455,52 @@ export class LockService {
     );
   }
 
+  public async release(options: IReleaseOptions): Promise<TransactionReceipt> {
+
+    if (!options.lockerAddress) {
+      throw new Error("lockerAddress is not defined");
+    }
+
+    if (!options.lockId) {
+      throw new Error("lockId is not defined");
+    }
+
+    const errMsg = await this.getReleaseBlocker(options.lockerAddress, options.lockId);
+
+    if (errMsg) {
+      throw new Error(errMsg);
+    }
+
+    return this.transactionService.send(() =>
+      this.lock4RepContract.release(options.lockerAddress, options.lockId),
+    );
+  }
+
+  /**
+ * Returns error message else null if can release
+ * @param lockerAddress
+ * @param lockId
+ */
+  public async getReleaseBlocker(lockerAddress: Address, lockId: Hash): Promise<string | null> {
+    const lockInfo = await this.getLockInfo(lockerAddress, lockId);
+    const now = await this.ethereumService.lastBlockDate;
+    const amount = BigNumber.from(lockInfo.amount);
+
+    if (amount.lte(0)) {
+      return "current locked amount must be greater than zero";
+    }
+
+    if (now <= lockInfo.releaseTime) {
+      return "the lock period has not ended";
+    }
+
+    if (lockInfo.released) {
+      return "lock is already released";
+    }
+
+    return null;
+  }
+
   /**
    * returns how many tokens the given token contract currently allows the lockingContract
    * to transfer on behalf of the current account.

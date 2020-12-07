@@ -173,71 +173,6 @@ export class LockingToken4Reputation {
     this.getMsRemainingInPeriodCountdown(blockDate);
   }
 
-  private async getLockBlocker(reason?: string): Promise<boolean> {
-
-    //   const maxLockingPeriodDays = this.appConfig.get('maxLockingPeriodDays');
-    //   // convert days to seconds
-    //   if (this.lockModel.period > (maxLockingPeriodDays * 86400)) {
-    //     reason = `Locking period cannot be more than ${maxLockingPeriodDays} days`;
-    //   }
-    // }
-    reason = await this.lockService.getLockBlocker(this.lockModel);
-
-    if (reason) {
-      this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Can't lock: ${reason}`));
-      // await BalloonService.show({
-      //   content: `Can't lock: ${reason}`,
-      //   eventMessageType: EventMessageType.Failure,
-      //   originatingUiElement: this.lockButton,
-      // });
-      return true;
-    }
-
-    return false;
-  }
-
-  private async release(config: { lock: ILocksTableInfo, releaseButton: JQuery<EventTarget> }): Promise<boolean> {
-    const lockInfo = config.lock;
-
-    if (this.locking || this.releasing) {
-      return false;
-    }
-
-    let success = false;
-
-    try {
-
-      this.releasing = lockInfo.sending = true;
-
-      const result = await (this.lockService as any).release(lockInfo) as ArcTransactionResult;
-
-      lockInfo.sending = false;
-
-      await result.watchForTxMined();
-
-      // this.eventAggregator.publish("handleTransaction",
-      //   new EventConfigTransaction("The lock has been released", result.tx));
-
-      // lockInfo.released = true;
-
-      this.eventAggregator.publish("Lock.Released");
-
-      success = true;
-
-    } catch (ex) {
-      this.eventAggregator.publish("handleException",
-        new EventConfigException("The lock was not released", ex));
-      // await BalloonService.show({
-      //   content: "The lock was not released",
-      //   eventMessageType: EventMessageType.Exception,
-      //   originatingUiElement: config.releaseButton,
-      // });
-    } finally {
-      this.releasing = lockInfo.sending = false;
-    }
-    return success;
-  }
-
   private async getLocks(): Promise<void> {
 
     const locks = await this.lockService.getUserLocks();
@@ -270,6 +205,29 @@ export class LockingToken4Reputation {
     return this.msRemainingInPeriodCountdown = Math.max(this.lockingEndTime.getTime() - Date.now(), 0);
   }
 
+  private async getLockBlocker(reason?: string): Promise<boolean> {
+
+    //   const maxLockingPeriodDays = this.appConfig.get('maxLockingPeriodDays');
+    //   // convert days to seconds
+    //   if (this.lockModel.period > (maxLockingPeriodDays * 86400)) {
+    //     reason = `Locking period cannot be more than ${maxLockingPeriodDays} days`;
+    //   }
+    // }
+    reason = await this.lockService.getLockBlocker(this.lockModel);
+
+    if (reason) {
+      this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Can't lock: ${reason}`));
+      // await BalloonService.show({
+      //   content: `Can't lock: ${reason}`,
+      //   eventMessageType: EventMessageType.Failure,
+      //   originatingUiElement: this.lockButton,
+      // });
+      return true;
+    }
+
+    return false;
+  }
+
   private async lock(): Promise<boolean> {
 
     if (this.locking || this.releasing) {
@@ -294,7 +252,7 @@ export class LockingToken4Reputation {
 
           this.sending = false;
 
-          // await this.getLocks();
+          await this.getLocks();
 
           // this.eventAggregator.publish("handleTransaction", new EventConfigTransaction(
           //   "The lock has been recorded", result.tx));
@@ -318,6 +276,46 @@ export class LockingToken4Reputation {
         this.locking = false;
         this.sending = false;
       }
+    }
+    return success;
+  }
+
+  private async release(config: { lock: ILocksTableInfo, releaseButton: JQuery<EventTarget> }): Promise<boolean> {
+    const lockInfo = config.lock;
+
+    if (this.locking || this.releasing) {
+      return false;
+    }
+
+    let success = false;
+
+    try {
+
+      this.releasing = lockInfo.sending = true;
+
+      /* const result = */ await this.lockService.release(lockInfo);
+
+      lockInfo.sending = false;
+
+      // this.eventAggregator.publish("handleTransaction",
+      //   new EventConfigTransaction("The lock has been released", result.tx));
+
+      // lockInfo.released = true;
+
+      this.eventAggregator.publish("Lock.Released");
+
+      success = true;
+
+    } catch (ex) {
+      this.eventAggregator.publish("handleException",
+        new EventConfigException("The lock was not released", ex));
+      // await BalloonService.show({
+      //   content: "The lock was not released",
+      //   eventMessageType: EventMessageType.Exception,
+      //   originatingUiElement: config.releaseButton,
+      // });
+    } finally {
+      this.releasing = lockInfo.sending = false;
     }
     return success;
   }
