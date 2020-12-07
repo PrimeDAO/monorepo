@@ -24,20 +24,6 @@ export class Utils {
   // }
 
   /**
-   * Returns the last mined block in the chain.
-   */
-  // public static async lastBlockDate(web3: Web3): Promise<Date> {
-  //   let block;
-  //   do {
-  //     block = await (Promise as any).promisify((callback: any): any =>
-  //       web3.eth.getBlock("latest", callback))() as BlockWithoutTransactionData;
-  //   }
-  //   while (!block);
-
-  //   return new Date(block.timestamp * 1000);
-  // }
-
-  /**
    * run a timer after a count of milliseconds greater than the 32-bit max that chrome can handle
    * @param date
    * @param func

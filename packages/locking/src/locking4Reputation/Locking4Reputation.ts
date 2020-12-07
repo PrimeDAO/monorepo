@@ -267,8 +267,6 @@ export abstract class Locking4Reputation {
     return success;
   }
 
-  protected abstract getLockUnit(lockInfo: LockInfo): Promise<string>;
-
   protected async getLocks(): Promise<void> {
 
     const locks = await this.lockService.getUserLocks();
@@ -278,7 +276,7 @@ export abstract class Locking4Reputation {
      */
     for (const lock of locks) {
       const lockInfoX = lock as ILocksTableInfo;
-      lockInfoX.units = await this.getLockUnit(lock as LockInfo);
+      lockInfoX.units = "PRIME"; // await this.getLockUnit(lock as LockInfo);
       lockInfoX.sending = false;
     }
 

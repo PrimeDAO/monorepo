@@ -1,8 +1,7 @@
 <template>
   <div
     class="pageloader"
-    if.bind="!loaded"
-  >
+    if.bind="!loaded">
     <pageloading></pageloading>
   </div>
   <div else>
@@ -13,30 +12,25 @@
     </instructions>
     <div
       class="scheme-dashboard-body lockingTokens"
-      ref="dashboard"
-    >
+      ref="dashboard">
 
       <div
         class="message"
-        if.to-view="lockingPeriodHasNotStarted"
-      >The Vote Staking Period has not yet begun. Return between ${lockingStartTime | date:'dayofmonth'} and ${lockingEndTime | date:'dayofmonth'} to lock tokens.</div>
+        if.to-view="lockingPeriodHasNotStarted">The Vote Staking Period has not yet begun. Return between ${lockingStartTime | date:'dayofmonth'} and ${lockingEndTime | date:'dayofmonth'} to lock tokens.</div>
 
       <div
         class="message"
-        if.to-view="inLockingPeriod"
-      >
+        if.to-view="inLockingPeriod">
         ${msRemainingInPeriodCountdown | timespan:"seconds"} remaining in the Vote Staking Period.
       </div>
 
       <div
         class="message"
-        if.to-view="lockingPeriodIsEnded"
-      >The Vote Staking Period has ended.</div>
+        if.to-view="lockingPeriodIsEnded">The Vote Staking Period has ended.</div>
 
       <form
         if.to-view="inLockingPeriod"
-        with.bind="lockModel"
-      >
+        with.bind="lockModel">
         <div class="row">
           <div class="col-12">
             <div class="form-group bmd-form-group">
@@ -47,24 +41,20 @@
                   href="#"
                   data-toggle="dropdown"
                   aria-haspopup="true"
-                  aria-expanded="false"
-                >${selectedToken ? "Selected token: " + selectedToken.symbol : "Select a
+                  aria-expanded="false">${selectedToken ? "Selected token: " + selectedToken.symbol : "Select a
                   Token to Lock"}</a>
                 <div
                   class="dropdown-menu"
-                  aria-labelledby="lockableTokensDdl"
-                >
+                  aria-labelledby="lockableTokensDdl">
                   <a
                     href="#"
                     class="dropdown-item"
                     click.delegate="selectToken.call($parent.$parent, tokenSpec)"
-                    repeat.for="tokenSpec of $parent.lockableTokens | sortTokens & debounce:1000 "
-                  >${tokenSpec.symbol} (<tokenbalance
+                    repeat.for="tokenSpec of $parent.lockableTokens | sortTokens & debounce:1000 ">${tokenSpec.symbol} (<tokenbalance
                       token.to-view="tokenSpec.address"
                       balance.bind="tokenSpec.balance"
                       trailing-zeroes.to-view="0"
-                      balance-changed.call="balanceChanged($last)"
-                    ></tokenbalance>)
+                      balance-changed.call="balanceChanged($last)"></tokenbalance>)
                   </a>
                 </div>
               </div>
@@ -75,40 +65,33 @@
         <div show.to-view="selectedToken">
           <div
             class="message"
-            if.to-view="!selectedTokenIsLiquid"
-          >
+            if.to-view="!tokenIsLiquid">
             <p>There currently isn’t sufficient trading for ETH/${selectedToken.symbol} on the DutchX. Please choose another token or try again later.
               To provide liquidity for ETH/${selectedToken.symbol} on the DutchX, trade on <a
                 target="_blank"
-                href="https://slow.trade"
-              >slow.trade</a>,
+                href="https://slow.trade">slow.trade</a>,
               <a
                 target="_blank"
-                href="https://fairdex.net/"
-              >FairDEX</a>,
+                href="https://fairdex.net/">FairDEX</a>,
               or visit the <a
                 target="_blank"
-                href="https://dutchx.readthedocs.io/en/latest/cli.html"
-              >DutchX documentation</a> for more information.</p>
+                href="https://dutchx.readthedocs.io/en/latest/cli.html">DutchX documentation</a> for more information.</p>
 
             <p><a
                 href="https://dxdao.daostack.io/liquidity"
-                target="_blank"
-              >See current Token Liquidity here</a>.</p>
+                target="_blank">See current Token Liquidity here</a>.</p>
           </div>
           <div>
             <div
               class="row"
-              show.to-view="hasPartialAllowance || sufficientAllowance"
-            >
+              show.to-view="hasPartialAllowance || sufficientAllowance">
               <div class="col-5">
                 <div class="form-group bmd-form-group">
                   <label for="lockAmount">Tokens to lock</label>
                   <numeric-input
                     css="form-control"
                     id="lockAmount"
-                    value.bind="amount | ethwei"
-                  ></numeric-input>
+                    value.bind="amount | ethwei"></numeric-input>
                 </div>
               </div>
               <div class="col-6">
@@ -117,15 +100,13 @@
                   <numeric-input
                     css="form-control"
                     id="lockingPeriod"
-                    value.bind="period | secondsDays"
-                  ></numeric-input>
+                    value.bind="period | secondsDays"></numeric-input>
                 </div>
               </div>
             </div>
             <div
               class="row"
-              show.to-view="hasPartialAllowance"
-            >
+              show.to-view="hasPartialAllowance">
               <div class="col-12">
                 <div class="form-group">
                   <div>${allowance | ethwei} ${selectedToken.symbol} already approved for locking</div>
@@ -144,8 +125,7 @@
                     text="Approve Token"
                     spin.to-view="approving"
                     id="approveButton"
-                    title.to-view="approving ? 'Approving token...' : 'Approve Token'"
-                  ></spinbutton>
+                    title.to-view="approving ? 'Approving token...' : 'Approve Token'"></spinbutton>
                   <spinbutton
                     else
                     onclick.call="lock()"
@@ -155,8 +135,7 @@
                     text="Lock Tokens"
                     spin.to-view="locking"
                     id="lockButton"
-                    title.to-view="locking ? 'Locking tokens...' : 'Submit Lock'"
-                  ></spinbutton>
+                    title.to-view="locking ? 'Locking tokens...' : 'Submit Lock'"></spinbutton>
                   <metamaskfeedback if.to-view="sending"></metamaskfeedback>
                 </div>
               </div>
@@ -170,8 +149,7 @@
           locks.to-view="locks"
           release.call="release({lock, releaseButton })"
           wrapper.one-time="wrapper"
-          refresh.call="getLocks()"
-        ></locks-for-reputation>
+          refresh.call="getLocks()"></locks-for-reputation>
       </div>
     </div>
   </div>

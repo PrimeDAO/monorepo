@@ -6,12 +6,13 @@ import { autoinject } from "aurelia-framework";
 const ContractAddresses = require("../contracts/contractAddresses.json") as INetworkContractAddresses;
 
 const LockingToken4Reputation = require("../contracts/LockingToken4Reputation.json");
+const PriceOracleInterface = require("../contracts/PriceOracleInterface.json");
 const ERC20ABI = require("../contracts/ERC20.json");
 
 export enum ContractNames {
   LockingToken4Reputation = "LockingToken4Reputation"
   , PRIMETOKEN = "PrimeToken"
-  //  , PrimeDAO = "Avatar"
+  , PriceOracleInterface = "PriceOracleInterface"
   , IERC20 = "IERC20"
 }
 
@@ -26,15 +27,16 @@ export class ContractsService {
     [
       [ContractNames.LockingToken4Reputation, LockingToken4Reputation.abi]
       , [ContractNames.PRIMETOKEN, ERC20ABI.abi]
-      // we wont get a contract for IERC20, it is just used for its ABI
+      , [ContractNames.PriceOracleInterface, PriceOracleInterface.abi]
       , [ContractNames.IERC20, ERC20ABI.abi]
       ,
     ],
   );
 
-  private static Contracts = new Map<ContractNames, Contract>([
+  private static Contracts = new Map<ContractNames, Contract & any>([
     [ContractNames.LockingToken4Reputation, null]
     , [ContractNames.PRIMETOKEN, null]
+    // don't get a contract for PriceOracleInterface, it is just used for its ABI
     // don't get a contract for IERC20, it is just used for its ABI
     ,
   ]);
@@ -101,6 +103,16 @@ export class ContractsService {
     return this.initializingContracts;
   }
 
+  private createProvider() {
+    let signerOrProvider;
+    if (this.accountAddress) {
+      signerOrProvider = Signer.isSigner(this.accountAddress) ? this.accountAddress : this.networkInfo.provider.getSigner(this.accountAddress);
+    } else {
+      signerOrProvider = this.ethereumService.readOnlyProvider;
+    }
+    return signerOrProvider;
+  }
+
   private initializeContracts(): void {
     if (!ContractAddresses || !ContractAddresses[this.ethereumService.targetedNetwork]) {
       throw new Error("initializeContracts: ContractAddresses not set");
@@ -113,17 +125,10 @@ export class ContractsService {
       this.setInitializingContracts();
     }
 
-    const networkInfo = this.networkInfo;
-
     const reuseContracts = // at least one random contract already exists
       ContractsService.Contracts.get(ContractNames.LockingToken4Reputation);
 
-    let signerOrProvider;
-    if (this.accountAddress) {
-      signerOrProvider = Signer.isSigner(this.accountAddress) ? this.accountAddress : networkInfo.provider.getSigner(this.accountAddress);
-    } else {
-      signerOrProvider = this.ethereumService.readOnlyProvider;
-    }
+    const signerOrProvider = this.createProvider();
 
     ContractsService.Contracts.forEach((_contract, contractName) => {
       let contract;
@@ -144,7 +149,7 @@ export class ContractsService {
     this.resolveInitializingContracts();
   }
 
-  public async getContractFor(contractName: ContractNames): Promise<any> {
+  public async getContractFor(contractName: ContractNames): Promise<Contract & any> {
     await this.assertContracts();
     return ContractsService.Contracts.get(contractName);
   }
@@ -155,5 +160,12 @@ export class ContractsService {
 
   public getContractAddress(contractName: ContractNames): Address {
     return ContractAddresses[this.ethereumService.targetedNetwork][contractName];
+  }
+
+  public getContractAtAddress(contractName: ContractNames, address: Address): Contract & any {
+    return new ethers.Contract(
+      address,
+      this.getContractAbi(contractName),
+      this.createProvider());
   }
 }

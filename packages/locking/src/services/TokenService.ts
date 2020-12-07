@@ -3,14 +3,15 @@ import { BigNumber, Contract, ethers } from "ethers";
 // import { formatEther } from "ethers/lib/utils";
 import { ContractNames, ContractsService } from "services/ContractsService";
 import { Address, EthereumService } from "services/EthereumService";
+import TransactionsService, { TransactionReceipt } from "services/TransactionsService";
 
 export interface IErc20Token {
   totalSupply(): Promise<BigNumber>;
   balanceOf(account: Address): Promise<BigNumber>;
-  transfer(recipient: Address, amount: BigNumber): Promise<boolean>
   allowance(owner: Address, spender: Address): Promise<BigNumber>
-  approve(spender: Address, amount: BigNumber): Promise<boolean>
-  transferFrom(sender: Address, recipient: Address, amount: BigNumber): Promise<boolean>
+  transfer(recipient: Address, amount: BigNumber): Promise<TransactionReceipt>
+  approve(spender: Address, amount: BigNumber): Promise<TransactionReceipt>
+  transferFrom(sender: Address, recipient: Address, amount: BigNumber): Promise<TransactionReceipt>
 }
 
 export interface IApprovalEvent {
@@ -54,8 +55,11 @@ export class TokenService {
 
   constructor(
     private ethereumService: EthereumService,
+    private transactionService: TransactionsService,
     contractsService: ContractsService) {
+
     this.erc20Abi = contractsService.getContractAbi(ContractNames.IERC20);
+
   }
 
   // private async _getBalance(
@@ -94,9 +98,16 @@ export class TokenService {
   // }
 
   public getTokenContract(tokenAddress: Address): Contract & IErc20Token {
-    return new ethers.Contract(
+
+    const contract = new ethers.Contract(
       tokenAddress,
       this.erc20Abi,
-      this.ethereumService.readOnlyProvider) as unknown as Contract & IErc20Token;
+      this.ethereumService.readOnlyProvider) as unknown as Contract;
+
+    return Object.assign(contract, {
+      transfer: (recipient: Address, amount: BigNumber) => this.transactionService.send(() => contract.transfer(recipient, amount)),
+      approve: (spender: Address, amount: BigNumber) => this.transactionService.send(() => contract.approve(spender, amount)),
+      transferFrom: (sender: Address, recipient: Address, amount: BigNumber) => this.transactionService.send(() => contract.transferFrom(sender, recipient, amount)),
+    }) as Contract & IErc20Token;
   }
 }

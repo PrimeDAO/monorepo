@@ -1,15 +1,17 @@
 import { EventAggregator } from "aurelia-event-aggregator";
-import { autoinject, computedFrom, signalBindings } from "aurelia-framework";
+import { autoinject, computedFrom } from "aurelia-framework";
 import {
   EventConfigException,
   EventConfigFailure,
   EventConfigTransaction,
   EventMessageType,
 } from "services/GeneralEvents";
-import { Locking4Reputation } from "./Locking4Reputation";
-import { ITokenSpecification, LockService } from "services/LockService";
-import { TokenService } from "services/TokenService";
-import { Utils as UtilsInternal } from "services/utils";
+import { ILockerInfo, ILockingOptions, ITokenSpecification, LockService } from "services/LockService";
+import { IErc20Token, TokenService } from "services/TokenService";
+import { Address, EthereumService } from "services/EthereumService";
+import { ContractNames, ContractsService } from "services/ContractsService";
+import { BigNumber } from "ethers";
+import { DisposableCollection } from "services/DisposableCollection";
 // import {
 //   Address,
 //   Erc20Factory,
@@ -20,24 +22,64 @@ import { Utils as UtilsInternal } from "services/utils";
 // } from '../services/ArcService';
 
 @autoinject
-export class LockingToken4Reputation extends Locking4Reputation {
+export class LockingToken4Reputation {
 
   private lockableTokens: Array<ITokenSpecificationX> = [];
-  private selectedToken: ITokenSpecification = null;
-  private selectedTokenIsLiquid = false;
+  private tokenIsLiquid = false;
   private dashboard: HTMLElement;
-  private tokensInited = false;
-  private allowance = new BigNumber(0);
+  private allowance = BigNumber.from(0);
   private _approving = false;
+  private token: IErc20Token;
+  private lockingStartTime: Date;
+  private lockingEndTime: Date;
+  private lockingPeriodHasNotStarted: boolean;
+  private lockingPeriodIsEnded: boolean;
+  private msUntilCanLockCountdown: number;
+  private msRemainingInPeriodCountdown: number;
+  private refreshing = false;
+  private loaded = false;
+  private lockerInfo: ILockerInfo;
+  private subscriptions = new DisposableCollection();
+  private locks: Array<ILocksTableInfo>;
+  private _locking = false;
+  private _releasing = false;
+  private sending = false;
+  private tokenAddress: Address;
+
+  private lockModel: ILockingOptions = {
+    tokenAddress: undefined,
+    amount: undefined,
+    period: undefined,
+  };
+
+  @computedFrom("_locking")
+  protected get locking(): boolean {
+    return this._locking;
+  }
+
+  protected set locking(val: boolean) {
+    this._locking = val;
+    setTimeout(() => this.eventAggregator.publish("locking.busy", val), 0);
+  }
+
+  @computedFrom("_releasing")
+  protected get releasing(): boolean {
+    return this._releasing;
+  }
+
+  protected set releasing(val: boolean) {
+    this._releasing = val;
+    setTimeout(() => this.eventAggregator.publish("releasing.busy", val), 0);
+  }
 
   @computedFrom("_approving")
-  protected get approving(): boolean {
+  private get approving(): boolean {
     return this._approving;
   }
 
-  protected set approving(val: boolean) {
+  private set approving(val: boolean) {
     this._approving = val;
-    setTimeout(() => this.eventAggregator.publish("dashboard.busy", val), 0);
+    setTimeout(() => this.eventAggregator.publish("approving.busy", val), 0);
   }
 
   private get approveButton(): HTMLElement {
@@ -59,90 +101,228 @@ export class LockingToken4Reputation extends Locking4Reputation {
     return this.allowance.gt("0") && this.allowance.lt(this.lockModel.amount || 0);
   }
 
-  constructor(
-    eventAggregator: EventAggregator,
-    web3Service: Web3Service,
-    private tokenService: TokenService,
-  ) {
-    super(eventAggregator, web3Service);
+  private get inLockingPeriod(): boolean {
+    return !this.lockingPeriodHasNotStarted && !this.lockingPeriodIsEnded;
   }
 
-  protected async refresh() {
-    await super.refresh();
+  constructor(
+    private eventAggregator: EventAggregator,
+    private tokenService: TokenService,
+    private contractsService: ContractsService,
+    private ethereumService: EthereumService,
+    private lockService: LockService,
+  ) {
+  }
+
+  public async attached(): Promise<void> {
+
+    this.loaded = false;
+
+    try {
+
+      this.tokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
+
+      await this.refresh();
+
+      this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account", (_account: Address) => {
+        this.accountChanged();
+      }));
+
+      this.subscriptions.push(this.eventAggregator.subscribe("secondPassed", async (blockDate: Date) => {
+        this.refreshCounters(blockDate);
+      }));
+    } finally {
+      this.loaded = true;
+    }
+  }
+
+  public detached(): void {
+    this.subscriptions.dispose();
+  }
+
+  private async refresh() {
     this.refreshing = true;
+    this.token = this.tokenService.getTokenContract(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN));
+
+    this.lockingStartTime = await this.lockService.getLockingStartTime();
+    this.lockingEndTime = await this.lockService.getLockingEndTime();
+
+    await this.accountChanged();
+    await this.refreshCounters(this.ethereumService.lastBlockDate);
+    this.tokenIsLiquid = await this.getTokenIsLiquid(this.tokenAddress);
+
     /**
      * This will cause all of the TokenBalance elements to be created, attached and for them to set
      * their balances.
      */
-    this.lockableTokens = this.lockService.lockableTokenSpecs;
     await this.getTokenAllowance();
     this.refreshing = false;
   }
 
-  protected async accountChanged(account: Address) {
+  private accountChanged() {
     /**
-     * note: Tokens will update themselves with the new account balances
+     * note: Token will update itself with the new account balance
      */
-    await super.accountChanged(account);
     return this.getLocks();
   }
 
-  protected async lock(): Promise<boolean> {
+  private refreshCounters(blockDate: Date): void {
+    this.getLockingPeriodIsEnded(blockDate);
+    this.getLockingPeriodHasNotStarted(blockDate);
+    this.getMsUntilCanLockCountdown(blockDate);
+    this.getMsRemainingInPeriodCountdown(blockDate);
+  }
 
-    if (!this.selectedToken) {
-      this.eventAggregator.publish("handleFailure", new EventConfigFailure("Please select a token"));
-      return;
+  private async getLockBlocker(reason?: string): Promise<boolean> {
+
+    //   const maxLockingPeriodDays = this.appConfig.get('maxLockingPeriodDays');
+    //   // convert days to seconds
+    //   if (this.lockModel.period > (maxLockingPeriodDays * 86400)) {
+    //     reason = `Locking period cannot be more than ${maxLockingPeriodDays} days`;
+    //   }
+    // }
+    reason = await this.lockService.getLockBlocker(this.lockModel);
+
+    if (reason) {
+      this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Can't lock: ${reason}`));
+      // await BalloonService.show({
+      //   content: `Can't lock: ${reason}`,
+      //   eventMessageType: EventMessageType.Failure,
+      //   originatingUiElement: this.lockButton,
+      // });
+      return true;
     }
 
+    return false;
+  }
+
+  private async release(config: { lock: ILocksTableInfo, releaseButton: JQuery<EventTarget> }): Promise<boolean> {
+    const lockInfo = config.lock;
+
+    if (this.locking || this.releasing) {
+      return false;
+    }
+
+    let success = false;
+
+    try {
+
+      this.releasing = lockInfo.sending = true;
+
+      const result = await (this.lockService as any).release(lockInfo) as ArcTransactionResult;
+
+      lockInfo.sending = false;
+
+      await result.watchForTxMined();
+
+      // this.eventAggregator.publish("handleTransaction",
+      //   new EventConfigTransaction("The lock has been released", result.tx));
+
+      // lockInfo.released = true;
+
+      this.eventAggregator.publish("Lock.Released");
+
+      success = true;
+
+    } catch (ex) {
+      this.eventAggregator.publish("handleException",
+        new EventConfigException("The lock was not released", ex));
+      // await BalloonService.show({
+      //   content: "The lock was not released",
+      //   eventMessageType: EventMessageType.Exception,
+      //   originatingUiElement: config.releaseButton,
+      // });
+    } finally {
+      this.releasing = lockInfo.sending = false;
+    }
+    return success;
+  }
+
+  private async getLocks(): Promise<void> {
+
+    const locks = await this.lockService.getUserLocks();
+
+    /**
+     * The symbol is for the LocksForReputation table
+     */
+    for (const lock of locks) {
+      const lockInfoX = lock as ILocksTableInfo;
+      lockInfoX.units = "PRIME"; // await this.getLockUnit(lock as LockInfo);
+      lockInfoX.sending = false;
+    }
+
+    this.locks = locks as Array<ILocksTableInfo>;
+  }
+
+  private getLockingPeriodHasNotStarted(blockDate: Date): boolean {
+    return this.lockingPeriodHasNotStarted = (blockDate < this.lockingStartTime);
+  }
+
+  private getLockingPeriodIsEnded(blockDate: Date): boolean {
+    return this.lockingPeriodIsEnded = (blockDate > this.lockingEndTime);
+  }
+
+  private getMsUntilCanLockCountdown(_blockDate: Date): number {
+    return this.msUntilCanLockCountdown = Math.max(this.lockingStartTime.getTime() - Date.now(), 0);
+  }
+
+  private getMsRemainingInPeriodCountdown(_blockDate: Date): number {
+    return this.msRemainingInPeriodCountdown = Math.max(this.lockingEndTime.getTime() - Date.now(), 0);
+  }
+
+  private async lock(): Promise<boolean> {
+
+    if (this.locking || this.releasing) {
+      return false;
+    }
+
+    let success = false;
     /**
      * just to be sure we're up-to-date
      */
     await this.getTokenAllowance();
-    if (!this.sufficientAllowance) {
-      return;
-    }
+    if (this.sufficientAllowance) {
 
-    (this.lockModel as TokenLockingOptions).tokenAddress = this.selectedToken.address;
+      try {
+        this.locking = true;
 
-    try {
+        if (!(await this.getLockBlocker())) {
 
-      if (!(await this.getLockBlocker())) {
+          this.sending = true;
 
-        this.sending = true;
+          /*const result = */ await this.lockService.lock(this.lockModel);
 
-        const success = await super.lock(true);
-        if (success) {
+          this.sending = false;
+
+          // await this.getLocks();
+
+          // this.eventAggregator.publish("handleTransaction", new EventConfigTransaction(
+          //   "The lock has been recorded", result.tx));
+
+          this.eventAggregator.publish("Lock.Submitted");
+
+          success = true;
           UtilsInternal.resetInputField(this.dashboard, "lockAmount", null);
           UtilsInternal.resetInputField(this.dashboard, "lockingPeriod", null);
         }
-        return success;
+      } catch (ex) {
+        this.eventAggregator.publish("handleException",
+          new EventConfigException("The token lock was not recorded", ex));
+      // await BalloonService.show({
+      //   content: "The token lock was not recorded",
+      //   eventMessageType: EventMessageType.Exception,
+      //   originatingUiElement: this.lockButton,
+      // });
+      } finally {
+        await this.getTokenAllowance();
+        this.locking = false;
+        this.sending = false;
       }
-    } catch (ex) {
-      this.eventAggregator.publish("handleException",
-        new EventConfigException("The token lock was not approved", ex));
-      await BalloonService.show({
-        content: "The token lock was not approved",
-        eventMessageType: EventMessageType.Exception,
-        originatingUiElement: this.lockButton,
-      });
-    } finally {
-      await this.getTokenAllowance();
-      this.locking = false;
-      this.sending = false;
     }
-    return false;
-  }
-
-  protected getLockUnit(lockInfo: LockInfo): Promise<string> {
-    return this.lockService.getLockedTokenSymbol(lockInfo);
+    return success;
   }
 
   private async approve(): Promise<boolean> {
-
-    if (!this.selectedToken) {
-      this.eventAggregator.publish("handleFailure", new EventConfigFailure("Please select a token"));
-      return false;
-    }
 
     if (this.sufficientAllowance) {
       /**
@@ -153,41 +333,36 @@ export class LockingToken4Reputation extends Locking4Reputation {
       return false;
     }
 
-    (this.lockModel as TokenLockingOptions).tokenAddress = this.selectedToken.address;
+    this.lockModel.tokenAddress = this.tokenAddress;
 
     try {
 
       this.approving = true;
 
-      const token = (await Erc20Factory.at(this.selectedToken.address)) as Erc20Wrapper;
+      const token = this.tokenService.getTokenContract(this.tokenAddress);
 
-      const totalSupply = await token.getTotalSupply();
+      const totalSupply = await token.totalSupply();
 
       this.sending = true;
 
-      const result = await token.approve({
-        amount: totalSupply,
-        owner: this.web3Service.defaultAccount,
-        spender: this.wrapper.address,
-      });
-
-      this.sending = false;
-
-      await result.watchForTxMined();
+      const result = await token.approve(
+        this.contractsService.getContractAddress(ContractNames.PRIMETOKEN),
+        totalSupply,
+      );
 
       this.eventAggregator.publish("handleTransaction", new EventConfigTransaction(
-        "The token approval has been recorded", result.tx));
+        "The token approval has been recorded", result));
 
       return true;
 
     } catch (ex) {
       this.eventAggregator.publish("handleException",
         new EventConfigException("The token approval was not accepted", ex));
-      await BalloonService.show({
-        content: "The token approval was not accepted",
-        eventMessageType: EventMessageType.Exception,
-        originatingUiElement: this.approveButton,
-      });
+      // await BalloonService.show({
+      //   content: "The token approval was not accepted",
+      //   eventMessageType: EventMessageType.Exception,
+      //   originatingUiElement: this.approveButton,
+      // });
     } finally {
       await this.getTokenAllowance();
       this.approving = false;
@@ -197,42 +372,17 @@ export class LockingToken4Reputation extends Locking4Reputation {
   }
 
   private async getTokenAllowance() {
-    if (this.selectedToken && this.selectedToken.address) {
-      this.allowance = await this.tokenService.getTokenAllowance(
-        this.selectedToken.address,
-        this.web3Service.defaultAccount,
-        this.address,
-      );
-    } else {
-      this.allowance = new BigNumber(0);
-    }
+    this.allowance = await this.lockService.getTokenAllowance(this.token);
   }
 
   private async getTokenIsLiquid(token: Address): Promise<boolean> {
-    return this.tokenService.getTokenIsLiquid(token, this.wrapper);
+    return this.lockService.getTokenIsLiquid(token);
   }
 
-  private async selectToken(tokenSpec: ITokenSpecification) {
-    this.selectedTokenIsLiquid = await this.getTokenIsLiquid(tokenSpec.address);
-    this.selectedToken = tokenSpec;
-    this.getTokenAllowance();
-  }
+  // private async selectToken(tokenSpec: ITokenSpecification) {
+  //   signalBindings("token.changed");
+  // }
 
-  private balanceChanged(isLast: boolean): void {
-
-    /**
-     * isLast is true when this is the last token in the list. We don't want to
-     * invoke SortTokens during initial loading until we've reached the last token
-     * in the list.  After that, we sort whenever there is a change.
-     */
-    if (isLast && !this.tokensInited) {
-      this.tokensInited = true;
-    }
-
-    if (this.tokensInited) {
-      signalBindings("token.changed");
-    }
-  }
 }
 
 export interface ITokenSpecificationX extends ITokenSpecification {

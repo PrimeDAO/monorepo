@@ -16,6 +16,36 @@ interface IEIP1193 {
   on(eventName: "disconnect", handler: (error: { code: number; message: string }) => void);
 }
 
+export type Address = string;
+export type Hash = string;
+
+interface IBlockInfoInternal {
+  hash: Hash;
+  /**
+   * previous block
+   */
+  parentHash: Hash;
+  /**
+   *The height(number) of this
+   */
+  number: number;
+  timestamp: number
+  /**
+   * The maximum amount of gas that this block was permitted to use.This is a value that can be voted up or voted down by miners and is used to automatically adjust the bandwidth requirements of the network.
+   *
+   */
+  gasLimit: BigNumber;
+  /**
+  * The total amount of gas used by all transactions in this
+   */
+  gasUsed: BigNumber
+  transactions: Array<Hash>;
+}
+
+export interface IBlockInfo extends IBlockInfoInternal {
+  blockDate: Date;
+}
+
 export type AllowedNetworks = "mainnet" | "kovan" | "rinkeby";
 
 export enum Networks {
@@ -76,8 +106,10 @@ export class EthereumService {
 
   private blockSubscribed: boolean;
 
-  private handleNewBlock = (): void => {
-    this.eventAggregator.publish("Network.NewBlock");
+  private handleNewBlock = async (blockNumber: number): Promise<void> => {
+    const block: Partial<IBlockInfo> = await this.readOnlyProvider.getBlock(blockNumber);
+    this._lastBlockDate = block.blockDate = new Date(block.timestamp * 1000);
+    this.eventAggregator.publish("Network.NewBlock", block);
   }
 
   public initialize(network: AllowedNetworks): void {
@@ -99,7 +131,7 @@ export class EthereumService {
     this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[this.targetedNetwork]);
 
     if (!this.blockSubscribed) {
-      this.readOnlyProvider.on("block", this.handleNewBlock);
+      this.readOnlyProvider.on("block", (blockNumber: number) => this.handleNewBlock(blockNumber));
       this.blockSubscribed = true;
     }
   }
@@ -254,16 +286,19 @@ export class EthereumService {
     this.fireDisconnectHandler(error);
   }
 
+  private _lastBlockDate: Date;
+
+  public get lastBlockDate(): Date {
+    return this._lastBlockDate;
+  }
+
   /**
    * so unit tests will be able to complete
    */
   public dispose(): void {
-    this.readOnlyProvider.off("block", this.handleNewBlock);
+    this.readOnlyProvider.off("block", (blockNumber: number) => this.handleNewBlock(blockNumber));
   }
 }
-
-export type Address = string;
-export type Hash = string;
 
 export const toWei = (ethValue: BigNumber | string | number): BigNumber => {
   return parseEther(ethValue.toString());

@@ -3,6 +3,8 @@ import { ContractNames, ContractsService } from "services/ContractsService";
 import { Address, EthereumService, Hash, Networks } from "services/EthereumService";
 import { BigNumber } from "ethers";
 import { EventAggregator } from "aurelia-event-aggregator";
+import TransactionsService, { TransactionReceipt } from "services/TransactionsService";
+import { IErc20Token } from "services/TokenService";
 
 export interface ILockInfo {
   lockerAddress: Address;
@@ -30,7 +32,6 @@ export interface ILockerInfo {
 }
 
 export interface IRedeemOptions {
-  lockerAddress: Address;
   /**
    * block in which contract was created, to optimize search for Redeem events, if needed
    */
@@ -51,6 +52,7 @@ export interface IReleaseOptions {
 }
 
 export interface ILockingOptions {
+  tokenAddress: Address;
   /**
    * in Wei
    */
@@ -59,8 +61,6 @@ export interface ILockingOptions {
    * the number of seconds the amount should be locked
    */
   period: number;
-  lockerAddress: Address;
-  legalContractHash: Hash;
 }
 
 export interface ITokenSpecification {
@@ -145,6 +145,7 @@ export class LockService {
     private contractsService: ContractsService,
     private eventAggregator: EventAggregator,
     private ethereumService: EthereumService,
+    private transactionService: TransactionsService,
   ) {
 
     this.startingBlockNumber = this.ethereumService.targetedNetwork === Networks.Kovan ? 22431693 : 11389827;
@@ -156,7 +157,6 @@ export class LockService {
     this.eventAggregator.subscribe("Network.Changed.Account", (account: Address): void => {
       this.userAddress = account;
     });
-
   }
 
   /**
@@ -318,5 +318,174 @@ export class LockService {
       }
     }
     return lockCount;
+  }
+
+  public async getLockingEndTime(): Promise<Date> {
+    const dt = await this.lock4RepContract.lockingEndTime();
+    return new Date(dt.toNumber() * 1000);
+  }
+
+  public async getLockingStartTime(): Promise<Date> {
+    const dt = await this.lock4RepContract.lockingStartTime();
+    return new Date(dt.toNumber() * 1000);
+  }
+
+  public async getMaxLockingPeriod(): Promise<number> {
+    // returns seconds
+    return (await this.lock4RepContract.maxLockingPeriod()).toNumber();
+  }
+
+  public getAvatar(): Promise<Address> {
+    return this.lock4RepContract.avatar();
+  }
+
+  public async getLockerScore(lockerAddress: Address): Promise<BigNumber> {
+    if (!lockerAddress) {
+      throw new Error("lockerAddress is not defined");
+    }
+    const lockerInfo = await this.getLockerInfo(lockerAddress);
+    return lockerInfo ? lockerInfo.score : BigNumber.from(0);
+  }
+
+  public async lockerHasLocked(lockerAddress: Address): Promise<boolean> {
+    if (!lockerAddress) {
+      throw new Error("lockerAddress is not defined");
+    }
+    return (await this.getLockerScore(lockerAddress)).gt(0);
+  }
+
+  /**
+   * Get a promise of the first date/time when anything can be redeemed
+   */
+  public async getRedeemEnableTime(): Promise<Date> {
+    const seconds = await this.lock4RepContract.redeemEnableTime();
+    return new Date(seconds.toNumber() * 1000);
+  }
+
+  public getTotalLocked(): Promise<BigNumber> {
+    return this.lock4RepContract.totalLocked();
+  }
+  public getTotalLockedLeft(): Promise<BigNumber> {
+    return this.lock4RepContract.totalLockedLeft();
+  }
+  public getTotalScore(): Promise<BigNumber> {
+    return this.lock4RepContract.totalScore();
+  }
+  /**
+   * get total number of locks
+   */
+  public async getLockCount(): Promise<number> {
+    return (await this.lock4RepContract.lockingsCounter()).toNumber();
+  }
+
+  /**
+   * get the total reputation this contract will reward
+   */
+  public getReputationReward(): Promise<BigNumber> {
+    return this.lock4RepContract.reputationReward();
+  }
+  /**
+   * get the total reputation this contract has not yet rewarded
+   */
+  public getReputationRewardLeft(): Promise<BigNumber> {
+    return this.lock4RepContract.reputationRewardLeft();
+  }
+
+  /**
+   * Returns reason why can't lock, else null if can lock
+   */
+  public async getLockBlocker(options: ILockingOptions): Promise<string | null> {
+
+    if (!this.ethereumService.defaultAccountAddress) {
+      return "the current account address is not defined";
+    }
+
+    if (!Number.isInteger(options.period)) {
+      return "The desired locking period is not expressed as a number of days";
+    }
+
+    let amount: BigNumber;
+
+    try {
+      amount = BigNumber.from(options.amount);
+    } catch {
+      return "amount does not represent a number";
+
+    }
+
+    if (amount.lte(0)) {
+      return "amount to lock must be greater than zero";
+    }
+
+    if (!Number.isInteger(options.period)) {
+      return "period does not represent a number";
+    }
+
+    if (options.period <= 0) {
+      return "period must be greater than zero";
+    }
+
+    const now = this.ethereumService.lastBlockDate;
+
+    const maxLockingPeriod = await this.getMaxLockingPeriod();
+
+    if (options.period > maxLockingPeriod) {
+      return "the locking period exceeds the maximum locking period";
+    }
+
+    const lockingStartTime = await this.getLockingStartTime();
+    const lockingEndTime = await this.getLockingEndTime();
+
+    if ((now < lockingStartTime) || (now > lockingEndTime)) {
+      return "the locking period has not started or has expired";
+    }
+
+    return null;
+  }
+
+  public async lock(options: ILockingOptions): Promise<TransactionReceipt> {
+
+    const msg = await this.getLockBlocker(options);
+    if (msg) {
+      throw new Error(msg);
+    }
+
+    return this.transactionService.send(() =>
+      this.lock4RepContract.lock(options.amount, options.period, options.tokenAddress, null),
+    );
+  }
+
+  /**
+   * returns how many tokens the given token contract currently allows the lockingContract
+   * to transfer on behalf of the current account.
+   */
+  public getTokenAllowance(token: IErc20Token): Promise<BigNumber> {
+    return token.allowance(
+      this.ethereumService.defaultAccountAddress,
+      ContractNames.LockingToken4Reputation,
+    );
+  }
+
+  public getPriceOracleAddress(): Promise<Address> {
+    return this.lock4RepContract.priceOracleContract();
+  }
+
+  public async getTokenIsLiquid(token: Address): Promise<boolean> {
+    return (await this.getTokenPriceFactor(token)) !== null;
+  }
+
+  public async getTokenPriceFactor(token: Address): Promise<BigNumber | null> {
+
+    const oracleAddress = await this.getPriceOracleAddress();
+
+    const oracle = this.contractsService.getContractAtAddress(ContractNames.PriceOracleInterface, oracleAddress);
+
+    const price = (await oracle.getPrice(token)) as Array<BigNumber>;
+
+    if (price && (price.length === 2) && price[0].gt(0) && price[1].gt(0)) {
+      return price[0].div(price[1]);
+    } else {
+      return null;
+    }
   }
 }

@@ -7,16 +7,22 @@ import "./styles/styles.scss";
 import "./app.scss";
 import { ConsoleLogService } from "services/ConsoleLogService";
 import { Utils } from "services/utils";
+import { BindingSignaler } from "aurelia-templating-resources";
+import { EthereumService } from "services/EthereumService";
 
 @autoinject
 export class App {
   constructor (
     private eventAggregator: EventAggregator,
-    private consoleLogService: ConsoleLogService) { }
+    private consoleLogService: ConsoleLogService,
+    private signaler: BindingSignaler,
+    private ethereumService: EthereumService,
+  ) { }
 
   private router: Router;
   private onOff = false;
   private modalMessage: string;
+  private intervalId: any;
 
   private errorHandler = (ex: unknown): boolean => {
     this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an unexpected error occurred", ex));
@@ -44,6 +50,12 @@ export class App {
       this.onOff = false;
     });
 
+
+    this.intervalId = setInterval(async () => {
+      this.signaler.signal("secondPassed");
+      const blockDate = this.ethereumService.lastBlockDate;
+      this.eventAggregator.publish("secondPassed", blockDate);
+    }, 1000);
   }
 
   private configureRouter(config: RouterConfiguration, router: Router) {
