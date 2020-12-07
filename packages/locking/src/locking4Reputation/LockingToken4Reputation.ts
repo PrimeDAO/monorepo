@@ -3,8 +3,6 @@ import { autoinject, computedFrom } from "aurelia-framework";
 import {
   EventConfigException,
   EventConfigFailure,
-  EventConfigTransaction,
-  EventMessageType,
 } from "services/GeneralEvents";
 import { ILockerInfo, ILockingOptions, ITokenSpecification, LockService } from "services/LockService";
 import { IErc20Token, TokenService } from "services/TokenService";
@@ -12,21 +10,14 @@ import { Address, EthereumService } from "services/EthereumService";
 import { ContractNames, ContractsService } from "services/ContractsService";
 import { BigNumber } from "ethers";
 import { DisposableCollection } from "services/DisposableCollection";
-// import {
-//   Address,
-//   Erc20Factory,
-//   Erc20Wrapper,
-//   LockInfo,
-//   LockingToken4ReputationWrapper,
-//   TokenLockingOptions,
-// } from '../services/ArcService';
+import { ILocksTableInfo } from "resources/elements/locksForReputation/locksForReputation";
 
 @autoinject
 export class LockingToken4Reputation {
 
   private lockableTokens: Array<ITokenSpecificationX> = [];
   private tokenIsLiquid = false;
-  private dashboard: HTMLElement;
+  // private dashboard: HTMLElement;
   private allowance = BigNumber.from(0);
   private _approving = false;
   private token: IErc20Token;
@@ -38,7 +29,6 @@ export class LockingToken4Reputation {
   private msRemainingInPeriodCountdown: number;
   private refreshing = false;
   private loaded = false;
-  private lockerInfo: ILockerInfo;
   private subscriptions = new DisposableCollection();
   private locks: Array<ILocksTableInfo>;
   private _locking = false;
@@ -121,6 +111,7 @@ export class LockingToken4Reputation {
     try {
 
       this.tokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
+      this.lockModel.tokenAddress = this.tokenAddress;
 
       await this.refresh();
 
@@ -234,7 +225,7 @@ export class LockingToken4Reputation {
       return false;
     }
 
-    let success = false;
+    const success = false;
     /**
      * just to be sure we're up-to-date
      */
@@ -248,20 +239,16 @@ export class LockingToken4Reputation {
 
           this.sending = true;
 
-          /*const result = */ await this.lockService.lock(this.lockModel);
+          await this.lockService.lock(this.lockModel);
 
           this.sending = false;
 
           await this.getLocks();
 
-          // this.eventAggregator.publish("handleTransaction", new EventConfigTransaction(
-          //   "The lock has been recorded", result.tx));
-
           this.eventAggregator.publish("Lock.Submitted");
 
-          success = true;
-          UtilsInternal.resetInputField(this.dashboard, "lockAmount", null);
-          UtilsInternal.resetInputField(this.dashboard, "lockingPeriod", null);
+          // UtilsInternal.resetInputField(this.dashboard, "lockAmount", null);
+          // UtilsInternal.resetInputField(this.dashboard, "lockingPeriod", null);
         }
       } catch (ex) {
         this.eventAggregator.publish("handleException",
@@ -280,7 +267,7 @@ export class LockingToken4Reputation {
     return success;
   }
 
-  private async release(config: { lock: ILocksTableInfo, releaseButton: JQuery<EventTarget> }): Promise<boolean> {
+  private async release(config: { lock: ILocksTableInfo, releaseButton: Element }): Promise<boolean> {
     const lockInfo = config.lock;
 
     if (this.locking || this.releasing) {
@@ -293,14 +280,9 @@ export class LockingToken4Reputation {
 
       this.releasing = lockInfo.sending = true;
 
-      /* const result = */ await this.lockService.release(lockInfo);
+      await this.lockService.release(lockInfo);
 
-      lockInfo.sending = false;
-
-      // this.eventAggregator.publish("handleTransaction",
-      //   new EventConfigTransaction("The lock has been released", result.tx));
-
-      // lockInfo.released = true;
+      lockInfo.released = true;
 
       this.eventAggregator.publish("Lock.Released");
 
@@ -331,8 +313,6 @@ export class LockingToken4Reputation {
       return false;
     }
 
-    this.lockModel.tokenAddress = this.tokenAddress;
-
     try {
 
       this.approving = true;
@@ -343,13 +323,10 @@ export class LockingToken4Reputation {
 
       this.sending = true;
 
-      const result = await token.approve(
+      await token.approve(
         this.contractsService.getContractAddress(ContractNames.PRIMETOKEN),
         totalSupply,
       );
-
-      this.eventAggregator.publish("handleTransaction", new EventConfigTransaction(
-        "The token approval has been recorded", result));
 
       return true;
 

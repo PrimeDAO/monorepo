@@ -1,38 +1,39 @@
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject, bindable, bindingMode } from "aurelia-framework";
-import { LockInfo, Locking4ReputationWrapper } from "services/ArcService";
 import { DateService } from "services/DateService";
-import { ILockInfoX } from "services/LockService";
-import { Web3Service } from "services/Web3Service";
+import { EthereumService } from "services/EthereumService";
+import { ILockInfo, ILockInfoX, LockService } from "services/LockService";
 
 @autoinject
 export class LocksForReputation {
 
-  @bindable({ defaultBindingMode: bindingMode.oneWay })
-  public locks: Array<LockInfo> = [];
-  // tslint:disable-next-line: variable-name
-  @bindable({ defaultBindingMode: bindingMode.oneTime })
-  public release: (config: { lock: LockInfo, releaseButton: JQuery<EventTarget> }) => Promise<boolean>;
-  @bindable({ defaultBindingMode: bindingMode.oneTime }) public wrapper: Locking4ReputationWrapper;
-  @bindable({ defaultBindingMode: bindingMode.oneTime }) public refresh: () => Promise<void>;
+  @bindable({ defaultBindingMode: bindingMode.toView })
+  public locks: Array<ILockInfo> = [];
 
-  private _locks: Array<LockInfo>;
+  @bindable({ defaultBindingMode: bindingMode.oneTime })
+  public release: (config: { lock: ILockInfo, releaseButton: Element }) => Promise<boolean>;
+
+  @bindable({ defaultBindingMode: bindingMode.oneTime })
+  public refresh: () => Promise<void>;
+
+  private _locks: Array<ILockInfo>;
   private anyCanRelease: boolean;
   private loading = true;
 
   constructor(
-    private web3Service: Web3Service,
+    private ethereumService: EthereumService,
+    private lockService: LockService,
     private eventAggregator: EventAggregator,
     private dateService: DateService,
   ) {
   }
 
-  public attached() {
+  public attached(): void {
     this.locksChanged(this.locks);
   }
 
-  private async locksChanged(newLocks: Array<LockInfo>) {
-    if (!this.wrapper) {
+  private async locksChanged(newLocks: Array<ILockInfo>) {
+    if (!this.refresh) {
       // then we haven't been attached yet, so wait
       return;
     }
@@ -47,32 +48,35 @@ export class LocksForReputation {
     this.anyCanRelease = tmpLocks.filter((l: ILockInfoInternal) => l.canRelease).length > 0;
     this._locks = tmpLocks;
     this.loading = false;
-    setTimeout(() => $("[data-release-time=\"true\"]").tooltip(), 0);
   }
 
-  private async _release(lock: ILockInfoInternal, event: Event) {
-    if (!lock.canRelease) { return; }
+  private async _release(lock: ILockInfoInternal, event: Event): Promise<void> {
+
+    /* eslint-disable require-atomic-updates */
+    if (!lock.canRelease || lock.releasing) { return; }
+
+    lock.releasing = true;
 
     try {
-      lock.releasing = true;
 
-      const releaseButton = $(event.target).next();
+      const releaseButton = (event.target as Element).nextElementSibling;
 
       const success = await this.release({ lock, releaseButton });
       if (success) {
         lock.canRelease = false; // await this.canRelease(lock);
-        lock.amount = (await this.wrapper.getLockInfo(lock.lockerAddress, lock.lockId)).amount;
+        lock.amount = (await this.lockService.getLockInfo(lock.lockerAddress, lock.lockId)).amount;
       }
     } finally {
       lock.releasing = false;
     }
+  /* eslint-enable require-atomic-updates */
   }
 
-  private async canRelease(lock: LockInfo): Promise<boolean> {
-    if (lock.lockerAddress.toLowerCase() !== this.web3Service.defaultAccount.toLowerCase()) {
+  private async canRelease(lock: ILockInfo): Promise<boolean> {
+    if (lock.lockerAddress.toLowerCase() !== this.ethereumService.defaultAccountAddress.toLowerCase()) {
       return false;
     } else {
-      const errMsg = await this.wrapper.getReleaseBlocker(lock.lockerAddress, lock.lockId);
+      const errMsg = await this.lockService.getReleaseBlocker(lock.lockerAddress, lock.lockId);
       return !errMsg;
     }
   }

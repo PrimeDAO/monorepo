@@ -9,6 +9,7 @@ import { ConsoleLogService } from "services/ConsoleLogService";
 import { Utils } from "services/utils";
 import { BindingSignaler } from "aurelia-templating-resources";
 import { EthereumService } from "services/EthereumService";
+import tippy from "tippy.js";
 
 @autoinject
 export class App {
@@ -30,6 +31,10 @@ export class App {
   }
 
   public attached(): void {
+
+    // so all elements with data-tippy-content will automatically have a tooltip
+    tippy("[data-tippy-content]");
+
     window.addEventListener("error", this.errorHandler);
 
     this.eventAggregator.subscribe("dashboard.loading", async (onOff: boolean) => {
