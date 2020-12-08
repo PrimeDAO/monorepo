@@ -97,17 +97,20 @@ export class TokenService {
   //   return this._getBalance(token, accountAddress, inEth);
   // }
 
-  public getTokenContract(tokenAddress: Address): Contract & IErc20Token {
+  public getTokenContract(tokenAddress: Address): IErc20Token {
 
     const contract = new ethers.Contract(
       tokenAddress,
       this.erc20Abi,
       this.ethereumService.readOnlyProvider) as unknown as Contract;
 
-    return Object.assign(contract, {
+    return {
+      totalSupply: () => contract.totalSupply(),
+      balanceOf: (account: Address) => contract.balanceOf(account),
+      allowance: (owner: Address, spender: Address) => contract.allowance(owner, spender),
       transfer: (recipient: Address, amount: BigNumber) => this.transactionService.send(() => contract.transfer(recipient, amount)),
       approve: (spender: Address, amount: BigNumber) => this.transactionService.send(() => contract.approve(spender, amount)),
       transferFrom: (sender: Address, recipient: Address, amount: BigNumber) => this.transactionService.send(() => contract.transferFrom(sender, recipient, amount)),
-    }) as Contract & IErc20Token;
+    };
   }
 }

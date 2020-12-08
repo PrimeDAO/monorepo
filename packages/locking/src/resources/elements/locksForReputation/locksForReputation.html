@@ -32,7 +32,7 @@
           <td style="white-space: nowrap">${lock.amount | ethwei} ${lock.units}</td>
           <td style="text-align: center; white-space:nowrap;max-width:3rem; overflow: hidden; text-overflow: ellipsis;">
             <span
-              data-tippy-content.to-view="${releaseTitle(lock)}"
+              data-tippy-content.to-view="releaseTitle(lock)"
               data-tippy-placement='top'>${releaseDate(lock)}</span>
           </td>
           <td class="actions">

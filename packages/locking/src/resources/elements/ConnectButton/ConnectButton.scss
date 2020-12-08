@@ -16,7 +16,7 @@
     padding: 0.6rem 0.9rem;
     border-radius: 0.75rem;
     white-space: nowrap;
-    color: rgb(109, 168, 255);
+    color: $color-light-purple;
     background-color: rgb(33, 36, 41);
     border: 1px solid rgba(21, 61, 111, 0.44);
     cursor: pointer;
@@ -24,7 +24,7 @@
 
     &:hover,
     &:focus {
-      color: rgb(83, 153, 255);
+      color: $color-light-purple;
     }
   }
 

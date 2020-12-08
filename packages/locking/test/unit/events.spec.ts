@@ -4,18 +4,20 @@ import { ContractNames, ContractsService } from "services/ContractsService";
 import { LockService } from "services/LockService";
 import { ITransferEvent } from "services/TokenService";
 import { BigNumber } from "ethers";
+import TransactionsService from "services/TransactionsService";
 
 describe("Events", () => {
   let ethereumService: EthereumService;
   let contractsService: ContractsService;
   let eventAggregator: EventAggregator;
+  let transactionsService: TransactionsService;
 
   const getLockingService = () => {
     return new LockService(
       contractsService,
       eventAggregator,
       ethereumService,
-      0,
+      transactionsService,
     );
   };
 
@@ -25,6 +27,7 @@ describe("Events", () => {
 
   beforeAll(() => {
     eventAggregator = new EventAggregator();
+    transactionsService = new TransactionsService(eventAggregator);
     ethereumService = new EthereumService(eventAggregator);
     ethereumService.initialize(Networks.Kovan);
     contractsService = new ContractsService(eventAggregator, ethereumService);

@@ -150,6 +150,26 @@ html {
       border-radius: $section-border-radius;
       padding: 18px 24px;
 
+      &.doubleSection {
+        display: flex;
+        padding: 0;
+
+        .left,
+        .right {
+          padding-top: 18px;
+          padding-bottom: 18px;
+        }
+
+        .left {
+          flex-basis: 50%;
+          border-right: $section-border;
+        }
+
+        .right {
+          flex-basis: 50%;
+        }
+      }
+
       &.top {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
@@ -166,25 +186,25 @@ html {
         border-bottom: none;
         text-align: center;
 
-        &.doubleSection {
-          display: flex;
-          padding: 0;
+        // &.doubleSection {
+        //   display: flex;
+        //   padding: 0;
 
-          .left,
-          .right {
-            padding-top: 18px;
-            padding-bottom: 18px;
-          }
+        //   .left,
+        //   .right {
+        //     padding-top: 18px;
+        //     padding-bottom: 18px;
+        //   }
 
-          .left {
-            flex-basis: 50%;
-            border-right: $section-border;
-          }
+        //   .left {
+        //     flex-basis: 50%;
+        //     border-right: $section-border;
+        //   }
 
-          .right {
-            flex-basis: 50%;
-          }
-        }
+        //   .right {
+        //     flex-basis: 50%;
+        //   }
+        // }
       }
       &.bottom {
         border-top-left-radius: 0;
