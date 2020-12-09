@@ -46,6 +46,7 @@
 
   .appFooter {
     padding: 16px;
+    font-size: 14px;
     border-top: 2px solid $color-white;
     display: grid;
     grid-template-columns: 34% 33% 33%;
@@ -56,7 +57,7 @@
     .name {
       opacity: 0.5;
       grid-area: title;
-      font-size: 32px;
+      font-size: 18px;
       margin-bottom: 12px;
     }
     .logo {
@@ -66,8 +67,8 @@
       justify-content: center;
       img {
         opacity: 0.75;
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
       }
     }
     .links {
@@ -75,19 +76,22 @@
       text-align: right;
       a {
         opacity: 0.5;
-        font-size: 18px;
+        font-size: 16px;
         text-decoration: none;
 
         &:hover {
           text-decoration: underline;
         }
       }
+      a:not(:last-child) {
+        margin-right: 4px;
+      }
     }
 
     .subtitle {
       opacity: 0.5;
       grid-area: subtitle;
-      font-size: 22px;
+      font-size: 14px;
     }
 
     .share {
@@ -96,15 +100,15 @@
       text-align: right;
 
       a {
-        width: 33px;
-        height: 33px;
+        width: 22px;
+        height: 22px;
         background-size: cover;
         background-repeat: no-repeat;
         display: inline-block;
       }
 
       a:not(:last-child) {
-        margin-right: 12px;
+        margin-right: 8px;
       }
     }
   }
