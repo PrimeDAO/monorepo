@@ -160,7 +160,7 @@ html {
           padding-bottom: 30px;
           padding-left: 40px;
           padding-right: 40px;
-          > div {
+          > div:not(:last-child) {
             margin-bottom: 16px;
           }
         }
@@ -182,7 +182,7 @@ html {
         padding-top: 60px;
         padding-bottom: 12px;
 
-        > div {
+        > div:not(:last-child) {
           margin-bottom: 16px;
         }
       }

@@ -41,26 +41,26 @@
       }
     }
 
-    .inputButtonGroup {
-      text-align: left;
-      display: block;
-      .inputGroup {
-        display: inline-block;
-        label {
-          display: block;
-        }
-        input {
-          margin-right: 6px;
-        }
-      }
-    }
+    // .inputButtonGroup {
+    //   text-align: left;
+    //   display: block;
+    //   .inputGroup {
+    //     display: inline-block;
+    //     label {
+    //       display: block;
+    //     }
+    //     input {
+    //       margin-right: 6px;
+    //     }
+    //   }
+    // }
 
-    .section.middle .value {
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 6px;
-      font-family: "Cera Pro";
-    }
+    // .section.middle .value {
+    //   font-size: 16px;
+    //   font-weight: bold;
+    //   margin-bottom: 6px;
+    //   font-family: "Cera Pro";
+    // }
   }
 
   .learnmore {
@@ -80,12 +80,43 @@
       text-decoration: underline;
     }
 
-    > div {
+    > div:not(:last-child) {
       margin-bottom: 16px;
     }
 
     .moreinfo {
       margin-bottom: 28px;
+    }
+  }
+
+  .locking {
+    .yourLocks {
+      .repStatus {
+        text-align: center;
+
+        .repStyle {
+          color: $color-lightblue;
+        }
+
+        .left,
+        .right {
+          padding: 10px;
+        }
+
+        .left {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          .totalRep {
+            font-size: 24px;
+            font-weight: bold;
+          }
+
+          .yourRep {
+            font-size: 22px;
+          }
+        }
+      }
     }
   }
 }
