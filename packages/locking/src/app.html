@@ -1,5 +1,6 @@
 <template>
   <banner></banner>
+
   <!-- TODO: get animation working -->
   <div class="appWrapper animated-page au-animate">
     <div class="appHeader">
@@ -17,8 +18,22 @@
       <router-view></router-view>
     </modalscreen>
     <div class="appFooter">
-      <img src="/logo-white.svg" />
-      <div class="text">&copy; 2020 Prime Development Foundation</div>
+      <div class="name">PrimeDAO</div>
+      <div class="logo">
+        <img src="/logo-white.svg" />
+      </div>
+      <div class="links">
+        <a href="mailto:hello@primedao.io" target="#" rel="noopener noreferrer">Contact Us</a>&nbsp;|&nbsp;
+        <a href="https://docs.primedao.io/primedao/faqs" target="_blank" rel="noopener noreferrer">FAQ</a>
+      </div>
+      <div class="subtitle">&copy; 2020 Prime Development Foundation</div>
+      <div class="share">
+        <a class="discord" href="https://discord.gg/x8v59pG" target="_blank" rel="noopener noreferrer"></a>
+        <a class="twitter" href=" https://twitter.com/PrimeDAO_?s=09" target="_blank" rel="noopener noreferrer"></a>
+        <a class="medium" href="https://medium.com/primedao" target="_blank" rel="noopener noreferrer"></a>
+        <a class="forum" href="https://daotalk.org/c/daos/primedao/38" target="_blank" rel="noopener noreferrer"></a>
+        <a class="telegram" href="https://t.me/primedao" target="_blank" rel="noopener noreferrer"></a>
+      </div>
     </div>
   </div>
   </modalscreen>

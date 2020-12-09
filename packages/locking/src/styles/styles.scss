@@ -156,8 +156,13 @@ html {
 
         .left,
         .right {
-          padding-top: 18px;
-          padding-bottom: 18px;
+          padding-top: 60px;
+          padding-bottom: 30px;
+          padding-left: 40px;
+          padding-right: 40px;
+          > div {
+            margin-bottom: 16px;
+          }
         }
 
         .left {

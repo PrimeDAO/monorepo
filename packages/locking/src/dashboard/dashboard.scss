@@ -18,26 +18,21 @@
     margin-right: 26px;
   }
 
-  .prepare,
-  .contribute,
   .learnmore,
-  .farming {
+  .locking {
     text-align: left;
     margin-bottom: 25px;
-    min-width: 290px;
-    max-width: 290px;
 
-    .moreinfo {
+    div.moreinfo {
       display: flex;
       align-items: center;
+      margin-bottom: 6px;
 
-      .icon {
+      .circled-number {
         flex-shrink: 2;
         padding-right: 10px;
-        img {
-          height: 16px;
-          position: relative;
-          top: 2px;
+        .number {
+          bottom: 1px;
         }
       }
 
@@ -69,6 +64,8 @@
   }
 
   .learnmore {
+    min-width: 290px;
+    max-width: 290px;
     border-top: 4px solid $color-lightblue;
     padding-top: 30px;
     .image {
@@ -89,55 +86,6 @@
 
     .moreinfo {
       margin-bottom: 28px;
-    }
-  }
-  .prepare {
-    .inputButtonGroup {
-      label {
-        margin-bottom: 4px;
-      }
-    }
-    .inputButtonGroup:first-of-type {
-      margin-bottom: 16px;
-    }
-  }
-  .contribute {
-    .liquidityButtons {
-      display: flex;
-      flex-direction: column;
-
-      button {
-        width: 150px;
-      }
-
-      > div:first-of-type {
-        margin-bottom: 12px;
-      }
-    }
-  }
-  .farming {
-    .stakingButtons {
-      display: flex;
-      flex-direction: column;
-
-      button {
-        width: 180px;
-      }
-
-      > div:not(:last-child) {
-        margin-bottom: 12px;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 1300px) {
-  .dashboardContainer {
-    flex-wrap: wrap;
-    > div:not(:last-child),
-    > div:last-child {
-      margin-left: auto;
-      margin-right: auto;
     }
   }
 }
