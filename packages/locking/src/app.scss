@@ -73,7 +73,8 @@
     }
     .links {
       grid-area: links;
-      text-align: right;
+      display: flex;
+      justify-content: flex-end;
       a {
         opacity: 0.5;
         font-size: 16px;
@@ -82,9 +83,6 @@
         &:hover {
           text-decoration: underline;
         }
-      }
-      a:not(:last-child) {
-        margin-right: 4px;
       }
     }
 
