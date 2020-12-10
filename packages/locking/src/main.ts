@@ -7,6 +7,7 @@ import { ConsoleLogService } from "services/ConsoleLogService";
 import { ContractsService } from "services/ContractsService";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { LockService } from "services/LockService";
+import { AvatarService } from "services/AvatarService";
 
 export function configure(aurelia: Aurelia): void {
   aurelia.use
@@ -37,6 +38,10 @@ export function configure(aurelia: Aurelia): void {
 
       const lockService = aurelia.container.get(LockService);
       await lockService.initialize();
+
+      const avatarService = aurelia.container.get(AvatarService);
+      await avatarService.initialize();
+
     } catch (ex) {
       const eventAggregator = aurelia.container.get(EventAggregator);
       eventAggregator.publish("handleException", new EventConfigException("Sorry, couldn't connect to ethereum", ex));

@@ -9,6 +9,8 @@ import { BigNumber } from "ethers";
 import { EventConfigException, EventConfigFailure} from "services/GeneralEvents";
 import { Router } from "aurelia-router";
 import { NumberService } from "services/numberService";
+import { AvatarService } from "services/AvatarService";
+import { toBigNumberJs } from "services/BigNumberService";
 
 @singleton(false)
 @autoinject
@@ -21,10 +23,14 @@ export class Dashboard {
   private userPrimeBalance: BigNumber;
   private tokensToLock: BigNumber;
   private numDays: number;
+  private totalReputation: BigNumber;
+  private userReputationBalance: BigNumber;
+  private userReputationShare: number;
 
   constructor(
     private eventAggregator: EventAggregator,
     private contractsService: ContractsService,
+    private avatarService: AvatarService,
     private ethereumService: EthereumService,
     private transactionsService: TransactionsService,
     private numberService: NumberService,
@@ -58,8 +64,9 @@ export class Dashboard {
     if (!this.initialized) {
       try {
       // timeout to allow styles to load on startup to modalscreen sizes correctly
-        // setTimeout(() => this.eventAggregator.publish("dashboard.loading", true), 100);
+        setTimeout(() => this.eventAggregator.publish("dashboard.loading", true), 100);
         this.primeTokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
+        this.totalReputation = await this.avatarService.reputation.totalSupply();
 
       } catch (ex) {
         this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
@@ -80,6 +87,9 @@ export class Dashboard {
           setTimeout(() => this.eventAggregator.publish("dashboard.loading", true), 100);
         }
         this.userPrimeBalance = await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress);
+        this.userReputationBalance = await this.avatarService.reputation.balanceOf(this.ethereumService.defaultAccountAddress);
+        this.userReputationShare = toBigNumberJs(this.userReputationBalance).div(toBigNumberJs(this.userPrimeBalance)).toNumber();
+
         this.connected= true;
       } catch (ex) {
         this.connected = false;

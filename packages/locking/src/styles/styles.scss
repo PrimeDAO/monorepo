@@ -10,6 +10,12 @@ html {
     font-family: Aeonik;
     min-height: 100vh;
 
+    span,
+    formatted-number {
+      // because otherwize spans are being rendered as if they have a bit of margin-left
+      display: inline-block;
+    }
+
     input {
       border: $section-border;
       width: 70px;

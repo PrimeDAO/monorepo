@@ -8,12 +8,16 @@ const ContractAddresses = require("../contracts/contractAddresses.json") as INet
 const LockingToken4Reputation = require("../contracts/LockingToken4Reputation.json");
 const PriceOracleInterface = require("../contracts/PriceOracleInterface.json");
 const ERC20ABI = require("../contracts/ERC20.json");
+const Avatar = require("../contracts/Avatar.json");
+const Reputation = require("../contracts/Reputation.json");
 
 export enum ContractNames {
   LockingToken4Reputation = "LockingToken4Reputation"
   , PRIMETOKEN = "PrimeToken"
   , PriceOracleInterface = "PriceOracleInterface"
   , IERC20 = "IERC20"
+  , Avatar = "Avatar"
+  , Reputation = "Reputation"
 }
 
 interface INetworkContractAddresses {
@@ -29,6 +33,8 @@ export class ContractsService {
       , [ContractNames.PRIMETOKEN, ERC20ABI.abi]
       , [ContractNames.PriceOracleInterface, PriceOracleInterface.abi]
       , [ContractNames.IERC20, ERC20ABI.abi]
+      , [ContractNames.Avatar, Avatar.abi]
+      , [ContractNames.Reputation, Reputation.abi]
       ,
     ],
   );
@@ -36,6 +42,8 @@ export class ContractsService {
   private static Contracts = new Map<ContractNames, Contract & any>([
     [ContractNames.LockingToken4Reputation, null]
     , [ContractNames.PRIMETOKEN, null]
+    , [ContractNames.Avatar, null]
+    // don't get a contract for Reputation, it is just used for its ABI
     // don't get a contract for PriceOracleInterface, it is just used for its ABI
     // don't get a contract for IERC20, it is just used for its ABI
     ,

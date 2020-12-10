@@ -1,9 +1,9 @@
 <template>
-  <instructions if.to-view="!lockingPeriodIsEnded">
+  <!-- <instructions if.to-view="!lockingPeriodIsEnded">
     <p>Select the number of PRIME tokens you would like to lock and the lock duration, in days, that you wish to lock them, for up to [XX?] days.</p>
     <p>At the end of the locking period [which period?] you will be awarded Reputation proportionally according to the total amount of locked PRIME tokens, the value of the token at the time of locking, and the length of the locking period [?] of all participants.</p>
     <p>After the lock duration you’ve specified has concluded, return to this web page to release the tokens. You will receive back the same amount of tokens that you locked.</p>
-  </instructions>
+  </instructions> -->
   <div
     class="scheme-dashboard-body lockingTokens"
     ref="dashboard">
@@ -79,7 +79,7 @@
         <button class="button1"
           else
           onclick.call="lock()"
-          disabled.to-view="(!amount || amount.eq(0)) || (!period || period <== 0)">Lock Tokens</button>
+          disabled.to-view="!amount || amount.eq(0) || !period">Lock Tokens</button>
       </div>
     </div>
 

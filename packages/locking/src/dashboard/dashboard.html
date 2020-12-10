@@ -28,11 +28,30 @@
           </div>
           <div class="section doubleSection repStatus">
             <div class="left">
-              <div class="totalRep repStyle">## REP</div>
-              <div class="yourRep repStyle">##%</div>
+              <div class="totalRep repStyle">
+                <span if.to-view="!totalReputation">--</span>
+                <formatted-number else value.to-view="totalReputation | ethwei"></formatted-number> REP
+              </div>
+              <div class="yourRep repStyle">
+                <span if.to-view="!userReputationShare">--</span>
+                <formatted-number else
+                  value.to-view="userReputationShare"
+                  average="false"
+                  mantissa="2"></formatted-number>%
+              </div>
             </div>
             <div class="right">
-              <div>You've generated <span class="repStyle">## REP</span>, or <span class="repStyle">##%</span> of the DAO's total voting power.</div>
+              <div>You've generated
+                <span class="repStyle">
+                  <formatted-number if.to-view="userReputationBalance" value.to-view="userReputationBalance | ethwei"></formatted-number>
+                  <span else>--</span>
+                </span>, or <span class="repStyle">
+                  <span if.to-view="!userReputationShare">--</span>
+                  <formatted-number else
+                    value.to-view="userReputationShare"
+                    average="false"
+                    mantissa="2"></formatted-number>%
+                </span> of the DAO's total voting power.</div>
               <div>Keep locking to earn more!</div>
             </div>
           </div>
