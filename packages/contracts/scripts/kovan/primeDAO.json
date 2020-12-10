@@ -1,5 +1,5 @@
 {
-  "orgName": "primeDAO",
+  "orgName": "primeDAO-test",
   "tokenName": "PrimeDAO Useless Token",
   "tokenSymbol": "PDAO",
   "ContributionReward": [{ "voteParams": 0 }],
@@ -8,32 +8,15 @@
   "StandAloneContracts": [],
   "CustomSchemes": [
     {
-      "name": "BalancerProxy",
-      "alias": "BalancerProxy",
-      "isUniversal": false,
-      "address": "",
-      "params": [],
-      "permissions": "0x00000010"
-    },
-    {
-      "name": "GenericScheme",
-      "schemeName": "GenericScheme",
-      "isUniversal": false,
-      "params": ["GenesisProtocolAddress", { "voteParams": 0 }, ""],
-      "permissions": "0x00000010",
-      "alias": "BalancerPoolManager",
-      "fromArc": true
-    },
-    {
        "name":"LockingToken4Reputation",
        "schemeName":"LockingToken4Reputation",
        "isUniversal":false,
        "params":[
          10000,
-         0,
-         1606089137,
-         1606089137,
-         1607188137
+         1607610981,
+         1607904000,
+         1607904000,
+         1608504000
        ],
        "permissions":"0x00000010",
        "alias":"LockingToken4Reputation",
