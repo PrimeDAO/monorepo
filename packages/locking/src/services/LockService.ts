@@ -137,7 +137,8 @@ export class LockService {
 
   // private static lockableTokens: Map<Address, ITokenSpecification> = new Map<Address, ITokenSpecification>();
 
-  private lock4RepContract: any;
+  public lock4RepContract: any;
+  public lock4RepContractAddress: Address;
   private userAddress: Address;
   private startingBlockNumber: number;
 
@@ -151,7 +152,7 @@ export class LockService {
     this.startingBlockNumber = this.ethereumService.targetedNetwork === Networks.Kovan ? 22431693 : 11389827;
 
     this.eventAggregator.subscribe("Contracts.Changed", async (): Promise<void> => {
-      this.lock4RepContract = await this.contractsService.getContractFor(ContractNames.LockingToken4Reputation);
+      this.initialize();
     });
 
     this.eventAggregator.subscribe("Network.Changed.Account", (account: Address): void => {
@@ -159,6 +160,10 @@ export class LockService {
     });
   }
 
+  public async initialize(): Promise<void> {
+    this.lock4RepContract = await this.contractsService.getContractFor(ContractNames.LockingToken4Reputation);
+    this.lock4RepContractAddress = this.contractsService.getContractAddress(ContractNames.LockingToken4Reputation);
+  }
   /**
    * Returns promise of array of `IReleaseInfo` for every `Release` event.
    */
@@ -508,7 +513,7 @@ export class LockService {
   public getTokenAllowance(token: IErc20Token): Promise<BigNumber> {
     return token.allowance(
       this.ethereumService.defaultAccountAddress,
-      ContractNames.LockingToken4Reputation,
+      this.lock4RepContractAddress,
     );
   }
 

@@ -32,12 +32,11 @@ export function configure(aurelia: Aurelia): void {
     try {
       const ethereumService = aurelia.container.get(EthereumService);
       ethereumService.initialize(process.env.NODE_ENV === "development" ? Networks.Kovan : Networks.Mainnet);
-      /**
-       * instantiate first so will capture the needed ensuing contracts events
-       */
-      aurelia.container.get(LockService);
+
       aurelia.container.get(ContractsService);
 
+      const lockService = aurelia.container.get(LockService);
+      await lockService.initialize();
     } catch (ex) {
       const eventAggregator = aurelia.container.get(EventAggregator);
       eventAggregator.publish("handleException", new EventConfigException("Sorry, couldn't connect to ethereum", ex));

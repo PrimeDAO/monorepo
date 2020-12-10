@@ -1,0 +1,26 @@
+@import "styles/colors.scss";
+
+.instructions {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  color: $color-white;
+  background-color: $color-lightblue;
+
+  .instructions-body {
+    font-size: 1rem;
+    padding-left: 1rem;
+    line-height: 1.35rem;
+  }
+
+  .instructions-icon {
+    flex-shrink: 2;
+    padding-right: 10px;
+    img {
+      height: 20px;
+      position: relative;
+      top: 2px;
+    }
+  }
+}

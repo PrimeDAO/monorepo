@@ -1,17 +1,19 @@
 import { EventAggregator } from "aurelia-event-aggregator";
-import { autoinject, computedFrom } from "aurelia-framework";
+import { autoinject, computedFrom, customElement } from "aurelia-framework";
 import {
   EventConfigException,
   EventConfigFailure,
 } from "services/GeneralEvents";
-import { ILockingOptions, ITokenSpecification, LockService } from "services/LockService";
+import { ILockingOptions, LockService } from "services/LockService";
 import { IErc20Token, TokenService } from "services/TokenService";
 import { Address, EthereumService } from "services/EthereumService";
 import { ContractNames, ContractsService } from "services/ContractsService";
 import { BigNumber } from "ethers";
 import { DisposableCollection } from "services/DisposableCollection";
 import { ILocksTableInfo } from "resources/elements/locksForReputation/locksForReputation";
+import { ITokenSpecificationX } from "resources/value-converters/sortTokens";
 
+@customElement("lockingform")
 @autoinject
 export class LockingToken4Reputation {
 
@@ -20,7 +22,6 @@ export class LockingToken4Reputation {
   // private dashboard: HTMLElement;
   private allowance = BigNumber.from(0);
   private _approving = false;
-  private token: IErc20Token;
   private lockingStartTime: Date;
   private lockingEndTime: Date;
   private lockingPeriodHasNotStarted: boolean;
@@ -35,7 +36,7 @@ export class LockingToken4Reputation {
   private _releasing = false;
   private sending = false;
   private tokenAddress: Address;
-  private approveButton: HTMLButtonElement;
+  private token: IErc20Token;
 
   private lockModel: ILockingOptions = {
     tokenAddress: undefined,
@@ -99,6 +100,7 @@ export class LockingToken4Reputation {
     private ethereumService: EthereumService,
     private lockService: LockService,
   ) {
+    this.lockModel.tokenAddress = this.tokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
   }
 
   public async attached(): Promise<void> {
@@ -107,8 +109,7 @@ export class LockingToken4Reputation {
 
     try {
 
-      this.tokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
-      this.lockModel.tokenAddress = this.tokenAddress;
+      this.token = this.tokenService.getTokenContract(this.tokenAddress);
 
       await this.refresh();
 
@@ -130,28 +131,21 @@ export class LockingToken4Reputation {
 
   private async refresh() {
     this.refreshing = true;
-    this.token = this.tokenService.getTokenContract(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN));
 
     this.lockingStartTime = await this.lockService.getLockingStartTime();
     this.lockingEndTime = await this.lockService.getLockingEndTime();
+    this.tokenIsLiquid = await this.getTokenIsLiquid(this.tokenAddress);
+    this.refreshCounters(this.ethereumService.lastBlockDate);
 
     await this.accountChanged();
-    await this.refreshCounters(this.ethereumService.lastBlockDate);
-    this.tokenIsLiquid = await this.getTokenIsLiquid(this.tokenAddress);
-
-    /**
-     * This will cause all of the TokenBalance elements to be created, attached and for them to set
-     * their balances.
-     */
-    await this.getTokenAllowance();
     this.refreshing = false;
   }
 
-  private accountChanged() {
-    /**
-     * note: Token will update itself with the new account balance
-     */
-    return this.getLocks();
+  private async accountChanged() {
+    if (this.ethereumService.defaultAccountAddress) {
+      await this.getTokenAllowance();
+      return this.getLocks();
+    }
   }
 
   private refreshCounters(blockDate: Date): void {
@@ -314,14 +308,12 @@ export class LockingToken4Reputation {
 
       this.approving = true;
 
-      const token = this.tokenService.getTokenContract(this.tokenAddress);
-
-      const totalSupply = await token.totalSupply();
+      const totalSupply = await this.token.totalSupply();
 
       this.sending = true;
 
-      await token.approve(
-        this.contractsService.getContractAddress(ContractNames.PRIMETOKEN),
+      await this.token.approve(
+        this.lockService.lock4RepContractAddress,
         totalSupply,
       );
 
@@ -355,8 +347,4 @@ export class LockingToken4Reputation {
   //   signalBindings("token.changed");
   // }
 
-}
-
-export interface ITokenSpecificationX extends ITokenSpecification {
-  balance?: BigNumber;
 }

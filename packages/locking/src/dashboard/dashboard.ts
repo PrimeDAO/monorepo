@@ -6,7 +6,7 @@ import { EventAggregator } from "aurelia-event-aggregator";
 import TransactionsService from "services/TransactionsService";
 import { Address, EthereumService } from "services/EthereumService";
 import { BigNumber } from "ethers";
-import { EventConfigException} from "services/GeneralEvents";
+import { EventConfigException, EventConfigFailure} from "services/GeneralEvents";
 import { Router } from "aurelia-router";
 import { NumberService } from "services/numberService";
 
@@ -19,6 +19,8 @@ export class Dashboard {
   private lockingToken4Reputation: any;
   private primeTokenAddress: Address;
   private userPrimeBalance: BigNumber;
+  private tokensToLock: BigNumber;
+  private numDays: number;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -104,4 +106,16 @@ export class Dashboard {
       return true;
     }
   }
+
+  // private async submitLock(): Promise<void> {
+  //   if (this.ensureConnected()) {
+  //     if (this.tokensToLock.gt(this.userPrimeBalance)) {
+  //       this.eventAggregator.publish("handleValidationError", new EventConfigFailure("You don't have enough PRIME to lock the amount you requested"));
+  //     } else {
+  //       await this.transactionsService.send(() => this.lockService.deposit({ value: this.tokensToLock }));
+  //       // TODO:  should happen after mining
+  //       this.getUserBalances();
+  //     }
+  //   }
+  // }
 }
