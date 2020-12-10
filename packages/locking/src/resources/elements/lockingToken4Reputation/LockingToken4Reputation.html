@@ -73,14 +73,13 @@
       </div>
 
       <div>
-        <button class="button1"
+        <button class="button1 tokenSubmitButton"
           if.to-view="hasPartialAllowance || noAllowance"
-          onclick.call="approve()"
-          class="tokenSubmitButton">Approve Token Transfer</button>
+          onclick.call="approve()">Approve Token Transfer</button>
         <button class="button1"
           else
           onclick.call="lock()"
-          class="tokenSubmitButton">Lock Tokens</button>
+          disabled.to-view="(!amount || amount.eq(0)) || (!period || period <== 0)">Lock Tokens</button>
       </div>
     </div>
 
