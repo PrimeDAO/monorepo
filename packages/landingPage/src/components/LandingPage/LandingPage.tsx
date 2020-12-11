@@ -23,7 +23,7 @@ const MainMenu = (props: { container: RefObject<HTMLDivElement> }): React.ReactE
         <div className="name"
           onMouseEnter={() => showMenu('PrimeToken', true)}
           onMouseLeave={() => showMenu('PrimeToken', false)}
-        >PRIME Token<div className="menuDivider"></div></div>
+        >Products<div className="menuDivider"></div></div>
       </div>
 
       <div className="learn">
@@ -44,10 +44,8 @@ const MainMenu = (props: { container: RefObject<HTMLDivElement> }): React.ReactE
         onMouseEnter={() => showMenu('PrimeToken', true)}
         onMouseLeave={() => showMenu('PrimeToken', false)}
       >
-        <div onClick={() => goto('http://raise.primedao.io')}><div className="name">Get PRIME Now!</div><div className="triangle"></div></div>
-        <div onClick={() => goto('https://medium.com/primedao/the-prime-initial-decentralized-offering-78a8787b9cff')}><div className="name">Offering Guide</div><div className="triangle"></div></div>
-        <div onClick={() => goto('https://primepool.eth.link/')}><div className="name">Seed Liquidity</div><div className="triangle"></div></div>
-        <div onClick={() => goto(' http://router.primedao.io/')}><div className="name">Swap To PRIME</div><div className="triangle"></div></div>
+        <div onClick={() => goto('https://primepool.eth.link/')}><div className="name">Pool Manager</div><div className="triangle"></div></div>
+        <div onClick={() => goto(' http://router.primedao.io/')}><div className="name">Prime Swap</div><div className="triangle"></div></div>
       </div>
 
       <div className="learnMenu"
@@ -92,8 +90,7 @@ const MobileMenu = (props: { container: RefObject<HTMLDivElement> }): React.Reac
         <div className="mobilemenuButton"><img onClick={() => showMobileMenu(props.container, false)} src="hamburger_menu.svg" /></div>
       </div>
 
-      <div className="item" onClick={() => goto('https://medium.com/primedao/the-prime-initial-decentralized-offering-78a8787b9cff')}><div className="name">Get PRIME Now!</div><div className="triangle"></div></div>
-      <div className="item" onClick={() => goto('http://router.primedao.io/')}><div className="name">Swap Tokens</div><div className="triangle"></div></div>
+      <div className="item" onClick={() => goto('http://router.primedao.io/')}><div className="name">Prime Swap</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://docs.primedao.io/')}><div className="name">Documentation</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://discord.gg/x8v59pG')}><div className="name">Discord</div><div className="triangle"></div></div>
       <div className="item" onClick={() => goto('https://twitter.com/PrimeDAO_?s=09')}><div className="name">Twitter</div><div className="triangle"></div></div>
@@ -128,7 +125,7 @@ const LandingPage = (): React.ReactElement => {
               <div className="body">A new system of open finance based on programmable money is being realized on Ethereum. PrimeDAO is here to catalyze and coordinate an open-source ecosystem of partners, builders, and users that simplifies, secures, and makes decentralized finance (<a href="https://defipulse.com/blog/what-is-defi/" target="_blank" rel="noopener noreferrer">DeFi</a>) accessible for the masses.</div>
             </div>
             <div className="buttons">
-              <a className="button tokenoffering" href="https://medium.com/primedao/the-prime-initial-decentralized-offering-78a8787b9cff" target="_blank" rel="noopener noreferrer">Get PRIME Now!</a>
+              <a className="button tokenoffering" href="http://router.primedao.io" target="_blank" rel="noopener noreferrer">Get PRIME Now!</a>
               <a className="button litepaper" href="https://docs.primedao.io/" target="_blank" rel="noopener noreferrer">Documentation</a>
             </div>
             <div className="footer">

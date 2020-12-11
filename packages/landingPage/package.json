@@ -1,6 +1,6 @@
 {
   "name": "@primedao/landingPage",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "PrimeDAO main webpage",
   "main": "index.js",
   "scripts": {
