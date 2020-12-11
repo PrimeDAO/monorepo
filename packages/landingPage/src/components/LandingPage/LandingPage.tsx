@@ -125,7 +125,7 @@ const LandingPage = (): React.ReactElement => {
               <div className="body">A new system of open finance based on programmable money is being realized on Ethereum. PrimeDAO is here to catalyze and coordinate an open-source ecosystem of partners, builders, and users that simplifies, secures, and makes decentralized finance (<a href="https://defipulse.com/blog/what-is-defi/" target="_blank" rel="noopener noreferrer">DeFi</a>) accessible for the masses.</div>
             </div>
             <div className="buttons">
-              <a className="button tokenoffering" href="http://router.primedao.io" target="_blank" rel="noopener noreferrer">Get PRIME Now!</a>
+              <a className="button tokenoffering" href="http://router.primedao.io" target="_blank" rel="noopener noreferrer">Swap Tokens</a>
               <a className="button litepaper" href="https://docs.primedao.io/" target="_blank" rel="noopener noreferrer">Documentation</a>
             </div>
             <div className="footer">
