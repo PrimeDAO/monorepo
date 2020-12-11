@@ -1,3 +1,4 @@
+import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
 import { BigNumber, Contract, ethers } from "ethers";
 // import { formatEther } from "ethers/lib/utils";
@@ -51,15 +52,10 @@ export interface ITransferEvent {
 @autoinject
 export class TokenService {
 
-  private erc20Abi: any;
-
   constructor(
     private ethereumService: EthereumService,
     private transactionService: TransactionsService,
-    contractsService: ContractsService) {
-
-    this.erc20Abi = contractsService.getContractAbi(ContractNames.IERC20);
-
+    private contractsService: ContractsService) {
   }
 
   // private async _getBalance(
@@ -97,12 +93,15 @@ export class TokenService {
   //   return this._getBalance(token, accountAddress, inEth);
   // }
 
+  /**
+   * The returned contract will only be readonly unless an account is present.  When an account becomes available
+   * and you want to call the write methods, you have to call this again to get the contract that
+   * has a signer.
+   * @param tokenAddress
+   */
   public getTokenContract(tokenAddress: Address): IErc20Token {
 
-    const contract = new ethers.Contract(
-      tokenAddress,
-      this.erc20Abi,
-      this.ethereumService.readOnlyProvider) as unknown as Contract;
+    const contract = this.contractsService.getContractAtAddress(ContractNames.IERC20, tokenAddress);
 
     return {
       totalSupply: () => contract.totalSupply(),

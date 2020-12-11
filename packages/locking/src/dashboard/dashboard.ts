@@ -6,7 +6,7 @@ import { EventAggregator } from "aurelia-event-aggregator";
 import TransactionsService from "services/TransactionsService";
 import { Address, EthereumService } from "services/EthereumService";
 import { BigNumber } from "ethers";
-import { EventConfigException, EventConfigFailure} from "services/GeneralEvents";
+import { EventConfigException } from "services/GeneralEvents";
 import { Router } from "aurelia-router";
 import { NumberService } from "services/numberService";
 import { AvatarService } from "services/AvatarService";
@@ -107,14 +107,7 @@ export class Dashboard {
   }
 
   private ensureConnected(): boolean {
-    if (!this.connected) {
-      // TODO: make this await until we're either connected or not?
-      this.ethereumService.connect();
-      return false;
-    }
-    else {
-      return true;
-    }
+    return this.ethereumService.ensureConnected();
   }
 
   // private async submitLock(): Promise<void> {

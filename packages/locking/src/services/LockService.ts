@@ -56,7 +56,7 @@ export interface ILockingOptions {
   /**
    * in Wei
    */
-  amount: BigNumber | string;
+  amount: BigNumber;
   /**
    * the number of seconds the amount should be locked
    */

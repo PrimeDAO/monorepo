@@ -12,6 +12,7 @@ import { BigNumber } from "ethers";
 import { DisposableCollection } from "services/DisposableCollection";
 import { ILocksTableInfo } from "resources/elements/locksForReputation/locksForReputation";
 import { ITokenSpecificationX } from "resources/value-converters/sortTokens";
+import "./LockingToken4Reputation.scss";
 
 @customElement("lockingform")
 @autoinject
@@ -101,28 +102,31 @@ export class LockingToken4Reputation {
     private lockService: LockService,
   ) {
     this.lockModel.tokenAddress = this.tokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
+    this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account", (_account: Address) => {
+      this.accountChanged();
+    }));
+
+    this.subscriptions.push(this.eventAggregator.subscribe("Contracts.Changed", (_account: Address) => {
+      this.token = this.tokenService.getTokenContract(this.tokenAddress);
+    }));
+
+    this.subscriptions.push(this.eventAggregator.subscribe("secondPassed", async (blockDate: Date) => {
+      if (this.loaded) {
+        this.refreshCounters(blockDate);
+      }
+    }));
   }
 
+  @computedFrom("ethereumService.defaultAccountAddress")
+  private get connected(): boolean {
+    return !!this.ethereumService.defaultAccountAddress;
+  }
   public async attached(): Promise<void> {
 
     this.loaded = false;
-
-    try {
-
-      this.token = this.tokenService.getTokenContract(this.tokenAddress);
-
-      await this.refresh();
-
-      this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account", (_account: Address) => {
-        this.accountChanged();
-      }));
-
-      this.subscriptions.push(this.eventAggregator.subscribe("secondPassed", async (blockDate: Date) => {
-        this.refreshCounters(blockDate);
-      }));
-    } finally {
-      this.loaded = true;
-    }
+    this.token = this.tokenService.getTokenContract(this.tokenAddress);
+    await this.refresh();
+    this.loaded = true;
   }
 
   public detached(): void {
@@ -145,6 +149,9 @@ export class LockingToken4Reputation {
     if (this.ethereumService.defaultAccountAddress) {
       await this.getTokenAllowance();
       return this.getLocks();
+    } else {
+      this.locks = undefined;
+      this.allowance = BigNumber.from(0);
     }
   }
 
@@ -216,6 +223,14 @@ export class LockingToken4Reputation {
       return false;
     }
 
+    if (!this.lockModel.amount || this.lockModel.amount.eq(0) || !this.lockModel.period) {
+      this.eventAggregator.publish("handleValidationError", new EventConfigFailure("Please enter an amount of tokens and number of days"));
+    }
+
+    if (!this.ethereumService.ensureConnected()) {
+      return false;
+    }
+
     const success = false;
     /**
      * just to be sure we're up-to-date
@@ -265,6 +280,10 @@ export class LockingToken4Reputation {
       return false;
     }
 
+    if (!this.ethereumService.ensureConnected()) {
+      return false;
+    }
+
     let success = false;
 
     try {
@@ -294,6 +313,10 @@ export class LockingToken4Reputation {
   }
 
   private async approve(): Promise<boolean> {
+
+    if (!this.ethereumService.ensureConnected()) {
+      return false;
+    }
 
     if (this.sufficientAllowance) {
       /**

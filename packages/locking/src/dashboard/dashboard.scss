@@ -120,11 +120,40 @@
           .totalRep {
             font-size: 24px;
             font-weight: bold;
+            white-space: nowrap;
           }
 
           .yourRep {
             font-size: 22px;
+            white-space: nowrap;
           }
+        }
+      }
+    }
+
+    .lockingform {
+      min-width: 400px;
+    }
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .dashboardContainer {
+    flex-direction: column;
+    > div:not(:last-child) {
+      margin: auto;
+      margin-bottom: 20px;
+    }
+
+    .locking {
+      .doubleSection {
+        flex-direction: column;
+        .left {
+          flex-basis: 100%;
+        }
+
+        .right {
+          flex-basis: 100%;
         }
       }
     }

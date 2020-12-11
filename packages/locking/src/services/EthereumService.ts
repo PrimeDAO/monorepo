@@ -298,6 +298,17 @@ export class EthereumService {
   public dispose(): void {
     this.readOnlyProvider.off("block", (blockNumber: number) => this.handleNewBlock(blockNumber));
   }
+
+  public ensureConnected(): boolean {
+    if (!this.defaultAccountAddress) {
+      // TODO: make this await until we're either connected or not?
+      this.connect();
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
 }
 
 export const toWei = (ethValue: BigNumber | string | number): BigNumber => {
