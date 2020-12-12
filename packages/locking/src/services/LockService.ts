@@ -1,6 +1,6 @@
 import { autoinject } from "aurelia-framework";
-import { ContractNames, ContractsService } from "services/ContractsService";
-import { Address, EthereumService, Hash, Networks } from "services/EthereumService";
+import { ContractNames, ContractsService, IStandardEvent } from "services/ContractsService";
+import { Address, EthereumService, Hash, Networks, NULL_HASH } from "services/EthereumService";
 import { BigNumber } from "ethers";
 import { EventAggregator } from "aurelia-event-aggregator";
 import TransactionsService, { TransactionReceipt } from "services/TransactionsService";
@@ -61,6 +61,7 @@ export interface ILockingOptions {
    * the number of seconds the amount should be locked
    */
   period: number;
+  agreementHash?: Hash;
 }
 
 export interface ITokenSpecification {
@@ -169,12 +170,13 @@ export class LockService {
    */
   public async getReleases(beneficiary: Address = null, lockingId: Hash = null): Promise<Array<IReleaseInfo>> {
     const filter = this.lock4RepContract.filters.Release(lockingId, beneficiary);
-    const releases = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
-    return releases.map((release: IReleaseEvent) => {
+    const releases: Array<IStandardEvent> = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
+    return releases.map((releaseEvent: IStandardEvent) => {
+      const eventArgs: IReleaseEvent = releaseEvent.args;
       return {
-        amount: release._amount,
-        lockId: release._lockingId,
-        lockerAddress: release._beneficiary,
+        amount: eventArgs._amount,
+        lockId: eventArgs._lockingId,
+        lockerAddress: eventArgs._beneficiary,
       };
     });
   }
@@ -227,13 +229,14 @@ export class LockService {
      */
   public async getLocks(lockerAddress: Address = null, lockingId: Hash = null): Promise<Array<ILockInfoX>> {
     const filter = this.lock4RepContract.filters.Lock(lockerAddress, lockingId);
-    const locks = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
+    const lockEvents: Array<IStandardEvent> = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
 
     const lockInfos = new Array<ILockInfoX>();
 
-    for (const lock of locks) {
-      const lockInfo = (await this.getLockInfo(lock._locker, lock._lockingId)) as ILockInfoX;
-      lockInfo.transactionHash = lock.transactionHash;
+    for (const lockEvent of lockEvents) {
+      const eventArgs: ILockEvent = lockEvent.args;
+      const lockInfo = (await this.getLockInfo(eventArgs._locker, eventArgs._lockingId)) as ILockInfoX;
+      lockInfo.transactionHash = lockEvent.transactionHash;
       lockInfos.push(lockInfo);
     }
 
@@ -282,22 +285,23 @@ export class LockService {
     const locks = new Map<string, ILockInfoX>();
 
     const filter = this.lock4RepContract.filters.Lock(this.userAddress);
-    const locksEvents: Array<ILockEvent> = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
+    const lockEvents: Array<IStandardEvent> = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
 
-    for (const event of locksEvents) {
-      const amount = event._amount;
-      const released = !!releases.filter((ri: IReleaseInfo) => ri.lockId === event._lockingId).length;
+    for (const event of lockEvents) {
+      const eventArgs: ILockEvent = event.args;
+      const amount = eventArgs._amount;
+      const released = !!releases.filter((ri: IReleaseInfo) => ri.lockId === eventArgs._lockingId).length;
 
-      if (!locks.get(event._lockingId)) {
-        const lockInfo = await this.lock4RepContract.lockers(this.userAddress, event._lockingId);
+      if (!locks.get(eventArgs._lockingId)) {
+        const lockInfo = await this.lock4RepContract.lockers(this.userAddress, eventArgs._lockingId);
 
-        locks.set(event._lockingId, {
+        locks.set(eventArgs._lockingId, {
           amount,
-          lockId: event._lockingId,
-          lockerAddress: event._locker,
+          lockId: eventArgs._lockingId,
+          lockerAddress: eventArgs._locker,
           releaseTime: new Date(lockInfo[1].toNumber() * 1000),
           released,
-          transactionHash: event.transactionHash,
+          transactionHash: eventArgs.transactionHash,
         });
       }
     }
@@ -307,18 +311,19 @@ export class LockService {
   public async getUserUnReleasedLockCount(): Promise<number> {
 
     const filter = this.lock4RepContract.filters.Release(null, this.userAddress);
-    const releases = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
+    const releases: Array<IStandardEvent> = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
 
     const locks = new Map<string, ILockInfoX>();
     let lockCount = 0;
 
     const locksFilter = this.lock4RepContract.filters.Lock(this.userAddress);
-    const locksEvents: Array<ILockEvent> = await this.lock4RepContract.queryFilter(locksFilter, this.startingBlockNumber);
+    const lockEvents: Array<IStandardEvent> = await this.lock4RepContract.queryFilter(locksFilter, this.startingBlockNumber);
 
-    for (const event of locksEvents) {
-      const released = !!releases.filter((ri: IReleaseInfo) => ri.lockId === event._lockingId).length;
+    for (const event of lockEvents) {
+      const eventArgs: ILockEvent = event.args;
+      const released = !!releases.filter((ri: IStandardEvent) => ri.args.lockId === eventArgs._lockingId).length;
 
-      if (!released && !locks.get(event._lockingId)) {
+      if (!released && !locks.get(eventArgs._lockingId)) {
         ++lockCount;
       }
     }
@@ -450,34 +455,20 @@ export class LockService {
 
   public async lock(options: ILockingOptions): Promise<TransactionReceipt> {
 
-    const msg = await this.getLockBlocker(options);
-    if (msg) {
-      throw new Error(msg);
+    if (!options.amount) {
+      throw new Error("amount is not defined");
+    }
+
+    if (!options.tokenAddress) {
+      throw new Error("tokenAddress is not defined");
+    }
+
+    if (!options.tokenAddress) {
+      throw new Error("tokenAddress is not defined");
     }
 
     return this.transactionService.send(() =>
-      this.lock4RepContract.lock(options.amount, options.period, options.tokenAddress, null),
-    );
-  }
-
-  public async release(options: IReleaseOptions): Promise<TransactionReceipt> {
-
-    if (!options.lockerAddress) {
-      throw new Error("lockerAddress is not defined");
-    }
-
-    if (!options.lockId) {
-      throw new Error("lockId is not defined");
-    }
-
-    const errMsg = await this.getReleaseBlocker(options.lockerAddress, options.lockId);
-
-    if (errMsg) {
-      throw new Error(errMsg);
-    }
-
-    return this.transactionService.send(() =>
-      this.lock4RepContract.release(options.lockerAddress, options.lockId),
+      this.lock4RepContract.lock(options.amount, options.period, options.tokenAddress, options.agreementHash ?? NULL_HASH),
     );
   }
 
@@ -486,8 +477,8 @@ export class LockService {
  * @param lockerAddress
  * @param lockId
  */
-  public async getReleaseBlocker(lockerAddress: Address, lockId: Hash): Promise<string | null> {
-    const lockInfo = await this.getLockInfo(lockerAddress, lockId);
+  public async getReleaseBlocker(options: IReleaseOptions): Promise<string | null> {
+    const lockInfo = await this.getLockInfo(options.lockerAddress, options.lockId);
     const now = await this.ethereumService.lastBlockDate;
     const amount = BigNumber.from(lockInfo.amount);
 
@@ -504,6 +495,21 @@ export class LockService {
     }
 
     return null;
+  }
+
+  public async release(options: IReleaseOptions): Promise<TransactionReceipt> {
+
+    if (!options.lockerAddress) {
+      throw new Error("lockerAddress is not defined");
+    }
+
+    if (!options.lockId) {
+      throw new Error("lockId is not defined");
+    }
+
+    return this.transactionService.send(() =>
+      this.lock4RepContract.release(options.lockerAddress, options.lockId),
+    );
   }
 
   /**

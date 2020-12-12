@@ -46,36 +46,35 @@
             target="_blank">See current Token Liquidity here</a>.</p>
       </div> -->
       <div if.to-view="connected">
-        <div if.to-view="hasPartialAllowance || sufficientAllowance">
-
+        <div if.to-view="!noAllowance">
           <div class="inputButtonGroup">
             <div class="inputGroup">
               <label for="lockAmount">Tokens to lock:</label>
               <numeric-input id="lockAmount"
-                value.two-way="amount | ethwei"
+                value.two-way="amount"
                 placeholder="0.0"></numeric-input>
             </div>
             <div class="inputGroup">
               <label for="lockingPeriod">Number of days:</label>
               <numeric-input id="lockingPeriod"
                 value.two-way="period | secondsDays"
+                wei="false"
                 placeholder="0.0"></numeric-input>
             </div>
           </div>
         </div>
-        <div else>
-          <div>Before locking you need to approve the eventual transfer of PRIME tokens to your account</div>
-        </div>
 
-        <div if.to-view="hasPartialAllowance">
-          <div>
-            <formatted-number value.to-view="allowance"></formatted-number> PRIME are already approved for locking
-          </div>
+        <!-- <div if.to-view="hasPartialAllowance">
+          <formatted-number value.to-view="allowance | ethwei"></formatted-number> PRIME are already approved for locking
+        </div> -->
+
+        <div if.to-view="noAllowance || hasPartialAllowance">
+          <div>Before locking you need to approve the eventual transfer of PRIME tokens to your account</div>
         </div>
 
         <div class="tokenButtons">
           <button class="button1 tokenSubmitButton"
-            if.to-view="hasPartialAllowance || noAllowance"
+            if.to-view="noAllowance || hasPartialAllowance"
             click.delegate="approve()">Approve Token Transfer</button>
           <button class="button1 tokenSubmitButton"
             else

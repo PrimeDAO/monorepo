@@ -76,7 +76,7 @@ export class LocksForReputation {
     if (lock.lockerAddress.toLowerCase() !== this.ethereumService.defaultAccountAddress.toLowerCase()) {
       return false;
     } else {
-      const errMsg = await this.lockService.getReleaseBlocker(lock.lockerAddress, lock.lockId);
+      const errMsg = await this.lockService.getReleaseBlocker(lock);
       return !errMsg;
     }
   }

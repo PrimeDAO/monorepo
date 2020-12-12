@@ -1,5 +1,5 @@
 import { Contract, ethers, Signer } from "ethers";
-import { Address, EthereumService, IChainEventInfo } from "services/EthereumService";
+import { Address, EthereumService, Hash, IChainEventInfo } from "services/EthereumService";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
 
@@ -18,6 +18,11 @@ export enum ContractNames {
   , IERC20 = "IERC20"
   , Avatar = "Avatar"
   , Reputation = "Reputation"
+}
+
+export interface IStandardEvent {
+  args: any;
+  transactionHash: Hash;
 }
 
 interface INetworkContractAddresses {

@@ -7,6 +7,7 @@ import {
 import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { NumberService } from "services/numberService";
+import { Utils } from "services/utils";
 
 @autoinject
 export class NumericInput {
@@ -33,7 +34,7 @@ export class NumericInput {
   /**
    * if true then value is converted from wei to eth for editing
    */
-  @bindable({ defaultBindingMode: bindingMode.oneTime }) public isWei?: boolean = true;
+  @bindable({ defaultBindingMode: bindingMode.oneTime }) public wei?: boolean = true;
   @bindable public placeholder = "";
 
   private element: HTMLInputElement;
@@ -56,7 +57,7 @@ export class NumericInput {
       // assuming here that the input element will always give us a string
       try {
         if (newValue !== ".") {
-          this.value = this.isWei ? parseEther(newValue) : newValue;
+          this.value = Utils.toBoolean(this.wei) ? parseEther(newValue) : newValue;
         }
       } catch {
         this.value = undefined;
@@ -70,7 +71,7 @@ export class NumericInput {
     } else if (newValue !== oldValue) {
       try {
         let newStringValue: string;
-        if (this.isWei) {
+        if (Utils.toBoolean(this.wei)) {
           newStringValue = formatEther(newValue.toString());
         } else {
           newStringValue = newValue.toString();

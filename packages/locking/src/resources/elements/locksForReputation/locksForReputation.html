@@ -15,7 +15,7 @@
       <thead class="thead-light">
         <tr>
           <th style="text-align:left;width: 20%;">Amount</th>
-          <th style="width: 70%; text-align: center">Releasable</th>
+          <th style="width: 70%; text-align: center">Releasable On</th>
           <th>&nbsp;</th>
         </tr>
       </thead>
@@ -28,7 +28,7 @@
           </td>
         </tr>
         <tr repeat.for="lock of _locks">
-          <td style="white-space: nowrap">${lock.amount | ethwei} ${lock.units}</td>
+          <td style="white-space: nowrap">${lock.amount | ethwei}</td>
           <td style="text-align: center; white-space:nowrap;max-width:3rem; overflow: hidden; text-overflow: ellipsis;">
             <span
               data-tippy-content.to-view="releaseTitle(lock)"

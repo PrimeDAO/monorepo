@@ -4,7 +4,7 @@ import {
   EventConfigException,
   EventConfigFailure,
 } from "services/GeneralEvents";
-import { ILockingOptions, LockService } from "services/LockService";
+import { ILockingOptions, IReleaseOptions, LockService } from "services/LockService";
 import { IErc20Token, TokenService } from "services/TokenService";
 import { Address, EthereumService } from "services/EthereumService";
 import { ContractNames, ContractsService } from "services/ContractsService";
@@ -194,7 +194,7 @@ export class LockingToken4Reputation {
     return this.msRemainingInPeriodCountdown = Math.max(this.lockingEndTime.getTime() - Date.now(), 0);
   }
 
-  private async getLockBlocker(reason?: string): Promise<boolean> {
+  private async getLockBlocker(): Promise<boolean> {
 
     //   const maxLockingPeriodDays = this.appConfig.get('maxLockingPeriodDays');
     //   // convert days to seconds
@@ -202,7 +202,7 @@ export class LockingToken4Reputation {
     //     reason = `Locking period cannot be more than ${maxLockingPeriodDays} days`;
     //   }
     // }
-    reason = await this.lockService.getLockBlocker(this.lockModel);
+    const reason = await this.lockService.getLockBlocker(this.lockModel);
 
     if (reason) {
       this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Can't lock: ${reason}`));
@@ -210,6 +210,22 @@ export class LockingToken4Reputation {
       //   content: `Can't lock: ${reason}`,
       //   eventMessageType: EventMessageType.Failure,
       //   originatingUiElement: this.lockButton,
+      // });
+      return true;
+    }
+
+    return false;
+  }
+
+  private async getReleaseBlocker(options: IReleaseOptions): Promise<boolean> {
+    const reason = await this.lockService.getReleaseBlocker(options);
+
+    if (reason) {
+      this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Can't release: ${reason}`));
+      // await BalloonService.show({
+      //   content: `Can't release: ${reason}`,
+      //   eventMessageType: EventMessageType.Failure,
+      //   originatingUiElement: this.releaseButton,
       // });
       return true;
     }
@@ -225,6 +241,7 @@ export class LockingToken4Reputation {
 
     if (!this.lockModel.amount || this.lockModel.amount.eq(0) || !this.lockModel.period) {
       this.eventAggregator.publish("handleValidationError", new EventConfigFailure("Please enter an amount of tokens and number of days"));
+      return false;
     }
 
     if (!this.ethereumService.ensureConnected()) {
@@ -290,13 +307,15 @@ export class LockingToken4Reputation {
 
       this.releasing = lockInfo.sending = true;
 
-      await this.lockService.release(lockInfo);
+      if (!(await this.getReleaseBlocker(lockInfo))) {
+        await this.lockService.release(lockInfo);
 
-      lockInfo.released = true;
+        lockInfo.released = true;
 
-      this.eventAggregator.publish("Lock.Released");
+        this.eventAggregator.publish("Lock.Released");
 
-      success = true;
+        success = true;
+      }
 
     } catch (ex) {
       this.eventAggregator.publish("handleException",

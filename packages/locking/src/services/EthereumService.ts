@@ -318,3 +318,5 @@ export const toWei = (ethValue: BigNumber | string | number): BigNumber => {
 export const fromWei = (weiValue: BigNumber | string): string => {
   return formatEther(weiValue.toString());
 };
+
+export const NULL_HASH = "0x0000000000000000000000000000000000000000000000000000000000000000";
