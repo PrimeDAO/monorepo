@@ -3,6 +3,7 @@ import { autoinject, bindable, bindingMode } from "aurelia-framework";
 import { DateService } from "services/DateService";
 import { EthereumService } from "services/EthereumService";
 import { ILockInfo, ILockInfoX, LockService } from "services/LockService";
+import "./locksForReputation.scss";
 
 @autoinject
 export class LocksForReputation {
@@ -63,8 +64,10 @@ export class LocksForReputation {
 
       const success = await this.release({ lock, releaseButton });
       if (success) {
-        lock.canRelease = false; // await this.canRelease(lock);
-        lock.amount = (await this.lockService.getLockInfo(lock.lockerAddress, lock.lockId)).amount;
+        const newLockInfo = (await this.lockService.getLockInfo(lock.lockerAddress, lock.lockId));
+        lock.amount = newLockInfo.amount;
+        lock.released = newLockInfo.released;
+        lock.canRelease = !lock.released; // await this.canRelease(lock);
       }
     } finally {
       lock.releasing = false;

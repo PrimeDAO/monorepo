@@ -9,7 +9,7 @@
     ref="dashboard">
 
     <div if.to-view="refreshing">&nbsp;</div>
-    <div else>
+    <div else class="messaging">
       <div
         class="message"
         if.to-view="lockingPeriodHasNotStarted">The locking period has not yet begun. Return between ${lockingStartTime | date:'dayofmonth'} and ${lockingEndTime | date:'dayofmonth'} to lock tokens.</div>
@@ -25,6 +25,7 @@
     </div>
 
     <div
+      class="form"
       if.to-view="inLockingPeriod && !refreshing"
       with.bind="lockModel">
       <!-- <div

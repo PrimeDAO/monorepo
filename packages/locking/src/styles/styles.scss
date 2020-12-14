@@ -76,7 +76,8 @@ html {
     .button1,
     .button2,
     .button3,
-    .button4 {
+    .button4,
+    .textAsButton {
       border-radius: $global-button-radius;
       padding: 7px 19px;
       font-size: 12px;
@@ -117,6 +118,12 @@ html {
       background-color: transparent;
       white-space: nowrap;
       border: 2px solid $color-green;
+      outline: none;
+    }
+    .textAsButton {
+      background-color: transparent;
+      white-space: nowrap;
+      border: 2px solid transparent;
       outline: none;
     }
 

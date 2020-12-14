@@ -310,8 +310,6 @@ export class LockingToken4Reputation {
       if (!(await this.getReleaseBlocker(lockInfo))) {
         await this.lockService.release(lockInfo);
 
-        lockInfo.released = true;
-
         this.eventAggregator.publish("Lock.Released");
 
         success = true;

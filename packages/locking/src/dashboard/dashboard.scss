@@ -100,39 +100,44 @@
   }
 
   .locking {
-    .yourLocks {
-      .repStatus {
-        text-align: center;
+    .left {
+      &.yourLocks {
+        .repStatus {
+          text-align: center;
 
-        .repStyle {
-          color: $color-lightblue;
-        }
-
-        .left,
-        .right {
-          padding: 10px;
-        }
-
-        .left {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          .totalRep {
-            font-size: 24px;
-            font-weight: bold;
-            white-space: nowrap;
+          .repStyle {
+            color: $color-lightblue;
           }
 
-          .yourRep {
-            font-size: 22px;
-            white-space: nowrap;
+          .left,
+          .right {
+            padding: 10px;
+          }
+
+          .left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            .totalRep {
+              font-size: 24px;
+              font-weight: bold;
+              white-space: nowrap;
+            }
+
+            .yourRep {
+              font-size: 22px;
+              white-space: nowrap;
+            }
           }
         }
       }
     }
 
-    .lockingform {
-      min-width: 400px;
+    .right {
+      &.lockingform {
+        padding: 0;
+        min-width: 400px;
+      }
     }
   }
 }

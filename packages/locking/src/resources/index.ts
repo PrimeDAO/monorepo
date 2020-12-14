@@ -17,6 +17,7 @@ export function configure(config: FrameworkConfiguration): void {
     PLATFORM.moduleName("./elements/lockingToken4Reputation/LockingToken4Reputation"),
     PLATFORM.moduleName("./elements/locksForReputation/locksForReputation"),
     PLATFORM.moduleName("./elements/circled-number.html"),
+    PLATFORM.moduleName("./elements/spinButton.html"),
     // PLATFORM.moduleName("./elements/spinButton.html"),
     PLATFORM.moduleName("./elements/instructions/instructions"),
     PLATFORM.moduleName("./value-converters/sortTokens"),

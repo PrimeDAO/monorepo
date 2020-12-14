@@ -1,14 +1,24 @@
 .lockingTokensForReputation {
-  .inputButtonGroup {
-    .inputGroup {
-      display: inline-block;
-      white-space: nowrap;
-    }
+  padding-top: 30px;
+  .messaging,
+  .form {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
   }
 
-  .tokenButtons {
-    button {
-      width: 100%;
+  .form {
+    .inputButtonGroup {
+      .inputGroup {
+        display: inline-block;
+        white-space: nowrap;
+      }
+    }
+
+    .tokenButtons {
+      button {
+        width: 100%;
+      }
     }
   }
 }

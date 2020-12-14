@@ -1,60 +1,38 @@
 <template>
-  <div style="padding-left: .5rem; padding-right: .5rem">
-    <div
-      style="font-weight: 500;">Your Locks</div>
-    <div class="pull-right">
-      <spinbutton
-        onclick.call="_refresh()"
-        class="locksRefreshButton"
-        spin.to-view="loading"
-        title="Refresh Locks List"></spinbutton>
+  <div class="lockForReputationContainer">
+
+    <div class="noLocks" if.to-view="_locks.length === 0">
+      You have not yet submitted any locks
     </div>
-  </div>
-  <div class="table-responsive">
-    <table class="table locksForRep">
-      <thead class="thead-light">
-        <tr>
-          <th style="text-align:left;width: 20%;">Amount</th>
-          <th style="width: 70%; text-align: center">Releasable On</th>
-          <th>&nbsp;</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr if.to-view="_locks.length === 0">
-          <td
-            colspan="100"
-            style="text-align: center; padding-top: 1rem">
-            You have not yet submitted any locks
-          </td>
-        </tr>
-        <tr repeat.for="lock of _locks">
-          <td style="white-space: nowrap">${lock.amount | ethwei}</td>
-          <td style="text-align: center; white-space:nowrap;max-width:3rem; overflow: hidden; text-overflow: ellipsis;">
-            <span
-              data-tippy-content.to-view="releaseTitle(lock)"
-              data-tippy-placement='top'>${releaseDate(lock)}</span>
-          </td>
-          <td class="actions">
-            <button
-              click.delegate="_release(lock, $event)"
-              disabled.bind="!lock.canRelease"
-              show.to-view="!lock.releasing && !lock.released"
-              class="btn btn-link release">Release</button>
-            <div
-              show.to-view="lock.releasing && !lock.released"
-              data-title="Releasing"
-              class="text-primary fa-refresh fa fa-spin"
-              style="line-height: 21px"></div>
-            <metamaskfeedback
-              icononly="true"
-              if.to-view="lock.sending"></metamaskfeedback>
-            <button
-              if.to-view="lock.released"
-              class="btn btn-link complete"
-              disabled>Completed</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+    <div else class="locks">
+      <div class="cell amount">Amount</div>
+      <div class="cell releaseDate">Releasable On</div>
+      <div class="cell actions">
+        <spinbutton
+          onclick.call="_refresh()"
+          class="locksRefreshButton"
+          spin.to-view="loading"
+          title="Refresh Locks List"></spinbutton>
+      </div>
+      <template repeat.for="lock of _locks">
+        <div class="cell amount">${lock.amount | ethwei}</div>
+        <div class="cell releaseDate"
+          data-tippy-content.to-view="releaseTitle(lock)"
+          data-tippy-placement='top'>
+          ${releaseDate(lock)}
+        </div>
+        <div class="cell actions">
+          <button
+            click.delegate="_release(lock, $event)"
+            disabled.bind="!lock.canRelease"
+            show.to-view="!lock.released"
+            class="button3 small release">Release</button>
+          <div
+            if.to-view="lock.released"
+            class="textAsButton small complete">Completed</div>
+        </div>
+      </template>
+    </div>
   </div>
 </template>
