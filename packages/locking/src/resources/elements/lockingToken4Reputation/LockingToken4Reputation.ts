@@ -383,8 +383,7 @@ export class LockingToken4Reputation {
     return this.lockService.getTokenIsLiquid(token);
   }
 
-  // private async selectToken(tokenSpec: ITokenSpecification) {
-  //   signalBindings("token.changed");
-  // }
-
+  private connect() {
+    this.ethereumService.ensureConnected();
+  }
 }

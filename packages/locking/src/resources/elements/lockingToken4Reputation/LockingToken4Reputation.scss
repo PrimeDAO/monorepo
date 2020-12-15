@@ -1,17 +1,36 @@
+@import "styles/colors.scss";
 .lockingTokensForReputation {
   padding-top: 30px;
   .messaging,
   .form {
     padding-left: 20px;
     padding-right: 20px;
-    padding-bottom: 20px;
+    margin-bottom: 20px;
   }
 
+  .messaging {
+    color: $color-yellow;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  .connectButton {
+    text-align: center;
+  }
   .form {
     .inputButtonGroup {
+      display: flex;
+      justify-content: space-evenly;
+      margin-bottom: 20px;
+
       .inputGroup {
-        display: inline-block;
         white-space: nowrap;
+
+        label {
+          white-space: nowrap;
+          margin-right: 6px;
+        }
       }
     }
 

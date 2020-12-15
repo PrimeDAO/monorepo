@@ -1,38 +1,43 @@
 <template>
   <div class="lockForReputationContainer">
 
-    <div class="noLocks" if.to-view="_locks.length === 0">
-      You have not yet submitted any locks
+    <div if.to-view="loading" class="loading">
+      <i class="fas fa-circle-notch fa-spin"></i>
     </div>
-
-    <div else class="locks">
-      <div class="cell amount">Amount</div>
-      <div class="cell releaseDate">Releasable On</div>
-      <div class="cell actions">
-        <spinbutton
-          onclick.call="_refresh()"
-          class="locksRefreshButton"
-          spin.to-view="loading"
-          title="Refresh Locks List"></spinbutton>
+    <div else>
+      <div class="noLocks" if.to-view="_locks.length === 0">
+        You have not yet submitted any locks
       </div>
-      <template repeat.for="lock of _locks">
-        <div class="cell amount">${lock.amount | ethwei}</div>
-        <div class="cell releaseDate"
-          data-tippy-content.to-view="releaseTitle(lock)"
-          data-tippy-placement='top'>
-          ${releaseDate(lock)}
+
+      <div else class="locks">
+        <div class="header cell amount">PRIME Amount</div>
+        <div class="header cell releaseDate">Releasable On</div>
+        <div class="header cell actions">
+          <spinbutton
+            onclick.call="_refresh()"
+            class="locksRefreshButton"
+            spin.to-view="loading"
+            title="Refresh Locks List"></spinbutton>
         </div>
-        <div class="cell actions">
-          <button
-            click.delegate="_release(lock, $event)"
-            disabled.bind="!lock.canRelease"
-            show.to-view="!lock.released"
-            class="button3 small release">Release</button>
-          <div
-            if.to-view="lock.released"
-            class="textAsButton small complete">Completed</div>
-        </div>
-      </template>
+        <template repeat.for="lock of _locks">
+          <div class="cell amount">${lock.amount | ethwei}</div>
+          <div class="cell releaseDate"
+            data-tippy-content.to-view="releaseTitle(lock)"
+            data-tippy-placement='top'>
+            ${releaseDate(lock)}
+          </div>
+          <div class="cell actions">
+            <button
+              click.delegate="_release(lock, $event)"
+              disabled.bind="!lock.canRelease"
+              show.to-view="!lock.released"
+              class="button3 small release">Release</button>
+            <div
+              if.to-view="lock.released"
+              class="textAsButton small complete">Completed</div>
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 </template>

@@ -84,6 +84,13 @@
           text-decoration: underline;
         }
       }
+
+      .separator {
+        display: inline-block;
+        margin-left: 6px;
+        margin-right: 6px;
+        color: $color-yellow;
+      }
     }
 
     .subtitle {

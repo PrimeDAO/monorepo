@@ -110,7 +110,7 @@ export class LocksForReputation {
     this.loading = true;
     try {
       await this.refresh();
-      this.eventAggregator.publish("showMessage", "Locks have been refreshed");
+      // this.eventAggregator.publish("showMessage", "Locks have been refreshed");
     } finally {
       this.loading = false;
     }

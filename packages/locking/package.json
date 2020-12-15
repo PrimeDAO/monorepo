@@ -1,6 +1,6 @@
 {
   "name": "@primedao/locking",
-  "version": "1.0.1",
+  "version": "1.0.o",
   "description": "PrimeDAO's friendly module for token holders to generate voting power",
   "repository": {
     "type": "git",
