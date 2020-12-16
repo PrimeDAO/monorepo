@@ -10,9 +10,9 @@ import { Address, EthereumService } from "services/EthereumService";
 import { ContractNames, ContractsService } from "services/ContractsService";
 import { BigNumber } from "ethers";
 import { DisposableCollection } from "services/DisposableCollection";
-import { ILocksTableInfo } from "resources/elements/locksForReputation/locksForReputation";
 import { ITokenSpecificationX } from "resources/value-converters/sortTokens";
 import "./LockingToken4Reputation.scss";
+import { ILocksTableInfo } from "resources/elements/locksForReputation/locksForReputation";
 
 @customElement("lockingform")
 @autoinject

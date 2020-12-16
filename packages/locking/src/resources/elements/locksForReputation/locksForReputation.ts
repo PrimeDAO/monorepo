@@ -149,7 +149,7 @@ export class LocksForReputation {
   }
 }
 
-interface ILocksTableInfo extends ILockInfoX {
+export interface ILocksTableInfo extends ILockInfoX {
   sending: boolean;
   canRelease: boolean;
   releasing: boolean;
