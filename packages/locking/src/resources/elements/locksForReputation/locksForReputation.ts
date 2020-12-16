@@ -14,9 +14,6 @@ export class LocksForReputation {
   @bindable({ defaultBindingMode: bindingMode.oneTime })
   public release: (config: { lock: ILockInfo, releaseButton: Element }) => Promise<boolean>;
 
-  @bindable({ defaultBindingMode: bindingMode.oneTime })
-  public refresh: () => Promise<void>;
-
   private loading = true;
   private subscriptions = new DisposableCollection();
 
@@ -120,7 +117,6 @@ export class LocksForReputation {
     this.loading = true;
     try {
       await this.getLocks(false);
-      await this.refresh();
       // this.eventAggregator.publish("showMessage", "Locks have been refreshed");
     } finally {
       this.loading = false;

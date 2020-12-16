@@ -107,6 +107,10 @@ export class LockingToken4Reputation {
   ) {
     this.lockModel.tokenAddress = this.tokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
 
+    this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account", async (_account: Address) => {
+      this.accountChanged();
+    }));
+
     this.subscriptions.push(this.eventAggregator.subscribe("Contracts.Changed", (_account: Address) => {
       this.token = this.tokenService.getTokenContract(this.tokenAddress);
     }));
