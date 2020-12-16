@@ -1,8 +1,7 @@
-<template bindable="onclick, title, text, spin, asButton, disabled">
+<template bindable="onclick, text, spin, asButton, disabled">
   <button
     if.bind="asButton"
     click.delegate="onclick()"
-    title.to-view="title"
     disabled.bind="!!disabled"
     class="spinbutton">
     <span>${text}</span>
@@ -15,6 +14,6 @@
     else
     click.delegate="onclick()"
     textcontent.to-view="text"
-    title.to-view="title"
+    data-tippy-content="Refresh Locks List"
     class-name="spinbutton-icon fa-refresh fa ${spin ? 'fa-spin': ''}"></div>
 </template>

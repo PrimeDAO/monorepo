@@ -5,6 +5,7 @@ import { DisposableCollection } from "services/DisposableCollection";
 import { Address, EthereumService } from "services/EthereumService";
 import { ILockInfo, ILockInfoX, LockService } from "services/LockService";
 import "./locksForReputation.scss";
+import tippy from "tippy.js";
 
 @autoinject
 export class LocksForReputation {
@@ -149,6 +150,7 @@ export class LocksForReputation {
     this.locks = locks as Array<ILocksTableInfo>;
 
     this.loading = !endOfLoading;
+    setTimeout(() => tippy("[data-tippy-content]"), 0);
   }
 }
 
