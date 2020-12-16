@@ -96,6 +96,13 @@ html {
       }
     }
 
+    .button1:enabled,
+    .button2:enabled,
+    .button3:enabled,
+    .button4:enabled {
+      cursor: pointer;
+    }
+
     .button1 {
       background-color: $button1-color;
       border-color: $button1-color;

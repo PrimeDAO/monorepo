@@ -74,7 +74,7 @@ export class LocksForReputation {
         const newLockInfo = (await this.lockService.getLockInfo(lock.lockerAddress, lock.lockId));
         lock.amount = newLockInfo.amount;
         lock.released = newLockInfo.released;
-        lock.canRelease = !lock.released; // await this.canRelease(lock);
+        lock.canRelease = !lock.released;
       }
     } finally {
       lock.releasing = false;

@@ -29,8 +29,9 @@
           <div class="cell actions">
             <button
               click.delegate="_release(lock, $event)"
+              class.to-view="lock.canRelease ? '' : 'disabled'"
               disabled.bind="!lock.canRelease"
-              show.to-view="!lock.released && lock.canRelease"
+              show.to-view="!lock.released"
               class="button3 small release">Release</button>
             <div
               if.to-view="lock.released"
