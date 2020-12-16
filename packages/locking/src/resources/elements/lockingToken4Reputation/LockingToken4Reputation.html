@@ -56,7 +56,7 @@
           <formatted-number value.to-view="allowance | ethwei"></formatted-number> PRIME are already approved for locking
         </div> -->
 
-        <div if.to-view="noAllowance || hasPartialAllowance">
+        <div class="allowanceMessage" if.to-view="noAllowance || hasPartialAllowance">
           <div>Before locking you need to approve the eventual transfer of PRIME tokens to your account</div>
         </div>
 

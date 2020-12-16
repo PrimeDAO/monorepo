@@ -30,7 +30,7 @@
             <button
               click.delegate="_release(lock, $event)"
               disabled.bind="!lock.canRelease"
-              show.to-view="!lock.released"
+              show.to-view="!lock.released && lock.canRelease"
               class="button3 small release">Release</button>
             <div
               if.to-view="lock.released"
