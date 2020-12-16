@@ -14,11 +14,11 @@ PrimeDAO monorepo is a single repository which hosts multiple packages  providin
 
 ## Packages
 
-| Package                                                                                | Version | Description                                                                                                   |
-| -------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------- |
-| [`contracts`](/packages/contracts)                           |         | PrimeDAO smart contracts                                                                           |
-| [`interface`](/packages/interface) |         | PrimeDAO user interface                                     |
-| [`landingPage`](/packages/landingPage)                                                 |         | PrimeDAO landing page                                             |
+| Package                                | Version | Description                                                                   |
+| -------------------------------------- | ------- | ----------------------------------------------------------------------------- |
+| [`contracts`](/packages/contracts)     |         | PrimeDAO smart contracts                                                      |
+| [`interface`](/packages/interface)     |         | PrimeDAO user interface at [primedao.eth.link](primedao.eth.link)             |
+| [`landingPage`](/packages/landingPage) |         | PrimeDAO liquidity pool interface at [primepool.eth.link](primepool.eth.link) |
 
 
 ## Installation
