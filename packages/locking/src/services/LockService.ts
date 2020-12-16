@@ -478,7 +478,7 @@ export class LockService {
  */
   public async getReleaseBlocker(options: IReleaseOptions): Promise<string | null> {
     const lockInfo = await this.getLockInfo(options.lockerAddress, options.lockId);
-    const now = await this.ethereumService.lastBlockDate;
+    const now = this.ethereumService.lastBlockDate;
     const amount = BigNumber.from(lockInfo.amount);
 
     if (amount.lte(0)) {

@@ -20,9 +20,7 @@ export class LockingToken4Reputation {
 
   private lockableTokens: Array<ITokenSpecificationX> = [];
   private tokenIsLiquid = false;
-  // private dashboard: HTMLElement;
   private allowance = BigNumber.from(0);
-  private _approving = false;
   private lockingStartTime: Date;
   private lockingEndTime: Date;
   private lockingPeriodHasNotStarted: boolean;
@@ -32,8 +30,6 @@ export class LockingToken4Reputation {
   private refreshing = false;
   private loaded = false;
   private subscriptions = new DisposableCollection();
-  private _locking = false;
-  private _releasing = false;
   private sending = false;
   private tokenAddress: Address;
   private token: IErc20Token;
@@ -44,35 +40,9 @@ export class LockingToken4Reputation {
     period: undefined,
   };
 
-  @computedFrom("_locking")
-  protected get locking(): boolean {
-    return this._locking;
-  }
-
-  protected set locking(val: boolean) {
-    this._locking = val;
-    setTimeout(() => this.eventAggregator.publish("locking.busy", val), 0);
-  }
-
-  @computedFrom("_releasing")
-  protected get releasing(): boolean {
-    return this._releasing;
-  }
-
-  protected set releasing(val: boolean) {
-    this._releasing = val;
-    setTimeout(() => this.eventAggregator.publish("releasing.busy", val), 0);
-  }
-
-  @computedFrom("_approving")
-  private get approving(): boolean {
-    return this._approving;
-  }
-
-  private set approving(val: boolean) {
-    this._approving = val;
-    setTimeout(() => this.eventAggregator.publish("approving.busy", val), 0);
-  }
+  protected locking: boolean;
+  protected releasing: boolean;
+  private approving: boolean;
 
   @computedFrom("allowance")
   private get noAllowance(): boolean {
@@ -188,11 +158,6 @@ export class LockingToken4Reputation {
 
     if (reason) {
       this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Can't lock: ${reason}`));
-      // await BalloonService.show({
-      //   content: `Can't lock: ${reason}`,
-      //   eventMessageType: EventMessageType.Failure,
-      //   originatingUiElement: this.lockButton,
-      // });
       return true;
     }
 
@@ -204,11 +169,6 @@ export class LockingToken4Reputation {
 
     if (reason) {
       this.eventAggregator.publish("handleFailure", new EventConfigFailure(`Can't release: ${reason}`));
-      // await BalloonService.show({
-      //   content: `Can't release: ${reason}`,
-      //   eventMessageType: EventMessageType.Failure,
-      //   originatingUiElement: this.releaseButton,
-      // });
       return true;
     }
 
@@ -249,18 +209,10 @@ export class LockingToken4Reputation {
           this.sending = false;
 
           this.eventAggregator.publish("Lock.Submitted");
-
-          // UtilsInternal.resetInputField(this.dashboard, "lockAmount", null);
-          // UtilsInternal.resetInputField(this.dashboard, "lockingPeriod", null);
         }
       } catch (ex) {
         this.eventAggregator.publish("handleException",
           new EventConfigException("The token lock was not recorded", ex));
-      // await BalloonService.show({
-      //   content: "The token lock was not recorded",
-      //   eventMessageType: EventMessageType.Exception,
-      //   originatingUiElement: this.lockButton,
-      // });
       } finally {
         await this.getTokenAllowance();
         this.locking = false;
@@ -298,11 +250,6 @@ export class LockingToken4Reputation {
     } catch (ex) {
       this.eventAggregator.publish("handleException",
         new EventConfigException("The lock was not released", ex));
-      // await BalloonService.show({
-      //   content: "The lock was not released",
-      //   eventMessageType: EventMessageType.Exception,
-      //   originatingUiElement: config.releaseButton,
-      // });
     } finally {
       this.releasing = lockInfo.sending = false;
     }
@@ -342,11 +289,6 @@ export class LockingToken4Reputation {
     } catch (ex) {
       this.eventAggregator.publish("handleException",
         new EventConfigException("The token approval was not accepted", ex));
-      // await BalloonService.show({
-      //   content: "The token approval was not accepted",
-      //   eventMessageType: EventMessageType.Exception,
-      //   originatingUiElement: this.approveButton,
-      // });
     } finally {
       await this.getTokenAllowance();
       this.approving = false;

@@ -35,16 +35,23 @@ export class LocksForReputation {
     this.subscriptions.push(this.eventAggregator.subscribe("Lock.Submitted", async (_account: Address) => {
       this.getLocks();
     }));
+
+    this.subscriptions.push(this.eventAggregator.subscribe("Network.NewBlock", async () => {
+      for (const lock of this.locks) {
+        const lockInfo = lock as ILocksTableInfo;
+
+        if (!lockInfo.released &&
+          !lockInfo.canRelease &&
+          (this.ethereumService.lastBlockDate > lockInfo.releaseTime)) {
+          lockInfo.canRelease = await this.canRelease(lock);
+        }
+      }
+    }));
   }
 
-  // @computedFrom("ethereumService.defaultAccountAddress")
-  // private get connected(): boolean {
-  //   return !!this.ethereumService.defaultAccountAddress;
-  // }
-
-  private async accountChanged(): Promise<void> {
+  private accountChanged(): Promise<void> {
     if (this.ethereumService.defaultAccountAddress) {
-      await this.getLocks();
+      return this.getLocks();
     } else {
       this.locks = undefined;
     }
