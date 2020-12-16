@@ -1,14 +1,14 @@
 import { EventAggregator } from "aurelia-event-aggregator";
-import { autoinject, bindable, bindingMode } from "aurelia-framework";
+import { autoinject, bindable, bindingMode, computedFrom } from "aurelia-framework";
 import { DateService } from "services/DateService";
-import { EthereumService } from "services/EthereumService";
+import { DisposableCollection } from "services/DisposableCollection";
+import { Address, EthereumService } from "services/EthereumService";
 import { ILockInfo, ILockInfoX, LockService } from "services/LockService";
 import "./locksForReputation.scss";
 
 @autoinject
 export class LocksForReputation {
 
-  @bindable({ defaultBindingMode: bindingMode.toView })
   public locks: Array<ILockInfo> = [];
 
   @bindable({ defaultBindingMode: bindingMode.oneTime })
@@ -17,9 +17,13 @@ export class LocksForReputation {
   @bindable({ defaultBindingMode: bindingMode.oneTime })
   public refresh: () => Promise<void>;
 
-  private _locks: Array<ILockInfo>;
-  private anyCanRelease: boolean;
   private loading = true;
+  private subscriptions = new DisposableCollection();
+
+  @computedFrom("ethereumService.defaultAccountAddress")
+  private get connected(): boolean {
+    return !!this.ethereumService.defaultAccountAddress;
+  }
 
   constructor(
     private ethereumService: EthereumService,
@@ -27,31 +31,37 @@ export class LocksForReputation {
     private eventAggregator: EventAggregator,
     private dateService: DateService,
   ) {
+    this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account", async (_account: Address) => {
+      this.accountChanged();
+    }));
+
+    this.subscriptions.push(this.eventAggregator.subscribe("Lock.Submitted", async (_account: Address) => {
+      this.getLocks();
+    }));
   }
 
-  public attached(): void {
-    this.locksChanged(this.locks);
-  }
+  // @computedFrom("ethereumService.defaultAccountAddress")
+  // private get connected(): boolean {
+  //   return !!this.ethereumService.defaultAccountAddress;
+  // }
 
-  private async locksChanged(newLocks: Array<ILockInfo>) {
-    if (!this.refresh) {
-      // then we haven't been attached yet, so wait
-      return;
+  private async accountChanged(): Promise<void> {
+    if (this.ethereumService.defaultAccountAddress) {
+      await this.getLocks();
+    } else {
+      this.locks = undefined;
     }
-
-    this.loading = true;
-    const tmpLocks = newLocks as Array<ILockInfoInternal>;
-
-    for (const lock of tmpLocks) {
-      lock.canRelease = await this.canRelease(lock);
-      lock.releasableToday = this.releasableToday(lock.releaseTime);
-    }
-    this.anyCanRelease = tmpLocks.filter((l: ILockInfoInternal) => l.canRelease).length > 0;
-    this._locks = tmpLocks;
-    this.loading = false;
   }
 
-  private async _release(lock: ILockInfoInternal, event: Event): Promise<void> {
+  public attached(): Promise<void> {
+    return this.accountChanged();
+  }
+
+  public detached(): void {
+    this.subscriptions.dispose();
+  }
+
+  private async _release(lock: ILocksTableInfo, event: Event): Promise<void> {
 
     /* eslint-disable require-atomic-updates */
     if (!lock.canRelease || lock.releasing) { return; }
@@ -96,33 +106,51 @@ export class LocksForReputation {
       (releaseTime.getFullYear() === now.getFullYear());
   }
 
-  private releaseDate(lock: ILockInfoInternal): string {
+  private releaseDate(lock: ILocksTableInfo): string {
 
     // tslint:disable-next-line: max-line-length
     return `${this.dateService.toString(lock.releaseTime, lock.releasableToday ? "table-time" : "table-date")}${lock.releasableToday ? " today" : ""}`;
   }
 
-  private releaseTitle(lock: ILockInfoInternal): string {
+  private releaseTitle(lock: ILocksTableInfo): string {
     return `${this.dateService.toString(lock.releaseTime, "table-datetime")}`;
   }
 
   private async _refresh(): Promise<void> {
     this.loading = true;
     try {
+      await this.getLocks(false);
       await this.refresh();
       // this.eventAggregator.publish("showMessage", "Locks have been refreshed");
     } finally {
       this.loading = false;
     }
   }
+
+  private async getLocks(endOfLoading = true): Promise<void> {
+
+    this.loading = true;
+
+    const locks = await this.lockService.getUserLocks();
+    /**
+     * The symbol is for the LocksForReputation table
+     */
+    for (const lock of locks) {
+      const lockInfoX = lock as ILocksTableInfo;
+      lockInfoX.sending = false;
+      lockInfoX.canRelease = await this.canRelease(lock);
+      lockInfoX.releasableToday = this.releasableToday(lock.releaseTime);
+    }
+    // this.anyCanRelease = locks.filter((l: ILocksTableInfo) => l.canRelease).length > 0;
+
+    this.locks = locks as Array<ILocksTableInfo>;
+
+    this.loading = !endOfLoading;
+  }
 }
 
-export interface ILocksTableInfo extends ILockInfoX {
-  units: string;
+interface ILocksTableInfo extends ILockInfoX {
   sending: boolean;
-}
-
-interface ILockInfoInternal extends ILocksTableInfo {
   canRelease: boolean;
   releasing: boolean;
   releasableToday: boolean;

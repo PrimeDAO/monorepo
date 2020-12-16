@@ -71,7 +71,7 @@
       </div>
     </div>
 
-    <div if.to-view="locks.length">
+    <div if.to-view="connected">
       <locks-for-reputation
         locks.to-view="locks"
         release.call="release({lock, releaseButton })"

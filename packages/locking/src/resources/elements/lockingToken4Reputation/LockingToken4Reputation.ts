@@ -32,7 +32,6 @@ export class LockingToken4Reputation {
   private refreshing = false;
   private loaded = false;
   private subscriptions = new DisposableCollection();
-  private locks: Array<ILocksTableInfo>;
   private _locking = false;
   private _releasing = false;
   private sending = false;
@@ -94,6 +93,11 @@ export class LockingToken4Reputation {
     return !this.lockingPeriodHasNotStarted && !this.lockingPeriodIsEnded;
   }
 
+  @computedFrom("ethereumService.defaultAccountAddress")
+  private get connected(): boolean {
+    return !!this.ethereumService.defaultAccountAddress;
+  }
+
   constructor(
     private eventAggregator: EventAggregator,
     private tokenService: TokenService,
@@ -102,9 +106,6 @@ export class LockingToken4Reputation {
     private lockService: LockService,
   ) {
     this.lockModel.tokenAddress = this.tokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
-    this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account", (_account: Address) => {
-      this.accountChanged();
-    }));
 
     this.subscriptions.push(this.eventAggregator.subscribe("Contracts.Changed", (_account: Address) => {
       this.token = this.tokenService.getTokenContract(this.tokenAddress);
@@ -117,12 +118,7 @@ export class LockingToken4Reputation {
     }));
   }
 
-  @computedFrom("ethereumService.defaultAccountAddress")
-  private get connected(): boolean {
-    return !!this.ethereumService.defaultAccountAddress;
-  }
   public async attached(): Promise<void> {
-
     this.loaded = false;
     this.token = this.tokenService.getTokenContract(this.tokenAddress);
     await this.refresh();
@@ -148,9 +144,7 @@ export class LockingToken4Reputation {
   private async accountChanged() {
     if (this.ethereumService.defaultAccountAddress) {
       await this.getTokenAllowance();
-      return this.getLocks();
     } else {
-      this.locks = undefined;
       this.allowance = BigNumber.from(0);
     }
   }
@@ -160,22 +154,6 @@ export class LockingToken4Reputation {
     this.getLockingPeriodHasNotStarted(blockDate);
     this.getMsUntilCanLockCountdown(blockDate);
     this.getMsRemainingInPeriodCountdown(blockDate);
-  }
-
-  private async getLocks(): Promise<void> {
-
-    const locks = await this.lockService.getUserLocks();
-
-    /**
-     * The symbol is for the LocksForReputation table
-     */
-    for (const lock of locks) {
-      const lockInfoX = lock as ILocksTableInfo;
-      lockInfoX.units = "PRIME"; // await this.getLockUnit(lock as LockInfo);
-      lockInfoX.sending = false;
-    }
-
-    this.locks = locks as Array<ILocksTableInfo>;
   }
 
   private getLockingPeriodHasNotStarted(blockDate: Date): boolean {
@@ -265,8 +243,6 @@ export class LockingToken4Reputation {
           await this.lockService.lock(this.lockModel);
 
           this.sending = false;
-
-          await this.getLocks();
 
           this.eventAggregator.publish("Lock.Submitted");
 

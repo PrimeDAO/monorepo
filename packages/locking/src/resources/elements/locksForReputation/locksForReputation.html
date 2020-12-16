@@ -1,15 +1,15 @@
 <template>
   <div class="lockForReputationContainer">
-
-    <div if.to-view="loading" class="loading">
-      <i class="fas fa-circle-notch fa-spin"></i>
-    </div>
-    <div else>
-      <div class="noLocks" if.to-view="_locks.length === 0">
-        You have not yet submitted any locks
+    <div if.to-view="connected && locks">
+      <div class="noLocks" if.to-view="!loading && !locks.length">
+        You have not submitted any locks
       </div>
 
-      <div else class="locks">
+      <div if.to-view="loading" class="loading">
+        <i class="fas fa-circle-notch fa-spin"></i>
+      </div>
+
+      <div if.to-view="!loading && locks.length" class="locks">
         <div class="header cell amount">PRIME Amount</div>
         <div class="header cell releaseDate">Releasable On</div>
         <div class="header cell actions">
@@ -19,7 +19,7 @@
             spin.to-view="loading"
             title="Refresh Locks List"></spinbutton>
         </div>
-        <template repeat.for="lock of _locks">
+        <template repeat.for="lock of locks">
           <div class="cell amount">${lock.amount | ethwei}</div>
           <div class="cell releaseDate"
             data-tippy-content.to-view="releaseTitle(lock)"
@@ -40,4 +40,5 @@
       </div>
     </div>
   </div>
+
 </template>

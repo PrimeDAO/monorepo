@@ -140,8 +140,11 @@ export class LockService {
 
   public lock4RepContract: any;
   public lock4RepContractAddress: Address;
-  private userAddress: Address;
   private startingBlockNumber: number;
+
+  private get userAddress(): Address {
+    return this.ethereumService.defaultAccountAddress;
+  }
 
   constructor(
     private contractsService: ContractsService,
@@ -154,10 +157,6 @@ export class LockService {
 
     this.eventAggregator.subscribe("Contracts.Changed", async (): Promise<void> => {
       this.initialize();
-    });
-
-    this.eventAggregator.subscribe("Network.Changed.Account", (account: Address): void => {
-      this.userAddress = account;
     });
   }
 
