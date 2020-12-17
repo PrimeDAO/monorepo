@@ -5,6 +5,7 @@ import { BigNumber } from "ethers";
 import { EventAggregator } from "aurelia-event-aggregator";
 import TransactionsService, { TransactionReceipt } from "services/TransactionsService";
 import { IErc20Token } from "services/TokenService";
+import { DateService, TimespanResolution } from "services/DateService";
 
 export interface ILockInfo {
   lockerAddress: Address;
@@ -151,6 +152,7 @@ export class LockService {
     private eventAggregator: EventAggregator,
     private ethereumService: EthereumService,
     private transactionService: TransactionsService,
+    private dateService: DateService,
   ) {
 
     this.startingBlockNumber = this.ethereumService.targetedNetwork === Networks.Kovan ? 22431693 : 11389827;
@@ -339,7 +341,7 @@ export class LockService {
     return new Date(dt.toNumber() * 1000);
   }
 
-  public async getMaxLockingPeriod(): Promise<number> {
+  public async getMaxLockingDuration(): Promise<number> {
     // returns seconds
     return (await this.lock4RepContract.maxLockingPeriod()).toNumber();
   }
@@ -436,10 +438,10 @@ export class LockService {
 
     const now = this.ethereumService.lastBlockDate;
 
-    const maxLockingPeriod = await this.getMaxLockingPeriod();
+    const maxLockingPeriod = await this.getMaxLockingDuration();
 
     if (options.period > maxLockingPeriod) {
-      return "the locking period exceeds the maximum locking period";
+      return `the locking duration exceeds the maximum of ${this.dateService.ticksToTimeSpanString(maxLockingPeriod * 1000, TimespanResolution.seconds)}`;
     }
 
     const lockingStartTime = await this.getLockingStartTime();
