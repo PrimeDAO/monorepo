@@ -8,7 +8,6 @@ import { ILockingOptions, IReleaseOptions, LockService } from "services/LockServ
 import { IErc20Token, TokenService } from "services/TokenService";
 import { Address, EthereumService } from "services/EthereumService";
 import { ContractNames, ContractsService } from "services/ContractsService";
-import { BigNumber } from "ethers";
 import { DisposableCollection } from "services/DisposableCollection";
 import { ITokenSpecificationX } from "resources/value-converters/sortTokens";
 import "./LockingToken4Reputation.scss";
@@ -20,7 +19,7 @@ export class LockingToken4Reputation {
 
   private lockableTokens: Array<ITokenSpecificationX> = [];
   private tokenIsLiquid = false;
-  private allowance = BigNumber.from(0);
+  private allowance = undefined;
   private lockingStartTime: Date;
   private lockingEndTime: Date;
   private lockingPeriodHasNotStarted: boolean;
@@ -46,17 +45,17 @@ export class LockingToken4Reputation {
 
   @computedFrom("allowance")
   private get noAllowance(): boolean {
-    return this.allowance.eq("0");
+    return !!this.allowance?.eq("0");
   }
 
   @computedFrom("allowance", "lockModel.amount")
   private get sufficientAllowance(): boolean {
-    return this.allowance.gt("0") && this.allowance.gte(this.lockModel.amount || 0);
+    return !!(this.allowance?.gt("0") && this.allowance?.gte(this.lockModel.amount || 0));
   }
 
   @computedFrom("allowance", "lockModel.amount")
   private get hasPartialAllowance(): boolean {
-    return this.allowance.gt("0") && this.allowance.lt(this.lockModel.amount || 0);
+    return !!(this.allowance?.gt("0") && !!this.lockModel.amount?.gt(0) && this.allowance?.lt(this.lockModel.amount));
   }
 
   private get inLockingPeriod(): boolean {
@@ -116,10 +115,9 @@ export class LockingToken4Reputation {
   }
 
   private async accountChanged() {
+    this.allowance = undefined;
     if (this.ethereumService.defaultAccountAddress) {
       await this.getTokenAllowance();
-    } else {
-      this.allowance = BigNumber.from(0);
     }
   }
 
