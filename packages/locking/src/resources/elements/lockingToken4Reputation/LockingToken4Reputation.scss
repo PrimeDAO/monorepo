@@ -1,6 +1,13 @@
 @import "styles/colors.scss";
 .lockingTokensForReputation {
   padding-top: 30px;
+  .loading {
+    text-align: center;
+    padding-top: 30px;
+    i {
+      font-size: 22px;
+    }
+  }
   .messaging,
   .form {
     padding-left: 20px;

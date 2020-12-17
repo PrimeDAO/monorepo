@@ -7,24 +7,28 @@
   <div
     class="lockingTokensForReputation">
 
-    <div if.to-view="refreshing">&nbsp;</div>
-    <div else class="messaging">
-      <div
-        class="message"
-        if.to-view="lockingPeriodHasNotStarted">The locking period has not yet begun. Return between ${lockingStartTime | date:'dayofmonth'} and ${lockingEndTime | date:'dayofmonth'} to lock tokens</div>
-
-      <div
-        class="message"
-        if.to-view="inLockingPeriod">
-        ${msRemainingInPeriodCountdown | timespan:"seconds"} remaining in the locking period</div>
-
-      <div
-        class="message"
-        if.to-view="lockingPeriodIsEnded">The locking period has ended</div>
+    <div if.to-view="refreshing" class="loading">
+      <i class="fas fa-circle-notch fa-spin"></i>
     </div>
+    <div else>
+      <div class="messaging">
+        <div
+          class="message"
+          if.to-view="lockingPeriodHasNotStarted">The locking period has not yet begun. Return between ${lockingStartTime | date:'dayofmonth'} and ${lockingEndTime | date:'dayofmonth'} to lock tokens</div>
 
-    <div if.to-view="!connected" class="connectButton">
-      <button class="button1" click.delegate="connect()">Connect to lock and release your tokens</button>
+        <div
+          class="message"
+          if.to-view="inLockingPeriod">
+          ${msRemainingInPeriodCountdown | timespan:"seconds"} remaining in the locking period</div>
+
+        <div
+          class="message"
+          if.to-view="lockingPeriodIsEnded">The locking period has ended</div>
+      </div>
+
+      <div if.to-view="!connected" class="connectButton">
+        <button class="button1" click.delegate="connect()">Connect to lock and release your tokens</button>
+      </div>
     </div>
 
     <div
