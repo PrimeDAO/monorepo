@@ -49,12 +49,19 @@
 
     .cell:nth-child(3n + 1) {
       // border-left: $section-border;
-      padding-left: 4px;
+      padding-left: 6px;
     }
 
-    // .cell:nth-child(3n) {
-    //   border-right: $section-border;
-    // }
+    .cell:nth-child(3n) {
+      // border-right: $section-border;
+      button.disabled {
+        background-color: transparent;
+        border-color: $color-aquablue;
+        border-width: 1px;
+        padding: 4px 14px;
+        color: $color-aquablue;
+      }
+    }
 
     // .cell:first-child {
     //   border-top-left-radius: $section-border-radius;

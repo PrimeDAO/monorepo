@@ -17,7 +17,7 @@
             onclick.call="_refresh()"
             class="locksRefreshButton"
             spin.to-view="loading"
-            title="Refresh Locks List"></spinbutton>
+            data-tippy-content="Refresh Locks List"></spinbutton>
         </div>
         <template repeat.for="lock of locks">
           <div class="cell amount">${lock.amount | ethwei}</div>
@@ -29,8 +29,9 @@
           <div class="cell actions">
             <button
               click.delegate="_release(lock, $event)"
+              class.to-view="lock.canRelease ? '' : 'disabled'"
               disabled.bind="!lock.canRelease"
-              show.to-view="!lock.released && lock.canRelease"
+              show.to-view="!lock.released"
               class="button3 small release">Release</button>
             <div
               if.to-view="lock.released"
