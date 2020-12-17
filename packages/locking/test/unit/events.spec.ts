@@ -5,12 +5,14 @@ import { LockService } from "services/LockService";
 import { ITransferEvent } from "services/TokenService";
 import { BigNumber } from "ethers";
 import TransactionsService from "services/TransactionsService";
+import { DateService } from "services/DateService";
 
 describe("Events", () => {
   let ethereumService: EthereumService;
   let contractsService: ContractsService;
   let eventAggregator: EventAggregator;
   let transactionsService: TransactionsService;
+  let dateService: DateService;
 
   const getLockingService = () => {
     return new LockService(
@@ -18,6 +20,7 @@ describe("Events", () => {
       eventAggregator,
       ethereumService,
       transactionsService,
+      dateService,
     );
   };
 
@@ -31,6 +34,7 @@ describe("Events", () => {
     ethereumService = new EthereumService(eventAggregator);
     ethereumService.initialize(Networks.Kovan);
     contractsService = new ContractsService(eventAggregator, ethereumService);
+    dateService = new DateService();
   });
 
   // beforeEach(() => {
