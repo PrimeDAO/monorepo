@@ -23,12 +23,12 @@
     color: $color-yellow;
     text-align: center;
     font-size: 14px;
-    margin-bottom: 20px;
   }
 
   .connectButton {
     text-align: center;
   }
+
   .form {
     .inputButtonGroup {
       display: flex;
@@ -48,6 +48,23 @@
     .tokenButtons {
       button {
         width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .lockingTokensForReputation {
+    padding-top: 0;
+
+    .loading {
+      padding-bottom: 30px;
+    }
+
+    .form {
+      .inputButtonGroup {
+        //justify-content: space-evenly;
+        flex-direction: column;
       }
     }
   }

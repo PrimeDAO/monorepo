@@ -16,11 +16,7 @@
     grid-template-columns: 20% 60% 20%;
     grid-template-rows: auto;
 
-    .amount {
-      white-space: nowrap;
-    }
     .releaseDate {
-      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -32,6 +28,7 @@
       border-bottom: $section-border;
       padding-top: 11px;
       padding-bottom: 11px;
+      line-height: 20px;
       min-height: 24px;
       text-align: center;
 
@@ -77,5 +74,19 @@
     // .cell:nth-last-child(3) {
     //   border-bottom-left-radius: $section-border-radius;
     // }
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  .lockForReputationContainer {
+    .loading {
+      padding-bottom: 30px;
+    }
+    .locks {
+      grid-template-columns: 20% 50% 30%;
+      .cell:nth-last-child(-n + 3) {
+        border-bottom: none;
+      }
+    }
   }
 }
