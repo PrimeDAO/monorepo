@@ -40,7 +40,8 @@
 
         label {
           white-space: nowrap;
-          margin-right: 6px;
+          display: block;
+          margin-bottom: 6px;
         }
       }
     }
@@ -59,13 +60,6 @@
 
     .loading {
       padding-bottom: 30px;
-    }
-
-    .form {
-      .inputButtonGroup {
-        //justify-content: space-evenly;
-        flex-direction: column;
-      }
     }
   }
 }
