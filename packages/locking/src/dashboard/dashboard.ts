@@ -11,6 +11,7 @@ import { Router } from "aurelia-router";
 import { NumberService } from "services/numberService";
 import { AvatarService } from "services/AvatarService";
 import { toBigNumberJs } from "services/BigNumberService";
+import { LockService } from "services/LockService";
 
 @singleton(false)
 @autoinject
@@ -21,6 +22,7 @@ export class Dashboard {
   private lockingToken4Reputation: any;
   private primeTokenAddress: Address;
   private userPrimeBalance: BigNumber;
+  private lockingPeriodEndDate: Date;
   private tokensToLock: BigNumber;
   private numDays: number;
   private totalReputation: BigNumber;
@@ -34,6 +36,7 @@ export class Dashboard {
     private ethereumService: EthereumService,
     private transactionsService: TransactionsService,
     private numberService: NumberService,
+    private lockService: LockService,
     private router: Router) {
   }
 
@@ -67,6 +70,7 @@ export class Dashboard {
         setTimeout(() => this.eventAggregator.publish("dashboard.loading", true), 100);
         this.primeTokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
         this.totalReputation = await this.avatarService.reputation.totalSupply();
+        this.lockingPeriodEndDate = await this.lockService.getLockingEndTime();
 
       } catch (ex) {
         this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
