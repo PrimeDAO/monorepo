@@ -341,9 +341,11 @@ export class LockService {
     return new Date(dt.toNumber() * 1000);
   }
 
+  private _maxLockingDuration: number;
   public async getMaxLockingDuration(): Promise<number> {
     // returns seconds
-    return (await this.lock4RepContract.maxLockingPeriod()).toNumber();
+    return this._maxLockingDuration ??
+      (this._maxLockingDuration = (await this.lock4RepContract.maxLockingPeriod()).toNumber());
   }
 
   public getAvatar(): Promise<Address> {

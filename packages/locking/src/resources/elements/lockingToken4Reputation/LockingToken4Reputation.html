@@ -33,7 +33,7 @@
 
     <div
       class="form"
-      if.to-view="inLockingPeriod && !refreshing"
+      if.to-view="!refreshing"
       with.bind="lockModel">
 
       <div if.to-view="connected && allowance">
@@ -41,12 +41,14 @@
           <div class="inputButtonGroup">
             <div class="inputGroup">
               <label for="lockAmount">Tokens to lock:</label>
+              <label class="maxLabel" if.to-view="userPrimeBalance.gt(0)"><button class="button4 small" click.delegate="handleGetMaxPrime()">Max</button></label>
               <numeric-input id="lockAmount"
                 value.two-way="amount"
                 placeholder="0.0"></numeric-input>
             </div>
             <div class="inputGroup">
               <label for="lockingPeriod">Number of days:</label>
+              <label class="maxLabel"><button class="button4 small" click.delegate="handleGetMaxLockingPeriod()">Max</button></label>
               <numeric-input id="lockingPeriod"
                 value.two-way="period | secondsDays"
                 wei="false"

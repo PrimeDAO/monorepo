@@ -1,5 +1,5 @@
 import { EventAggregator } from "aurelia-event-aggregator";
-import { autoinject, computedFrom, customElement } from "aurelia-framework";
+import { autoinject, computedFrom, customElement, bindable } from "aurelia-framework";
 import {
   EventConfigException,
   EventConfigFailure,
@@ -12,6 +12,7 @@ import { DisposableCollection } from "services/DisposableCollection";
 import { ITokenSpecificationX } from "resources/value-converters/sortTokens";
 import "./LockingToken4Reputation.scss";
 import { ILocksTableInfo } from "resources/elements/locksForReputation/locksForReputation";
+import { BigNumber } from "ethers";
 
 @customElement("lockingform")
 @autoinject
@@ -32,6 +33,7 @@ export class LockingToken4Reputation {
   private sending = false;
   private tokenAddress: Address;
   private token: IErc20Token;
+  @bindable private userPrimeBalance: BigNumber;
 
   private lockModel: ILockingOptions = {
     tokenAddress: undefined,
@@ -305,5 +307,14 @@ export class LockingToken4Reputation {
 
   private connect() {
     this.ethereumService.ensureConnected();
+  }
+
+  private handleGetMaxPrime() {
+    this.lockModel.amount = this.userPrimeBalance;
+  }
+
+  private async handleGetMaxLockingPeriod() {
+    this.lockModel.period = await this.lockService.getMaxLockingDuration();
+
   }
 }
