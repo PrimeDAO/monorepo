@@ -39,7 +39,7 @@ export class FormattedNumber {
 
     let text = null;
 
-    if (this._value) {
+    if ((this._value !== null) && (this._value !== undefined)) {
       const average = (this.average === undefined) ? true : Utils.toBoolean(this.average);
       text = this.numberService.toString(Number(this._value),
         {
