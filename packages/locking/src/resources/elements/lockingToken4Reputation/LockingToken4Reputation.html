@@ -23,11 +23,13 @@
 
         <div
           class="message"
-          if.to-view="lockingPeriodIsEnded">The locking period has ended</div>
+          if.to-view="lockingPeriodIsEnded">The locking period has ended. You will receive your Reputation in PrimeDAO shortly. You can check to see if you’ve already received your REP by viewing the DAO's <a href="https://alchemy.daostack.io/dao/0x273d0f686a53a49a0fba2a801566b19f9aaf8fcd/members/" target="_blank" rel="noopener noreferrer">member list</a>.
+          <p><span class="icon"><img src="/PD_ASSET_ICON_INFO_01.svg" /></span>For help, please use the #support channel on <a href="https://discord.com/invite/x8v59pG" target="_blank" rel="noopener noreferrer">Discord</a>.</p>
+        </div>
       </div>
 
       <div if.to-view="!connected" class="connectButton">
-        <button class="button1" click.delegate="connect()">Connect to lock and release your tokens</button>
+        <button class="button1" click.delegate="connect()">${lockingPeriodIsEnded ? "Connect to view your locks" : "Connect to lock and release your tokens"}</button>
       </div>
     </div>
 

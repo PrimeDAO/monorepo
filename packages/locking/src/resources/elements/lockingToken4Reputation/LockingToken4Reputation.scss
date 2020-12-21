@@ -23,6 +23,17 @@
     color: $color-yellow;
     text-align: center;
     font-size: 14px;
+
+    .message {
+      .icon {
+        padding-right: 6px;
+        img {
+          height: 16px;
+          position: relative;
+          top: 3px;
+        }
+      }
+    }
   }
 
   .connectButton {
