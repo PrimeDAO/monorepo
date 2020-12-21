@@ -36,7 +36,7 @@
       if.to-view="!refreshing"
       with.bind="lockModel">
 
-      <div if.to-view="connected && allowance">
+      <div if.to-view="connected && allowance && inLockingPeriod">
         <div if.to-view="!noAllowance">
           <div class="inputButtonGroup">
             <div class="inputGroup">
@@ -76,7 +76,7 @@
       </div>
     </div>
 
-    <div if.to-view="connected">
+    <div if.to-view="connected && !lockingPeriodHasNotStarted">
       <locks-for-reputation
         locks.to-view="locks"
         release.call="release({lock, releaseButton })"></locks-for-reputation>
