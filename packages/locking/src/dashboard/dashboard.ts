@@ -3,12 +3,9 @@ import { ContractNames } from "services/ContractsService";
 import { ContractsService } from "services/ContractsService";
 import "./dashboard.scss";
 import { EventAggregator } from "aurelia-event-aggregator";
-import TransactionsService from "services/TransactionsService";
 import { Address, EthereumService } from "services/EthereumService";
 import { BigNumber } from "ethers";
 import { EventConfigException } from "services/GeneralEvents";
-import { Router } from "aurelia-router";
-import { NumberService } from "services/numberService";
 import { AvatarService } from "services/AvatarService";
 import { toBigNumberJs } from "services/BigNumberService";
 import { LockService } from "services/LockService";
@@ -27,7 +24,6 @@ export class Dashboard {
   numDays: number;
   totalReputation: BigNumber;
   totalUserReputationEarned: BigNumber;
-  totalReputationAvailable: BigNumber;
   percentUserReputationEarned: number;
   userHasRedeemed: boolean;
   lockingEndTime: Date;
@@ -49,10 +45,7 @@ export class Dashboard {
     private contractsService: ContractsService,
     private avatarService: AvatarService,
     private ethereumService: EthereumService,
-    private transactionsService: TransactionsService,
-    private numberService: NumberService,
-    private lockService: LockService,
-    private router: Router) {
+    private lockService: LockService) {
   }
 
   async attached(): Promise<void> {
@@ -119,9 +112,9 @@ export class Dashboard {
         const userRedeemedAmount = await this.lockService.getRedeemedAmount(this.ethereumService.defaultAccountAddress);
         this.userHasLocked = await this.lockService.userHasLocked(this.ethereumService.defaultAccountAddress);
         this.totalUserReputationEarned = await this.lockService.getUserEarnedReputation(this.ethereumService.defaultAccountAddress, userRedeemedAmount);
-        this.totalReputationAvailable = await this.lockService.getReputationReward();
+        const totalReputationAvailable = await this.lockService.getReputationReward();
         this.percentUserReputationEarned = toBigNumberJs(this.totalUserReputationEarned)
-          .div(toBigNumberJs(this.totalReputationAvailable).plus(toBigNumberJs(this.totalReputation)))
+          .div(toBigNumberJs(totalReputationAvailable).plus(toBigNumberJs(this.totalReputation)))
           .times(100)
           .toNumber();
 
@@ -136,8 +129,8 @@ export class Dashboard {
         }
       }
     } else {
+      this.userHasLocked = false;
       this.totalUserReputationEarned =
-      this.totalReputationAvailable =
       this.percentUserReputationEarned =
       this.userPrimeBalance = undefined;
       this.connected = false;

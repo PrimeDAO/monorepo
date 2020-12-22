@@ -584,27 +584,6 @@ export class LockService {
     return rep;
   }
 
-  // public async getUserHasRedeemed(lockerAddress: Address): Promise<BigNumber> {
-
-
-  //   let rep: BigNumber = BigNumber.from(0);
-
-  //   if (!lockerAddress) {
-  //     throw new Error("lockerAddress is not defined");
-  //   }
-
-  //   const hasLocked = await this.userHasLocked(lockerAddress);
-  //   if (hasLocked) {
-  //     rep = redeemedAmount ?? await this.lock4RepContract.callStatic.redeem(lockerAddress);
-  //   } else {
-  //     /**
-  //      * see if it is 0 by result of the reputation being redeemed
-  //      */
-  //     rep = await this.getRedeemedAmount(lockerAddress);
-  //   }
-  //   return rep;
-  // }
-
   public async getRedeemedAmount(lockerAddress: Address): Promise<BigNumber> {
     let rep: BigNumber = BigNumber.from(0);
 
