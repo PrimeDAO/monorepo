@@ -26,8 +26,9 @@ export class Dashboard {
   private tokensToLock: BigNumber;
   private numDays: number;
   private totalReputation: BigNumber;
-  private userReputationBalance: BigNumber;
-  private userReputationShare: number;
+  private totalUserReputationEarned: BigNumber;
+  private totalReputationAvailable: BigNumber;
+  private percentUserReputationEarned: number;
 
   constructor(
     private eventAggregator: EventAggregator,
@@ -91,8 +92,12 @@ export class Dashboard {
           setTimeout(() => this.eventAggregator.publish("dashboard.loading", true), 100);
         }
         this.userPrimeBalance = await this.primeToken.balanceOf(this.ethereumService.defaultAccountAddress);
-        this.userReputationBalance = await this.avatarService.reputation.balanceOf(this.ethereumService.defaultAccountAddress);
-        this.userReputationShare = toBigNumberJs(this.userReputationBalance).div(toBigNumberJs(this.userPrimeBalance)).toNumber();
+        this.totalUserReputationEarned = await this.lockService.getUserEarnedReputation(this.ethereumService.defaultAccountAddress);
+        this.totalReputationAvailable = await this.lockService.getReputationReward();
+        this.percentUserReputationEarned = toBigNumberJs(this.totalUserReputationEarned)
+          .div(toBigNumberJs(this.totalReputationAvailable).plus(toBigNumberJs(this.totalReputation)))
+          .times(100)
+          .toNumber();
 
         this.connected= true;
       } catch (ex) {
@@ -105,6 +110,9 @@ export class Dashboard {
         }
       }
     } else {
+      this.totalUserReputationEarned =
+      this.totalReputationAvailable =
+      this.percentUserReputationEarned =
       this.userPrimeBalance = undefined;
       this.connected = false;
     }

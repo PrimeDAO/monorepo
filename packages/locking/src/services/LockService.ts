@@ -97,6 +97,20 @@ export interface ILockEvent {
 /**
  * defined in ordinal sequence
  */
+export interface IRedeemEvent {
+  /**
+   * indexed
+   */
+  _beneficiary: Address;
+  /**
+   * in Wei
+   */
+  _amount: BigNumber;
+}
+
+/**
+ * defined in ordinal sequence
+ */
 export interface ILockTokenEvent {
   /**
    * indexed
@@ -166,6 +180,7 @@ export class LockService {
     this.lock4RepContract = await this.contractsService.getContractFor(ContractNames.LockingToken4Reputation);
     this.lock4RepContractAddress = this.contractsService.getContractAddress(ContractNames.LockingToken4Reputation);
   }
+
   /**
    * Returns promise of array of `IReleaseInfo` for every `Release` event.
    */
@@ -547,5 +562,33 @@ export class LockService {
     } else {
       return null;
     }
+  }
+
+  public async getUserEarnedReputation(lockerAddress: Address): Promise<BigNumber> {
+
+    let rep: BigNumber = BigNumber.from(0);
+
+    if (!lockerAddress) {
+      throw new Error("lockerAddress is not defined");
+    }
+
+    const hasLocked = await this.lockerHasLocked(lockerAddress);
+    if (hasLocked) {
+      rep = await this.lock4RepContract.callStatic.redeem(lockerAddress);
+    } else {
+      /**
+       * see if it is 0 by result of the reputation being redeemed
+       */
+      const filter = this.lock4RepContract.filters.Redeem(lockerAddress);
+      const redeemEvents: Array<IStandardEvent> = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
+
+      if (redeemEvents.length > 1) {
+        throw new Error("unexpectedly received more than one Redeem event for the account");
+      } else if (redeemEvents.length) {
+        const eventArgs: IRedeemEvent = redeemEvents[0].args;
+        rep = eventArgs._amount;
+      }
+    }
+    return rep;
   }
 }

@@ -23,6 +23,7 @@ export enum ContractNames {
 export interface IStandardEvent {
   args: any;
   transactionHash: Hash;
+  blockNumber: number;
 }
 
 interface INetworkContractAddresses {

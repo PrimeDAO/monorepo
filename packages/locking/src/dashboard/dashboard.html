@@ -31,13 +31,13 @@
           <div class="section doubleSection repStatus">
             <div class="left">
               <div class="totalRep repStyle">
-                <span if.to-view="!totalReputation">--</span>
-                <formatted-number else value.to-view="totalReputation | ethwei"></formatted-number> REP
+                <span if.to-view="!totalUserReputationEarned">--</span>
+                <formatted-number else value.to-view="totalUserReputationEarned | ethwei"></formatted-number> REP
               </div>
               <div class="yourRep repStyle">
-                <span if.to-view="!userReputationShare">--</span>
+                <span if.to-view="percentUserReputationEarned === undefined">--</span>
                 <formatted-number else
-                  value.to-view="userReputationShare"
+                  value.to-view="percentUserReputationEarned"
                   average="false"
                   mantissa="2"></formatted-number>%
               </div>
@@ -45,12 +45,12 @@
             <div class="right">
               <div>You've generated
                 <span class="repStyle">
-                  <formatted-number if.to-view="userReputationBalance" value.to-view="userReputationBalance | ethwei"></formatted-number>
+                  <formatted-number if.to-view="totalUserReputationEarned" value.to-view="totalUserReputationEarned | ethwei"></formatted-number>
                   <span else>--</span>
                 </span>, or <span class="repStyle">
-                  <span if.to-view="!userReputationShare">--</span>
+                  <span if.to-view="percentUserReputationEarned === undefined">--</span>
                   <formatted-number else
-                    value.to-view="userReputationShare"
+                    value.to-view="percentUserReputationEarned"
                     average="false"
                     mantissa="2"></formatted-number>%
                 </span> of the DAO's total voting power.
