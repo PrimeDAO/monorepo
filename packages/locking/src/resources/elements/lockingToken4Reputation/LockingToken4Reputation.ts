@@ -18,54 +18,50 @@ import { BigNumber } from "ethers";
 @autoinject
 export class LockingToken4Reputation {
 
-  private lockableTokens: Array<ITokenSpecificationX> = [];
-  private tokenIsLiquid = false;
-  private allowance = undefined;
-  private lockingStartTime: Date;
-  private lockingEndTime: Date;
-  private lockingPeriodHasNotStarted: boolean;
-  private lockingPeriodIsEnded: boolean;
-  private msUntilCanLockCountdown: number;
-  private msRemainingInPeriodCountdown: number;
-  private refreshing = false;
-  private loaded = false;
-  private subscriptions = new DisposableCollection();
-  private sending = false;
-  private tokenAddress: Address;
-  private token: IErc20Token;
-  @bindable private userPrimeBalance: BigNumber;
+  lockableTokens: Array<ITokenSpecificationX> = [];
+  tokenIsLiquid = false;
+  allowance = undefined;
+  refreshing = false;
+  subscriptions = new DisposableCollection();
+  sending = false;
+  tokenAddress: Address;
+  token: IErc20Token;
+  @bindable userPrimeBalance: BigNumber;
+  @bindable lockingEndTime: Date;
+  @bindable lockingStartTime: Date;
+  @bindable lockingPeriodHasNotStarted: boolean;
+  @bindable lockingPeriodIsEnded: boolean;
+  @bindable msUntilCanLockCountdown: number;
+  @bindable msRemainingInPeriodCountdown: number;
+  @bindable inLockingPeriod: boolean;
 
-  private lockModel: ILockingOptions = {
+  lockModel: ILockingOptions = {
     tokenAddress: undefined,
     amount: undefined,
     period: undefined,
   };
 
-  protected locking: boolean;
-  protected releasing: boolean;
-  private approving: boolean;
+  locking: boolean;
+  releasing: boolean;
+  approving: boolean;
 
   @computedFrom("allowance")
-  private get noAllowance(): boolean {
+  get noAllowance(): boolean {
     return !!this.allowance?.eq("0");
   }
 
   @computedFrom("allowance", "lockModel.amount")
-  private get sufficientAllowance(): boolean {
+  get sufficientAllowance(): boolean {
     return !!(this.allowance?.gt("0") && this.allowance?.gte(this.lockModel.amount || 0));
   }
 
   @computedFrom("allowance", "lockModel.amount")
-  private get hasPartialAllowance(): boolean {
+  get hasPartialAllowance(): boolean {
     return !!(this.allowance?.gt("0") && !!this.lockModel.amount?.gt(0) && this.allowance?.lt(this.lockModel.amount));
   }
 
-  private get inLockingPeriod(): boolean {
-    return !this.lockingPeriodHasNotStarted && !this.lockingPeriodIsEnded;
-  }
-
   @computedFrom("ethereumService.defaultAccountAddress")
-  private get connected(): boolean {
+  get connected(): boolean {
     return !!this.ethereumService.defaultAccountAddress;
   }
 
@@ -78,75 +74,35 @@ export class LockingToken4Reputation {
   ) {
     this.lockModel.tokenAddress = this.tokenAddress = this.contractsService.getContractAddress(ContractNames.PRIMETOKEN);
 
-    this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account", async (_account: Address) => {
-      this.accountChanged();
-    }));
-
     this.subscriptions.push(this.eventAggregator.subscribe("Contracts.Changed", (_account: Address) => {
       this.token = this.tokenService.getTokenContract(this.tokenAddress);
     }));
 
-    this.subscriptions.push(this.eventAggregator.subscribe("secondPassed", async (blockDate: Date) => {
-      if (this.loaded) {
-        this.refreshCounters(blockDate);
-      }
-    }));
   }
 
-  public async attached(): Promise<void> {
-    this.loaded = false;
-    this.token = this.tokenService.getTokenContract(this.tokenAddress);
-    await this.refresh();
-    this.loaded = true;
-  }
-
-  public detached(): void {
-    this.subscriptions.dispose();
-  }
-
-  private async refresh() {
+  async attached(): Promise<void> {
     this.refreshing = true;
-
-    this.lockingStartTime = await this.lockService.getLockingStartTime();
-    this.lockingEndTime = await this.lockService.getLockingEndTime();
+    this.token = this.tokenService.getTokenContract(this.tokenAddress);
     this.tokenIsLiquid = await this.getTokenIsLiquid(this.tokenAddress);
-    this.refreshCounters(this.ethereumService.lastBlockDate);
-
     await this.accountChanged();
+    this.subscriptions.push(this.eventAggregator.subscribe("Network.Changed.Account", async (_account: Address) => {
+      this.accountChanged();
+    }));
     this.refreshing = false;
   }
 
-  private async accountChanged() {
+  detached(): void {
+    this.subscriptions.dispose();
+  }
+
+  async accountChanged(): Promise<void> {
     this.allowance = undefined;
     if (this.ethereumService.defaultAccountAddress) {
       await this.getTokenAllowance();
     }
   }
 
-  private refreshCounters(blockDate: Date): void {
-    this.getLockingPeriodIsEnded(blockDate);
-    this.getLockingPeriodHasNotStarted(blockDate);
-    this.getMsUntilCanLockCountdown(blockDate);
-    this.getMsRemainingInPeriodCountdown(blockDate);
-  }
-
-  private getLockingPeriodHasNotStarted(blockDate: Date): boolean {
-    return this.lockingPeriodHasNotStarted = (blockDate < this.lockingStartTime);
-  }
-
-  private getLockingPeriodIsEnded(blockDate: Date): boolean {
-    return this.lockingPeriodIsEnded = (blockDate > this.lockingEndTime);
-  }
-
-  private getMsUntilCanLockCountdown(_blockDate: Date): number {
-    return this.msUntilCanLockCountdown = Math.max(this.lockingStartTime.getTime() - Date.now(), 0);
-  }
-
-  private getMsRemainingInPeriodCountdown(_blockDate: Date): number {
-    return this.msRemainingInPeriodCountdown = Math.max(this.lockingEndTime.getTime() - Date.now(), 0);
-  }
-
-  private async getLockBlocker(): Promise<boolean> {
+  async getLockBlocker(): Promise<boolean> {
 
     //   const maxLockingPeriodDays = this.appConfig.get('maxLockingPeriodDays');
     //   // convert days to seconds
@@ -164,7 +120,7 @@ export class LockingToken4Reputation {
     return false;
   }
 
-  private async getReleaseBlocker(options: IReleaseOptions): Promise<boolean> {
+  async getReleaseBlocker(options: IReleaseOptions): Promise<boolean> {
     const reason = await this.lockService.getReleaseBlocker(options);
 
     if (reason) {
@@ -175,7 +131,7 @@ export class LockingToken4Reputation {
     return false;
   }
 
-  private async lock(): Promise<boolean> {
+  async lock(): Promise<boolean> {
 
     if (this.locking || this.releasing) {
       return false;
@@ -222,7 +178,7 @@ export class LockingToken4Reputation {
     return success;
   }
 
-  private async release(config: { lock: ILocksTableInfo, releaseButton: Element }): Promise<boolean> {
+  async release(config: { lock: ILocksTableInfo, releaseButton: Element }): Promise<boolean> {
     const lockInfo = config.lock;
 
     if (this.locking || this.releasing) {
@@ -256,7 +212,7 @@ export class LockingToken4Reputation {
     return success;
   }
 
-  private async approve(): Promise<boolean> {
+  async approve(): Promise<boolean> {
 
     if (!this.ethereumService.ensureConnected()) {
       return false;
@@ -297,24 +253,23 @@ export class LockingToken4Reputation {
     return false;
   }
 
-  private async getTokenAllowance() {
+  async getTokenAllowance(): Promise<void> {
     this.allowance = await this.lockService.getTokenAllowance(this.token);
   }
 
-  private async getTokenIsLiquid(token: Address): Promise<boolean> {
+  async getTokenIsLiquid(token: Address): Promise<boolean> {
     return this.lockService.getTokenIsLiquid(token);
   }
 
-  private connect() {
+  connect(): void {
     this.ethereumService.ensureConnected();
   }
 
-  private handleGetMaxPrime() {
+  handleGetMaxPrime(): void {
     this.lockModel.amount = this.userPrimeBalance;
   }
 
-  private async handleGetMaxLockingPeriod() {
+  async handleGetMaxLockingPeriod(): Promise<void> {
     this.lockModel.period = await this.lockService.getMaxLockingDuration();
-
   }
 }

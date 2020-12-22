@@ -135,7 +135,7 @@ export class LocksForReputation {
 
     this.loading = true;
 
-    const locks = await this.lockService.getUserLocks();
+    const locks = await this.lockService.getUserLocks(this.ethereumService.defaultAccountAddress);
     /**
      * The symbol is for the LocksForReputation table
      */

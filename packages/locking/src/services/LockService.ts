@@ -294,13 +294,13 @@ export class LockService {
     return lockers;
   }
 
-  public async getUserLocks(): Promise<Array<ILockInfoX>> {
+  public async getUserLocks(lockerAddress: Address, withIsReleased = true): Promise<Array<ILockInfoX>> {
 
-    const releases = await this.getReleases(this.userAddress);
+    const releases = withIsReleased ? (await this.getReleases(lockerAddress)) : [];
 
     const locks = new Map<string, ILockInfoX>();
 
-    const filter = this.lock4RepContract.filters.Lock(this.userAddress);
+    const filter = this.lock4RepContract.filters.Lock(lockerAddress);
     const lockEvents: Array<IStandardEvent> = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
 
     for (const event of lockEvents) {
@@ -309,7 +309,7 @@ export class LockService {
       const released = !!releases.filter((ri: IReleaseInfo) => ri.lockId === eventArgs._lockingId).length;
 
       if (!locks.get(eventArgs._lockingId)) {
-        const lockInfo = await this.lock4RepContract.lockers(this.userAddress, eventArgs._lockingId);
+        const lockInfo = await this.lock4RepContract.lockers(lockerAddress, eventArgs._lockingId);
 
         locks.set(eventArgs._lockingId, {
           amount,
@@ -375,11 +375,11 @@ export class LockService {
     return lockerInfo ? lockerInfo.score : BigNumber.from(0);
   }
 
-  public async lockerHasLocked(lockerAddress: Address): Promise<boolean> {
+  public async userHasLocked(lockerAddress: Address): Promise<boolean> {
     if (!lockerAddress) {
       throw new Error("lockerAddress is not defined");
     }
-    return (await this.getLockerScore(lockerAddress)).gt(0);
+    return (await this.getUserLocks(lockerAddress, false)).length > 0;
   }
 
   /**
@@ -390,7 +390,7 @@ export class LockService {
     return new Date(seconds.toNumber() * 1000);
   }
 
-  public getTotalLocked(): Promise<BigNumber> {
+  public getTotalTokensLocked(): Promise<BigNumber> {
     return this.lock4RepContract.totalLocked();
   }
   public getTotalLockedLeft(): Promise<BigNumber> {
@@ -564,7 +564,7 @@ export class LockService {
     }
   }
 
-  public async getUserEarnedReputation(lockerAddress: Address): Promise<BigNumber> {
+  public async getUserEarnedReputation(lockerAddress: Address, redeemedAmount?: BigNumber): Promise<BigNumber> {
 
     let rep: BigNumber = BigNumber.from(0);
 
@@ -572,22 +572,50 @@ export class LockService {
       throw new Error("lockerAddress is not defined");
     }
 
-    const hasLocked = await this.lockerHasLocked(lockerAddress);
-    if (hasLocked) {
-      rep = await this.lock4RepContract.callStatic.redeem(lockerAddress);
+    const hasAScore = (await this.getLockerScore(lockerAddress)).gt(0);
+    if (hasAScore) {
+      rep = redeemedAmount ?? await this.lock4RepContract.callStatic.redeem(lockerAddress);
     } else {
       /**
-       * see if it is 0 by result of the reputation being redeemed
+       * see if it is score of 0 by result of the reputation having already been redeemed
        */
-      const filter = this.lock4RepContract.filters.Redeem(lockerAddress);
-      const redeemEvents: Array<IStandardEvent> = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
+      rep = await this.getRedeemedAmount(lockerAddress);
+    }
+    return rep;
+  }
 
-      if (redeemEvents.length > 1) {
-        throw new Error("unexpectedly received more than one Redeem event for the account");
-      } else if (redeemEvents.length) {
-        const eventArgs: IRedeemEvent = redeemEvents[0].args;
-        rep = eventArgs._amount;
-      }
+  // public async getUserHasRedeemed(lockerAddress: Address): Promise<BigNumber> {
+
+
+  //   let rep: BigNumber = BigNumber.from(0);
+
+  //   if (!lockerAddress) {
+  //     throw new Error("lockerAddress is not defined");
+  //   }
+
+  //   const hasLocked = await this.userHasLocked(lockerAddress);
+  //   if (hasLocked) {
+  //     rep = redeemedAmount ?? await this.lock4RepContract.callStatic.redeem(lockerAddress);
+  //   } else {
+  //     /**
+  //      * see if it is 0 by result of the reputation being redeemed
+  //      */
+  //     rep = await this.getRedeemedAmount(lockerAddress);
+  //   }
+  //   return rep;
+  // }
+
+  public async getRedeemedAmount(lockerAddress: Address): Promise<BigNumber> {
+    let rep: BigNumber = BigNumber.from(0);
+
+    const filter = this.lock4RepContract.filters.Redeem(lockerAddress);
+    const redeemEvents: Array<IStandardEvent> = await this.lock4RepContract.queryFilter(filter, this.startingBlockNumber);
+
+    if (redeemEvents.length > 1) {
+      throw new Error("unexpectedly received more than one Redeem event for the account");
+    } else if (redeemEvents.length) {
+      const eventArgs: IRedeemEvent = redeemEvents[0].args;
+      rep = eventArgs._amount;
     }
     return rep;
   }

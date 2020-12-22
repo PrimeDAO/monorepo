@@ -16,7 +16,7 @@
         <div class="left yourLocks">
           <span class="triangle"><img /></span>
           <div class="heading1">The future of PrimeDAO is yours!</div>
-          <div class="blurb">PrimeDAO needs good governance! Between now and ${lockingPeriodEndDate | date:"amPmHourTz"}, ${lockingPeriodEndDate | date:"friendly"}, safely deposit your PRIME tokens to generate voting power — also called Reputation — in the DAO. You can use REP to approve or deny DAO-funded proposals, interface and protocol changes as PrimeDAO paves the way towards sustainable decentralized finance.</div>
+          <div class="blurb">PrimeDAO needs good governance! Between <span>${lockingEndTime | date:'amPmHourTz'} ${lockingEndTime | date:'shortdate'}</span> and ${lockingEndTime | date:"amPmHourTz"} ${lockingEndTime | date:"shortdate"}, safely deposit your PRIME tokens to generate voting power — also called Reputation — in the DAO. You can use REP to approve or deny DAO-funded proposals, interface and protocol changes as PrimeDAO paves the way towards sustainable decentralized finance.</div>
           <div class="blurb">You will be awarded REP relative to all PRIME locked based off of:</div>
           <div class="moreinfolist">
             <div class="moreinfo">
@@ -55,12 +55,23 @@
                     mantissa="2"></formatted-number>%
                 </span> of the DAO's total voting power.
               </div>
-              <div>Keep locking to earn more!</div>
+              <div if.to-view="lockingPeriodHasNotStarted">Come back to earn REP!</div>
+              <div if.to-view="inLockingPeriod && !userHasLocked">Start locking to earn REP!</div>
+              <div if.to-view="inLockingPeriod && userHasLocked">Keep locking to earn more!</div>
+              <div if.to-view="lockingPeriodIsEnded && userHasLocked">Congratulations on earning REP in the PrimeDAO!</div>
             </div>
           </div>
         </div>
         <div class="right lockingform">
-          <lockingform user-prime-balance.to-view="userPrimeBalance"></lockingform>
+          <lockingform
+            in-locking-period.to-view="inLockingPeriod"
+            locking-end-time.to-view="lockingEndTime"
+            locking-start-time.to-view="lockingStartTime"
+            locking-period-has-not-started.to-view="lockingPeriodHasNotStarted"
+            locking-period-is-ended.to-view="lockingPeriodIsEnded"
+            ms-until-can-lock-countdown.to-view="msUntilCanLockCountdown"
+            ms-remaining-in-period-countdown.to-view="msRemainingInPeriodCountdown"
+            user-prime-balance.to-view="userPrimeBalance"></lockingform>
         </div>
       </div>
     </div>
