@@ -31,8 +31,8 @@
           <div class="section doubleSection repStatus">
             <div class="left">
               <div class="totalRep repStyle">
-                <span if.to-view="!totalUserReputationEarned">--</span>
-                <formatted-number else value.to-view="totalUserReputationEarned | ethwei"></formatted-number> REP
+                <span if.to-view="!userReputationEarned">--</span>
+                <formatted-number else value.to-view="userReputationEarned | ethwei"></formatted-number> REP
               </div>
               <div class="yourRep repStyle">
                 <span if.to-view="percentUserReputationEarned === undefined">--</span>
@@ -45,7 +45,7 @@
             <div class="right">
               <div>You've generated
                 <span class="repStyle">
-                  <formatted-number if.to-view="totalUserReputationEarned" value.to-view="totalUserReputationEarned | ethwei"></formatted-number>
+                  <formatted-number if.to-view="userReputationEarned" value.to-view="userReputationEarned | ethwei"></formatted-number>
                   <span else>--</span>
                 </span>, or <span class="repStyle">
                   <span if.to-view="percentUserReputationEarned === undefined">--</span>
@@ -59,6 +59,7 @@
               <div if.to-view="inLockingPeriod && !userHasLocked">Start locking to earn REP!</div>
               <div if.to-view="inLockingPeriod && userHasLocked">Keep locking to earn more!</div>
               <div if.to-view="lockingPeriodIsEnded && userHasLocked">Congratulations on earning REP in the PrimeDAO!</div>
+              <div if.to-view="lockingPeriodIsEnded && !userHasLocked">&nbsp;</div>
             </div>
           </div>
         </div>
