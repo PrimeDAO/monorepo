@@ -34,6 +34,7 @@ export class Dashboard {
   msRemainingInPeriodCountdown: number;
   subscriptions = new DisposableCollection();
   userHasLocked: boolean;
+  userHasRedeemedReputation: boolean;
 
   @computedFrom("lockingPeriodHasNotStarted", "lockingPeriodIsEnded")
   get inLockingPeriod(): boolean {
@@ -117,6 +118,11 @@ export class Dashboard {
           .div(toBigNumberJs(totalReputationAvailable).plus(toBigNumberJs(this.totalReputation)))
           .times(100)
           .toNumber();
+        this.userHasRedeemedReputation =
+          this.lockingPeriodIsEnded &&
+          this.userHasLocked &&
+          (this.percentUserReputationEarned > 0) &&
+          (await this.lockService.getRedeemedAmount(this.ethereumService.defaultAccountAddress)).gt(0);
 
         this.connected= true;
       } catch (ex) {
@@ -129,7 +135,8 @@ export class Dashboard {
         }
       }
     } else {
-      this.userHasLocked = false;
+      this.userHasLocked =
+        this.userHasRedeemedReputation = false;
       this.userReputationEarned =
       this.percentUserReputationEarned =
       this.userPrimeBalance = undefined;

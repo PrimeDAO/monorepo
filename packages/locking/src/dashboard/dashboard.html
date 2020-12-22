@@ -43,7 +43,7 @@
               </div>
             </div>
             <div class="right">
-              <div>You've generated
+              <div><span if.to-view="userHasRedeemedReputation">You've generated</span><span else>You will generate</span>
                 <span class="repStyle">
                   <formatted-number if.to-view="userReputationEarned" value.to-view="userReputationEarned | ethwei"></formatted-number>
                   <span else>--</span>
