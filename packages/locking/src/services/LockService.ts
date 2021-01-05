@@ -574,7 +574,7 @@ export class LockService {
 
     const hasAScore = (await this.getLockerScore(lockerAddress)).gt(0);
     if (hasAScore) {
-      rep = redeemedAmount ?? await this.lock4RepContract.callStatic.redeem(lockerAddress);
+      rep = redeemedAmount?.gt(0) ? redeemedAmount : (await this.lock4RepContract.callStatic.redeem(lockerAddress));
     } else {
       /**
        * see if it is score of 0 by result of the reputation having already been redeemed
